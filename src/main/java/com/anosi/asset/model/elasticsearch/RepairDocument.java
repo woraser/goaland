@@ -14,7 +14,7 @@ public class RepairDocument implements Serializable{
 	 */
 	private static final long serialVersionUID = 7259174821924357576L;
 	
-	private Long id;
+	private String id;
 
 	private String problemDescription;
 	
@@ -23,11 +23,11 @@ public class RepairDocument implements Serializable{
 	private String processMode;
 
 	@Id
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
