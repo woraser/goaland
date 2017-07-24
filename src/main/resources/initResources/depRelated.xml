@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<departments>
+	<department code="networkDep" name="网络部">
+		<depGroup code="networkManageGroup" name="网络管理组">
+			<role code="admin" name="管理员"></role>
+		</depGroup>
+	</department>
+</departments>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roleFunctions>
+	<roleFunction roleFunctionPageId="companyManage" name="公司管理">
+		<roleFunction roleFunctionPageId="employeeManage" name="人员管理">
+			<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+			<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+			<roleFunctionBtn btnId="batadd" name="批量配置"></roleFunctionBtn>
+		</roleFunction>
+	</roleFunction>
+</roleFunctions>
