@@ -1,5 +1,7 @@
 package com.anosi.asset.service;
 
+import java.util.Map;
+
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.task.Task;
@@ -81,5 +83,24 @@ public interface BaseProcessService<T extends BaseProcess> {
 	 * @return
 	 */
 	T findByProcessInstanceId(String processInstanceId);
+
+	/***
+	 * 重载completeTask(String taskId, Map<String, Object> variables)
+	 * @param taskId
+	 */
+	void completeTask(String taskId);
+
+	/***
+	 * 模板方法，可以在任务完成前后做一些固定的动作，比如生成记录和发站内信
+	 * @param taskId
+	 * @param variables
+	 */
+	void completeTask(String taskId, Map<String, Object> variables);
+
+	/***
+	 * 获取definitionKey，应在具体子类构造方法中设置
+	 * @return
+	 */
+	String getDefinitionKey();
 	
 }

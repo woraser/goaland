@@ -38,8 +38,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public void startProcess() {
-		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(definitionKey, ImmutableMap.of("assignee", SessionUtil.getCurrentUser().getLoginId()));
-		customerServiceProcessDao.save(new CustomerServiceProcess(processInstance.getId()));
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey(), ImmutableMap.of("assignee", SessionUtil.getCurrentUser().getLoginId()));
+		CustomerServiceProcess customerServiceProcess = new CustomerServiceProcess();
+		customerServiceProcess.setProcessInstanceId(processInstance.getId());
+		customerServiceProcessDao.save(customerServiceProcess);
 	}
 
 	@Override

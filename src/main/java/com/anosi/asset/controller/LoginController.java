@@ -80,7 +80,7 @@ public class LoginController extends BaseController<Account> {
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("redirect:/iotx/management/map?menuId=iotxManagement");
+		ModelAndView mv = new ModelAndView("index");
 		return mv;
 	}
 	

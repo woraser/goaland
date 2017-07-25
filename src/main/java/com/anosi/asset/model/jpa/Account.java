@@ -31,7 +31,11 @@ public class Account extends BaseEntity{
 	
 	private Role role;
 
-	private List<Privilege> privilegeList = new ArrayList<Privilege>();
+	private List<Privilege> privilegeList = new ArrayList<>();
+	
+	private List<MessageInfo> formMessageList = new ArrayList<>();
+
+	private List<MessageInfo> toMessageList = new ArrayList<>();
 	
 	//密码加盐
 	private String salt;
@@ -86,6 +90,24 @@ public class Account extends BaseEntity{
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "from", targetEntity = MessageInfo.class)
+	public List<MessageInfo> getFormMessageList() {
+		return formMessageList;
+	}
+
+	public void setFormMessageList(List<MessageInfo> formMessageList) {
+		this.formMessageList = formMessageList;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "to", targetEntity = MessageInfo.class)
+	public List<MessageInfo> getToMessageList() {
+		return toMessageList;
+	}
+
+	public void setToMessageList(List<MessageInfo> toMessageList) {
+		this.toMessageList = toMessageList;
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package com.anosi.asset.model.jpa;
 
-import java.util.Objects;
-
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,15 +12,40 @@ public class CustomerServiceProcess extends BaseProcess{
 	 * 
 	 */
 	private static final long serialVersionUID = 2663257381437985964L;
+	
+	private LaunchDetail launchDetail;
+	
+	public LaunchDetail getLaunchDetail() {
+		return launchDetail;
+	}
 
-	public CustomerServiceProcess() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void setLaunchDetail(LaunchDetail launchDetail) {
+		this.launchDetail = launchDetail;
+	}
+
+	/***
+	 * 内部类定义组件
+	 * @author jinyao
+	 *
+	 */
+	@Embeddable
+	class LaunchDetail{
+		
+		private String sceneDescription;
+
+		public String getSceneDescription() {
+			return sceneDescription;
+		}
+
+		public void setSceneDescription(String sceneDescription) {
+			this.sceneDescription = sceneDescription;
+		}
+		
 	}
 	
-	public CustomerServiceProcess(String processInstanceId) {
-		super();
-		this.processInstanceId = Objects.requireNonNull(processInstanceId);
+	@Embeddable
+	class RepairDetail{
+		
 	}
-	
+
 }

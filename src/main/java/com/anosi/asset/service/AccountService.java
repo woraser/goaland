@@ -1,5 +1,6 @@
 package com.anosi.asset.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.model.jpa.Account;
@@ -13,6 +14,6 @@ public interface AccountService extends BaseService<Account, Long> {
 	
 	public Iterable<Account> findAll(Predicate predicate);
 
-	public Iterable<Account> findAll(Predicate predicate, Pageable pageable);
+	public Page<Account> findAll(Predicate predicate, Pageable pageable);
 	
 }
