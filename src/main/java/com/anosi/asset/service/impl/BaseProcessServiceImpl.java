@@ -1,8 +1,8 @@
 package com.anosi.asset.service.impl;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -15,6 +15,7 @@ import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,11 @@ import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.component.WebSocketComponent;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.model.jpa.MessageInfo;
+import com.anosi.asset.model.jpa.ProcessRecord;
+import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.MessageInfoService;
+import com.anosi.asset.service.ProcessRecordService;
 import com.anosi.asset.util.SessionUtil;
 
 /***
@@ -53,10 +57,23 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	protected WebSocketComponent webSocketComponent;
 	@Autowired
 	protected I18nComponent i18nComponent;
+	@Autowired
+	protected ProcessRecordService processRecordService;
 
 	protected String definitionKey;
 
 	protected List<MessageInfo> messageInfos;
+	
+
+	/*-----设置为成员变量是因为会在多个方法中使用,这样子参数列表会清晰一些-----*/
+	
+	protected HandleType type;//办理的类型
+	
+	protected String reason;//办理的理由
+	
+	protected String reamin;//组任务的待办人
+	
+	/*--------------------------------------*/
 
 	@Override
 	public Page<T> findRuntimeTasks(Pageable pageable) {
@@ -140,20 +157,31 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	}
 
 	@Override
-	public void completeTask(String taskId) {
-		completeTask(taskId, null);
-	}
-
-	@Override
-	public void completeTask(String taskId, Map<String, Object> variables) {
-		taskService.complete(taskId, variables);
+	public void completeTask(String taskId,DoInComplete doInComplete) {
+		// 找出这个任务的记录,设置任务的完成时间和完成类型
+		String processInstanceId = processRecordService.findByTaskId(taskId).setType(type).setEndTime(new Date()).setReason(reason)
+				.setAssignee(SessionUtil.getCurrentUser()).getProcessInstanceId();
+		doInComplete.excute();
 		saveMessageInfoAndSend();
+		// 生成新的待办任务记录
+		createNewProcessRecord(processInstanceId);
 	}
 	
-	/***
-	 * save messageinfo,并向用户推送消息
-	 */
-	protected void saveMessageInfoAndSend(){
+	@Override
+	public void createNewProcessRecord(String processInstanceId) {
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+		for (Task task : tasks) {
+			if(processRecordService.findByTaskId(task.getId())==null){
+				ProcessRecord processRecord = new ProcessRecord();
+				processRecord.setProcessInstanceId(processInstanceId).setTaskId(task.getId()).setTaskName(task.getName())
+						.setStartTime(new Date()).setType(HandleType.REAMIN_TO_DO).setRemain(StringUtils.isBlank(task.getAssignee())?reamin:task.getAssignee());
+				processRecordService.save(processRecord);
+			}
+		}
+	}
+	
+	@Override
+	public void saveMessageInfoAndSend() {
 		for (MessageInfo messageInfo : messageInfos) {
 			messageInfoService.save(messageInfo);
 			try {
@@ -171,6 +199,17 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	@Override
 	public String getDefinitionKey() {
 		return Objects.requireNonNull(definitionKey, "definitionKey can not be null");
+	}
+	
+
+	/***
+	 * 内部方法接口,用来执行completeTask中的具体操作
+	 * @author jinyao
+	 *
+	 */
+	@FunctionalInterface
+	public interface DoInComplete{
+		public void excute();
 	}
 
 }
