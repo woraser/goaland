@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
 
@@ -51,8 +52,12 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 		if (multipartFiles != null && multipartFiles.length > 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
 				logger.debug("is uploading");
-				this.fileMetaDataService.saveFile(identification, multipartFile.getOriginalFilename(),
-						multipartFile.getInputStream(), multipartFile.getSize());
+				try {
+					this.fileMetaDataService.saveFile(identification, multipartFile.getOriginalFilename(),
+							multipartFile.getInputStream(), multipartFile.getSize());
+				}  catch (Exception e) {
+					throw new CustomRunTimeException("upload fail");
+				}
 			}
 			jsonObject.put("result", "upload success");
 		} else {
@@ -69,7 +74,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/fileDownload/list/{identification}", method = RequestMethod.GET)
-	public List<FileMetaData> fileDownloadList(@PathVariable String identification,
+	public Page<FileMetaData> fileDownloadList(@PathVariable String identification,
 			@PageableDefault(sort = {"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)throws Exception {
 		logger.info("to view file list");
 		logger.debug("identification:{}",identification);

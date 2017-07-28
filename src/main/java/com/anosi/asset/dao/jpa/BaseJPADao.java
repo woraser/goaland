@@ -1,8 +1,8 @@
 package com.anosi.asset.dao.jpa;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.CrudRepository;
 
-public interface BaseJPADao<T> extends CrudRepository<T, Long>,QueryDslPredicateExecutor<T>{
+public interface BaseJPADao<T> extends JpaRepository<T, Long>,QueryDslPredicateExecutor<T>{
 
 }

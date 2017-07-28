@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 @Document
 public class FileMetaData extends AbstractDocument{
 
@@ -34,6 +36,7 @@ public class FileMetaData extends AbstractDocument{
 		this.identification = identification;
 	}
 
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	public Date getUploadTime() {
 		return uploadTime;
 	}

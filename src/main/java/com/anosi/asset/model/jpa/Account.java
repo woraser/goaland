@@ -37,6 +37,10 @@ public class Account extends BaseEntity{
 
 	private List<MessageInfo> toMessageList = new ArrayList<>();
 	
+	private List<ProcessRecord> processRecordList = new ArrayList<>();
+	
+	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
+	
 	//密码加盐
 	private String salt;
 	
@@ -108,6 +112,24 @@ public class Account extends BaseEntity{
 
 	public void setToMessageList(List<MessageInfo> toMessageList) {
 		this.toMessageList = toMessageList;
+	}
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "assignee", targetEntity = ProcessRecord.class)
+	public List<ProcessRecord> getProcessRecordList() {
+		return processRecordList;
+	}
+
+	public void setProcessRecordList(List<ProcessRecord> processRecordList) {
+		this.processRecordList = processRecordList;
+	}
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "applicant", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getCustomerServiceProcesseList() {
+		return customerServiceProcesseList;
+	}
+
+	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
+		this.customerServiceProcesseList = customerServiceProcesseList;
 	}
 
 	/**

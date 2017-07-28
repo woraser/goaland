@@ -22,6 +22,8 @@ public class MessageInfo extends BaseEntity{
 	
 	private Account to;
 	
+	private Date sendTime;
+	
 	private Date readTime;
 	
 	private String content;
@@ -79,6 +81,14 @@ public class MessageInfo extends BaseEntity{
 
 	public void setTo(Account to) {
 		this.to = to;
+	}
+	
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	public Date getReadTime() {

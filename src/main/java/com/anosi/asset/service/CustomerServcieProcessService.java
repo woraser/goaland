@@ -11,27 +11,38 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 */
 	void startProcess();
 	
-	/***
+	/**
 	 * 发起人完成发起的清单
-	 * 流程变量:${engineeDep}:下一步工程部办理人
+	 * @param engineeDep 流程变量,下一步工程部办理人${engineeDep}
+	 * @param taskId
 	 */
 	void completeProcess(Account engineeDep,String taskId);
 	
 	/***
 	 * 工程部问题评估
-	 * 流程变量:${servicer}:下一步售后服务组办理人
+	 * @param servicer 流程变量:${servicer}:下一步售后服务组办理人
+	 * @param taskId
 	 */
 	void evaluating(Account servicer,String taskId);
 	
 	/***
 	 * 售后服务组派单
-	 * 流程变量:${engineer}:下一步工程师
+	 * @param engineer 流程变量:${engineer}:下一步工程师
+	 * @param taskId
 	 */
 	void distribute(Account engineer,String taskId);
 	
 	/***
 	 * 工程师上门维修
+	 * @param taskId
 	 */
 	void repair(String taskId);
+	
+	/***
+	 * 委托
+	 * @param taskId
+	 * @param mandatary
+	 */
+	void entrust(String taskId,Account mandatary);
 	
 }
