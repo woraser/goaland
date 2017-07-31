@@ -10,6 +10,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -63,24 +64,38 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	protected String definitionKey;
 
 	protected List<MessageInfo> messageInfos;
-	
 
 	/*-----设置为成员变量是因为会在多个方法中使用,这样子参数列表会清晰一些-----*/
-	
-	protected HandleType type;//办理的类型
-	
-	protected String reason;//办理的理由
-	
-	protected String reamin;//组任务的待办人
-	
+
+	protected HandleType type;// 办理的类型
+
+	protected String reason;// 办理的理由
+
+	protected String reamin;// 组任务的待办人
+
 	/*--------------------------------------*/
 
 	@Override
-	public Page<T> findRuntimeTasks(Pageable pageable) {
+	public Page<T> findHistoricProcessInstance(Pageable pageable,
+			HistoricProcessInstanceQuery historicProcessInstanceQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
 		int maxResults = firstResult + pageable.getOffset();
 
-		TaskQuery taskQuery = findRuntimeTasksQuery();
+		List<HistoricProcessInstance> instances = historicProcessInstanceQuery.listPage(firstResult, maxResults);
+		long total = historicProcessInstanceQuery.count(); // 总数
+		logger.debug("the total for historicProcessInstance:{}", total);
+
+		List<T> list = instances.stream()
+				.map(instance -> findAndSetInstanceValue(instance))
+				.collect(Collectors.toList());
+
+		return new PageImpl<>(list, pageable, total);
+	}
+
+	@Override
+	public Page<T> findRuntimeTasks(Pageable pageable, TaskQuery taskQuery) {
+		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
+		int maxResults = firstResult + pageable.getOffset();
 
 		List<Task> tasks = taskQuery.listPage(firstResult, maxResults); // 分页task
 		long total = taskQuery.count(); // task总数
@@ -93,11 +108,9 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	}
 
 	@Override
-	public Page<T> findHistoricTasks(Pageable pageable) {
+	public Page<T> findHistoricTasks(Pageable pageable, HistoricTaskInstanceQuery historicTaskInstanceQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
 		int maxResults = firstResult + pageable.getOffset();
-
-		HistoricTaskInstanceQuery historicTaskInstanceQuery = findHistoricTasksQuery();
 
 		List<HistoricTaskInstance> historicTaskInstances = historicTaskInstanceQuery.listPage(firstResult, maxResults);
 		long total = historicTaskInstanceQuery.count(); // task总数
@@ -126,6 +139,13 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 		t.setHistoricTaskInstance(historicTaskInstance);
 		return t;
 	}
+	
+	@Override
+	public T findAndSetInstanceValue(HistoricProcessInstance instance){
+		T process = findByProcessInstanceId(instance.getId());
+		process.setHistoricProcessInstance(instance);
+		return process;
+	}
 
 	@Override
 	public T findAndSetRunTimeValue(Task task) {
@@ -138,48 +158,41 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 				historicTaskInstance);
 	}
 
-	/**
-	 * 返回用于查看所有运行中任务的query
-	 */
 	@Override
-	public TaskQuery findRuntimeTasksQuery() {
-		return taskService.createTaskQuery().processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
-				.taskCandidateOrAssigned(SessionUtil.getCurrentUser().getLoginId());
-	}
-
-	/**
-	 * 返回用于查看所有历史任务的query
-	 */
-	@Override
-	public HistoricTaskInstanceQuery findHistoricTasksQuery() {
-		return historyService.createHistoricTaskInstanceQuery().processDefinitionKey(getDefinitionKey())
-				.orderByTaskCreateTime().desc().taskAssignee(SessionUtil.getCurrentUser().getLoginId());
-	}
-
-	@Override
-	public void completeTask(String taskId,DoInComplete doInComplete) {
+	public void completeTask(String taskId, DoInComplete doInComplete) {
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
-		String processInstanceId = processRecordService.findByTaskId(taskId).setType(type).setEndTime(new Date()).setReason(reason)
-				.setAssignee(SessionUtil.getCurrentUser()).getProcessInstanceId();
+		ProcessRecord processRecord = processRecordService.findByTaskId(taskId);
+		
+		processRecord.setType(type);
+		processRecord.setEndTime(new Date());
+		processRecord.setReason(reason);
+		processRecord.setAssignee(SessionUtil.getCurrentUser());
+		
+		String processInstanceId = 	processRecord.getProcessInstanceId();
+		
 		doInComplete.excute();
 		saveMessageInfoAndSend();
 		// 生成新的待办任务记录
 		createNewProcessRecord(processInstanceId);
 	}
-	
+
 	@Override
 	public void createNewProcessRecord(String processInstanceId) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		for (Task task : tasks) {
-			if(processRecordService.findByTaskId(task.getId())==null){
+			if (processRecordService.findByTaskId(task.getId()) == null) {
 				ProcessRecord processRecord = new ProcessRecord();
-				processRecord.setProcessInstanceId(processInstanceId).setTaskId(task.getId()).setTaskName(task.getName())
-						.setStartTime(new Date()).setType(HandleType.REAMIN_TO_DO).setRemain(StringUtils.isBlank(task.getAssignee())?reamin:task.getAssignee());
+				processRecord.setProcessInstanceId(processInstanceId);
+				processRecord.setTaskId(task.getId());
+				processRecord.setTaskName(task.getName());
+				processRecord.setStartTime(new Date());
+				processRecord.setType(HandleType.REAMIN_TO_DO);
+				processRecord.setRemain(StringUtils.isBlank(task.getAssignee()) ? reamin : task.getAssignee());
 				processRecordService.save(processRecord);
 			}
 		}
 	}
-	
+
 	@Override
 	public void saveMessageInfoAndSend() {
 		for (MessageInfo messageInfo : messageInfos) {
@@ -200,15 +213,38 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	public String getDefinitionKey() {
 		return Objects.requireNonNull(definitionKey, "definitionKey can not be null");
 	}
-	
+
+	@Override
+	public Page<T> findStartedProcess(Pageable pageable) {
+		HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+				.processDefinitionKey(getDefinitionKey()).startedBy(SessionUtil.getCurrentUser().getLoginId())
+				.orderByProcessInstanceStartTime().desc();
+		return findHistoricProcessInstance(pageable, historicProcessInstanceQuery);
+	}
+
+	@Override
+	public Page<T> findTasksToDo(Pageable pageable) {
+		TaskQuery taskQuery = taskService.createTaskQuery().processDefinitionKey(getDefinitionKey())
+				.orderByTaskCreateTime().desc().taskCandidateOrAssigned(SessionUtil.getCurrentUser().getLoginId());
+		return findRuntimeTasks(pageable, taskQuery);
+	}
+
+	@Override
+	public Page<T> findHistoricTasks(Pageable pageable) {
+		HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
+				.processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
+				.taskAssignee(SessionUtil.getCurrentUser().getLoginId());
+		return findHistoricTasks(pageable, historicTaskInstanceQuery);
+	}
 
 	/***
 	 * 内部方法接口,用来执行completeTask中的具体操作
+	 * 
 	 * @author jinyao
 	 *
 	 */
 	@FunctionalInterface
-	public interface DoInComplete{
+	public interface DoInComplete {
 		public void excute();
 	}
 

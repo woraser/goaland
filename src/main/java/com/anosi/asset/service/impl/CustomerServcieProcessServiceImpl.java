@@ -38,35 +38,37 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public void startProcess() {
-		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey(), ImmutableMap.of("assignee", SessionUtil.getCurrentUser().getLoginId()));
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey(),
+				ImmutableMap.of("assignee", SessionUtil.getCurrentUser().getLoginId()));
 		CustomerServiceProcess customerServiceProcess = new CustomerServiceProcess();
 		customerServiceProcess.setProcessInstanceId(processInstance.getId());
 		customerServiceProcessDao.save(customerServiceProcess);
 	}
 
 	@Override
-	public void completeProcess(Account engineeDep,String taskId) {
-		completeTask(taskId, ()->taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
+	public void completeProcess(Account engineeDep, String taskId) {
+		completeTask(taskId,
+				() -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
 	}
 
 	@Override
 	public void evaluating(Account servicer, String taskId) {
-		completeTask(taskId, ()->taskService.complete(taskId, ImmutableMap.of("servicer", servicer.getLoginId())));
+		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("servicer", servicer.getLoginId())));
 	}
 
 	@Override
 	public void distribute(Account engineer, String taskId) {
-		completeTask(taskId, ()->taskService.complete(taskId, ImmutableMap.of("engineer", engineer.getLoginId())));
+		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("engineer", engineer.getLoginId())));
 	}
 
 	@Override
 	public void repair(String taskId) {
-		completeTask(taskId, ()->taskService.complete(taskId));
+		completeTask(taskId, () -> taskService.complete(taskId));
 	}
 
 	@Override
 	public void entrust(String taskId, Account mandatary) {
-		//TODO acitviti委托
+		// TODO acitviti委托
 	}
-	
+
 }

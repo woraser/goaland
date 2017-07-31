@@ -71,5 +71,16 @@ spring:
     suffix: .ftl
     template-loader-path:
     - classpath:/templates/
+    
+  #redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    pool:
+      max-active: 20
+      max-wait: 60000
+      max-idle: 20
+      min-idle: 1
+    database: 0
   
     

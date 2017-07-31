@@ -64,72 +64,64 @@ public class ProcessRecord extends BaseEntity{
 		return processInstanceId;
 	}
 
-	public ProcessRecord setProcessInstanceId(String processInstanceId) {
+	public void setProcessInstanceId(String processInstanceId) {
 		this.processInstanceId = processInstanceId;
-		return this;
 	}
 	
 	public String getTaskId() {
 		return taskId;
 	}
 
-	public ProcessRecord setTaskId(String taskId) {
+	public void setTaskId(String taskId) {
 		this.taskId = taskId;
-		return this;
 	}
 
 	public HandleType getType() {
 		return type;
 	}
 
-	public ProcessRecord setType(HandleType type) {
+	public void setType(HandleType type) {
 		this.type = type;
-		return this;
 	}
 
 	public String getReason() {
 		return reason;
 	}
 
-	public ProcessRecord setReason(String reason) {
+	public void setReason(String reason) {
 		this.reason = reason;
-		return this;
 	}
 
 	public Date getStartTime() {
 		return startTime;
 	}
 
-	public ProcessRecord setStartTime(Date startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
-		return this;
 	}
 
 	public Date getEndTime() {
 		return endTime;
 	}
 
-	public ProcessRecord setEndTime(Date endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
-		return this;
 	}
 
 	public String getTaskName() {
 		return taskName;
 	}
 
-	public ProcessRecord setTaskName(String taskName) {
+	public void setTaskName(String taskName) {
 		this.taskName = taskName;
-		return this;
 	}
 	
 	public String getRemain() {
 		return remain;
 	}
 
-	public ProcessRecord setRemain(String remain) {
+	public void setRemain(String remain) {
 		this.remain = remain;
-		return this;
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Account.class)
@@ -138,9 +130,8 @@ public class ProcessRecord extends BaseEntity{
 		return assignee;
 	}
 
-	public ProcessRecord setAssignee(Account assignee) {
+	public void setAssignee(Account assignee) {
 		this.assignee = assignee;
-		return this;
 	}
 	
 }

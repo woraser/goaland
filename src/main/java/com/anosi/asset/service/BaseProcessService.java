@@ -1,5 +1,7 @@
 package com.anosi.asset.service;
 
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.task.Task;
@@ -37,6 +39,13 @@ public interface BaseProcessService<T extends BaseProcess> {
 	T setHistoricValueForProcess(T t,HistoricTaskInstance historicTaskInstance);
 	
 	/***
+	 * 为T设置HistoricProcessInstance
+	 * 内部通过调用父接口的findAndSetRunTimeValue来减少重复代码
+	 * @return
+	 */
+	T findAndSetInstanceValue(HistoricProcessInstance instance);
+	
+	/***
 	 * 为T设置运行时属性
 	 * 内部通过调用父接口的findAndSetRunTimeValue来减少重复代码
 	 * @return
@@ -51,30 +60,26 @@ public interface BaseProcessService<T extends BaseProcess> {
 	T findAndSetHistoricValue(HistoricTaskInstance historicTaskInstance);
 	
 	/***
+	 * 获取所有发起的流程
+	 * @param pageable
+	 * @param taskQuery
+	 * @return
+	 */
+	public Page<T> findHistoricProcessInstance(Pageable pageable,HistoricProcessInstanceQuery historicProcessInstanceQuery);
+	
+	/***
 	 * 获取等待办理的任务
 	 * @param pageable
 	 * @return
 	 */
-	Page<T> findRuntimeTasks(Pageable pageable);
+	Page<T> findRuntimeTasks(Pageable pageable,TaskQuery taskQuery);
 	
 	/***
 	 * 获取办理过的任务
 	 * @param pageable
 	 * @return
 	 */
-	Page<T> findHistoricTasks(Pageable pageable);
-	
-	/***
-	 * 获取具体子类的TaskQuery
-	 * @return
-	 */
-	TaskQuery findRuntimeTasksQuery();
-	
-	/***
-	 * 获取具体子类的HistoricTaskInstanceQuery
-	 * @return
-	 */
-	HistoricTaskInstanceQuery findHistoricTasksQuery();
+	Page<T> findHistoricTasks(Pageable pageable,HistoricTaskInstanceQuery historicTaskInstanceQuery);
 	
 	/**
 	 * 根据processInstanceId查找流程
@@ -106,5 +111,26 @@ public interface BaseProcessService<T extends BaseProcess> {
 	 * @param processInstanceId
 	 */
 	void createNewProcessRecord(String processInstanceId);
+	
+	/***
+	 * 获取发起的流程，默认实现
+	 * @param pageable
+	 * @return
+	 */
+	Page<T> findStartedProcess(Pageable pageable);
+	
+	/***
+	 * 获取待办任务，默认实现
+	 * @param pageable
+	 * @return
+	 */
+	Page<T> findTasksToDo(Pageable pageable);
+	
+	/***
+	 * 获取历史任务，默认实现
+	 * @param pageable
+	 * @return
+	 */
+	Page<T> findHistoricTasks(Pageable pageable);
 	
 }

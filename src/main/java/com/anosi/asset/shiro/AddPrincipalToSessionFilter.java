@@ -16,6 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.service.AccountService;
 
+/***
+ * 如果使用了shiro的rememberMe功能，在未登录情况下，服务器端可能没有session，这个filter是为了在这种情况下创建session
+ * @author jinyao
+ *
+ */
 public class AddPrincipalToSessionFilter extends OncePerRequestFilter {
 
     @Autowired

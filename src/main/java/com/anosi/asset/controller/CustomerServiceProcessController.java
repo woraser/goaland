@@ -43,7 +43,7 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 		
-		return jqgridUtil.parsePageToJqgridJson(customerServcieProcessService.findRuntimeTasks(pageable), rowId,
+		return jqgridUtil.parsePageToJqgridJson(customerServcieProcessService.findTasksToDo(pageable), rowId,
 				showAttributes.split(","));
 	}
 	
