@@ -19,7 +19,8 @@ public class GlobalController<T> {
 		if(ex instanceof CustomRunTimeException){
 			ModelAndView mv = new ModelAndView(new MappingJackson2JsonView());
 			String message = ex.getMessage();
-			mv.addObject("result", message);
+			mv.addObject("result", "error");
+			mv.addObject("message", message);
 			return mv;
 		}else if(ex instanceof UnauthenticatedException){
 			//没有进行认证

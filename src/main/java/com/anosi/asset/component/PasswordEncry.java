@@ -1,4 +1,4 @@
-package com.anosi.asset.util;
+package com.anosi.asset.component;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.RandomNumberGenerator;

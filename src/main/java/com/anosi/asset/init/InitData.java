@@ -10,10 +10,10 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.anosi.asset.component.PasswordEncry;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.RoleService;
-import com.anosi.asset.util.PasswordEncry;
 
 /***
  * 进行一些数据的初始化工作

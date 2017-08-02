@@ -2,6 +2,9 @@ package com.anosi.asset.service;
 
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
 
 public interface CustomerServcieProcessService extends BaseProcessService<CustomerServiceProcess>{
 
@@ -15,15 +18,16 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 发起人完成发起的清单
 	 * @param engineeDep 流程变量,下一步工程部办理人${engineeDep}
 	 * @param taskId
+	 * @param startDetail 存放发起流程表单信息的bean
 	 */
-	void completeProcess(Account engineeDep,String taskId);
+	void completeStartDetail(Account engineeDep,String taskId,StartDetail startDetail);
 	
 	/***
 	 * 工程部问题评估
 	 * @param servicer 流程变量:${servicer}:下一步售后服务组办理人
 	 * @param taskId
 	 */
-	void evaluating(Account servicer,String taskId);
+	void evaluating(Account servicer,String taskId,EvaluatingDetail evaluatingDetail);
 	
 	/***
 	 * 售后服务组派单
@@ -36,12 +40,12 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 工程师上门维修
 	 * @param taskId
 	 */
-	void repair(String taskId);
+	void repair(String taskId,RepairDetail repairDetail);
 	
 	/***
 	 * 委托
 	 * @param taskId
-	 * @param mandatary
+	 * @param mandatary 代理人
 	 */
 	void entrust(String taskId,Account mandatary);
 	

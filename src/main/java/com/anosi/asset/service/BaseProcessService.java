@@ -9,6 +9,7 @@ import org.activiti.engine.task.TaskQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.service.impl.BaseProcessServiceImpl.DoInComplete;
 
@@ -81,19 +82,38 @@ public interface BaseProcessService<T extends BaseProcess> {
 	 */
 	Page<T> findHistoricTasks(Pageable pageable,HistoricTaskInstanceQuery historicTaskInstanceQuery);
 	
+	/***
+	 * 根据taskId查找流程
+	 * @param taskId
+	 * @return
+	 */
+	T findBytaskId(String taskId);
+	
 	/**
 	 * 根据processInstanceId查找流程
 	 * @param processInstanceId
 	 * @return
 	 */
 	T findByProcessInstanceId(String processInstanceId);
+	
+	/***
+	 * 重载，不需要下一步办理人
+	 * @param taskId
+	 * @param t	流程
+	 * @param applicant	流程发起人
+	 * @param doInComplete
+	 */
+	void completeTask(String taskId,T t,Account applicant,DoInComplete doInComplete);
 
 	/***
 	 * 模板方法，可以在任务完成前后做一些固定的动作，比如生成记录和发站内信
 	 * @param taskId
-	 * @param variables
+	 * @param t	流程
+	 * @param applicant	流程发起人
+	 * @param nextAssignee	下一步办理人
+	 * @param doInComplete	具体完成任务的函数
 	 */
-	void completeTask(String taskId,DoInComplete doInComplete);
+	void completeTask(String taskId,T t,Account applicant,Account nextAssignee,DoInComplete doInComplete);
 
 	/***
 	 * 获取definitionKey，应在具体子类构造方法中设置
@@ -132,5 +152,30 @@ public interface BaseProcessService<T extends BaseProcess> {
 	 * @return
 	 */
 	Page<T> findHistoricTasks(Pageable pageable);
+	
+	/***
+	 * 查出下一步任务id，发给下一步代办人
+	 * @param t
+	 * @param processInstanceId
+	 * @param nextAssignee
+	 */
+	public void searchNextTaskAndSend(T t,String processInstanceId,Account nextAssignee);
+	
+	/***
+	 * 将信息发送给办理人
+	 * @param t
+	 * @param taskId
+	 * @param applicant
+	 * @param nextAssignee
+	 */
+	public void messageInfoForAssignee(T t,String taskId,Account nextAssignee);
+	
+	/***
+	 * 只发给发起人
+	 * @param t
+	 * @param taskId
+	 * @param applicant
+	 */
+	public void messageInfoForApplicant(T t,String taskId,Account applicant);
 	
 }

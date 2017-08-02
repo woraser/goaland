@@ -1,4 +1,4 @@
-package com.anosi.asset.util;
+package com.anosi.asset.component;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;

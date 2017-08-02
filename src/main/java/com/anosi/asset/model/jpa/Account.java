@@ -2,6 +2,7 @@ package com.anosi.asset.model.jpa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -131,7 +132,7 @@ public class Account extends BaseEntity{
 	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
 		this.customerServiceProcesseList = customerServiceProcesseList;
 	}
-
+	
 	/**
 	 * 密码盐.
 	 * @return

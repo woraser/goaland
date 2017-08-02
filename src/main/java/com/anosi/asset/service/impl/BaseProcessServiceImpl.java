@@ -25,7 +25,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.component.WebSocketComponent;
+import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
@@ -33,7 +35,6 @@ import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.MessageInfoService;
 import com.anosi.asset.service.ProcessRecordService;
-import com.anosi.asset.util.SessionUtil;
 
 /***
  * 所有流程service集成的抽象类，实现了上层接口的部分方法,剩余方法在具体流程中实现
@@ -67,7 +68,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 
 	/*-----设置为成员变量是因为会在多个方法中使用,这样子参数列表会清晰一些-----*/
 
-	protected HandleType type;// 办理的类型
+	protected HandleType type = HandleType.PASS;// 办理的类型
 
 	protected String reason;// 办理的理由
 
@@ -85,8 +86,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 		long total = historicProcessInstanceQuery.count(); // 总数
 		logger.debug("the total for historicProcessInstance:{}", total);
 
-		List<T> list = instances.stream()
-				.map(instance -> findAndSetInstanceValue(instance))
+		List<T> list = instances.stream().map(instance -> findAndSetInstanceValue(instance))
 				.collect(Collectors.toList());
 
 		return new PageImpl<>(list, pageable, total);
@@ -139,9 +139,9 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 		t.setHistoricTaskInstance(historicTaskInstance);
 		return t;
 	}
-	
+
 	@Override
-	public T findAndSetInstanceValue(HistoricProcessInstance instance){
+	public T findAndSetInstanceValue(HistoricProcessInstance instance) {
 		T process = findByProcessInstanceId(instance.getId());
 		process.setHistoricProcessInstance(instance);
 		return process;
@@ -159,21 +159,32 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	}
 
 	@Override
-	public void completeTask(String taskId, DoInComplete doInComplete) {
+	public void completeTask(String taskId, T t, Account applicant, DoInComplete doInComplete) {
+		completeTask(taskId, t, applicant, null, doInComplete);
+	}
+
+	@Override
+	public void completeTask(String taskId, T t, Account applicant, Account nextAssignee, DoInComplete doInComplete) {
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
 		ProcessRecord processRecord = processRecordService.findByTaskId(taskId);
-		
+
 		processRecord.setType(type);
 		processRecord.setEndTime(new Date());
 		processRecord.setReason(reason);
 		processRecord.setAssignee(SessionUtil.getCurrentUser());
-		
-		String processInstanceId = 	processRecord.getProcessInstanceId();
-		
-		doInComplete.excute();
-		saveMessageInfoAndSend();
-		// 生成新的待办任务记录
-		createNewProcessRecord(processInstanceId);
+		String processInstanceId = processRecord.getProcessInstanceId();
+
+		messageInfoForApplicant(t, taskId, applicant);// 发送给发起人
+		doInComplete.excute();// 办理任务
+
+		if (nextAssignee == null) {
+			saveMessageInfoAndSend();// 发送
+		} else {
+			/*-----注意以下三步的顺序，要先发送消息，再创建下一步的记录，不然不会发送--*/
+			searchNextTaskAndSend(t, processInstanceId, nextAssignee);// 发给下一步办理人
+			saveMessageInfoAndSend();// 发送
+			createNewProcessRecord(processInstanceId);// 生成新的待办任务记录
+		}
 	}
 
 	@Override
@@ -200,8 +211,8 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 			try {
 				// 利用websocket向浏览器发送消息
 				webSocketComponent.sendByQuene(messageInfo.getTo().getLoginId(),
-						MessageFormat.format(i18nComponent.getMessage("messageTemplate"),
-								messageInfo.getFrom().getLoginId(), messageInfo.getTitle()));
+						MessageFormat.format(i18nComponent.getMessage("message.template"),
+								messageInfo.getFrom().getName(), messageInfo.getTitle()));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -235,6 +246,61 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 				.processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
 				.taskAssignee(SessionUtil.getCurrentUser().getLoginId());
 		return findHistoricTasks(pageable, historicTaskInstanceQuery);
+	}
+
+	@Override
+	public T findBytaskId(String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		return findByProcessInstanceId(task.getProcessInstanceId());
+	}
+
+	@Override
+	public void searchNextTaskAndSend(T t, String processInstanceId, Account nextAssignee) {
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+		for (Task task : tasks) {
+			// 如果是新生成的任务
+			if (processRecordService.findByTaskId(task.getId()) == null) {
+				messageInfoForAssignee(t, task.getId(), nextAssignee);
+			}
+		}
+	}
+
+	@Override
+	public void messageInfoForAssignee(T t, String taskId, Account nextAssignee) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+				.processInstanceId(task.getProcessInstanceId()).singleResult();
+
+		MessageInfo messageInfo = new MessageInfo();
+		messageInfo.setFrom(SessionUtil.getCurrentUser());
+		messageInfo.setTo(nextAssignee);
+		messageInfo.setSendTime(new Date());
+		// 从i18n中读取信息
+		messageInfo.setTitle(MessageFormat.format(i18nComponent.getMessage("message.titile.taskToDo"),
+				processInstance.getProcessDefinitionName(), task.getName()));// {0}等待办理,任务:{1}
+		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskToDo"), t.getName(),
+				task.getName()));// 流程编号为{0},任务名称为{1},等待办理
+
+		messageInfos.add(messageInfo);
+	}
+
+	@Override
+	public void messageInfoForApplicant(T t, String taskId, Account applicant) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+				.processInstanceId(task.getProcessInstanceId()).singleResult();
+
+		MessageInfo messageInfo = new MessageInfo();
+		messageInfo.setFrom(SessionUtil.getCurrentUser());
+		messageInfo.setTo(applicant);
+		messageInfo.setSendTime(new Date());
+		// 从i18n中读取信息
+		messageInfo.setTitle(MessageFormat.format(i18nComponent.getMessage("message.titile.taskComplete"),
+				processInstance.getProcessDefinitionName()));// {0}被办理
+		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskComplete"),
+				t.getName(), task.getName(), messageInfo.getFrom().getName()));// 你发起的流程{0},{1}已经被办理,办理人为{2}
+
+		messageInfos.add(messageInfo);
 	}
 
 	/***

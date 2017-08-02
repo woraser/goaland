@@ -16,11 +16,11 @@ public class RepairDocument implements Serializable{
 	
 	private String id;
 
-	private String problemDescription;
+	private String problemDescription;//问题描述
 	
-	private String failureCause;
+	private String failureCause;//故障原因
 	
-	private String processMode;
+	private String processMode;//处理方式
 
 	@Id
 	public String getId() {
