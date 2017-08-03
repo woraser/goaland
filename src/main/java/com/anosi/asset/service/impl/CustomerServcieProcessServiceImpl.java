@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anosi.asset.component.SessionUtil;
+import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
@@ -39,6 +40,11 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		super();
 		// 在构造方法中对流程定义赋值
 		definitionKey = "customerService";
+	}
+	
+	@Override
+	public BaseJPADao<CustomerServiceProcess> getRepository() {
+		return customerServiceProcessDao;
 	}
 
 	@Override

@@ -10,12 +10,11 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.DevCategoryStructuresDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.DevCategory;
@@ -23,11 +22,10 @@ import com.anosi.asset.model.jpa.DevCategoryStructures;
 import com.anosi.asset.service.DevCategoryStructuresService;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.querydsl.core.types.Predicate;
 
 @Service("devCategoryStructuresSerivce")
 @Transactional
-public class DevCategoryStructuresSerivceImpl implements DevCategoryStructuresService {
+public class DevCategoryStructuresSerivceImpl extends BaseServiceImpl<DevCategoryStructures> implements DevCategoryStructuresService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DevCategoryStructuresSerivceImpl.class);
 
@@ -37,18 +35,8 @@ public class DevCategoryStructuresSerivceImpl implements DevCategoryStructuresSe
 	private DevCategoryStructuresDao devCategoryStructuresDao;
 	
 	@Override
-	public DevCategoryStructures save(DevCategoryStructures devCategoryStructures) {
-		return devCategoryStructuresDao.save(devCategoryStructures);
-	}
-
-	@Override
-	public Page<DevCategoryStructures> findAll(Predicate predicate, Pageable pageable) {
-		return devCategoryStructuresDao.findAll(predicate, pageable);
-	}
-	
-	@Override
-	public Iterable<DevCategoryStructures> save(Iterable<DevCategoryStructures> entities) {
-		return devCategoryStructuresDao.save(entities);
+	public BaseJPADao<DevCategoryStructures> getRepository() {
+		return devCategoryStructuresDao;
 	}
 
 	@Override

@@ -2,10 +2,8 @@ package com.anosi.asset.service;
 
 import com.anosi.asset.model.jpa.ProcessRecord;
 
-public interface ProcessRecordService {
+public interface ProcessRecordService extends BaseService<ProcessRecord, Long>{
 
-	public ProcessRecord save(ProcessRecord processRecord);
-	
 	public ProcessRecord findByTaskIdNotEnd(String taskId);
 	
 }

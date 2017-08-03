@@ -2,12 +2,8 @@ package com.anosi.asset.service;
 
 import com.anosi.asset.model.jpa.Company;
 
-public interface CompanyService {
+public interface CompanyService extends BaseService<Company,Long>{
 
-	public Iterable<Company> findAll();
-	
-	public Company save(Company company);
-	
 	public Company findByName(String name);
 	
 }

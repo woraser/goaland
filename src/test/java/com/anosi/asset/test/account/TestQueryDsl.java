@@ -34,5 +34,11 @@ public class TestQueryDsl {
 		Iterable<Account> all = accountService.findAll(account.role.depGroup.department.name.eq("网络部"));
 		all.forEach(a->logger.debug("account.name:{}",a.getName()));
 	}
+	
+	@Test
+	public void testFindAll(){
+		Iterable<Account> iterable = accountService.findAll();
+		iterable.forEach(System.out::print);
+	}
 
 }

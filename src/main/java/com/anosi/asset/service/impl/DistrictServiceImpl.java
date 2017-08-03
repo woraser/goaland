@@ -5,13 +5,14 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.DistrictDao;
 import com.anosi.asset.model.jpa.District;
 import com.anosi.asset.service.DistrictService;
 
 @Service("districtService")
 @Transactional
-public class DistrictServiceImpl implements DistrictService{
+public class DistrictServiceImpl extends BaseServiceImpl<District> implements DistrictService{
 	
 	@Autowired
 	private DistrictDao districtDao;
@@ -22,13 +23,8 @@ public class DistrictServiceImpl implements DistrictService{
 	}
 
 	@Override
-	public long count() {
-		return districtDao.count();
-	}
-
-	@Override
-	public Iterable<District> save(Iterable<District> districts) {
-		return districtDao.save(districts);
+	public BaseJPADao<District> getRepository() {
+		return districtDao;
 	}
 
 }

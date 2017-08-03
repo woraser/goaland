@@ -5,13 +5,14 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.DepGroupDao;
 import com.anosi.asset.model.jpa.DepGroup;
 import com.anosi.asset.service.DepGroupService;
 
 @Service("depGroupService")
 @Transactional
-public class DepGroupServiceImpl implements DepGroupService{
+public class DepGroupServiceImpl extends BaseServiceImpl<DepGroup> implements DepGroupService{
 	
 	@Autowired
 	private DepGroupDao depGroupDao;
@@ -22,8 +23,8 @@ public class DepGroupServiceImpl implements DepGroupService{
 	}
 
 	@Override
-	public DepGroup save(DepGroup depGroup) {
-		return depGroupDao.save(depGroup);
+	public BaseJPADao<DepGroup> getRepository() {
+		return depGroupDao;
 	}
 
 }

@@ -2,12 +2,8 @@ package com.anosi.asset.service;
 
 import com.anosi.asset.model.jpa.RoleFunction;
 
-public interface RoleFunctionService {
+public interface RoleFunctionService extends BaseService<RoleFunction, Long>{
 
-	public long count();
-	
 	public RoleFunction findByRoleFunctionPageId(String roleFunctionPageId);
-	
-	public RoleFunction save(RoleFunction roleFunction);
 	
 }
