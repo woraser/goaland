@@ -3,6 +3,7 @@ package com.anosi.asset.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -24,6 +25,17 @@ import com.google.common.collect.Table;
  *
  */
 public class ExcelUtil {
+	
+	/***
+	 * 方法重载
+	 * @param file
+	 * @param sheetIndex
+	 * @return
+	 * @throws IOException
+	 */
+	public static Table<Integer, String, Object> readExcel(File file, Integer sheetIndex) throws IOException {
+		return readExcel(new FileInputStream(file), sheetIndex);
+	}
 
 	/**
 	 * 读取excel
@@ -36,7 +48,7 @@ public class ExcelUtil {
 	 * 
 	 * 可以看用例  {@link com.anosi.asset.test.TestExcel#testReadExcel()}  
 	 */
-	public static Table<Integer, String, Object> readExcel(File file, Integer sheetIndex) throws IOException {
+	public static Table<Integer, String, Object> readExcel(InputStream is, Integer sheetIndex) throws IOException {
 		// 使用Guava的table来存放读取excel的数据
 		// 三个泛型分别为行(int)，列(string)，值(object)
 		Table<Integer, String, Object> excelTable = HashBasedTable.create();
@@ -44,9 +56,9 @@ public class ExcelUtil {
 		Workbook workbook = null;
 		// 针对03和07版本的区别
 		try {
-			workbook = new HSSFWorkbook(new FileInputStream(file));
+			workbook = new HSSFWorkbook(is);
 		} catch (OfficeXmlFileException e) {
-			workbook = new XSSFWorkbook(new FileInputStream(file));
+			workbook = new XSSFWorkbook(is);
 		}
 
 		if(sheetIndex==-1){
