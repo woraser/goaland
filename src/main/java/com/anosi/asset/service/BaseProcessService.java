@@ -97,23 +97,11 @@ public interface BaseProcessService<T extends BaseProcess> {
 	T findByProcessInstanceId(String processInstanceId);
 	
 	/***
-	 * 重载，不需要下一步办理人
-	 * @param taskId
-	 * @param t	流程
-	 * @param applicant	流程发起人
-	 * @param doInComplete
-	 */
-	void completeTask(String taskId,T t,Account applicant,DoInComplete doInComplete);
-
-	/***
 	 * 模板方法，可以在任务完成前后做一些固定的动作，比如生成记录和发站内信
 	 * @param taskId
-	 * @param t	流程
-	 * @param applicant	流程发起人
-	 * @param nextAssignee	下一步办理人
 	 * @param doInComplete	具体完成任务的函数
 	 */
-	void completeTask(String taskId,T t,Account applicant,Account nextAssignee,DoInComplete doInComplete);
+	void completeTask(String taskId,DoInComplete doInComplete);
 
 	/***
 	 * 获取definitionKey，应在具体子类构造方法中设置

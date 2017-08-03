@@ -4,6 +4,6 @@ import com.anosi.asset.model.jpa.ProcessRecord;
 
 public interface ProcessRecordDao extends BaseJPADao<ProcessRecord> {
 
-	public ProcessRecord findByTaskId(String taskId);
+	public ProcessRecord findByTaskIdEqualsAndEndTimeIsNotNull(String taskId);
 	
 }

@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -32,6 +33,7 @@ import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
+import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.MessageInfoService;
 import com.anosi.asset.service.ProcessRecordService;
@@ -54,6 +56,8 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	@Autowired
 	protected HistoryService historyService;
 	@Autowired
+	protected IdentityService identityService;
+	@Autowired
 	protected MessageInfoService messageInfoService;
 	@Autowired
 	protected WebSocketComponent webSocketComponent;
@@ -61,6 +65,8 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	protected I18nComponent i18nComponent;
 	@Autowired
 	protected ProcessRecordService processRecordService;
+	@Autowired
+	protected AccountService accountService;
 
 	protected String definitionKey;
 
@@ -159,39 +165,38 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 	}
 
 	@Override
-	public void completeTask(String taskId, T t, Account applicant, DoInComplete doInComplete) {
-		completeTask(taskId, t, applicant, null, doInComplete);
-	}
-
-	@Override
-	public void completeTask(String taskId, T t, Account applicant, Account nextAssignee, DoInComplete doInComplete) {
+	public void completeTask(String taskId,DoInComplete doInComplete) {
+		T t = findBytaskId(taskId);
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
-		ProcessRecord processRecord = processRecordService.findByTaskId(taskId);
-
+		ProcessRecord processRecord = processRecordService.findByTaskIdNotEnd(taskId);
+		
 		processRecord.setType(type);
 		processRecord.setEndTime(new Date());
 		processRecord.setReason(reason);
 		processRecord.setAssignee(SessionUtil.getCurrentUser());
 		String processInstanceId = processRecord.getProcessInstanceId();
 
-		messageInfoForApplicant(t, taskId, applicant);// 发送给发起人
+		messageInfoForApplicant(t, taskId, accountService.findByLoginId((String) taskService.getVariable(taskId, "applicant")));// 发送给发起人
 		doInComplete.excute();// 办理任务
-
-		if (nextAssignee == null) {
-			saveMessageInfoAndSend();// 发送
-		} else {
-			/*-----注意以下三步的顺序，要先发送消息，再创建下一步的记录，不然不会发送--*/
-			searchNextTaskAndSend(t, processInstanceId, nextAssignee);// 发给下一步办理人
-			saveMessageInfoAndSend();// 发送
-			createNewProcessRecord(processInstanceId);// 生成新的待办任务记录
-		}
+		
+		//这里只发送个人任务的信息，由于组任务相对较少，且封装复杂
+		//所以如果是组任务，将发送信息的代码自行写到DoInComplete中
+		//然后由此模板方法完成发送及创建记录
+		/*-----注意以下三步的顺序，要先发送消息，再创建下一步的记录，不然不会发送--*/
+		if (StringUtils.isNotBlank(task.getAssignee())) {
+			searchNextTaskAndSend(t, processInstanceId, accountService.findByLoginId(task.getAssignee()));// 发给下一步办理人
+		} 
+		saveMessageInfoAndSend();// 发送
+		createNewProcessRecord(processInstanceId);// 生成新的待办任务记录
 	}
 
 	@Override
 	public void createNewProcessRecord(String processInstanceId) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		for (Task task : tasks) {
-			if (processRecordService.findByTaskId(task.getId()) == null) {
+			if (processRecordService.findByTaskIdNotEnd(task.getId()) == null) {
 				ProcessRecord processRecord = new ProcessRecord();
 				processRecord.setProcessInstanceId(processInstanceId);
 				processRecord.setTaskId(task.getId());
@@ -214,7 +219,6 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 						MessageFormat.format(i18nComponent.getMessage("message.template"),
 								messageInfo.getFrom().getName(), messageInfo.getTitle()));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -259,7 +263,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		for (Task task : tasks) {
 			// 如果是新生成的任务
-			if (processRecordService.findByTaskId(task.getId()) == null) {
+			if (processRecordService.findByTaskIdNotEnd(task.getId()) == null) {
 				messageInfoForAssignee(t, task.getId(), nextAssignee);
 			}
 		}
@@ -298,7 +302,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> implements B
 		messageInfo.setTitle(MessageFormat.format(i18nComponent.getMessage("message.titile.taskComplete"),
 				processInstance.getProcessDefinitionName()));// {0}被办理
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskComplete"),
-				t.getName(), task.getName(), messageInfo.getFrom().getName()));// 你发起的流程{0},{1}已经被办理,办理人为{2}
+				t.getName(), task.getName(), messageInfo.getFrom().getName(),reason));// 你发起的流程{0},{1}已经被办理,办理人为{2},办理说明:{3}
 
 		messageInfos.add(messageInfo);
 	}

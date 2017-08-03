@@ -22,8 +22,8 @@ public class ProcessRecordServiceImpl implements ProcessRecordService {
 	}
 
 	@Override
-	public ProcessRecord findByTaskId(String taskId) {
-		return processRecordDao.findByTaskId(taskId);
+	public ProcessRecord findByTaskIdNotEnd(String taskId) {
+		return processRecordDao.findByTaskIdEqualsAndEndTimeIsNotNull(taskId);
 	}
 	
 }

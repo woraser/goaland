@@ -20,6 +20,8 @@ import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
 import com.anosi.asset.model.jpa.MessageInfo;
+import com.anosi.asset.model.jpa.ProcessRecord;
+import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.google.common.collect.ImmutableMap;
 
@@ -48,8 +50,8 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Override
 	public void startProcess() {
 		// 启动流程，因为下一步为完善清单，所以将发起人设置为下一步的办理人
-		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey(),
-				ImmutableMap.of("assignee", SessionUtil.getCurrentUser().getLoginId()));
+		identityService.setAuthenticatedUserId(SessionUtil.getCurrentUser().getLoginId());
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey());
 		CustomerServiceProcess customerServiceProcess = new CustomerServiceProcess();
 		customerServiceProcess.setProcessInstanceId(processInstance.getId());
 		customerServiceProcessDao.save(customerServiceProcess);
@@ -57,39 +59,35 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public void completeStartDetail(Account engineeDep, String taskId, StartDetail startDetail) {
-		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
-		customerServiceProcess.setStartDetail(startDetail);
-		completeTask(taskId, customerServiceProcess, customerServiceProcess.getApplicant(), engineeDep,
+		findBytaskId(taskId).setStartDetail(startDetail);
+		completeTask(taskId,
 				() -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
 	}
 
 	@Override
 	public void evaluating(Account servicer, String taskId, EvaluatingDetail evaluatingDetail) {
-		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
-		customerServiceProcess.setEvaluatingDetail(evaluatingDetail);
-		completeTask(taskId, customerServiceProcess, customerServiceProcess.getApplicant(), servicer,
-				() -> taskService.complete(taskId, ImmutableMap.of("servicer", servicer.getLoginId())));
+		findBytaskId(taskId).setEvaluatingDetail(evaluatingDetail);
+		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("servicer", servicer.getLoginId())));
 	}
 
 	@Override
 	public void distribute(Account engineer, String taskId) {
-		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
-		completeTask(taskId, customerServiceProcess, customerServiceProcess.getApplicant(), engineer,
-				() -> taskService.complete(taskId, ImmutableMap.of("engineer", engineer.getLoginId())));
+		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("engineer", engineer.getLoginId())));
 	}
 
 	@Override
 	public void repair(String taskId, RepairDetail repairDetail) {
-		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
-		customerServiceProcess.setRepairDetail(repairDetail);
-		completeTask(taskId, customerServiceProcess, customerServiceProcess.getApplicant(),
-				() -> taskService.complete(taskId));
+		findBytaskId(taskId).setRepairDetail(repairDetail);
+		completeTask(taskId, () -> taskService.complete(taskId));
 	}
 
 	@Override
-	public void entrust(String taskId, Account mandatary) {
+	public void entrust(String taskId, Account mandatary,String reason) {
 		taskService.setAssignee(taskId, mandatary.getLoginId());// 任务委托
-		entrustMessageInfo(taskId, mandatary);
+		//完成相应的流程记录
+		entrustProcessRecord(taskId, mandatary,reason);
+		//发送委托站内信
+		entrustMessageInfo(taskId, mandatary,reason);
 	}
 
 	/***
@@ -98,9 +96,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	 * @param taskId
 	 * @param mandatary
 	 */
-	private void entrustMessageInfo(String taskId, Account mandatary) {
+	private void entrustMessageInfo(String taskId, Account mandatary,String reason) {
 		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		
 		// 发送委托的站内信
 		MessageInfo messageInfo = new MessageInfo();
 		messageInfo.setFrom(SessionUtil.getCurrentUser());
@@ -109,10 +108,36 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		// 从i18n中读取信息
 		messageInfo.setTitle(i18nComponent.getMessage("message.titile.entrust"));
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.entrust"),
-				messageInfo.getFrom().getName(), customerServiceProcess.getName(), task.getName()));
+				messageInfo.getFrom().getName(), customerServiceProcess.getName(), task.getName(),reason));
 
 		messageInfos.add(messageInfo);
 		saveMessageInfoAndSend();
+	}
+	
+	/**
+	 * 完成委托相应的流程记录
+	 * @param taskId
+	 * @param mandatary
+	 */
+	private void entrustProcessRecord(String taskId, Account mandatary,String reason){
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		// 找出这个任务的记录,设置任务的完成时间和完成类型
+		ProcessRecord unFinishRecord = processRecordService.findByTaskIdNotEnd(taskId);
+		
+		unFinishRecord.setType(HandleType.ENTRUST);
+		unFinishRecord.setEndTime(new Date());
+		unFinishRecord.setReason(reason);
+		unFinishRecord.setAssignee(SessionUtil.getCurrentUser());
+		
+		//生成新的流程记录
+		ProcessRecord newRecord = new ProcessRecord();
+		newRecord.setProcessInstanceId(task.getProcessInstanceId());
+		newRecord.setTaskId(task.getId());
+		newRecord.setTaskName(task.getName());
+		newRecord.setStartTime(new Date());
+		newRecord.setType(HandleType.REAMIN_TO_DO);
+		newRecord.setRemain(mandatary.getLoginId());//待办人
+		processRecordService.save(newRecord);
 	}
 
 }

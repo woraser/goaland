@@ -6,6 +6,6 @@ public interface ProcessRecordService {
 
 	public ProcessRecord save(ProcessRecord processRecord);
 	
-	public ProcessRecord findByTaskId(String taskId);
+	public ProcessRecord findByTaskIdNotEnd(String taskId);
 	
 }

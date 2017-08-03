@@ -47,6 +47,6 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @param taskId
 	 * @param mandatary 代理人
 	 */
-	void entrust(String taskId,Account mandatary);
+	void entrust(String taskId,Account mandatary,String reason);
 	
 }

@@ -116,49 +116,55 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 
 	/***
 	 * 完成发起流程的表单
+	 * 
 	 * @param taskId
 	 * @param engineeDep
 	 * @param startDetail
 	 * @return
 	 */
 	@RequestMapping(value = "/customerServiceProcess/completeStartDetail", method = RequestMethod.POST)
-	public JSONObject completeStartDetail(@RequestParam(value = "taskId") String taskId,@RequestParam(value = "engineeDep")String engineeDep,
-			StartDetail startDetail) {
+	public JSONObject completeStartDetail(@RequestParam(value = "taskId") String taskId,
+			@RequestParam(value = "engineeDep") String engineeDep, StartDetail startDetail) {
 		logger.debug("customerServiceProcess -> completeStartDetail");
-		customerServcieProcessService.completeStartDetail(accountService.findByLoginId(engineeDep), taskId, startDetail);
+		customerServcieProcessService.completeStartDetail(accountService.findByLoginId(engineeDep), taskId,
+				startDetail);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
-	
+
 	/***
 	 * 工程部问题评估
+	 * 
 	 * @param taskId
 	 * @param servicer
 	 * @param evaluatingDetail
 	 * @return
 	 */
 	@RequestMapping(value = "/customerServiceProcess/evaluating", method = RequestMethod.POST)
-	public JSONObject evaluating(@RequestParam(value = "taskId") String taskId, @RequestParam(value = "servicer")String servicer,
-			EvaluatingDetail evaluatingDetail) {
+	public JSONObject evaluating(@RequestParam(value = "taskId") String taskId,
+			@RequestParam(value = "servicer") String servicer, EvaluatingDetail evaluatingDetail) {
 		logger.debug("customerServiceProcess -> evaluating");
 		customerServcieProcessService.evaluating(accountService.findByLoginId(servicer), taskId, evaluatingDetail);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
-	
+
 	/***
 	 * 售后服务组派单
+	 * 
 	 * @param taskId
 	 * @param engineer
 	 * @return
 	 */
 	@RequestMapping(value = "/customerServiceProcess/distribute", method = RequestMethod.POST)
-	public JSONObject distribute(@RequestParam(value = "taskId") String taskId, @RequestParam(value = "engineer")String engineer) {
+	public JSONObject distribute(@RequestParam(value = "taskId") String taskId,
+			@RequestParam(value = "engineer") String engineer) {
 		logger.debug("customerServiceProcess -> distribute");
 		customerServcieProcessService.distribute(accountService.findByLoginId(engineer), taskId);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
-	
+
 	/***
 	 * 工程师上门维修
+	 * 
 	 * @param taskId
 	 * @param repairDetail
 	 * @return
@@ -169,17 +175,19 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 		customerServcieProcessService.repair(taskId, repairDetail);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
-	
+
 	/***
 	 * 委托
+	 * 
 	 * @param taskId
 	 * @param mandatary
 	 * @return
 	 */
 	@RequestMapping(value = "/customerServiceProcess/entrust", method = RequestMethod.POST)
-	public JSONObject entrust(@RequestParam(value = "taskId")String taskId,@RequestParam(value = "mandatary")String mandatary){
+	public JSONObject entrust(@RequestParam(value = "taskId") String taskId,
+			@RequestParam(value = "mandatary") String mandatary, @RequestParam(value = "reason") String reason) {
 		logger.debug("customerServiceProcess -> entrust");
-		customerServcieProcessService.entrust(taskId, accountService.findByLoginId(mandatary));
+		customerServcieProcessService.entrust(taskId, accountService.findByLoginId(mandatary), reason);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
