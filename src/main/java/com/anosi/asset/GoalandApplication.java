@@ -9,6 +9,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -16,6 +17,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 @SpringBootApplication
+@RestController
 public class GoalandApplication {
 
 	public static void main(String[] args) {
