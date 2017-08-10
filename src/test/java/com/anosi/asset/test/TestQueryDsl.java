@@ -1,4 +1,4 @@
-package com.anosi.asset.test.account;
+package com.anosi.asset.test;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 

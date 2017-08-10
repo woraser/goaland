@@ -14,7 +14,7 @@ public interface DevCategoryStructuresService extends BaseService<DevCategoryStr
 	 * @param subDevCategorys	导入数据
 	 * @throws Exception
 	 */
-	public void checkStructures(DevCategory devCategory,List<String> subDevCategorys) throws Exception;
+	public Map<String,Integer> checkStructures(DevCategory devCategory,List<String> subDevCategorys) throws Exception;
 	
 	/***
 	 * 比对导入数据和数据库数据结构是否相同

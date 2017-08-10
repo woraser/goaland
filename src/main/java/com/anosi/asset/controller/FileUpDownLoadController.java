@@ -99,10 +99,10 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 		if(fileMetaData!=null){
 			logger.debug("fileMetaData:{}",fileMetaData.toString());
 			// 设置http请求头
-			response.setHeader("Contentdisposition", "attachment;filename=" + fileMetaData.getFileName());
-			response.setContentType("application/forcedownload;charset=utf8");
+			response.setHeader("Content-disposition", "attachment;filename=" + new String(fileMetaData.getFileName().getBytes("gbk"),"iso-8859-1"));
+			response.setContentType("application/force-download;charset=utf-8");
 			response.setHeader("Content_length", String.valueOf(fileMetaData.getFileSize()));
-
+			
 			/*start:trywithresource*/
 			try (BufferedInputStream bis = new BufferedInputStream(fileMetaDataService.getFileByObjectId(objectId));// 获取文件流
 					OutputStream os = new BufferedOutputStream(response.getOutputStream())) {

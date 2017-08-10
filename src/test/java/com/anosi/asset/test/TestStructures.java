@@ -1,4 +1,4 @@
-package com.anosi.asset.test.devcategory;
+package com.anosi.asset.test;
 
 import java.text.MessageFormat;
 import java.util.List;

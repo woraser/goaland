@@ -1,6 +1,5 @@
 package com.anosi.asset.service.impl;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,12 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.DevCategoryStructuresDao;
-import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.DevCategory;
 import com.anosi.asset.model.jpa.DevCategoryStructures;
 import com.anosi.asset.service.DevCategoryStructuresService;
@@ -30,8 +26,6 @@ public class DevCategoryStructuresSerivceImpl extends BaseServiceImpl<DevCategor
 	private static final Logger logger = LoggerFactory.getLogger(DevCategoryStructuresSerivceImpl.class);
 
 	@Autowired
-	private I18nComponent i18nComponent;
-	@Autowired
 	private DevCategoryStructuresDao devCategoryStructuresDao;
 	
 	@Override
@@ -40,13 +34,14 @@ public class DevCategoryStructuresSerivceImpl extends BaseServiceImpl<DevCategor
 	}
 
 	@Override
-	public void checkStructures(DevCategory devCategory, List<String> subDevCategorys) throws Exception {
+	public Map<String,Integer> checkStructures(DevCategory devCategory, List<String> subDevCategorys) throws Exception {
 		Map<String, Integer> result = checkStructures(devCategory.getMainDevCategoryStructures(), subDevCategorys);
-		if (!CollectionUtils.isEmpty(result)) {
+		return result;
+		/*if (!CollectionUtils.isEmpty(result)) {
 			logger.debug("checkStructures is not empty");
 			throw new CustomRunTimeException(MessageFormat.format(i18nComponent.getMessage("checkStructures.template"),
 					devCategory.getName(), result.toString()));
-		}
+		}*/
 	}
 
 	@Override

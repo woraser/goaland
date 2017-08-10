@@ -1,4 +1,4 @@
-package com.anosi.asset.test.xml;
+package com.anosi.asset.test;
 
 import static org.junit.Assert.*
 

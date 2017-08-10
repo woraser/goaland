@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>文档检索</title>
+
+<link href="/webResources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="/webResources/plugins/fileinput/css/plugins/fileinput.css" rel="stylesheet"/>
+
+
+</head>
+
+<body>
+	<p>
+		<input type="text" name="content" id="content" /> <input id="search" type="button" value="search" />
+	</p>
+	<form id="uploadForm" >
+		<input type="file" class="file" id="file_upload" name="file_upload"/>
+		<input type="submit" value="upload"/>
+	</form>
+	<div id="result"></div>
+	
+	<script type="text/javascript" src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/bootstrap/js/bootstrap.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/fileinput/js/plugins/fileinput.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/fileinput/js/plugins/fileinput_locale_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	
+	<script type="text/javascript">
+		$(function(){
+			$("#search").click(function(){
+				$.ajax({
+	              	url: "/technologyDocument/search/content",
+	              	data:{"content":$("#content").val(),"rowId":"id","showAttributes":"highLight,fileId"},
+	              	type : "get",
+	              	dataType : "json",
+	              	success: function(data){
+	              		var table = $("#result");
+	              		table.empty()
+	              		$.each(data.rows,function(i,value){
+	              			var href="/fileDownload/"+this.cell[1]
+	              			table.append("<tr>")
+	              			table.append("<td>摘要:</td>")
+	              			table.append("<td>")
+	              			table.append(this.cell[0])
+	              			table.append("</td>")
+	              			table.append("<td>")
+	              			table.append("<a href="+href+">download</a>")
+	              			table.append("</td>")
+	              			table.append("</tr>")
+						})
+	              	},
+	    	        error:function(){alert('出错了')},
+	           });
+			})
+			
+			
+			$("input:file").fileinput({
+				allowedFileExtensions: ["xls","xlsx","pdf","doc","docx","csv","txt"]
+			});
+			
+			$("#uploadForm").validate({
+				submitHandler: function(form) {  
+					var options = {
+						type : "post",
+						url : '/technologyDocument/upload',
+						success : function(data) {
+							if(data.result=='upload success'){
+								alert('操作成功');
+							}else if(data.result=='error'){
+								alert('操作失败:'+data.message);
+							}
+						}
+					};
+					
+					$(form).ajaxSubmit(options);     
+				}  
+			})
+		});
+	</script>
+	
+</body>
+</html>

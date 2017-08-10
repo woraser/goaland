@@ -1,10 +1,12 @@
 package com.anosi.asset.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
@@ -25,9 +27,10 @@ import com.google.common.collect.Table;
  *
  */
 public class ExcelUtil {
-	
+
 	/***
 	 * 方法重载
+	 * 
 	 * @param file
 	 * @param sheetIndex
 	 * @return
@@ -40,13 +43,13 @@ public class ExcelUtil {
 	/**
 	 * 读取excel
 	 * 
-	 * @param file
+	 * @param is
 	 * @param sheetIndex
 	 *            sheet的序号，从0开始,如果为-1,代表遍历全部sheet
-	 *            
+	 * 
 	 * @return 返回Guava的table类型
 	 * 
-	 * 可以看用例  {@link com.anosi.asset.test.TestExcel#testReadExcel()}  
+	 *         可以看用例 {@link com.anosi.asset.test.TestExcel#testReadExcel()}
 	 */
 	public static Table<Integer, String, Object> readExcel(InputStream is, Integer sheetIndex) throws IOException {
 		// 使用Guava的table来存放读取excel的数据
@@ -55,18 +58,20 @@ public class ExcelUtil {
 
 		Workbook workbook = null;
 		// 针对03和07版本的区别
+		// 发生异常会使得is流关闭,所以以防万一需要将流提取成byte数组,这样可以复用
+		byte[] byteArray = IOUtils.toByteArray(is);
 		try {
-			workbook = new HSSFWorkbook(is);
+			workbook = new HSSFWorkbook(new ByteArrayInputStream(byteArray));
 		} catch (OfficeXmlFileException e) {
-			workbook = new XSSFWorkbook(is);
+			workbook = new XSSFWorkbook(new ByteArrayInputStream(byteArray));
 		}
 
-		if(sheetIndex==-1){
-			//遍历所有sheet
+		if (sheetIndex == -1) {
+			// 遍历所有sheet
 			for (Sheet sheet : workbook) {
 				readSheet(sheet, excelTable, workbook);
 			}
-		}else{
+		} else {
 			readSheet(workbook.getSheetAt(sheetIndex), excelTable, workbook);
 		}
 		return excelTable;
@@ -87,9 +92,9 @@ public class ExcelUtil {
 						excelTable.put(i, String.valueOf(readCellValue(titles.getCell(j))), cellValue);
 					}
 				}
-			} 
+			}
 		} finally {
-			if(workbook!=null){
+			if (workbook != null) {
 				try {
 					workbook.close();
 				} catch (IOException e) {
@@ -99,7 +104,6 @@ public class ExcelUtil {
 			}
 		}
 	}
-	
 
 	/***
 	 * 根据cell内容的格式，读取cell的值

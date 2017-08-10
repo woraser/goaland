@@ -25,7 +25,7 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	private static final Logger logger = LoggerFactory.getLogger(FileMetaDataServiceImpl.class);
 
 	@Autowired
-	private FileMetaDataDao fileAttributesDao;
+	private FileMetaDataDao fileMetaDataDao;
 	@Autowired
 	private GridFsDao gridFsDao;
 	
@@ -45,7 +45,7 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 		logger.info("upload file to gridfs");
 		Object id = gridFsDao.uploadFileToGridFS(in,fileMetaData.getFileName());
 		fileMetaData.setObjectId(FileMetaData.ObjectIdToBigIntegerConverter((ObjectId) id));
-		fileAttributesDao.save(fileMetaData);
+		fileMetaDataDao.save(fileMetaData);
 		return fileMetaData;
 	}
 	
@@ -54,7 +54,7 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	@Override
 	public void deleteFile(FileMetaData fileMetaData) {
 		ObjectId id=FileMetaData.BigIntegerToObjectIdConverter(fileMetaData.getObjectId());
-		fileAttributesDao.delete(fileMetaData);
+		fileMetaDataDao.delete(fileMetaData);
 		//gridfs删除文件
 		logger.info("delete file from gridfs");
 		gridFsDao.deleteFileFromGridFS(id);
@@ -62,12 +62,12 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 
 	@Override
 	public Page<FileMetaData> findByIdentification(String identification,Pageable pageable) {
-		return fileAttributesDao.findByIdentification(identification,pageable);
+		return fileMetaDataDao.findByIdentification(identification,pageable);
 	}
 
 	@Override
 	public FileMetaData findByObjectId(BigInteger objectId) {
-		return fileAttributesDao.findByObjectId(objectId);
+		return fileMetaDataDao.findByObjectId(objectId);
 	}
 
 	@Override
