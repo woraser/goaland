@@ -1,5 +1,11 @@
 #spring
 spring:
+  #upload file size
+  http:
+    multipart:
+      max-file-size: 1000Mb
+      maxRequestSize: 1000Mb
+
   data:
     #elasticsearch
     elasticsearch:

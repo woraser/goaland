@@ -31,7 +31,6 @@ import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = GoalandApplication.class)
 @Transactional
-@SuppressWarnings("unused")
 public class ElasticsearchTest {
 
 	
@@ -42,11 +41,11 @@ public class ElasticsearchTest {
 	
 	@Test
 	public void testHighLight(){
-		Field field = new HighlightBuilder.Field("problemDescription");
+		Field field = new HighlightBuilder.Field("content");
 		field.preTags("<b>");
 		field.postTags("</b>");
 		SearchQuery searchQuery = new NativeSearchQueryBuilder()
-				.withQuery(termQuery("problemDescription", "漏水"))
+				.withQuery(termQuery("content", "测试"))
 				.withHighlightFields(field).build();
 		
 		AggregatedPage<TechnologyDocument> queryForPage = elasticsearchTemplate.queryForPage(searchQuery, TechnologyDocument.class, new SearchResultMapper() {
@@ -60,13 +59,15 @@ public class ElasticsearchTest {
 						return null;
 					}
 					TechnologyDocument technologyDocument = new TechnologyDocument();
-					String highLight = searchHit.getHighlightFields().get("problemDescription").fragments()[0].toString();
+					String highLight = searchHit.getHighlightFields().get("content").fragments()[0].toString();
 					technologyDocument.setHighLight(highLight);
 					chunk.add(technologyDocument);
 				}
 				return new AggregatedPageImpl<>((List<T>) chunk);
 			}
 		});
+		
+		queryForPage.getContent().forEach(s->logger.debug(s.getHighLight()));
 		
 	}
 	

@@ -1,0 +1,22 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "ik_letter_smart": {
+          "type": "custom",
+          "tokenizer": "ik_max_word",
+          "filter": [
+            "lc_first_letter"
+          ]
+        },
+        "ik_py_smart": {
+          "type": "custom",
+          "tokenizer": "ik_max_word",
+          "filter": [
+            "lc_full_pinyin"
+          ]
+        }
+      }
+    }
+  }
+}

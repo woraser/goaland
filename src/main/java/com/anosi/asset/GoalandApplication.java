@@ -59,5 +59,5 @@ public class GoalandApplication {
        HttpMessageConverter<?> converter = fastConverter;
        return new HttpMessageConverters(converter);
     }
-
+    
 }
