@@ -31,5 +31,7 @@ public interface FileMetaDataService {
 	public FileMetaData findByObjectId(BigInteger objectId);
 	
 	public InputStream getFileByObjectId(BigInteger objectId);
+
+	Page<FileMetaData> findByUploader(String uploader, Pageable pageable);
 	
 }

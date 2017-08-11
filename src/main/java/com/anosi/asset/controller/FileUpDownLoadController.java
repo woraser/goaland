@@ -68,13 +68,28 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	}
 
 	/***
-	 * 可下载文件的列表
+	 * 根据上传者来获取可下载文件的列表
 	 * 
 	 * @param identification
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/fileDownload/list/{identification}", method = RequestMethod.GET)
-	public Page<FileMetaData> fileDownloadList(@PathVariable String identification,
+	@RequestMapping(value = "/fileDownload/list/{uploader}", method = RequestMethod.GET)
+	public Page<FileMetaData> fileDownloadList(@PathVariable String uploader,
+			@PageableDefault(sort = {"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)throws Exception {
+		logger.info("to view file list");
+		logger.debug("uploader:{}",uploader);
+		logger.debug("page:{},size{},sort{}",pageable.getPageNumber(),pageable.getPageSize(),pageable.getSort());
+		return fileMetaDataService.findByIdentification(uploader, pageable);
+	}
+	
+	/***
+	 * 根据文件组来获取可下载文件的列表
+	 * 
+	 * @param identification
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/fileDownload/list/group/{identification}", method = RequestMethod.GET)
+	public Page<FileMetaData> fileDownloadListGroup(@PathVariable String identification,
 			@PageableDefault(sort = {"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)throws Exception {
 		logger.info("to view file list");
 		logger.debug("identification:{}",identification);

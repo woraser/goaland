@@ -13,6 +13,8 @@ public interface FileMetaDataDao extends MongoRepository<FileMetaData, BigIntege
 
 	public Page<FileMetaData> findByIdentification(String identification, Pageable pageable);
 	
+	public Page<FileMetaData> findByUploader(String uploader, Pageable pageable);
+	
 	public FileMetaData findByObjectId(BigInteger objectId);
 	
 }

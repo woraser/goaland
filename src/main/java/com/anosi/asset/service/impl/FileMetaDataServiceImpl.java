@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.dao.mongo.FileMetaDataDao;
 import com.anosi.asset.dao.mongo.GridFsDao;
 import com.anosi.asset.model.mongo.FileMetaData;
@@ -33,6 +34,7 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	public FileMetaData saveFile(String identification, String fileName,InputStream is,Long fileSize) throws Exception{
 		FileMetaData fileMetaData=new FileMetaData();
 		fileMetaData.setIdentification(identification);
+		fileMetaData.setUploader(SessionUtil.getCurrentUser()==null?identification:SessionUtil.getCurrentUser().getLoginId());
 		fileMetaData.setUploadTime(new Date());
 		fileMetaData.setFileName(fileName);
 		fileMetaData.setFileSize(fileSize);
@@ -63,6 +65,11 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	@Override
 	public Page<FileMetaData> findByIdentification(String identification,Pageable pageable) {
 		return fileMetaDataDao.findByIdentification(identification,pageable);
+	}
+	
+	@Override
+	public Page<FileMetaData> findByUploader(String uploader,Pageable pageable) {
+		return fileMetaDataDao.findByUploader(uploader,pageable);
 	}
 
 	@Override
