@@ -2,6 +2,7 @@ package com.anosi.asset.test
 
 import org.junit.Test
 
+import com.anosi.asset.model.elasticsearch.SearchRecord
 import com.anosi.asset.util.FileFetchUtil
 import com.anosi.asset.util.TXTUtil
 

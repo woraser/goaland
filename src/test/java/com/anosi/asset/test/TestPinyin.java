@@ -8,7 +8,7 @@ public class TestPinyin {
 
 	@Test
 	public void testPinyin(){
-		String hanyu="你好啊";
+		String hanyu="rg";
 		System.out.println(PinyinUtil.getStringPinYin(hanyu)[0]);
 		
 		String[] charPinYin = PinyinUtil.getCharPinYin("你".charAt(0));

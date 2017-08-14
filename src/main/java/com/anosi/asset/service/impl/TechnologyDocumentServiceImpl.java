@@ -18,10 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
+import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.anosi.asset.util.FileFetchUtil;
 
@@ -35,6 +37,8 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	private ElasticsearchTemplate elasticsearchTemplate;
 	@Autowired
 	private TechnologyDocumentDao technologyDocumentDao;
+	@Autowired
+	private SearchRecordService searchRecordService;
 	@Autowired
 	private FileMetaDataService fileMetaDataService;
 
@@ -95,6 +99,9 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	@Override
 	public Page<TechnologyDocument> getHighLightContent(String content, Pageable pageable) throws Exception {
 		logger.debug("search content:{}",content);
+		//判断是否需要插入中央词库
+		//新开一个线程,不影响用户体验
+		new Thread(()->searchRecordService.insertInto(content, SessionUtil.getCurrentUser().getLoginId())).start();
 		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withQuery(QueryBuilders.matchQuery("content", content))
 				.withPageable(pageable);
 		return technologyDocumentDao.getHighLightContent(elasticsearchTemplate, queryBuilder);

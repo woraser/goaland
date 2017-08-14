@@ -86,7 +86,7 @@ $(function(){
 		        search: function() {
 		          // 自定义最小长度
 		          var term = this.value;
-		          if ( term.length < 1 ) {
+		          if ( term.length < 1 || term.length >10 ) {
 		            return false;
 		          }
 		        },

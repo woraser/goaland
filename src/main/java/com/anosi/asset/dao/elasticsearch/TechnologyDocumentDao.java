@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightBuilder.Field;
@@ -49,10 +50,17 @@ public interface TechnologyDocumentDao extends ElasticsearchRepository<Technolog
 								return null;
 							}
 							TechnologyDocument technologyDocument = new TechnologyDocument();
-							String highLight = searchHit.getHighlightFields().get("content").fragments()[0].toString();
+							Text[] fragments = searchHit.getHighlightFields().get("content").fragments();
+							StringBuilder highLight = new StringBuilder();
+							for(Text t : fragments){
+								highLight.append(".......");
+								highLight.append(t.toString());
+								highLight.append(".......");
+								highLight.append("\t");
+							}
 							technologyDocument.setId(searchHit.getId());
 							technologyDocument.setFileId((String) searchHit.getSource().get("fileId"));
-							technologyDocument.setHighLight(highLight);
+							technologyDocument.setHighLight(highLight.toString());
 							chunk.add(technologyDocument);
 						}
 						return new AggregatedPageImpl<>((List<T>) chunk, pageable, response.getHits().getTotalHits());

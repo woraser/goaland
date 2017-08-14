@@ -32,7 +32,7 @@ public class SearchRecordController extends BaseController<SearchRecord>{
 	 */
 	@RequestMapping(value = "/searchRecord/autocomplete", method = RequestMethod.GET)
 	public JSONArray autocomplete(@RequestParam(value = "searchContent") String searchContent,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 5) Pageable pageable) throws Exception{
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable) throws Exception{
 		return jsonUtil.parseAttributesToAutocomplete("searchContent", "searchContent", searchRecordService.findBySearchContent(searchContent, pageable));
 	} 
 	

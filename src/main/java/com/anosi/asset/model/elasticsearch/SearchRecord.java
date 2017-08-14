@@ -24,9 +24,6 @@ public class SearchRecord implements Serializable {
 	@Field(searchAnalyzer = "lc_search", analyzer = "lc_index",store=true)
 	private String searchContent;
 
-	@Field(index = FieldIndex.not_analyzed,store=true)
-	private Integer searchCount = 1;
-
 	@Id
 	public String getId() {
 		return id;
@@ -44,12 +41,29 @@ public class SearchRecord implements Serializable {
 		this.searchContent = searchContent;
 	}
 
-	public Integer getSearchCount() {
-		return searchCount;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((searchContent == null) ? 0 : searchContent.hashCode());
+		return result;
 	}
 
-	public void setSearchCount(Integer searchCount) {
-		this.searchCount = searchCount;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchRecord other = (SearchRecord) obj;
+		if (searchContent == null) {
+			if (other.searchContent != null)
+				return false;
+		} else if (!searchContent.equals(other.searchContent))
+			return false;
+		return true;
 	}
-
+	
 }
