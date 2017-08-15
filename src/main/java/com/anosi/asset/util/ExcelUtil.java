@@ -27,6 +27,57 @@ import com.google.common.collect.Table;
  *
  */
 public class ExcelUtil {
+	
+	/***
+	 * 方法重载readExcelToText
+	 * 
+	 * @param file
+	 * @param sheetIndex
+	 * @return
+	 * @throws IOException
+	 */
+	public static String readExcelToText(File file, Integer sheetIndex) throws IOException {
+		return readExcelToText(new FileInputStream(file), sheetIndex);
+	}
+	
+	/***
+	 * 将excel读取string
+	 * 
+	 * @param is
+	 * @param sheetIndex
+	 *            sheet的序号，从0开始,如果为-1,代表遍历全部sheet
+	 * @return
+	 * @throws IOException
+	 */
+	public static String readExcelToText(InputStream is, Integer sheetIndex) throws IOException {
+		Workbook workbook = createWorkBook(is);
+		StringBuilder sb = new StringBuilder();
+		if (sheetIndex == -1) {
+			// 遍历所有sheet
+			for (Sheet sheet : workbook) {
+				readSheetToString(sheet, sb);
+			}
+		} else {
+			readSheetToString(workbook.getSheetAt(sheetIndex), sb);
+		}
+		return sb.toString();
+	}
+	
+	private static void readSheetToString(Sheet sheet,StringBuilder sb){
+		// 循环每一行
+		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+			Row row = sheet.getRow(i);
+			// 循环每行的每个单元格
+			for (int j = 0; j <= row.getLastCellNum(); j++) {
+				Cell cell = row.getCell(j);
+				if (cell != null) {
+					Object cellValue = readCellValue(cell);
+					sb.append(cellValue.toString()+"\t");
+				}
+			}
+			sb.append('\n');
+		}
+	}
 
 	/***
 	 * 方法重载
@@ -56,42 +107,16 @@ public class ExcelUtil {
 		// 三个泛型分别为行(int)，列(string)，值(object)
 		Table<Integer, String, Object> excelTable = HashBasedTable.create();
 
-		Workbook workbook = null;
-		// 针对03和07版本的区别
-		// 发生异常会使得is流关闭,所以以防万一需要将流提取成byte数组,这样可以复用
-		byte[] byteArray = IOUtils.toByteArray(is);
-		try {
-			workbook = new HSSFWorkbook(new ByteArrayInputStream(byteArray));
-		} catch (OfficeXmlFileException e) {
-			workbook = new XSSFWorkbook(new ByteArrayInputStream(byteArray));
-		}
+		Workbook workbook = createWorkBook(is);
 
-		if (sheetIndex == -1) {
-			// 遍历所有sheet
-			for (Sheet sheet : workbook) {
-				readSheet(sheet, excelTable, workbook);
-			}
-		} else {
-			readSheet(workbook.getSheetAt(sheetIndex), excelTable, workbook);
-		}
-		return excelTable;
-	}
-
-	private static void readSheet(Sheet sheet, Table<Integer, String, Object> excelTable, Workbook workbook) {
 		try {
-			// 标题行
-			Row titles = sheet.getRow(0);
-			// 循环每一行
-			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-				Row row = sheet.getRow(i);
-				// 循环每行的每个单元格
-				for (int j = 0; j <= titles.getLastCellNum(); j++) {
-					Cell cell = row.getCell(j);
-					if (cell != null) {
-						Object cellValue = readCellValue(cell);
-						excelTable.put(i, String.valueOf(readCellValue(titles.getCell(j))), cellValue);
-					}
+			if (sheetIndex == -1) {
+				// 遍历所有sheet
+				for (Sheet sheet : workbook) {
+					readSheet(sheet, excelTable);
 				}
+			} else {
+				readSheet(workbook.getSheetAt(sheetIndex), excelTable);
 			}
 		} finally {
 			if (workbook != null) {
@@ -100,6 +125,24 @@ public class ExcelUtil {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+			}
+		}
+		return excelTable;
+	}
+
+	private static void readSheet(Sheet sheet, Table<Integer, String, Object> excelTable) {
+		// 标题行
+		Row titles = sheet.getRow(0);
+		// 循环每一行
+		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+			Row row = sheet.getRow(i);
+			// 循环每行的每个单元格
+			for (int j = 0; j <= titles.getLastCellNum(); j++) {
+				Cell cell = row.getCell(j);
+				if (cell != null) {
+					Object cellValue = readCellValue(cell);
+					excelTable.put(i, String.valueOf(readCellValue(titles.getCell(j))), cellValue);
 				}
 			}
 		}
@@ -130,6 +173,19 @@ public class ExcelUtil {
 		} else {
 			return cell.getStringCellValue();
 		}
+	}
+
+	private static Workbook createWorkBook(InputStream is) throws IOException {
+		Workbook workbook = null;
+		// 针对03和07版本的区别
+		// 发生异常会使得is流关闭,所以以防万一需要将流提取成byte数组,这样可以复用
+		byte[] byteArray = IOUtils.toByteArray(is);
+		try {
+			workbook = new HSSFWorkbook(new ByteArrayInputStream(byteArray));
+		} catch (OfficeXmlFileException e) {
+			workbook = new XSSFWorkbook(new ByteArrayInputStream(byteArray));
+		}
+		return workbook;
 	}
 
 }

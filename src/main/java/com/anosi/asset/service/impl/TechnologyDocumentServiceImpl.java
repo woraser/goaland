@@ -30,7 +30,7 @@ import com.anosi.asset.util.FileFetchUtil;
 @Service("technologyDocumentService")
 @Transactional
 public class TechnologyDocumentServiceImpl implements TechnologyDocumentService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(TechnologyDocumentServiceImpl.class);
 
 	@Autowired
@@ -58,7 +58,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 
 	private TechnologyDocument saveTechnologyDocument(String fileName, InputStream is, Long fileSize, String content)
 			throws Exception {
-		logger.debug("saveTechnologyDocument,fileName:{},fileSize:{}",fileName,fileSize);
+		logger.debug("saveTechnologyDocument,fileName:{},fileSize:{}", fileName, fileSize);
 		FileMetaData fileMetaData = fileMetaDataService.saveFile(identification, fileName, is, fileSize);
 		TechnologyDocument td = new TechnologyDocument();
 		td.setContent(content);
@@ -85,7 +85,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 			String it = multipartFile.getOriginalFilename();
 			suffixs.add(it.substring(it.lastIndexOf(".") + 1));
 		}
-		// 先进行检查，提高效率
+		// 先进行检查,提高效率,否则执行到一般发现问题就太浪费时间了
 		FileFetchUtil.checkSuffixs(suffixs);
 
 		List<TechnologyDocument> documents = new ArrayList<>();
@@ -98,12 +98,12 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 
 	@Override
 	public Page<TechnologyDocument> getHighLightContent(String content, Pageable pageable) throws Exception {
-		logger.debug("search content:{}",content);
-		//判断是否需要插入中央词库
-		//新开一个线程,不影响用户体验
-		new Thread(()->searchRecordService.insertInto(content, SessionUtil.getCurrentUser().getLoginId())).start();
-		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withQuery(QueryBuilders.matchQuery("content", content))
-				.withPageable(pageable);
+		logger.debug("search content:{}", content);
+		// 判断是否需要插入中央词库,新开一个线程,不影响用户体验
+		new Thread(() -> searchRecordService.insertInto(content, "search_" + SessionUtil.getCurrentUser().getLoginId()))
+				.start();
+		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder()
+				.withQuery(QueryBuilders.matchQuery("content", content)).withPageable(pageable);
 		return technologyDocumentDao.getHighLightContent(elasticsearchTemplate, queryBuilder);
 	}
 

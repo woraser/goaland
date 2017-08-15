@@ -28,7 +28,7 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	private TechnologyDocumentService technologyDocumentService;
 	@Autowired
 	private JqgridUtil<TechnologyDocument> jqgridUtil;
-	
+
 	/***
 	 * 进去文档检索页面
 	 */

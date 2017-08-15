@@ -15,15 +15,16 @@ import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.util.JsonUtil;
 
 @RestController
-public class SearchRecordController extends BaseController<SearchRecord>{
+public class SearchRecordController extends BaseController<SearchRecord> {
 
 	@Autowired
 	private JsonUtil<SearchRecord> jsonUtil;
 	@Autowired
 	private SearchRecordService searchRecordService;
-	
+
 	/***
 	 * 获取autocomplete的source
+	 * 
 	 * @param predicate
 	 * @param label
 	 * @param value
@@ -32,8 +33,10 @@ public class SearchRecordController extends BaseController<SearchRecord>{
 	 */
 	@RequestMapping(value = "/searchRecord/autocomplete", method = RequestMethod.GET)
 	public JSONArray autocomplete(@RequestParam(value = "searchContent") String searchContent,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable) throws Exception{
-		return jsonUtil.parseAttributesToAutocomplete("searchContent", "searchContent", searchRecordService.findBySearchContent(searchContent, pageable));
-	} 
-	
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable)
+			throws Exception {
+		return jsonUtil.parseAttributesToAutocomplete("searchContent", "searchContent",
+				searchRecordService.findBySearchContent(searchContent, pageable));
+	}
+
 }

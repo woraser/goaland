@@ -74,4 +74,46 @@ public class CSVUtil {
 		return excelTable;
 	}
 	
+	/***
+	 * 重载readCSVToText
+	 * 
+	 * @param is
+	 * @return
+	 */
+	public static String readCSVToText(InputStream is) {
+		return readCSVToText(new InputStreamReader(is));
+	}
+
+	/***
+	 * 将csv读取成文本
+	 * 
+	 * @param rd
+	 * @return
+	 */
+	public static String readCSVToText(Reader rd) {
+		StringBuilder sb = new StringBuilder();
+		CsvReader reader = null;
+		try {
+			reader = new CsvReader(rd);
+
+			while (reader.readRecord()) {
+				// 为0时表示表头，其余为内容
+				String[] values = reader.getValues();
+				for (String value : values) {
+					sb.append(value + '\t');
+				}
+				sb.append('\n');
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+		return sb.toString();
+	}
+	
 }

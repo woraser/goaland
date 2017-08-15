@@ -81,15 +81,7 @@ class FileFetchUtil {
 	 * @return
 	 */
 	private static String fetchCSV(InputStream is) {
-		def sb = new StringBuilder()
-		def csvTable = CSVUtil.readCsv(is)
-		csvTable.rowMap().each{
-			it.value.each{
-				sb.append(it.value+'\t')
-			}
-			sb.append('\n')
-		}
-		return sb.toString()
+		return CSVUtil.readCSVToText(is)
 	}
 
 	/***
@@ -98,15 +90,7 @@ class FileFetchUtil {
 	 * @return
 	 */
 	private static String fetchXLSX(InputStream is) {
-		def sb = new StringBuilder()
-		def excelTable = ExcelUtil.readExcel(is, -1)
-		excelTable.rowMap().each{
-			it.value.each{
-				sb.append(it.value+'\t')
-			}
-			sb.append('\n')
-		}
-		return sb.toString()
+		return ExcelUtil.readExcelToText(is, -1)
 	}
 	
 	/***

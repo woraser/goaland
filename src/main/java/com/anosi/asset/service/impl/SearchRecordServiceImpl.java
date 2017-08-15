@@ -38,14 +38,14 @@ public class SearchRecordServiceImpl implements SearchRecordService {
 					pageable.getPageSize() - locals.size(), pageable.getSort()));
 			locals.addAll(centers);
 		}
-		return locals.parallelStream().distinct().collect(Collectors.toList());
+		return locals.stream().distinct().collect(Collectors.toList());
 	}
 
 	@Override
 	public List<SearchRecord> findLocal(String searchContent, String key, Pageable pageable) {
 		SetOperations<String, String> vo = redisTemplate.opsForSet();
 		Set<String> members = vo.members(key);
-		return members.parallelStream().map(m -> {
+		return members.stream().map(m -> {
 			// 以searchContent开头 或者 拼音以searchContent开头 或者 拼音首字母已searchContent开头
 			// m是members中每一个元素,也就是个人词库中的每一个词
 			if (m.startsWith(searchContent)
