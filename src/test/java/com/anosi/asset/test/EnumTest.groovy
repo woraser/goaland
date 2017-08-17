@@ -11,7 +11,8 @@ class EnumTest {
 
 	@Test
 	void testSuffix(){
-		Suffix.valueOf("TXT")
+		def suffix=Suffix.valueOf("TXT")
+		println "$suffix"
 	}
 	
 }

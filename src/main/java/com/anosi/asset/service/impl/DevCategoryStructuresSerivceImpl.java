@@ -39,7 +39,7 @@ public class DevCategoryStructuresSerivceImpl extends BaseServiceImpl<DevCategor
 		return result;
 		/*if (!CollectionUtils.isEmpty(result)) {
 			logger.debug("checkStructures is not empty");
-			throw new CustomRunTimeException(MessageFormat.format(i18nComponent.getMessage("checkStructures.template"),
+			throw new CustomRunTimeException(MessageFormat.format(i18nComponent.getMessage("exception.checkStructures.template"),
 					devCategory.getName(), result.toString()));
 		}*/
 	}

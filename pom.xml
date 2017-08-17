@@ -222,7 +222,22 @@
 		    <artifactId>pinyin4j</artifactId>
 		    <version>2.5.1</version>
 		</dependency>
-		
+		<!-- aspose -->
+		<dependency>
+		    <groupId>com.aspose</groupId>
+		    <artifactId>aspose-words</artifactId>
+		    <version>17.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.aspose</groupId>
+		    <artifactId>aspose-cells</artifactId>
+		    <version>17.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk16</artifactId>
+		    <version>1.46</version>
+		</dependency>
 	</dependencies>
 
 	<build>

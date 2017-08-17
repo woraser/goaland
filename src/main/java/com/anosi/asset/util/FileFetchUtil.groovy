@@ -5,7 +5,7 @@ import java.security.PublicKey
 import com.anosi.asset.exception.CustomRunTimeException
 
 class FileFetchUtil {
-
+	
 	public static enum Suffix{
 		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF
 	}
@@ -32,7 +32,7 @@ class FileFetchUtil {
 	 */
 	public static void checkSuffixs(List<String> suffixs){
 		suffixs.each{
-			checkSuffix(it)
+			checkSuffix(it.toUpperCase())
 		}
 	}
 
@@ -53,9 +53,7 @@ class FileFetchUtil {
 	 * @param is
 	 * @return
 	 */
-	public static String fetchContent(String suffix, InputStream is) {
-		suffix=suffix.toUpperCase()
-		checkSuffix(suffix)
+	public static String fetchContent(Suffix suffix, InputStream is) {
 		return "fetch$suffix"(is)
 	}
 

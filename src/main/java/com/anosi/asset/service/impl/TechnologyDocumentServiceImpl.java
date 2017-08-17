@@ -1,11 +1,14 @@
 package com.anosi.asset.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +21,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
+import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.anosi.asset.util.FileFetchUtil;
+import com.anosi.asset.util.FileFetchUtil.Suffix;
 
 @Service("technologyDocumentService")
 @Transactional
@@ -41,6 +47,8 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	private SearchRecordService searchRecordService;
 	@Autowired
 	private FileMetaDataService fileMetaDataService;
+	@Autowired
+	private I18nComponent i18nComponent;
 
 	private static final String identification = "technologyDocument";
 
@@ -52,8 +60,17 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	@Override
 	public TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize)
 			throws Exception {
-		String content = FileFetchUtil.fetchContent(fileName.substring(fileName.lastIndexOf(".") + 1), is);
-		return saveTechnologyDocument(fileName, is, fileSize, content);
+		byte[] byteArray = IOUtils.toByteArray(is);
+		String content;
+		try {
+			// 如果不在枚举类中直接报错
+			content = FileFetchUtil.fetchContent(Suffix.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()),
+					new ByteArrayInputStream(byteArray));
+		} catch (IllegalArgumentException e) {
+			throw new CustomRunTimeException(MessageFormat.format(i18nComponent.getMessage("exception.unSupportSuffix"),
+					fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()));
+		}
+		return saveTechnologyDocument(fileName, new ByteArrayInputStream(byteArray), fileSize, content);
 	}
 
 	private TechnologyDocument saveTechnologyDocument(String fileName, InputStream is, Long fileSize, String content)

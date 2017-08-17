@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.anosi.asset.util.JqgridUtil;
@@ -50,15 +49,8 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 		logger.info("technologyDocument upload");
 		JSONObject jsonObject = new JSONObject();
 		if (multipartFiles != null && multipartFiles.length > 0) {
-			for (MultipartFile multipartFile : multipartFiles) {
-				logger.debug("is uploading");
-				try {
-					technologyDocumentService.createTechnologyDocument(multipartFile.getOriginalFilename(),
-							multipartFile.getInputStream(), multipartFile.getSize());
-				} catch (Exception e) {
-					throw new CustomRunTimeException("upload fail");
-				}
-			}
+			logger.debug("is uploading");
+			technologyDocumentService.createTechnologyDocument(multipartFiles);
 			jsonObject.put("result", "upload success");
 		} else {
 			jsonObject.put("result", "file is null");

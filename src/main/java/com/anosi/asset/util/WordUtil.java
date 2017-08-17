@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hwpf.HWPFDocument;
@@ -12,6 +13,10 @@ import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import com.aspose.words.Document;
+import com.aspose.words.PdfSaveOptions;
+import com.aspose.words.SaveFormat;
 
 /****
  * 读取word
@@ -64,4 +69,21 @@ public class WordUtil {
 		return sb.toString();
 	}
 
+	/***
+	 * 将word转换为pdf
+	 * @param inputStream
+	 * @param outputStream
+	 * @throws Exception
+	 */
+	public static void convert2PDF(InputStream inputStream, OutputStream outputStream) throws Exception {
+		Document doc = new Document(inputStream);
+
+		PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+		pdfSaveOptions.setSaveFormat(SaveFormat.PDF);
+		pdfSaveOptions.getOutlineOptions().setHeadingsOutlineLevels(3); // 设置3级doc书签需要保存到pdf的heading中
+		pdfSaveOptions.getOutlineOptions().setExpandedOutlineLevels(1); // 设置pdf中默认展开1级
+
+		doc.save(outputStream, pdfSaveOptions);
+	}
+	
 }

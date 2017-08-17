@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -17,6 +18,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.aspose.cells.SaveFormat;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
@@ -27,7 +29,7 @@ import com.google.common.collect.Table;
  *
  */
 public class ExcelUtil {
-	
+
 	/***
 	 * 方法重载readExcelToText
 	 * 
@@ -39,7 +41,7 @@ public class ExcelUtil {
 	public static String readExcelToText(File file, Integer sheetIndex) throws IOException {
 		return readExcelToText(new FileInputStream(file), sheetIndex);
 	}
-	
+
 	/***
 	 * 将excel读取string
 	 * 
@@ -62,8 +64,8 @@ public class ExcelUtil {
 		}
 		return sb.toString();
 	}
-	
-	private static void readSheetToString(Sheet sheet,StringBuilder sb){
+
+	private static void readSheetToString(Sheet sheet, StringBuilder sb) {
 		// 循环每一行
 		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			Row row = sheet.getRow(i);
@@ -72,7 +74,7 @@ public class ExcelUtil {
 				Cell cell = row.getCell(j);
 				if (cell != null) {
 					Object cellValue = readCellValue(cell);
-					sb.append(cellValue.toString()+"\t");
+					sb.append(cellValue.toString() + "\t");
 				}
 			}
 			sb.append('\n');
@@ -146,6 +148,16 @@ public class ExcelUtil {
 				}
 			}
 		}
+	}
+
+	/***
+	 * 将excel转为pdf
+	 * 
+	 * @param inputStream
+	 * @param outputStream
+	 */
+	public static void convert2PDF(InputStream inputStream, OutputStream outputStream) throws Exception {
+		new com.aspose.cells.Workbook(inputStream).save(outputStream, SaveFormat.PDF);
 	}
 
 	/***

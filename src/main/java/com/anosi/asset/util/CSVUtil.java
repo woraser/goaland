@@ -6,8 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 
+import com.aspose.cells.LoadFormat;
+import com.aspose.cells.LoadOptions;
+import com.aspose.cells.SaveFormat;
+import com.aspose.cells.Workbook;
 import com.csvreader.CsvReader;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -114,6 +119,16 @@ public class CSVUtil {
 			}
 		}
 		return sb.toString();
+	}
+	
+	/***
+	 * 将csv转换为pdf
+	 * @param inputStream
+	 * @param outputStream
+	 * @throws Exception
+	 */
+	public static void convert2PDF(InputStream inputStream, OutputStream outputStream) throws Exception {
+		new Workbook(inputStream,new LoadOptions(LoadFormat.CSV)).save(outputStream, SaveFormat.PDF);
 	}
 	
 }
