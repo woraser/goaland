@@ -155,9 +155,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 						MessageFormat.format(i18nComponent.getMessage("exception.unSupportSuffix"),
 								fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()));
 			}
-
 		};
-
 		return fileResponse(objectId, response, doResponseOut);
 	}
 
@@ -167,7 +165,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * @param objectId
 	 * @param response
 	 * @param doResponseOut
-	 *            response.outPutStream的具体操作
+	 *            对response.outPutStream的具体操作
 	 * @return
 	 * @throws Exception
 	 */

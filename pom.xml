@@ -230,6 +230,11 @@
 		</dependency>
 		<dependency>
 		    <groupId>com.aspose</groupId>
+		    <artifactId>aspose-pdf</artifactId>
+		    <version>17.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.aspose</groupId>
 		    <artifactId>aspose-cells</artifactId>
 		    <version>17.7</version>
 		</dependency>

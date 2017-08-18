@@ -13,6 +13,12 @@ import com.anosi.asset.exception.CustomRunTimeException;
 @RestController
 public class GlobalController<T> {
 	
+	/***
+	 * 全局异常处理
+	 * @param ex
+	 * @return
+	 * @throws IOException
+	 */
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleAllException(Exception ex) throws IOException {
 		//如果抛出的是自定义的异常

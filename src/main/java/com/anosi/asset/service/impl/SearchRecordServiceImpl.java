@@ -32,7 +32,7 @@ public class SearchRecordServiceImpl implements SearchRecordService {
 	@Override
 	public List<SearchRecord> findBySearchContent(String searchContent, Pageable pageable) {
 		// 先查询个人词库，再查询中央词库
-		List<SearchRecord> locals = findLocal(searchContent, SessionUtil.getCurrentUser().getLoginId(), pageable);
+		List<SearchRecord> locals = findLocal(searchContent, "search_"+SessionUtil.getCurrentUser().getLoginId(), pageable);
 		if (locals.size() < pageable.getPageSize()) {
 			List<SearchRecord> centers = findCenter(searchContent, new PageRequest(pageable.getPageNumber(),
 					pageable.getPageSize() - locals.size(), pageable.getSort()));

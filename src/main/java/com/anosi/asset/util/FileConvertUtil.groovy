@@ -3,11 +3,16 @@ package com.anosi.asset.util
 import org.apache.commons.io.IOUtils
 
 import com.anosi.asset.exception.CustomRunTimeException
+import com.anosi.asset.util.FileConvertUtil.Picture
 
 class FileConvertUtil {
 
-	public static enum Suffix{
-		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF
+	static enum Suffix{
+		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,GIF,PNG,JPEG,BMP,ICON
+	}
+
+	enum Picture{
+		GIF,PNG,JPEG,BMP,ICON
 	}
 
 	/***
@@ -16,12 +21,33 @@ class FileConvertUtil {
 	 * @param is
 	 * @param os
 	 */
-	public static void convert(InputStream is,Suffix originalSuffix,OutputStream os,Suffix convertSuffix) {
+	static void convert(InputStream is,Suffix originalSuffix,OutputStream os,Suffix convertSuffix) {
 		if(originalSuffix==convertSuffix){
 			IOUtils.copy(is, os)
+		}else if (checkPicture(originalSuffix)) {
+			convertPicture(is, os, originalSuffix, convertSuffix)
 		}else{
 			"convert$originalSuffix"(is,os,convertSuffix)
 		}
+	}
+
+	private static boolean checkPicture(Suffix originalSuffix){
+		try {
+			Picture.valueOf("$originalSuffix")
+		} catch (IllegalArgumentException e) {
+			return false
+		}
+		return true
+	}
+
+	/***
+	 * 将图片转为convertSuffix
+	 * @param is
+	 * @param os
+	 * @param convertSuffix
+	 */
+	private static void convertPicture(InputStream is,OutputStream os,Suffix originalSuffix,Suffix convertSuffix) {
+		ImageUtil."convert2$convertSuffix"(is, os, "$originalSuffix")
 	}
 
 	/***

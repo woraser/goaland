@@ -64,7 +64,8 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		String content;
 		try {
 			// 如果不在枚举类中直接报错
-			content = FileFetchUtil.fetchContent(Suffix.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()),
+			content = FileFetchUtil.fetchContent(
+					Suffix.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()),
 					new ByteArrayInputStream(byteArray));
 		} catch (IllegalArgumentException e) {
 			throw new CustomRunTimeException(MessageFormat.format(i18nComponent.getMessage("exception.unSupportSuffix"),
@@ -102,7 +103,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 			String it = multipartFile.getOriginalFilename();
 			suffixs.add(it.substring(it.lastIndexOf(".") + 1));
 		}
-		// 先进行检查,提高效率,否则执行到一般发现问题就太浪费时间了
+		// 先进行检查,提高效率,否则执行到一半发现问题就太浪费时间了
 		FileFetchUtil.checkSuffixs(suffixs);
 
 		List<TechnologyDocument> documents = new ArrayList<>();

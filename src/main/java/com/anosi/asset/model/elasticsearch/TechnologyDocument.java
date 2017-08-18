@@ -29,6 +29,8 @@ public class TechnologyDocument implements Serializable{
 	
 	@Field(index = FieldIndex.not_analyzed,store=true)
 	private String fileId;//文件的唯一id
+	
+	private String type;
 
 	@Id
 	public String getId() {
@@ -63,4 +65,12 @@ public class TechnologyDocument implements Serializable{
 		this.fileId = fileId;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }
