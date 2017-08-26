@@ -1,0 +1,99 @@
+.topTitle{
+float: left;height: 100%;color:#98C3ED;font-size:16px;text-align: center;padding:1%;font-weight: 800
+}
+.taskSimple{
+    float: left;font-weight: 800;font-size:16px;padding-top:1%;
+}
+.deviceInfo{
+    color: #909BA6;border: 0px;font-size: 16px;
+}
+.deviceNewInfo{
+    color: #FFFFFF;border: 0px;font-size: 16px;
+}
+.table > tbody > tr > td{
+    border: 0px;padding: 0px;
+}
+.doButton{
+    margin-left:35%;
+    background:transparent linear-gradient(to bottom, #1ec6ff, #0b74d5) repeat scroll 0% 0%;
+    width:85px;
+    height:35px;
+    border-radius:2px;
+    border:none;
+    color: #fff;
+}
+.doButton:hover{
+    background: #0b74d5;
+}
+.taskModel{
+    width:100%;height:33.33%;margin-top: 2%
+}
+.taskAllSimple{
+    width:100%;height: 30%;background: #2D3241;
+}
+.taskAll{
+    width:100%;height: 70%;background: #363C4C;
+}
+.taskPicture{
+    float:left;width: 8%;height: 100%;
+}
+.deviceTable{
+    float:left;width: 32%;height: 100%;margin-left: 3%;border-right: 1px solid #3D4456;
+}
+.describeDevice{
+    float:left;width: 22%;height: 100%;border-right: 1px solid #3D4456;color: #ffffff;font-size: 16px;text-align: left;padding: 3%
+}
+.taskState{
+    float:left;width: 16.5%;height: 100%;
+}
+.state{
+    float:left;width: 100%;height: 50%;color: #50E29C;text-align: center;font-size: 22px;font-weight: 800;padding-top: 15%
+}
+.taskData{
+    float:left;width: 100%;height: 50%;color: #8EBBBF;text-align: center;margin-top: 5%
+}
+.taskButton{
+    float:left;width: 16.5%;height: 100%;padding-top: 2.8%;margin-left: 2%;
+}
+.table{
+    margin-top: 8%;
+}
+.typeTitle{
+    width: 100%;height:4%;margin-top:1%;text-align: left;font-size: 25px;font-weight: 900;color: #3795FF
+}
+.newButton{
+    margin-left:35%;
+    background:transparent linear-gradient(to bottom, #E79F0D, #FD8502) repeat scroll 0% 0%;
+    width:85px;
+    height:35px;
+    border-radius:50px;
+    border:none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    margin-top: 28%;
+}
+.newButton:hover{
+    background: #e7d31e;
+}
+.doButton{
+    margin-left:30%;
+    background:transparent linear-gradient(to bottom, #1ec6ff, #0b74d5) repeat scroll 0% 0%;
+    width:30%;
+    height:30%;
+    border-radius:2px;
+    border:none;
+    color: #fff;
+    float: left;
+}
+.newTaskButton{
+    float: left;
+    margin-left: 10px;
+    background:#363C4C;
+    width:30%;
+    height:30%;
+    border-radius:2px;
+    border:none;
+    color: #fff;
+    border: 1px solid #1EABFF;
+}

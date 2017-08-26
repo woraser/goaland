@@ -1,0 +1,45 @@
+设置拼音分词
+POST http://localhost:9200/goaland/_mapping/searchRecord
+{
+  "searchRecord": {
+    "properties": {
+      "searchContent": {
+        "type": "String",
+        "analyzer": "lc_index",
+        "search_analyzer": "lc_search",
+        "term_vector": "with_positions_offsets"
+      }
+    }
+  }
+}
+
+设置中文分词
+POST http://localhost:9200/goaland/_mapping/technologyDocument
+{
+  "technologyDocument": {
+    "properties": {
+      "content": {
+        "type": "String",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_max_word",
+        "store":"false",
+        "term_vector": "with_positions_offsets"
+      }
+    }
+  }
+}
+
+设置不分词
+POST http://localhost:9200/goaland/_mapping/technologyDocument
+{
+  "technologyDocument": {
+    "properties": {
+      "type": {
+        "type": "String",
+        "index" : "not_analyzed",
+        "store":"false"
+      }
+    }
+  }
+}
+

@@ -3,6 +3,7 @@ package com.anosi.asset.service.impl;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.anosi.asset.dao.mongo.FileMetaDataDao;
 import com.anosi.asset.dao.mongo.GridFsDao;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
+import com.querydsl.core.types.Predicate;
 
 @Service("fileMetaDataService")
 @Transactional
@@ -68,11 +70,6 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	}
 	
 	@Override
-	public Page<FileMetaData> findByUploader(String uploader,Pageable pageable) {
-		return fileMetaDataDao.findByUploader(uploader,pageable);
-	}
-
-	@Override
 	public FileMetaData findByObjectId(BigInteger objectId) {
 		return fileMetaDataDao.findByObjectId(objectId);
 	}
@@ -80,6 +77,26 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	@Override
 	public InputStream getFileByObjectId(BigInteger objectId) {
 		return gridFsDao.getFileFromGridFS(FileMetaData.BigIntegerToObjectIdConverter(objectId));
+	}
+
+	@Override
+	public Page<FileMetaData> findAll(Predicate predicate, Pageable pageable) {
+		return fileMetaDataDao.findAll(predicate, pageable);
+	}
+
+	@Override
+	public List<FileMetaData> findByIdentification(String identification) {
+		return fileMetaDataDao.findByIdentification(identification);
+	}
+
+	@Override
+	public List<FileMetaData> updateIdentification(String lastIdentification, String nowIdentification) {
+		List<FileMetaData> fileMetaDatas = fileMetaDataDao.findByIdentification(lastIdentification);
+		for (FileMetaData fileMetaData : fileMetaDatas) {
+			fileMetaData.setIdentification(nowIdentification);
+		}
+		fileMetaDataDao.save(fileMetaDatas);
+		return fileMetaDatas;
 	}
 	
 }

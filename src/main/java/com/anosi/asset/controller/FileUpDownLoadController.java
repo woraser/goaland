@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.util.FileConvertUtil;
 import com.anosi.asset.util.FileConvertUtil.Suffix;
+import com.querydsl.core.types.Predicate;
 
 /***
  * 这个类包含了文件上传、下载、预览功能
@@ -57,7 +59,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/fileUpload/multipartFiles/{identification}", method = RequestMethod.POST)
-	public String fileUpload(@RequestParam("file_upload") MultipartFile[] multipartFiles,
+	public JSONObject fileUpload(@RequestParam("file_upload") MultipartFile[] multipartFiles,
 			@PathVariable String identification) throws Exception {
 		logger.info("file upload");
 		logger.debug("identification:{}", identification);
@@ -77,24 +79,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 			jsonObject.put("result", "file is null");
 		}
 		logger.info(jsonObject.toString());
-		return jsonObject.toString();
-	}
-
-	/***
-	 * 根据上传者来获取可下载文件的列表
-	 * 
-	 * @param identification
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/fileDownload/list/{uploader}", method = RequestMethod.GET)
-	public Page<FileMetaData> fileDownloadList(@PathVariable String uploader,
-			@PageableDefault(sort = {
-					"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
-			throws Exception {
-		logger.info("to view file list");
-		logger.debug("uploader:{}", uploader);
-		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		return fileMetaDataService.findByIdentification(uploader, pageable);
+		return jsonObject;
 	}
 
 	/***
@@ -114,6 +99,25 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 		return fileMetaDataService.findByIdentification(identification, pageable);
 	}
 
+	/***
+	 * 根据文件组来获取可下载文件的列表.
+	 * 
+	 * @param showType
+	 *            返回数据的形式,可选参数:grid,remote
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/fileDownload/list/{showType}", method = RequestMethod.GET)
+	public JSONObject fileDownloadListGrid(@QuerydslPredicate(root = FileMetaData.class) Predicate predicate,
+			@PathVariable ShowType showType,
+			@PageableDefault(sort = {
+					"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable,
+			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+		logger.info("to view file list");
+		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+		return parseToJson(fileMetaDataService.findAll(predicate, pageable), rowId, showAttributes, showType);
+	}
+
 	/****
 	 * 下载文件
 	 * 
@@ -122,7 +126,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/fileDownload/{objectId}", method = RequestMethod.GET)
-	public String fileDownload(@PathVariable BigInteger objectId, HttpServletResponse response) throws Exception {
+	public JSONObject fileDownload(@PathVariable BigInteger objectId, HttpServletResponse response) throws Exception {
 		DoResponseOut doResponseOut = (is, os) -> {
 			// 获取文件流
 			try (BufferedInputStream bis = new BufferedInputStream(is);
@@ -142,7 +146,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/filePreview/{objectId}", method = RequestMethod.GET)
-	public String filePreview(@PathVariable BigInteger objectId, HttpServletResponse response) throws Exception {
+	public JSONObject filePreview(@PathVariable BigInteger objectId, HttpServletResponse response) throws Exception {
 		DoResponseOut doResponseOut = (is, os) -> {
 			FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
 			String fileName = fileMetaData.getFileName();
@@ -169,7 +173,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * @return
 	 * @throws Exception
 	 */
-	private String fileResponse(BigInteger objectId, HttpServletResponse response, DoResponseOut doResponseOut)
+	private JSONObject fileResponse(BigInteger objectId, HttpServletResponse response, DoResponseOut doResponseOut)
 			throws Exception {
 		FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
 
@@ -192,7 +196,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 					MessageFormat.format(i18nComponent.getMessage("exception.fileNotFound"), objectId));
 		}
 		logger.info(jsonObject.toString());
-		return jsonObject.toString();
+		return jsonObject;
 	}
 
 	/***

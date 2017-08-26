@@ -1,16 +1,87 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>登录</title>
+<html xmlns:th="http://www.thymeleaf.org">
 
+<head>
+	<meta charset="UTF-8" />
+	<title>登录</title>
+	
+	<link href="/webResources/css/cloud/cloud-admin.min.css" type="text/css"  rel="stylesheet"/>
+	<link href="/webResources/plugins/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+	<link href="/webResources/plugins/uniform/css/uniform.default.min.css" type="text/css" rel="stylesheet" />
+	
 </head>
 
-<body>
-       <form action="" method="post">
-           <p>账号：<input type="text" name="loginId" value="admin"/></p>
-           <p>密码：<input type="text" name="password" value="123456"/></p>
-           <p><input type="submit" value="登录"/></p>
-       </form>
+<body class="login" style="background-image: url('/webResources/img/logo/iotx-login.png'); ">
+	<!-- PAGE -->
+	<section id="page">
+		<header>
+			<!-- NAV-BAR -->
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 col-md-offset-4">
+						<div id="logo">
+						
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/NAV-BAR -->
+		</header>
+		<!-- LOGIN -->
+		<section id="login" class="visible">
+			<div class="container">
+				<div class="row" >
+					<div class="col-md-4 col-md-offset-4" style="width:29%;margin-left:36%;margin-top:1%;background:#232634">
+						<div class="login-box-plain" style="padding: 38px 60px 60px;background:#232634;border:0px;box-shadow: 0 0px 0px #D3D3D3;">
+							<div id="logo">
+								<img src="/webResources/img/logo/logo-iotx.png" height="140" alt="logo name" />
+							</div>
+							<div class="divide-40"></div>
+							<form role="form" action="" method="post">
+							  <div class="form-group">
+								<label for="loginId" style="color:white;margin-left:10px"></label>
+								<i class="fa fa-envelope"></i>
+								<input type="text" class="form-control" id="loginId" name="loginId" th:placeholder="#{scanLoginId}"/>
+							  </div>
+							  <div class="form-group"> 
+								<label for="password" style="color:white;margin-left:10px"></label>
+								<i class="fa fa-lock"></i>
+								<input type="password" class="form-control" id="password" name="password" th:placeholder="#{scanPassword}"/>
+							  </div>
+							  <div class="form-actions" style="padding:0px;margin-top:10%;background-color:#222737;color:white;border-top:0px;">
+								<label class="checkbox" style="color:white;margin-left:10px">
+									<input type="checkbox" name="rememberMe" class="uniform" th:text="#{rememberMe}"/>
+								</label>
+								<input type="submit" th:value="#{login}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
+							  </div>
+							  <font color="#DEDEDE" size="5px" th:text="${message}"></font>
+							</form>
+							<!-- SOCIAL LOGIN -->
+							<div class="center">
+								<input type="button" th:value="#{loginWithQRCode}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</section>
+	
+	<script type="text/javascript" src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<!-- JQUERY UI-->
+	<script type="text/javascript" src="/webResources/plugins/jQueryUI/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="/webResources/plugins/uniform/jquery.uniform.min.js"></script>
+	<!-- CUSTOM SCRIPT -->
+	<script type="text/javascript" src="/webResources/js/script.js"></script>
+	<script>
+		jQuery(document).ready(function() {		
+			App.setPage("login");  //Set current page
+			App.init(); //Initialise plugins and elements
+		});
+	</script>
+	
 </body>
+
 </html>

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <roleFunctions>
-	<roleFunction roleFunctionPageId="companyManage" name="公司管理">
-		<roleFunction roleFunctionPageId="employeeManage" name="人员管理">
+	<roleFunction roleFunctionPageId="systemMgr" name="系统管理">
+		<roleFunction roleFunctionPageId="employeeMgr" name="人员管理">
 			<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
 			<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
 			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
 			<roleFunctionBtn btnId="batadd" name="批量配置"></roleFunctionBtn>
+		</roleFunction>
+	</roleFunction>
+	<roleFunction roleFunctionPageId="customServiceProcess"
+		name="售后流程">
+		<roleFunction roleFunctionPageId="taskStarted"
+			name="我发起的任务">
+		</roleFunction>
+		<roleFunction roleFunctionPageId="taskToDo" name="我待办的任务">
 		</roleFunction>
 	</roleFunction>
 </roleFunctions>

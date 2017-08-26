@@ -2,8 +2,6 @@ package com.anosi.asset.util;
 
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.NestedNullException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -58,19 +56,12 @@ public class JqgridUtil<T> {
 		JSONArray jsonArray = new JSONArray();
 		for (T t : datas) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("id", BeanUtils.getNestedProperty(t, rowId));
+			jsonObject.put("id", PropertyUtil.getNestedProperty(t, rowId));
 			
 			JSONArray attributeArray = new JSONArray();
 			//遍历属性
 			for (String attribute : attributes) {
-				try {
-					//根据属性名获取属性
-					String nestedProperty = BeanUtils.getNestedProperty(t, attribute);
-					attributeArray.add(nestedProperty);
-				} catch (NestedNullException e) {
-					//发生这个异常表示找不到attribute，或者attribute的值为null
-					attributeArray.add(null);
-				}
+				jsonObject.put(attribute, PropertyUtil.getNestedProperty(t, attribute));
 			}
 			jsonObject.put("cell", attributeArray);
 			

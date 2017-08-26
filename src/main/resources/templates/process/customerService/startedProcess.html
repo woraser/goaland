@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" 
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>售后流程-我发起的任务</title>
+	
+	<link href="/webResources/css/custom/process.css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
+	
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/startedProcess.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/page/createPageDefault.js" ></script>
+	
+</head>
+
+<body>
+	<div layout:fragment="content" >
+		<div class="col-md-12" style="width:90%;height:1050px;margin-top:30px;margin-left: 5%">
+		    <div class="typeTitle">
+		        售后流程
+		    </div>
+		
+		    <div class="nav-tabs-custom" style="float:left;padding-top:2.5%;width: 50%;height: 10%;">
+		        <ul class="nav nav-tabs" style="border-bottom:0px;">
+		            <li style="width: 25%;height:100%;text-align: center"><a href="#tab_1_1" data-toggle="tab"> 任务总览</a></li>
+		            <li class="active" style="width: 25%;height:100%;background: #292D3C;text-align: center"><a data-toggle="tab"> 我发起的任务</a></li>
+		            <li style="width: 25%;height:100%;background: #292D3C;text-align: center"><a href="#tab_1_2" data-toggle="tab">我待办的任务</a></li>
+		            <li style="width: 25%;height:100%;background: #292D3C;text-align: center"><a href="#tab_1_3" data-toggle="tab">我办过的任务</a></li>
+		        </ul>
+		    </div>
+		    
+		    <div style="float: left;width: 50%;height: 10%">
+		        <div class="dataTables_filter" id="datatable1_filter" style="float:left;width:50%;margin-left: 25%;margin-top: 5.5%"><input aria-controls="datatable1" placeholder="Search" class="form-control input-sm" type="text"/></div>
+		        <div style="float: right;width:20%;height: 100%;">
+		            <button class="newButton" id="createProcess">新增</button>
+		        </div>
+		    </div>
+		    
+		    <div style="width:100%;height: 6%;margin-top:7%;background: #343A4A">
+		        <div class="topTitle" style="width: 45%" th:text="#{task}">任务</div>
+		        <div class="topTitle" style="width: 20%" th:text="#{describe}">描述</div>
+		        <div class="topTitle" style="width: 17.5%" th:text="#{processStatus}">工单状态</div>
+		        <div class="topTitle" style="width: 17.5%" th:text="#{operate}">操作</div>
+		    </div>
+		    
+		    <div id="tasks" style="width:100% ;height: 63%">
+		    	
+		    </div>
+		    <div class="zxf_pagediv" id="dataPager"></div>
+		</div>
+	</div>
+</body>
+
+</html>

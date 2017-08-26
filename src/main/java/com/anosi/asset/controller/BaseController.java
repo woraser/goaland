@@ -9,17 +9,33 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
-public class BaseController<T> extends GlobalController<T>{
+import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.model.jpa.RoleFunction;
+import com.anosi.asset.service.RoleFunctionService;
+import com.anosi.asset.util.JqgridUtil;
+import com.anosi.asset.util.JsonUtil;
+
+public class BaseController<T> extends GlobalController<T> {
+
+	@Autowired
+	protected JqgridUtil<T> jqgridUtil;
+	@Autowired
+	protected JsonUtil<T> jsonUtil;
+	@Autowired
+	protected RoleFunctionService roleFunctionService;
 
 	/***
 	 * 注册date
+	 * 
 	 * @param request
 	 * @param binder
 	 */
@@ -29,29 +45,65 @@ public class BaseController<T> extends GlobalController<T>{
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 	}
-	
+
 	/***
 	 * 注册double
+	 * 
 	 * @param request
 	 * @param binder
 	 */
 	@InitBinder
 	protected void initDouble(HttpServletRequest request, ServletRequestDataBinder binder) {
-		binder.registerCustomEditor(Double.class,new CustomNumberEditor(Double.class,true));
+		binder.registerCustomEditor(Double.class, new CustomNumberEditor(Double.class, true));
 	}
 	
+	@ModelAttribute("menus")
+	public Iterable<RoleFunction> setMenu() {
+		return roleFunctionService.findByParentRoleFunctionIsNull();
+	}
+
 	/***
 	 * 在每个controller调用前，将menuId加入session
+	 * 
 	 * @param id
 	 * @param model
 	 */
-	@ModelAttribute
-	public void setMenuIdIntoSession(@RequestParam(value = "menuId", required = false) String menuId){
+	public void setMenuIdIntoSession(@RequestParam(value = "menuId", required = false) String menuId) {
 		if(StringUtils.isNoneBlank(menuId)){
 			Subject currentUser = SecurityUtils.getSubject();  
 			Session session = currentUser.getSession();
 			session.setAttribute("menuId", menuId);
 		}
 	}
-	
+
+	/****
+	 * 根据showType将数据转为指定格式的json
+	 * 
+	 * @param pages
+	 * @param rowId
+	 * @param showAttributes
+	 * @param showType
+	 * @return
+	 * @throws Exception
+	 */
+	protected JSONObject parseToJson(Page<T> pages, String rowId, String showAttributes, ShowType showType)
+			throws Exception {
+		JSONObject jsonObject = null;
+		switch (showType) {
+		case GRID:
+			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, showAttributes.split(","));
+			break;
+		case REMOTE:
+			jsonObject = jsonUtil.parseAttributesToJson(pages, showAttributes.split(","));
+			break;
+		default:
+			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, showAttributes.split(","));
+		}
+		return jsonObject;
+	}
+
+	enum ShowType {
+		GRID, REMOTE
+	}
+
 }

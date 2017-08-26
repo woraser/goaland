@@ -1,6 +1,7 @@
 package com.anosi.asset.service.impl;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -40,12 +41,16 @@ import com.anosi.asset.service.ProcessRecordService;
 
 /***
  * 所有流程service集成的抽象类，实现了上层接口的部分方法,剩余方法在具体流程中实现
+ * <p>
+ * 继承于它的子类要使用<b>多例模式@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)</b>
+ * </p>
  * 
  * @author jinyao
  *
  * @param <T>
  */
-public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends BaseServiceImpl<T> implements BaseProcessService<T> {
+public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends BaseServiceImpl<T>
+		implements BaseProcessService<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseProcessServiceImpl.class);
 
@@ -68,11 +73,17 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Autowired
 	protected AccountService accountService;
 
-	protected String definitionKey;
+	protected String definitionKey;// 由于每个子类的definitionKey都是一样的，所以不会有线程安全问题
 
-	protected List<MessageInfo> messageInfos;
+	/*--------------------------------------*/
 
-	/*-----设置为成员变量是因为会在多个方法中使用,这样子参数列表会清晰一些-----*/
+	/*----- 设置为成员变量是因为会在多个方法中使用,这样子参数列表会清晰一些,不必每个方法后面都写几个参数,
+	 * 		而且以后一旦参数变化,也不必把涉及到的方法的参数都改一遍,
+	 * 
+	 * 		但这样在单例模式会引起线程安全问题，所以需要多例@Scope(@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)),
+	 * 		以下参数都是可选参数,都是在完成任务的时候设置的-----*/
+
+	protected List<MessageInfo> messageInfos = new ArrayList<>();
 
 	protected HandleType type = HandleType.PASS;// 办理的类型
 
@@ -86,7 +97,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	public Page<T> findHistoricProcessInstance(Pageable pageable,
 			HistoricProcessInstanceQuery historicProcessInstanceQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-		int maxResults = firstResult + pageable.getOffset();
+		int maxResults = firstResult + pageable.getPageSize();
 
 		List<HistoricProcessInstance> instances = historicProcessInstanceQuery.listPage(firstResult, maxResults);
 		long total = historicProcessInstanceQuery.count(); // 总数
@@ -101,7 +112,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public Page<T> findRuntimeTasks(Pageable pageable, TaskQuery taskQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-		int maxResults = firstResult + pageable.getOffset();
+		int maxResults = firstResult + pageable.getPageSize();
 
 		List<Task> tasks = taskQuery.listPage(firstResult, maxResults); // 分页task
 		long total = taskQuery.count(); // task总数
@@ -116,7 +127,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public Page<T> findHistoricTasks(Pageable pageable, HistoricTaskInstanceQuery historicTaskInstanceQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-		int maxResults = firstResult + pageable.getOffset();
+		int maxResults = firstResult + pageable.getPageSize();
 
 		List<HistoricTaskInstance> historicTaskInstances = historicTaskInstanceQuery.listPage(firstResult, maxResults);
 		long total = historicTaskInstanceQuery.count(); // task总数
@@ -132,8 +143,11 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	public T setRunTimeValueForProcess(T t, Task task) {
 		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
+		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(task.getProcessInstanceId()).singleResult();
 		t.setTask(task);
 		t.setProcessInstance(processInstance);
+		t.setHistoricProcessInstance(historicProcessInstance);
 		return t;
 	}
 
@@ -145,7 +159,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		t.setHistoricTaskInstance(historicTaskInstance);
 		return t;
 	}
-
+	
 	@Override
 	public T findAndSetInstanceValue(HistoricProcessInstance instance) {
 		T process = findByProcessInstanceId(instance.getId());
@@ -165,29 +179,30 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
-	public void completeTask(String taskId,DoInComplete doInComplete) {
+	public void completeTask(String taskId, DoInComplete doInComplete) {
 		T t = findBytaskId(taskId);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		
+
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
 		ProcessRecord processRecord = processRecordService.findByTaskIdNotEnd(taskId);
-		
+
 		processRecord.setType(type);
 		processRecord.setEndTime(new Date());
 		processRecord.setReason(reason);
 		processRecord.setAssignee(SessionUtil.getCurrentUser());
 		String processInstanceId = processRecord.getProcessInstanceId();
 
-		messageInfoForApplicant(t, taskId, accountService.findByLoginId((String) taskService.getVariable(taskId, "applicant")));// 发送给发起人
+		messageInfoForApplicant(t, taskId,
+				accountService.findByLoginId((String) taskService.getVariable(taskId, "applicant")));// 生成发送给发起人的信息
 		doInComplete.excute();// 办理任务
-		
-		//这里只发送个人任务的信息，由于组任务相对较少，且封装复杂
-		//所以如果是组任务，将发送信息的代码自行写到DoInComplete中
-		//然后由此模板方法完成发送及创建记录
+
+		// 这里只发送个人任务的信息，由于组任务相对较少，且封装复杂
+		// 所以如果是组任务，将发送信息的代码自行写到DoInComplete中
+		// 然后由此模板方法完成发送及创建记录
 		/*-----注意以下三步的顺序，要先发送消息，再创建下一步的记录，不然不会发送--*/
 		if (StringUtils.isNotBlank(task.getAssignee())) {
-			searchNextTaskAndSend(t, processInstanceId, accountService.findByLoginId(task.getAssignee()));// 发给下一步办理人
-		} 
+			searchNextTaskAndSend(t, processInstanceId, accountService.findByLoginId(task.getAssignee()));// 生成发给下一步办理人的信息
+		}
 		saveMessageInfoAndSend();// 发送
 		createNewProcessRecord(processInstanceId);// 生成新的待办任务记录
 	}
@@ -302,7 +317,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		messageInfo.setTitle(MessageFormat.format(i18nComponent.getMessage("message.titile.taskComplete"),
 				processInstance.getProcessDefinitionName()));// {0}被办理
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskComplete"),
-				t.getName(), task.getName(), messageInfo.getFrom().getName(),reason));// 你发起的流程{0},{1}已经被办理,办理人为{2},办理说明:{3}
+				t.getName(), task.getName(), messageInfo.getFrom().getName(), reason));// 你发起的流程{0},{1}已经被办理,办理人为{2},办理说明:{3}
 
 		messageInfos.add(messageInfo);
 	}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/distribute.js" ></script>
+	
+</head>
+
+<body class="skin-blue sidebar-mini">
+	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+		<input type="hidden" id="taskId" name="taskId" th:value="${task.id}"/>  
+	    <fieldset>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{nextAssignee}">选择工程师</label>  
+		    	<div class="col-sm-8">
+		    	 	<select name="engineer" id="engineer" class="form-control"> 
+		            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
+		            </select>
+    			</div>
+	    	</div>
+	    </fieldset>  
+	</form>  
+</body>
+
+</html>
+

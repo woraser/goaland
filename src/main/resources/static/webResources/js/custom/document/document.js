@@ -5,7 +5,7 @@ $(function(){
 			$("#search").click(function(){
 				$.ajax({
 	              	url: "/technologyDocument/search/content",
-	              	data:{"content":$("#content").val(),"rowId":"id","showAttributes":"highLight,fileId"},
+	              	data:{"content":$("#content").val(),"rowId":"id","showAttributes":"highLight,fileId","type":"故障诊断文档"},
 	              	type : "get",
 	              	dataType : "json",
 	              	success: function(data){
@@ -38,6 +38,7 @@ $(function(){
 					var options = {
 						type : "post",
 						url : '/technologyDocument/upload',
+						data : {'type':'技术文档'},
 						success : function(data) {
 							if(data.result=='upload success'){
 								alert('操作成功');

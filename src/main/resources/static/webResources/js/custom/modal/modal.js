@@ -63,6 +63,27 @@ function warning(message){
 	dialog.open();
 }
 
+function warningAndFunc(message,func){
+	var dialog = new BootstrapDialog({
+		title: '错误',
+		message: message,
+		buttons: [{
+			id: 'btn-1',
+	        label: '确定'
+	    }],
+	    closable: false,
+	    draggable: true,
+	});
+	dialog.realize();
+	dialog.setType(BootstrapDialog.TYPE_DANGER);
+	var btn1 = dialog.getButton('btn-1');
+	btn1.click(function(event){
+		func();
+	});
+	
+	dialog.open();
+}
+
 function info(message){
 	var dialog = new BootstrapDialog({
 		title: '信息',
@@ -79,6 +100,27 @@ function info(message){
 	var btn1 = dialog.getButton('btn-1');
 	btn1.click(function(event){
 		dialog.close();
+	});
+	
+	dialog.open();
+}
+
+function infoAndFunc(message,func){
+	var dialog = new BootstrapDialog({
+		title: '信息',
+		message: message,
+		buttons: [{
+			id: 'btn-1',
+	        label: '确定'
+	    }],
+	    closable: false,
+	    draggable: true,
+	});
+	dialog.realize();
+	dialog.setType(BootstrapDialog.TYPE_INFO);
+	var btn1 = dialog.getButton('btn-1');
+	btn1.click(function(event){
+		func()
 	});
 	
 	dialog.open();

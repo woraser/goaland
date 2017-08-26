@@ -23,19 +23,22 @@ public class GoalandApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GoalandApplication.class, args);
 	}
-	
+
 	/***
 	 * rememberMe 以后的默认路径
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/")
-    public ModelAndView index() {
-        return new ModelAndView("redirect:/index");
-    }
+	public ModelAndView index() {
+		return new ModelAndView("redirect:/index");
+	}
 
 	/***
-	 * 解决以下异常：
-	 * 	Parameter 0 of method springAsyncExecutor in org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration required a single bean
+	 * 解决以下异常： Parameter 0 of method springAsyncExecutor in
+	 * org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration required
+	 * a single bean
+	 * 
 	 * @return
 	 */
 	@Primary
@@ -45,19 +48,20 @@ public class GoalandApplication {
 		// add necessary properties to the executor
 		return executor;
 	}
-	
+
 	/***
 	 * 让spring boot默认使用fastjson解析json数据
+	 * 
 	 * @return
 	 */
-    @Bean
-    public HttpMessageConverters fastJsonHttpMessageConverters() {
-       FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
-       FastJsonConfig fastJsonConfig = new FastJsonConfig();
-       fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
-       fastConverter.setFastJsonConfig(fastJsonConfig);
-       HttpMessageConverter<?> converter = fastConverter;
-       return new HttpMessageConverters(converter);
-    }
-    
+	@Bean
+	public HttpMessageConverters fastJsonHttpMessageConverters() {
+		FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+		FastJsonConfig fastJsonConfig = new FastJsonConfig();
+		fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+		fastConverter.setFastJsonConfig(fastJsonConfig);
+		HttpMessageConverter<?> converter = fastConverter;
+		return new HttpMessageConverters(converter);
+	}
+
 }

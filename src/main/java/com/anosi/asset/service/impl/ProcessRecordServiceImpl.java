@@ -19,7 +19,7 @@ public class ProcessRecordServiceImpl extends BaseServiceImpl<ProcessRecord> imp
 
 	@Override
 	public ProcessRecord findByTaskIdNotEnd(String taskId) {
-		return processRecordDao.findByTaskIdEqualsAndEndTimeIsNotNull(taskId);
+		return processRecordDao.findByTaskIdEqualsAndEndTimeIsNull(taskId);
 	}
 
 	@Override

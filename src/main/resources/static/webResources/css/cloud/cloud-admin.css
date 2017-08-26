@@ -1633,6 +1633,7 @@ output {
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  /*background: red;*/
 }
 .form-control:-moz-placeholder {
   color: #999999;
@@ -1720,6 +1721,8 @@ fieldset[disabled] .checkbox-inline {
   font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
+  background:#242735 ;
+  border: 2px solid #586578;
 }
 select.input-sm {
   height: 30px;
@@ -1894,7 +1897,7 @@ textarea.input-lg {
   vertical-align: middle;
   cursor: pointer;
   background-image: none;
-  border: 1px solid transparent;
+  border: 1px solid #3B4253;
   white-space: nowrap;
   padding: 6px 12px;
   font-size: 14px;
@@ -3391,7 +3394,8 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .nav > li > a:hover,
 .nav > li > a:focus {
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: #363C4C;
+  color:#0192D7;
 }
 .nav > li.disabled > a {
   color: #999999;
@@ -3407,7 +3411,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .nav .open > a:hover,
 .nav .open > a:focus {
   background-color: #eeeeee;
-  border-color: #5e87b0;
+  border-color: #8F9199;
 }
 .nav .nav-divider {
   height: 1px;
@@ -3432,14 +3436,15 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-radius: 4px 4px 0 0;
 }
 .nav-tabs > li > a:hover {
-  border-color: #eeeeee #eeeeee #dddddd;
+  /*border-color: #eeeeee #eeeeee #dddddd;*/
 }
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #555555;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
+  color: #01aeff;
+  background-color: #363C4C;
+  border: 0px solid #dddddd;
+  border-top: 2px solid #0192D7;
   border-bottom-color: transparent;
   cursor: default;
 }

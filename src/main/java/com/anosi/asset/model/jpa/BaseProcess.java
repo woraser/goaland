@@ -38,6 +38,27 @@ public class BaseProcess extends BaseEntity {
 	protected ProcessInstance processInstance;
 
 	protected HistoricProcessInstance historicProcessInstance;
+	
+	protected FinishType finishType;
+	
+	public static enum FinishType{
+		REAMIN("待办"),FINISHED("已完成"),DELETED("已删除"),REFUSED("被驳回"),FORCED("强制结束");
+		
+		private String name;
+		
+		private FinishType(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+	}
 
 	@Column(unique = true, nullable = false)
 	public String getProcessInstanceId() {
@@ -54,6 +75,14 @@ public class BaseProcess extends BaseEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public FinishType getFinishType() {
+		return finishType;
+	}
+
+	public void setFinishType(FinishType finishType) {
+		this.finishType = finishType;
 	}
 
 	@Transient

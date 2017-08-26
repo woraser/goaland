@@ -2,11 +2,13 @@ package com.anosi.asset.service;
 
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.model.mongo.FileMetaData;
+import com.querydsl.core.types.Predicate;
 
 public interface FileMetaDataService {
 	
@@ -28,10 +30,20 @@ public interface FileMetaDataService {
 	
 	public Page<FileMetaData> findByIdentification(String identification,Pageable pageable);
 	
+	public List<FileMetaData> findByIdentification(String identification);
+	
+	/***
+	 * 批量更新Identification
+	 * @param lastIdentification
+	 * @param nowIdentification
+	 * @return
+	 */
+	List<FileMetaData> updateIdentification(String lastIdentification,String nowIdentification);
+	
 	public FileMetaData findByObjectId(BigInteger objectId);
 	
 	public InputStream getFileByObjectId(BigInteger objectId);
-
-	Page<FileMetaData> findByUploader(String uploader, Pageable pageable);
+	
+	Page<FileMetaData> findAll(Predicate predicate, Pageable pageable);
 	
 }

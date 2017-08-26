@@ -1,5 +1,7 @@
 package com.anosi.asset.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
@@ -11,8 +13,11 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	/***
 	 * 销售部/工程部/质检部发起
 	 * 流程变量:${assignee}:发起人
+	 * @param startDetail 
+	 * @param account 
+	 * @param multipartFiles 
 	 */
-	void startProcess();
+	void startProcess(Account account, StartDetail startDetail, MultipartFile[] multipartFiles) throws Exception;
 	
 	/**
 	 * 发起人完成发起的清单

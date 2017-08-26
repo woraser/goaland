@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>error</title>
+	
+</head>
+
+<body>
+	<div layout:fragment="content" >
+		<div class="error-page">
+			<div class="error-content">
+				<h3>
+					<i class="fa fa-warning text-red"></i>
+					<font color="#F8F8F8" th:text="#{errorPointOut}"></font>
+				</h3>
+				<p>
+					<font color="#F8F8F8" th:text="#{weWillFix}"></font>
+					<a href="/index" th:text="#{returnIndex}"></a>
+					<font color="#F8F8F8" th:text="#{tellAdmin}"></font>
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>
+

@@ -21,6 +21,8 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 
 public interface TechnologyDocumentDao extends ElasticsearchRepository<TechnologyDocument, String> {
+	
+	public List<TechnologyDocument> findByTypeEquals(String type);
 
 	/***
 	 * 查找TechnologyDocument,带有匹配高亮

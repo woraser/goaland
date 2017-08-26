@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -125,7 +124,6 @@ public class ProcessRecord extends BaseEntity{
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Account.class)
-	@JoinColumn(nullable=false)
 	public Account getAssignee() {
 		return assignee;
 	}

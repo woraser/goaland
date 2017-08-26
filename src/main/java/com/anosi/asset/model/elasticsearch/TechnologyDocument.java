@@ -30,6 +30,7 @@ public class TechnologyDocument implements Serializable{
 	@Field(index = FieldIndex.not_analyzed,store=true)
 	private String fileId;//文件的唯一id
 	
+	@Field(index = FieldIndex.not_analyzed,store=true)
 	private String type;
 
 	@Id

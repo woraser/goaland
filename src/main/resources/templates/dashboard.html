@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+    
+<head>
+	<meta charset="UTF-8" />
+	<title>首页</title>
+	
+	<style type="text/css">
+	#showIotxMap {
+		width: 100%;
+		height: 700px;
+		overflow: hidden;
+		margin: 0;
+		font-family: "微软雅黑";
+	}
+	.anchorBL{  
+        display:none;   
+    }   
+	</style>
+	
+	<link href="/webResources/css/custom/dashboard.css" rel="stylesheet"/>
+	
+	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
+	<script type="text/javascript" th:src="@{http://api.map.baidu.com/getscript(v=2.0,ak=5CszUV7dPeeTfhUi2OR8hXncqKYz2WqW,t=20170608143204)}"></script>
+	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/bMap/bmap.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/dashboard/dashboard.js" ></script>
+	
+</head>
+
+<body>
+	<div layout:fragment="content" >
+		<div class="col-md-12" style="width:98%;background:#363C4C;height:950px;margin-top:30px;margin-left: 1%">
+		    <div class="topdiv" style="margin-left:1.5%;border-left:8px solid #01D0FE;">
+		        <div class="title" style="color:#01D0FE">88</div>
+		        <div class="secondtitle">HVSC  COOLING</div>
+		        <div class="thirdtitle">88套直流换阀水冷装置</div>
+		    </div>
+		    <div class="topdiv" style="border-left:8px solid #4F80FF;">
+		        <div class="title" style="color:#4F80FF">88</div>
+		        <div class="secondtitle">HVSC COOLING</div>
+		        <div class="thirdtitle">88套直流换阀水冷装置</div>
+		    </div>
+		    <div class="topdiv" style="border-left:8px solid #05B6D3;">
+		        <div class="title" style="color:#05B6D3">88</div>
+		        <div class="secondtitle">HVSC COOLING</div>
+		        <div class="thirdtitle">88套直流换阀水冷装置</div>
+		    </div>
+		    <div class="topdiv" style="border-left:8px solid #4F80FF;">
+		        <div class="title" style="color:#4F80FF">88</div>
+		        <div class="secondtitle">HVSC COOLING</div>
+		        <div class="thirdtitle">88套直流换阀水冷装置</div>
+		    </div>
+		    <div  style="width:25%;height:900px;float:right">
+		        <div class="rightdiv" >
+		            <div class="subRightTitle">
+		                设备分布
+		            </div>
+		            <div style="height: 15%;">
+		                <div style="float: right;width: 55%;height:100%;">
+		                    <h5 style="padding-top:2.5%;float:left;text-align:left;color: #8e939f;font-weight: 500">设备总量</h5>
+		                    <h5 style="float:left;text-align:left;color: #FCAF03;font-weight: 500;font-size: 22px;">&nbsp;&nbsp;3,5280</h5>
+		                    <h5 style="padding-top:2.5%;float:left;text-align:left;color: #65BB6A;font-weight: 500;font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;2.4%</h5>
+		                </div>
+		            </div>
+		            <div id="circletable" style="width:100%;height:65%">
+		            </div>
+		        </div>
+		        <div class="rightdiv" >
+		            <div class="subRightTitle">
+		                告警数据
+		            </div>
+		            <div id="healthindex" style="float:left;width: 45%;height:70%;">
+		            </div>
+		            <div style="width: 55%;height: 23%;float: right;">
+		                <div style="width:20%;height:100%;border:1px solid #9D9EA2;border-radius:10px;float:left;padding-top:10px;color:#9D9EA2">
+		                    06<br/>
+		                    月
+		                </div>
+		                <div style="width:45%;height:100%;float:left">
+		                    <div style="width:100%;height:50%;float:left;color:#9D9EA2">告警总量</div>
+		                    <div style="width:100%;height:50%;float:left;font-size: 22px;font-weight:500;padding-bottom:10px;color:#FCAF03">3,520</div>
+		                </div>:
+		                <div style="width:35%;height:60%;text-align:left;font-size:16px;font-weight:500;float:right;color:#D87373;margin-top: 8%">
+		                    2.4%
+		                </div>
+		            </div>
+		            <div id="warning" style="float: right;width: 55%;height: 68%;">
+		            </div>
+		            <div style="float: left;width: 45%;height: 15%;text-align: center;color: #F5F8FF">
+		                设备总体健康指数
+		            </div>
+		        </div>
+		        <div class="rightdiv" >
+		            <div class="subRightTitle">
+		                告警数据
+		            </div>
+		            <div style="height:30%;width:60%;float:left;">
+		                <div class="progress" style="margin-top: 10%;margin-left: 10%;height: 30%">
+		                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+		                    </div>
+		                </div>
+		                <div style="width: 90%;height: 30%;margin-left: 10%">
+		                    <h5 style="float: left;font-size: 13px;color: #83c68f;margin-top: -5%">在线1024</h5>
+		                    <h5 style="float: right;font-size: 13px;color: #83c68f;margin-top: -5%">离线212</h5>
+		                </div>
+		            </div>
+		            <div style="height:30%;width:35%;float:right">
+		                <div style="width:100%;height:32%;color:#9D9EA2">IOT-X总量</div>
+		                <div style="width:100%;height:32%;font-size: 22px;font-weight:500;color:#FCAF03">34210</div>
+		                <div style="width:100%;height:32%;font-size:16px;font-weight:500;float:right;color:#D87373;margin-top: 6%">2.4%</div>
+		            </div>
+		            <div id="warning11" style="height: 55%;width: 100%;margin-top: 20%"></div>
+		        </div>
+		    </div>
+		
+		    <div id="allmap" ></div>
+		</div>
+	</div>
+</body>
+
+</html>

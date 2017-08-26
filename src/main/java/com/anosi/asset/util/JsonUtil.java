@@ -1,10 +1,9 @@
 package com.anosi.asset.util;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
@@ -15,79 +14,92 @@ import groovy.json.JsonOutput;
 
 @Component("jsonUtil")
 public class JsonUtil<T> {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JsonUtil.class);
-	
-	public JSONObject parseAttributesToJson(String[] attributes,T t) throws Exception{
+
+	/***
+	 * 将pages转换成json
+	 * 格式:{page:"当前页数,从0开始",total:"总页数",records:"总记录数",content:[{},{},{}.....]}
+	 * 
+	 * @param pages
+	 * @param showAttributes
+	 * @return
+	 */
+	public JSONObject parseAttributesToJson(Page<T> pages, String[] showAttributes) throws Exception {
 		JSONObject jsonObject = new JSONObject();
-		for (String attribute : attributes) {
-			try {
-				//根据属性名获取属性
-				String nestedProperty = BeanUtils.getNestedProperty(t, attribute);
-				jsonObject.put(attribute, nestedProperty);
-			} catch (NestedNullException e) {
-				//发生这个异常表示找不到attribute，或者attribute的值为null
-				jsonObject.put(attribute, null);
-			}
-		}
-		logger.debug("jsonUtil result:{}",JsonOutput.prettyPrint(jsonObject.toString()));
+		// 设置page
+		jsonObject.put("page", pages.getNumber());
+		// 设置total
+		jsonObject.put("total", pages.getTotalPages());
+		// 设置record
+		jsonObject.put("records", pages.getTotalElements());
+		// 设置content
+		jsonObject.put("content", parseAttributesToJsonArray(showAttributes, pages.getContent()));
 		return jsonObject;
 	}
 
-	public JSONArray parseAttributesToJsonArray(String[] attributes,Iterable<T> ts) throws Exception{
+	/****
+	 * 将对象t的attributes属性数组转换成json
+	 * 
+	 * @param attributes
+	 * @param t
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject parseAttributesToJson(String[] attributes, T t) throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		for (String attribute : attributes) {
+			jsonObject.put(attribute, PropertyUtil.getNestedProperty(t, attribute));
+		}
+		logger.debug("jsonUtil result:{}", JsonOutput.prettyPrint(jsonObject.toString()));
+		return jsonObject;
+	}
+
+	/***
+	 * 将ts中每个对象t的attributes属性数组转换成json
+	 * 
+	 * @param attributes
+	 * @param ts
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONArray parseAttributesToJsonArray(String[] attributes, Iterable<T> ts) throws Exception {
 		JSONArray jsonArray = new JSONArray();
 		for (T t : ts) {
 			jsonArray.add(parseAttributesToJson(attributes, t));
 		}
 		return jsonArray;
 	}
-	
+
 	/***
-	 * 生成返回给autocomplete的jsonarray
-	 * 格式为[ { label: "Choice1", value: "value1" }, ... ]
-	 * 如果value为空，格式为[ "Choice1", "Choice2" ]
+	 * 生成返回给autocomplete的jsonarray 格式为[ { label: "Choice1", value: "value1" },
+	 * ... ] 如果value为空，格式为[ "Choice1", "Choice2" ]
+	 * 
 	 * @param label
 	 * @param value
 	 * @param ts
 	 * @return
 	 * @throws Exception
 	 */
-	public JSONArray parseAttributesToAutocomplete(String label,String value,Iterable<T> ts) throws Exception{
-		
-		if(StringUtils.isBlank(label)){
+	public JSONArray parseAttributesToAutocomplete(String label, String value, Iterable<T> ts) throws Exception {
+
+		if (StringUtils.isBlank(label)) {
 			throw new CustomRunTimeException("lable cannot be null or ''");
 		}
-		
+
 		JSONArray jsonArray = new JSONArray();
 		for (T t : ts) {
-			//如果value为空
-			if(StringUtils.isBlank(value)){
-				try {
-					jsonArray.add(BeanUtils.getNestedProperty(t, label));
-				} catch (NestedNullException e) {
-					//发生这个异常表示找不到attribute，或者attribute的值为null
-					continue;
-				}
-			}else{
+			// 如果value为空
+			if (StringUtils.isBlank(value)) {
+				jsonArray.add(PropertyUtil.getNestedProperty(t, label));
+			} else {
 				JSONObject jsonObject = new JSONObject();
-				try {
-					jsonObject.put("label", BeanUtils.getNestedProperty(t, label));
-				} catch (NestedNullException e) {
-					//发生这个异常表示找不到attribute，或者attribute的值为null
-					jsonObject.put("label", null);
-				}
-				
-				try {
-					jsonObject.put("value", BeanUtils.getNestedProperty(t, value));
-				} catch (NestedNullException e) {
-					//发生这个异常表示找不到attribute，或者attribute的值为null
-					jsonObject.put("value", null);
-				}
-				
+				jsonObject.put("label", PropertyUtil.getNestedProperty(t, label));
+				jsonObject.put("value", PropertyUtil.getNestedProperty(t, value));
 				jsonArray.add(jsonObject);
 			}
 		}
 		return jsonArray;
 	}
-	
+
 }

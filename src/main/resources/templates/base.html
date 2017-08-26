@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="author" content=""/>
+	
+	<title>首页</title>
+	
+	<link href="/webResources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="/webResources/css/cloud/cloud-admin.css" rel="stylesheet"/>
+	<link href="/webResources/css/cloud/themes/night.css" rel="stylesheet"/>
+	<link href="/webResources/css/cloud/responsive.min.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+	<link href="/webResources/css/cloud/animatecss/animate.min.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/jquery-todo/css/styles.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/gritter/css/jquery.gritter.css" rel="stylesheet"/>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel="stylesheet"/>
+	<link href="/webResources/plugins/bootstrap3-dialog/bootstrap-dialog.min.css" rel="stylesheet"/>
+	
+	<style type="text/css">
+	body,html {
+		width: 100%;
+		height: 700px;
+	}
+	.ui-autocomplete{
+		display:block;
+		z-index:99999;
+	}
+	</style>
+	
+	<script type="text/javascript" src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/bootstrap/js/bootstrap.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/bootstrap3-dialog/bootstrap-dialog.min.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/modal/modal.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/common.js"></script>
+	
+	<script type="text/javascript" src="/webResources/plugins/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/fullcalendar/fullcalendar.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jQuery-Cookie/jquery.cookie.min.js"></script>
+	<!-- CUSTOM SCRIPT -->
+	<script type="text/javascript" src="/webResources/js/script.js"></script>
+	
+	<script>
+		jQuery(document).ready(function() {	
+			App.setPage("index");  //Set current page
+			App.init(); //Initialise plugins and elements
+		});
+	</script>
+	
+</head>
+
+<body>
+	<!-- 引入页眉 -->
+	<header class="navbar clearfix" th:include="top::top"></header>	
+	
+	<section id="page">
+		<!-- 引入menu -->
+		<div id="sidebar" class="sidebar" th:include="menu::menu"></div>
+		
+		<!-- 具体内容 -->
+		<div id="main-content">
+			<!-- SAMPLE BOX CONFIGURATION MODAL FORM-->
+			<div class="modal fade" id="box-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					  <h4 class="modal-title">Box Settings</h4>
+					</div>
+					<div class="modal-body">
+					  Here goes box setting content.
+					</div>
+					<div class="modal-footer">
+					  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					  <button type="button" class="btn btn-primary">Save changes</button>
+					</div>
+				  </div>
+				</div>
+			  </div>
+			<!-- 跳转页面-->
+			<div id="contentedison" class="container" style="background: #242735;height:1080px" layout:fragment="content">
+			
+			</div>
+		</div>
+	</section>
+	
+	
+</body>
+
+</html>

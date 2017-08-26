@@ -41,28 +41,30 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	 * 上传技术文档
 	 * 
 	 * @param multipartFiles
+	 * @param type	文档的具体种类
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/technologyDocument/upload", method = RequestMethod.POST)
-	public String fileUpload(@RequestParam("file_upload") MultipartFile[] multipartFiles) throws Exception {
+	public JSONObject fileUpload(@RequestParam("file_upload") MultipartFile[] multipartFiles,@RequestParam("type")String type) throws Exception {
 		logger.info("technologyDocument upload");
 		JSONObject jsonObject = new JSONObject();
 		if (multipartFiles != null && multipartFiles.length > 0) {
 			logger.debug("is uploading");
-			technologyDocumentService.createTechnologyDocument(multipartFiles);
+			technologyDocumentService.createTechnologyDocument(multipartFiles,type);
 			jsonObject.put("result", "upload success");
 		} else {
 			jsonObject.put("result", "file is null");
 		}
 		logger.info(jsonObject.toString());
-		return jsonObject.toString();
+		return jsonObject;
 	}
 
 	/***
 	 * 根据content查找技术文档
 	 * 
 	 * @param content
+	 * @param type
 	 * @param showAttributes
 	 * @param rowId
 	 * @param pageable
@@ -70,13 +72,13 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/technologyDocument/search/content", method = RequestMethod.GET)
-	public JSONObject fileDownloadList(@RequestParam String content,
+	public JSONObject fileDownloadList(@RequestParam String content,String type,
 			@RequestParam(value = "showAttributes") String showAttributes, @RequestParam(value = "rowId") String rowId,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
 			throws Exception {
 		logger.info("to view file list");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		return jqgridUtil.parsePageToJqgridJson(technologyDocumentService.getHighLightContent(content, pageable), rowId,
+		return jqgridUtil.parsePageToJqgridJson(technologyDocumentService.getHighLightContent(content,type, pageable), rowId,
 				showAttributes.split(","));
 	}
 

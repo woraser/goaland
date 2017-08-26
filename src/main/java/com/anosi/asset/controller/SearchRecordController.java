@@ -12,13 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.elasticsearch.SearchRecord;
 import com.anosi.asset.service.SearchRecordService;
-import com.anosi.asset.util.JsonUtil;
 
 @RestController
 public class SearchRecordController extends BaseController<SearchRecord> {
 
-	@Autowired
-	private JsonUtil<SearchRecord> jsonUtil;
 	@Autowired
 	private SearchRecordService searchRecordService;
 

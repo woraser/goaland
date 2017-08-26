@@ -1,28 +1,29 @@
 package com.anosi.asset.controller;
 
+import java.util.Map;
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
+import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
-import com.anosi.asset.util.JqgridUtil;
 import com.google.common.collect.ImmutableMap;
 
 @RestController
-public class CustomerServiceProcessController extends BaseController<CustomerServiceProcess> {
+@RequestMapping("/customerServiceProcess")
+public class CustomerServiceProcessController extends BaseProcessController<CustomerServiceProcess> {
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomerServiceProcessController.class);
 
@@ -30,76 +31,22 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	private CustomerServcieProcessService customerServcieProcessService;
 	@Autowired
 	private AccountService accountService;
-	@Autowired
-	private JqgridUtil<CustomerServiceProcess> jqgridUtil;
 
-	/***
-	 * 获取由当前account发起的流程
-	 * 
-	 * @param pageable
-	 * @param showAttributes
-	 * @param rowId
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/customerServiceProcess/startedProcess/data", method = RequestMethod.GET)
-	public JSONObject findStartedProcess(
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes, @RequestParam(value = "rowId") String rowId)
-			throws Exception {
-		logger.info("find customerServiceProcess runtimeTask");
-		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
-
-		return jqgridUtil.parsePageToJqgridJson(customerServcieProcessService.findStartedProcess(pageable), rowId,
-				showAttributes.split(","));
+	public CustomerServiceProcessController() {
+		super();
+		// 在构造方法中对流程定义赋值
+		definitionKey = "customerService";
 	}
 
-	/**
-	 * 查询当前account待办的任务
-	 * 
-	 * @param pageable
-	 *            分页
-	 * @param showAttributes
-	 *            展示的列
-	 * @param rowId
-	 *            jqgrid每行的id
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/customerServiceProcess/runtimeTask/data", method = RequestMethod.GET)
-	public JSONObject findRuntimeTaskDatas(
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes, @RequestParam(value = "rowId") String rowId)
-			throws Exception {
-		logger.info("find customerServiceProcess runtimeTask");
-		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
-
-		return jqgridUtil.parsePageToJqgridJson(customerServcieProcessService.findTasksToDo(pageable), rowId,
-				showAttributes.split(","));
+	@Override
+	public BaseProcessService<CustomerServiceProcess> getPorcessService() {
+		return customerServcieProcessService;
 	}
 
-	/***
-	 * 查询当前account办理过的任务
-	 * 
-	 * @param pageable
-	 * @param showAttributes
-	 * @param rowId
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/customerServiceProcess/historicTasks/data", method = RequestMethod.GET)
-	public JSONObject findHistoricTasks(
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes, @RequestParam(value = "rowId") String rowId)
-			throws Exception {
-		logger.info("find customerServiceProcess runtimeTask");
-		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
-
-		return jqgridUtil.parsePageToJqgridJson(customerServcieProcessService.findHistoricTasks(pageable), rowId,
-				showAttributes.split(","));
+	@Override
+	protected Map<String, Object> getStartProcessObjects() {
+		Iterable<Account> accounts = accountService.findAll(QAccount.account.role.code.eq("engineerManager"));
+		return ImmutableMap.of("accounts", accounts);
 	}
 
 	/***
@@ -107,11 +54,37 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/customerServiceProcess/startProcess", method = RequestMethod.POST)
-	public JSONObject startProcess() {
+	@RequestMapping(value = "/startProcess", method = RequestMethod.POST)
+	public JSONObject startProcess(@RequestParam(value = "engineeDep") String engineeDep,
+			CustomerServiceProcess process, MultipartFile[] multipartFiles) {
 		logger.debug("customerServiceProcess -> start process");
-		customerServcieProcessService.startProcess();
+		try {
+			customerServcieProcessService.startProcess(accountService.findByLoginId(engineeDep),
+					process.getStartDetail(), multipartFiles);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new JSONObject(
+					ImmutableMap.of("result", "error", "message", Objects.requireNonNull(e.getMessage(), "error")));
+		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	@Override
+	protected Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey) {
+		logger.debug("taskDefinitionKey:{},process:customerService",taskDefinitionKey);
+		Iterable<Account> accounts;
+		switch (taskDefinitionKey) {
+		case "evaluating":
+			accounts = accountService.findAll(QAccount.account.role.depGroup.code.eq("customerServiceGroup"));
+			return ImmutableMap.of("accounts", accounts);
+		case "distribute":
+			accounts = accountService.findAll(QAccount.account.role.code.eq("engineer"));
+			return ImmutableMap.of("accounts", accounts);
+		case "repair":
+			accounts = accountService.findAll(QAccount.account.role.code.eq("engineer"));
+			return ImmutableMap.of("accounts", accounts);
+		}
+		return null;
 	}
 
 	/***
@@ -121,13 +94,14 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	 * @param engineeDep
 	 * @param startDetail
 	 * @return
+	 * @deprecated 已经与startProcess合并为一步
 	 */
-	@RequestMapping(value = "/customerServiceProcess/completeStartDetail", method = RequestMethod.POST)
+	@RequestMapping(value = "/completeStartDetail", method = RequestMethod.POST)
 	public JSONObject completeStartDetail(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "engineeDep") String engineeDep, StartDetail startDetail) {
+			@RequestParam(value = "engineeDep") String engineeDep, CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> completeStartDetail");
 		customerServcieProcessService.completeStartDetail(accountService.findByLoginId(engineeDep), taskId,
-				startDetail);
+				process.getStartDetail());
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -139,11 +113,12 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	 * @param evaluatingDetail
 	 * @return
 	 */
-	@RequestMapping(value = "/customerServiceProcess/evaluating", method = RequestMethod.POST)
+	@RequestMapping(value = "/evaluating", method = RequestMethod.POST)
 	public JSONObject evaluating(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "servicer") String servicer, EvaluatingDetail evaluatingDetail) {
+			@RequestParam(value = "servicer") String servicer, CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> evaluating");
-		customerServcieProcessService.evaluating(accountService.findByLoginId(servicer), taskId, evaluatingDetail);
+		customerServcieProcessService.evaluating(accountService.findByLoginId(servicer), taskId,
+				process.getEvaluatingDetail());
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -154,7 +129,7 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	 * @param engineer
 	 * @return
 	 */
-	@RequestMapping(value = "/customerServiceProcess/distribute", method = RequestMethod.POST)
+	@RequestMapping(value = "/distribute", method = RequestMethod.POST)
 	public JSONObject distribute(@RequestParam(value = "taskId") String taskId,
 			@RequestParam(value = "engineer") String engineer) {
 		logger.debug("customerServiceProcess -> distribute");
@@ -169,10 +144,10 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	 * @param repairDetail
 	 * @return
 	 */
-	@RequestMapping(value = "/customerServiceProcess/repair", method = RequestMethod.POST)
-	public JSONObject repair(@RequestParam(value = "taskId") String taskId, RepairDetail repairDetail) {
+	@RequestMapping(value = "/repair", method = RequestMethod.POST)
+	public JSONObject repair(@RequestParam(value = "taskId") String taskId, CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> repair");
-		customerServcieProcessService.repair(taskId, repairDetail);
+		customerServcieProcessService.repair(taskId, process.getRepairDetail());
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -183,7 +158,7 @@ public class CustomerServiceProcessController extends BaseController<CustomerSer
 	 * @param mandatary
 	 * @return
 	 */
-	@RequestMapping(value = "/customerServiceProcess/entrust", method = RequestMethod.POST)
+	@RequestMapping(value = "/entrust", method = RequestMethod.POST)
 	public JSONObject entrust(@RequestParam(value = "taskId") String taskId,
 			@RequestParam(value = "mandatary") String mandatary, @RequestParam(value = "reason") String reason) {
 		logger.debug("customerServiceProcess -> entrust");

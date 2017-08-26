@@ -78,6 +78,10 @@ public class FileMetaData extends AbstractDocument{
 	public void setUploader(String uploader) {
 		this.uploader = uploader;
 	}
+	
+	public String getSuffix() {
+		return fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+	}
 
 	@Override
 	public String toString() {

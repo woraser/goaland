@@ -1,5 +1,7 @@
 package com.anosi.asset.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,11 @@ public class RoleFunctionServiceImpl extends BaseServiceImpl<RoleFunction> imple
 	@Override
 	public BaseJPADao<RoleFunction> getRepository() {
 		return roleFunctionDao;
+	}
+
+	@Override
+	public List<RoleFunction> findByParentRoleFunctionIsNull() {
+		return roleFunctionDao.findByParentRoleFunctionIsNull();
 	}
 
 }

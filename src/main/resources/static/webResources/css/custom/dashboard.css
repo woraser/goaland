@@ -1,0 +1,46 @@
+.topdiv{
+       background:#303644;
+       width:17.2%;
+       height:110px;
+       float:left;
+       margin-right:0.8%;
+       border:0px;
+       color:white;
+       text-align: center;
+       margin-top: 30px;
+   }  /* 上面四个标签 */
+.rightdiv{
+    background:#303644;
+    height:31.2%;
+    color:white;
+    margin-top:30px;
+    margin-right: 5%;
+    text-align: center;
+}
+.title{
+    margin-top: 2%;
+    font-size:25px;
+    font-weight: 800;
+}
+.secondtitle{
+    margin-top: 1%;
+    color:#74787F;
+    font-weight: 800;
+    font-size: 18px;
+}
+.thirdtitle{
+    margin-top: 1%;
+    font-size: 18px;
+}
+.subRightTitle{
+    width:100%;
+    height:15%;
+    text-align: left;
+    padding: 20px;
+    color:#74787F;
+    font-weight: 600;
+    font-size: 18px;
+}
+#allmap{
+    margin-top:9%;width:71%; height:81.5%;top: 3%;margin-left: 1.5%;
+}

@@ -5,4 +5,15 @@
 			<role code="admin" name="管理员"></role>
 		</depGroup>
 	</department>
+	<department code="engineerDep" name="工程部">
+		<depGroup code="engineerManageGroup" name="工程管理组">
+			<role code="engineerManager" name="工程部经理"></role>
+		</depGroup>
+		<depGroup code="customerServiceGroup" name="售后服务组">
+			<role code="customerServicer" name="服务人员"></role>
+		</depGroup>
+		<depGroup code="engineerGroup" name="工程师组">
+			<role code="engineer" name="工程师"></role>
+		</depGroup>
+	</department>
 </departments>
