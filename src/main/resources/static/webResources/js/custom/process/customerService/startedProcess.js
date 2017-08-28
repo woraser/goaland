@@ -5,7 +5,7 @@ $(document).ready(function() {
 	 
 	 //每页显示多少行
 	 var rowNum=3;
-	 var initPage=0;//初始页
+	 var page=0;//初始页
 	 var pageNum=0;//总页数
 	 var url='/customerServiceProcess/startedProcess/data/REMOTE';
 	 var sort;
@@ -35,6 +35,9 @@ $(document).ready(function() {
 					$.each(data.content,function(i,value){
 						convertContent(this)
 					})
+					$("#tasks").append(' <div class="zxf_pagediv" id="dataPager"></div>');
+					//刷新分页插件
+					createPage($("#dataPager"),pageNum,page,11,reloadContent)
 				}
 		 });
 	 }
@@ -111,9 +114,6 @@ $(document).ready(function() {
 	 })
 	 
 	 //加载数据
-	 reloadContent(initPage)
-	 
-	 //刷新分页插件
-	 createPage($("#dataPager"),pageNum,initPage,11,reloadContent)
+	 reloadContent(page)
 	 
 })

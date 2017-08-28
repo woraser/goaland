@@ -61,7 +61,7 @@ public class JqgridUtil<T> {
 			JSONArray attributeArray = new JSONArray();
 			//遍历属性
 			for (String attribute : attributes) {
-				jsonObject.put(attribute, PropertyUtil.getNestedProperty(t, attribute));
+				attributeArray.add(PropertyUtil.getNestedProperty(t, attribute));
 			}
 			jsonObject.put("cell", attributeArray);
 			
