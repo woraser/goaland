@@ -1,6 +1,7 @@
 package com.anosi.asset.model.elasticsearch;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -25,13 +26,31 @@ public class TechnologyDocument implements Serializable{
 	@Field(searchAnalyzer="ik_max_word",analyzer="ik_max_word")
 	private String content;
 	
-	private String highLight;
-	
 	@Field(index = FieldIndex.not_analyzed,store=true)
 	private String fileId;//文件的唯一id
 	
 	@Field(index = FieldIndex.not_analyzed,store=true)
 	private String type;
+	
+	@Field(index = FieldIndex.not_analyzed,store=true)
+	private String uploader;
+	
+	@Field(index = FieldIndex.not_analyzed,store=true)
+	private Date uploadTime;
+	
+	private String fileName;
+	
+	private String highLightContent;
+	
+	private String highLightFileName;
+	
+	// 上传时间下限
+	private Date lowerLimit;
+
+	// 上传时间上限
+	private Date upperLimit;
+	
+	private String searchContent;
 
 	@Id
 	public String getId() {
@@ -50,14 +69,6 @@ public class TechnologyDocument implements Serializable{
 		this.content = content;
 	}
 
-	public String getHighLight() {
-		return highLight;
-	}
-
-	public void setHighLight(String highLight) {
-		this.highLight = highLight;
-	}
-
 	public String getFileId() {
 		return fileId;
 	}
@@ -72,6 +83,74 @@ public class TechnologyDocument implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getUploader() {
+		return uploader;
+	}
+
+	public void setUploader(String uploader) {
+		this.uploader = uploader;
+	}
+
+	public Date getUploadTime() {
+		return uploadTime;
+	}
+
+	public void setUploadTime(Date uploadTime) {
+		this.uploadTime = uploadTime;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getHighLightContent() {
+		return highLightContent;
+	}
+
+	public void setHighLightContent(String highLightContent) {
+		this.highLightContent = highLightContent;
+	}
+
+	public String getHighLightFileName() {
+		return highLightFileName;
+	}
+
+	public void setHighLightFileName(String highLightFileName) {
+		this.highLightFileName = highLightFileName;
+	}
+	
+	public Date getLowerLimit() {
+		return lowerLimit;
+	}
+
+	public void setLowerLimit(Date lowerLimit) {
+		this.lowerLimit = lowerLimit;
+	}
+
+	public Date getUpperLimit() {
+		return upperLimit;
+	}
+
+	public void setUpperLimit(Date upperLimit) {
+		this.upperLimit = upperLimit;
+	}
+
+	public String getSuffix() {
+		return fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+	}
+
+	public String getSearchContent() {
+		return searchContent;
+	}
+
+	public void setSearchContent(String searchContent) {
+		this.searchContent = searchContent;
 	}
 	
 }

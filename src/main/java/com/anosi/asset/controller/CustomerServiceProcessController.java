@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.QAccount;
@@ -84,7 +85,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 			accounts = accountService.findAll(QAccount.account.role.code.eq("engineer"));
 			return ImmutableMap.of("accounts", accounts);
 		}
-		return null;
+		throw new CustomRunTimeException("taskDefinitionKey is illegal");
 	}
 
 	/***

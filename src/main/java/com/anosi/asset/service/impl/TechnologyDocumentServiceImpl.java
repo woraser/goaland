@@ -6,11 +6,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,8 @@ import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.anosi.asset.util.FileFetchUtil;
 import com.anosi.asset.util.FileFetchUtil.Suffix;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service("technologyDocumentService")
 @Transactional
@@ -82,6 +84,9 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		td.setContent(content);
 		td.setFileId(fileMetaData.getObjectId().toString());
 		td.setType(type);
+		td.setFileName(fileName);
+		td.setUploader(fileMetaData.getUploader());
+		td.setUploadTime(fileMetaData.getUploadTime());
 		return technologyDocumentDao.save(td);
 	}
 
@@ -117,18 +122,58 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	}
 
 	@Override
-	public Page<TechnologyDocument> getHighLightContent(String content, String type, Pageable pageable)
+	public Page<TechnologyDocument> getHighLight(TechnologyDocument technologyDocument, Pageable pageable)
 			throws Exception {
-		logger.debug("search content:{}", content);
-		// 判断是否需要插入中央词库,新开一个线程,不在主线程上消耗时间影响用户体验
-		new Thread(() -> searchRecordService.insertInto(content, "search_" + SessionUtil.getCurrentUser().getLoginId()))
-				.start();
-		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder()
-				.withQuery(QueryBuilders.matchQuery("content", content)).withPageable(pageable);
-		if (StringUtils.isNoneBlank(type)) {
-			queryBuilder.withFilter(QueryBuilders.boolQuery().filter(QueryBuilders.termQuery("type", type)));
+		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withPageable(pageable);
+		return technologyDocumentDao.getHighLight(elasticsearchTemplate,
+				parseToQuery(technologyDocument, queryBuilder));
+	}
+
+	/***
+	 * 根据technologyDocument的各个属性,parse成query
+	 * 
+	 * @param technologyDocument
+	 * @param queryBuilder
+	 * @return
+	 */
+	private NativeSearchQueryBuilder parseToQuery(TechnologyDocument technologyDocument,
+			NativeSearchQueryBuilder queryBuilder) {
+		String searchContent = technologyDocument.getSearchContent();
+		Date lowerLimit = technologyDocument.getLowerLimit();
+		Date upperLimit = technologyDocument.getUpperLimit();
+		String uploader = technologyDocument.getUploader();
+		String type = technologyDocument.getType();
+
+		// 如果查询内容不为空，那么默认查询内容或者标题
+		if (StringUtils.isNoneBlank(searchContent)) {
+			// 判断是否需要插入中央词库,新开一个线程,不在主线程上消耗时间影响用户体验
+			new Thread(() -> searchRecordService.insertInto(searchContent,
+					"search_" + SessionUtil.getCurrentUser().getLoginId())).start();
+			queryBuilder.withQuery(boolQuery().should(matchQuery("content", searchContent))
+					.should(matchQuery("fileName", searchContent)));
 		}
-		return technologyDocumentDao.getHighLightContent(elasticsearchTemplate, queryBuilder);
+
+		// 查询文档类型
+		if (StringUtils.isNoneBlank(type)) {
+			queryBuilder.withFilter(boolQuery().filter(termQuery("type", type)));
+		}
+
+		// 查询文档上传人
+		if (StringUtils.isNoneBlank(uploader)) {
+			queryBuilder.withFilter(boolQuery().filter(termQuery("uploader", uploader)));
+		}
+
+		// 查询文档上传时间的下限
+		if (lowerLimit != null) {
+			queryBuilder.withFilter(boolQuery().filter(rangeQuery("uploadTime").from(lowerLimit)));
+		}
+
+		// 查询文档上传时间的上限
+		if (upperLimit != null) {
+			queryBuilder.withFilter(boolQuery().filter(rangeQuery("uploadTime").to(upperLimit)));
+		}
+
+		return queryBuilder;
 	}
 
 	@Override
@@ -139,7 +184,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	@Override
 	public List<TechnologyDocument> updateType(String lastType, String nowType) {
 		List<TechnologyDocument> technologyDocuments = technologyDocumentDao.findByTypeEquals(lastType);
-		if(!CollectionUtils.isEmpty(technologyDocuments)){
+		if (!CollectionUtils.isEmpty(technologyDocuments)) {
 			for (TechnologyDocument technologyDocument : technologyDocuments) {
 				technologyDocument.setType(nowType);
 			}

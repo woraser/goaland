@@ -38,7 +38,7 @@ $(function(){
 					var options = {
 						type : "post",
 						url : '/technologyDocument/upload',
-						data : {'type':'技术文档'},
+						data : {'type':'故障文档'},
 						success : function(data) {
 							if(data.result=='upload success'){
 								alert('操作成功');

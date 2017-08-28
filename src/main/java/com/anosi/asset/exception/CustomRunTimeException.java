@@ -1,5 +1,10 @@
 package com.anosi.asset.exception;
 
+/***
+ * 自定义的异常，用来给用户反馈
+ * @author jinyao
+ *
+ */
 public class CustomRunTimeException extends RuntimeException{
 
 	/**

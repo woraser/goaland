@@ -26,7 +26,7 @@ class TestTechnologyDocument {
 
 	@Test
 	void testCreate(){
-		technologyDocumentService.createTechnologyDocument(new File('E:/水源产品生命周期跟踪系统技术文档7.11.docx'))
+		technologyDocumentService.createTechnologyDocument(new File('E:/水源产品生命周期跟踪系统技术文档7.11.docx'),"故障文档")
 	}
 
 	@Test

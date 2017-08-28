@@ -1,4 +1,4 @@
-ÉèÖÃÆ´Òô·Ö´Ê
+è®¾ç½®æ‹¼éŸ³åˆ†è¯
 POST http://localhost:9200/goaland/_mapping/searchRecord
 {
   "searchRecord": {
@@ -13,7 +13,7 @@ POST http://localhost:9200/goaland/_mapping/searchRecord
   }
 }
 
-ÉèÖÃÖĞÎÄ·Ö´Ê
+è®¾ç½®ä¸­æ–‡åˆ†è¯
 POST http://localhost:9200/goaland/_mapping/technologyDocument
 {
   "technologyDocument": {
@@ -22,24 +22,39 @@ POST http://localhost:9200/goaland/_mapping/technologyDocument
         "type": "String",
         "analyzer": "ik_max_word",
         "search_analyzer": "ik_max_word",
-        "store":"false",
+        "term_vector": "with_positions_offsets"
+      },
+      "fileName": {
+        "type": "String",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_max_word",
         "term_vector": "with_positions_offsets"
       }
     }
   }
 }
 
-ÉèÖÃ²»·Ö´Ê
+è®¾ç½®ä¸åˆ†è¯
 POST http://localhost:9200/goaland/_mapping/technologyDocument
 {
   "technologyDocument": {
     "properties": {
       "type": {
         "type": "String",
-        "index" : "not_analyzed",
-        "store":"false"
+        "index" : "not_analyzed"
+      },
+      "uploader": {
+	    "type": "String",
+	    "index" : "not_analyzed"
+	  },
+	  "uploadTime": {
+        "type": "date",
+        "index" : "not_analyzed"
       }
     }
   }
 }
+
+åˆ é™¤
+DEL http://localhost:9200/goaland/
 

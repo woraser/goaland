@@ -57,12 +57,12 @@ public interface TechnologyDocumentService {
 	/***
 	 * 根据内容查找文档
 	 * 
-	 * @param content
+	 * @param technologyDocument
 	 * @param pageable
 	 * @return
 	 * @throws Exception
 	 */
-	Page<TechnologyDocument> getHighLightContent(String content, String type, Pageable pageable) throws Exception;
+	Page<TechnologyDocument> getHighLight( TechnologyDocument technologyDocument, Pageable pageable) throws Exception;
 	
 	/***
 	 * 根据类型精确查找文档
