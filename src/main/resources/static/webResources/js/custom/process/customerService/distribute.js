@@ -22,6 +22,8 @@ $(document).ready(function() {
 						infoAndFunc('操作成功',func);
 					}else if(data.result=='error'){
 						warning('操作失败:'+data.message);
+					}else{
+						warning('操作失败');
 					}
 				}
 			};

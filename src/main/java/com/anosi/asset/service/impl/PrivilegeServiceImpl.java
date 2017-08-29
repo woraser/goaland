@@ -29,5 +29,11 @@ public class PrivilegeServiceImpl extends BaseServiceImpl<Privilege> implements 
 	public BaseJPADao<Privilege> getRepository() {
 		return privilegeDao;
 	}
+
+	@Override
+	public void deleteByAccountLoginId(String accountLoginId) {
+		Iterable<Privilege> privileges = privilegeDao.findByAccount_loginIdEquals(accountLoginId);
+		privilegeDao.delete(privileges);
+	}
 	
 }

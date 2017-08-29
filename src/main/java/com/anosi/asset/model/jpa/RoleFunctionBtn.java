@@ -59,7 +59,30 @@ public class RoleFunctionBtn extends BaseEntity{
 	public void setPrivilegeList(List<Privilege> privilegeList) {
 		this.privilegeList = privilegeList;
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((btnId == null) ? 0 : btnId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RoleFunctionBtn other = (RoleFunctionBtn) obj;
+		if (btnId == null) {
+			if (other.btnId != null)
+				return false;
+		} else if (!btnId.equals(other.btnId))
+			return false;
+		return true;
+	}
 	
 }

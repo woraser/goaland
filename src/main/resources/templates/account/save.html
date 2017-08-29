@@ -18,13 +18,13 @@
 
 <body class="skin-blue sidebar-mini">
 	<form class="form-horizontal" role="form" th:object="${account}" id="accountForm">
-		<input type="hidden" id="accountId" name="accountId" th:value="${account.id}"/>  
+		<input type="hidden" id="accountId" name="accountId" th:value="${account.id}"/> 
+		<input type="hidden" id="password" name="password" th:value="${account.password}"/>   
 	    <fieldset>
-	    	<div class="form-group">
+	    	<div class="form-group" th:unless="${account.id}">
 		    	<label class="col-sm-3 control-label"  th:text="#{account.loginId}" for="loginId">账号</label>  
 		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{loginId}" id="loginId" class="form-control" th:placeholder="#{account.loginId}" th:if="${account.id}" style="background-color:#cccccc;" readonly="readonly"/>  
-    				<input type="text" th:field="*{loginId}" id="loginId" class="form-control" th:placeholder="#{account.loginId}" th:unless="${account.id}"/>
+    				<input type="text" th:field="*{loginId}" id="loginId" class="form-control" th:placeholder="#{account.loginId}"/>
     			</div>
 	    	</div>
 	    	<div class="form-group">
@@ -34,9 +34,9 @@
     			</div>
 	    	</div>
 	    	<div class="form-group" id="showPassword">
-		    	<label class="col-sm-3 control-label"  th:text="#{account.password}" for="password">密码</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{account.password}" for="newPassword">密码</label>  
 		    	<div class="col-sm-8">
-		    		<input type="password" name="password" id="password" class="form-control" th:placeholder="#{account.password}"/>  
+		    		<input type="password" name="newPassword" id="newPassword" class="form-control" th:placeholder="#{account.password}"/>  
     			</div>
 	    	</div>
 	    	<div class="form-group" id="showPasswordConfirm">

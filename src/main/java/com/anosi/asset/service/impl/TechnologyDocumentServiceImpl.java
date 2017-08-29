@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 import com.anosi.asset.model.mongo.FileMetaData;
+import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
@@ -53,6 +56,8 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	private FileMetaDataService fileMetaDataService;
 	@Autowired
 	private I18nComponent i18nComponent;
+	@Autowired
+	private AccountService accountService;
 
 	@Override
 	public TechnologyDocument createTechnologyDocument(File file, String type) throws Exception {
@@ -87,6 +92,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		td.setFileName(fileName);
 		td.setUploader(fileMetaData.getUploader());
 		td.setUploadTime(fileMetaData.getUploadTime());
+		accountService.getOne(SessionUtil.getCurrentUser().getId()).setUploadDocument(true);
 		return technologyDocumentDao.save(td);
 	}
 
@@ -125,8 +131,11 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	public Page<TechnologyDocument> getHighLight(TechnologyDocument technologyDocument, Pageable pageable)
 			throws Exception {
 		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withPageable(pageable);
-		return technologyDocumentDao.getHighLight(elasticsearchTemplate,
+		Page<TechnologyDocument> page = technologyDocumentDao.getHighLight(elasticsearchTemplate,
 				parseToQuery(technologyDocument, queryBuilder));
+		//把上传人从登录帐号改为用户名
+		page.getContent().forEach(t -> t.setUploader(accountService.findByLoginId(t.getUploader()).getName()));
+		return page;
 	}
 
 	/***
@@ -153,27 +162,40 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 					.should(matchQuery("fileName", searchContent)));
 		}
 
+		BoolQueryBuilder boolQueryBuilder = null;
+
 		// 查询文档类型
 		if (StringUtils.isNoneBlank(type)) {
-			queryBuilder.withFilter(boolQuery().filter(termQuery("type", type)));
+			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, termQuery("type", type));
 		}
 
 		// 查询文档上传人
 		if (StringUtils.isNoneBlank(uploader)) {
-			queryBuilder.withFilter(boolQuery().filter(termQuery("uploader", uploader)));
+			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, termQuery("uploader", uploader));
 		}
 
-		// 查询文档上传时间的下限
-		if (lowerLimit != null) {
-			queryBuilder.withFilter(boolQuery().filter(rangeQuery("uploadTime").from(lowerLimit)));
+		// 查询文档上传时间的下限,上限
+		if (lowerLimit != null && upperLimit != null) {
+			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder,
+					rangeQuery("uploadTime").from(lowerLimit).to(upperLimit));
+		} else if (upperLimit != null) {
+			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, rangeQuery("uploadTime").to(upperLimit));
+		} else if (lowerLimit != null) {
+			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, termQuery("uploadTime", lowerLimit));
 		}
-
-		// 查询文档上传时间的上限
-		if (upperLimit != null) {
-			queryBuilder.withFilter(boolQuery().filter(rangeQuery("uploadTime").to(upperLimit)));
+		if (boolQueryBuilder != null) {
+			queryBuilder.withFilter(boolQueryBuilder);
 		}
-
 		return queryBuilder;
+	}
+
+	private BoolQueryBuilder checkBoolQueryBuilder(BoolQueryBuilder boolQueryBuilder, QueryBuilder queryBuilder) {
+		if (boolQueryBuilder == null) {
+			boolQueryBuilder = boolQuery().must(queryBuilder);
+		} else {
+			boolQueryBuilder.must(queryBuilder);
+		}
+		return boolQueryBuilder;
 	}
 
 	@Override

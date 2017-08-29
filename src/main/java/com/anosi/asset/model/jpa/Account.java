@@ -30,6 +30,8 @@ public class Account extends BaseEntity{
 	private String password;
 	
 	private Role role;
+	
+	private boolean uploadDocument = false;//是否上传过文件
 
 	private List<Privilege> privilegeList = new ArrayList<>();
 	
@@ -86,6 +88,14 @@ public class Account extends BaseEntity{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public boolean isUploadDocument() {
+		return uploadDocument;
+	}
+
+	public void setUploadDocument(boolean uploadDocument) {
+		this.uploadDocument = uploadDocument;
 	}
 
 	public String getSalt() {

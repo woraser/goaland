@@ -49,6 +49,8 @@ $(document).ready(function() {
 						infoAndFunc('操作成功',func);
 					}else if(data.result=='error'){
 						warning('操作失败:'+data.message);
+					}else{
+						warning('操作失败');
 					}
 				}
 			};
@@ -65,7 +67,7 @@ $(document).ready(function() {
 		return this.optional(element) || (length == 11 && mobile.test(value));
 	}, "请正确填写您的手机号码");
 
-	$("#proposeTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true'});
+	$("#proposeTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
 	
 	$("#fileUpLoad").fileinput({
 		language: 'zh', //设置语言

@@ -35,6 +35,12 @@ public class GlobalController<T> {
 			return mv;
 		}else{
 			ModelAndView mv =  new ModelAndView("error");
+			StringBuilder sb = new StringBuilder();
+			StackTraceElement[] stackTrace = ex.getStackTrace();
+			for (StackTraceElement stackTraceElement : stackTrace) {
+				sb.append(stackTraceElement+"\n");
+			}
+			mv.addObject("message", sb.toString());
 			return mv;
 		}
 	}

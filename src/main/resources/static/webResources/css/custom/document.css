@@ -15,6 +15,6 @@
 }
 .knowledgeInfo{float:left;width: 23%;height: 100%;}
 .knowledgeDev{float:left;width: 16%;height: 100%;color: #C1C1C1;padding-left:1%;padding-top:3%;font-size: 15px}
-.upLoader{float:left;width: 16%;height: 100%;color: #C1C1C1;padding-top: 3%;font-size: 15px}
+.upLoader{float:left;width: 16%;height: 100%;color: #C1C1C1;padding-top: 3%;font-size: 15px;padding-left: 1%}
 .upTime{float: left;width: 20%;height: 100%;color: #C1C1C1;font-size: 15px;padding-top: 3%}
-.handle{float:left;width: 16%;height: 100%;color: #C1C1C1;padding-top: 3%;font-size: 15px}
+.handle{float:left;width: 16%;height: 100%;color: #C1C1C1;padding-top: 3%;font-size: 15px;padding-left: 1%}

@@ -2,25 +2,22 @@
  * 
  */
 $(document).ready(function() {
-	$("#customerServiceForm").validate({
+	$("#documentForm").validate({
 		//debug:true,
 		rules : {
-			"evaluatingDetail.breakdownDevice" : {
-				required : true,
-			},
-			servicer : {
+			fileUpLoad : {
 				required : true,
 			},
 		},
 		submitHandler: function(form) {  
 			var options = {
 				type : "post",
-				url : '/customerServiceProcess/evaluating',
+				url : '/technologyDocument/upload',
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){
 						var func = function(){
-							window.location.href="/customerServiceProcess/runtimeTask/view"
+							window.location.href="/technologyDocument/manage"
 						}
 						infoAndFunc('操作成功',func);
 					}else if(data.result=='error'){
@@ -36,4 +33,11 @@ $(document).ready(function() {
 		}  
 	});
 
+	$("#fileUpLoad").fileinput({
+		language: 'zh', //设置语言
+		maxFileCount: 10,
+		showUpload: false, //是否显示上传按钮
+		allowedFileExtensions: ["xlsx","xls","pdf","doc","docx","csv","txt"]
+	});
+	 
 })

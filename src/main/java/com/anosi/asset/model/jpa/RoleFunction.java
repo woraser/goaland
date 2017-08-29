@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "roleFunction")
@@ -86,6 +87,9 @@ public class RoleFunction extends BaseEntity{
 		this.privilegeList = privilegeList;
 	}
 	
-	
+	@Transient
+	public boolean isFirstNode(){
+		return parentRoleFunction==null;
+	}
 
 }

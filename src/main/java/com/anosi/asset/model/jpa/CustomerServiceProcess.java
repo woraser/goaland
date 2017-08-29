@@ -24,6 +24,8 @@ public class CustomerServiceProcess extends BaseProcess{
 	
 	private RepairDetail repairDetail;//维修字段
 	
+	private boolean file = false;//是否有上传文件
+	
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Account.class)
 	@JoinColumn(nullable=false)
 	public Account getApplicant() {
@@ -57,7 +59,14 @@ public class CustomerServiceProcess extends BaseProcess{
 	public void setEvaluatingDetail(EvaluatingDetail evaluatingDetail) {
 		this.evaluatingDetail = evaluatingDetail;
 	}
+	
+	public boolean isFile() {
+		return file;
+	}
 
+	public void setFile(boolean file) {
+		this.file = file;
+	}
 
 	/***
 	 * 流程发起时的表单字段

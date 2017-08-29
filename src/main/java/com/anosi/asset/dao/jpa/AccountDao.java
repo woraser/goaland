@@ -6,4 +6,6 @@ public interface AccountDao extends BaseJPADao<Account>{
 
 	public Account findByLoginId(String loginId);
 	
+	public Iterable<Account> findByUploadDocument(boolean uploadDocument);
+	
 }

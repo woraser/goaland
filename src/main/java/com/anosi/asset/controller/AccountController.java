@@ -26,15 +26,15 @@ import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
 
 @RestController
-public class AccountController extends BaseController<Account>{
-	
+public class AccountController extends BaseController<Account> {
+
 	private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
-	
+
 	@Autowired
 	private AccountService accountService;
 	@Autowired
 	private RoleService roleService;
-	
+
 	/***
 	 * 进入查看<b>用户信息管理</b>的页面
 	 * 
@@ -45,9 +45,10 @@ public class AccountController extends BaseController<Account>{
 		logger.debug("view account manage");
 		return new ModelAndView("account/accountManage");
 	}
-	
+
 	/***
 	 * 获取account数据
+	 * 
 	 * @param pageable
 	 * @param predicate
 	 * @param showAttributes
@@ -60,23 +61,24 @@ public class AccountController extends BaseController<Account>{
 	public JSONObject findAccountManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = Account.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes, @RequestParam(value = "rowId") String rowId)
-					throws Exception {
+			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
 		logger.info("find iotx");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
-		
+
 		return parseToJson(accountService.findAll(predicate, pageable), rowId, showAttributes, showType);
 	}
-	
+
 	/***
 	 * 进入添加用户的页面
+	 * 
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/save", method = RequestMethod.GET)
-	public ModelAndView toSaveIotxPage(@RequestParam(value = "id", required = false) Long id) throws Exception{
+	public ModelAndView toSaveIotxPage(@RequestParam(value = "id", required = false) Long id) throws Exception {
 		Account account = null;
 		if (id != null) {
 			account = accountService.getOne(id);
@@ -85,7 +87,17 @@ public class AccountController extends BaseController<Account>{
 		}
 		return new ModelAndView("account/save").addObject("account", account).addObject("roles", roleService.findAll());
 	}
-	
+
+	/***
+	 * 将菜单权限转化为zTree字符串
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/account/roleFunction/tree/data", method = RequestMethod.GET)
+	public JSONArray parseToTree(@RequestParam(name = "accountId", required = false) Long id) {
+		return accountService.parseRoleFunctionToTree(id);
+	}
+
 	/****
 	 * 在执行update前，先获取持久化的account对象
 	 * 
@@ -99,27 +111,31 @@ public class AccountController extends BaseController<Account>{
 			model.addAttribute("account", accountService.getOne(id));
 		}
 	}
-	
+
 	/***
 	 * 添加或者修改account
+	 * 
 	 * @param account
 	 * @param 如果请求中传来了password,说明修改了密码或者新建了用户
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/save", method = RequestMethod.POST)
-	public JSONObject saveIotx(@ModelAttribute("account") Account account,String password) throws Exception {
+	public JSONObject saveIotx(@ModelAttribute("account") Account account,
+			@RequestParam(name = "newPassword", required = false) String password, String[] selRolesFunctionNode)
+			throws Exception {
 		logger.debug("saveOrUpdate account");
-		if(StringUtils.isBlank(password)){
-			accountService.save(account);
-		}else{
-			accountService.save(account,password);
+		if (StringUtils.isBlank(password)) {
+			accountService.save(account, selRolesFunctionNode);
+		} else {
+			accountService.save(account, password, selRolesFunctionNode);
 		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
-	
+
 	/***
 	 * 获取autocomplete的source
+	 * 
 	 * @param predicate
 	 * @param label
 	 * @param value
@@ -127,20 +143,21 @@ public class AccountController extends BaseController<Account>{
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/autocomplete", method = RequestMethod.GET)
-	public JSONArray autocomplete(@QuerydslPredicate(root = Account.class) Predicate predicate,@RequestParam(value = "label") String label,
-			String value) throws Exception{
+	public JSONArray autocomplete(@QuerydslPredicate(root = Account.class) Predicate predicate,
+			@RequestParam(value = "label") String label, String value) throws Exception {
 		return jsonUtil.parseAttributesToAutocomplete(label, value, accountService.findAll(predicate));
-	} 
-	
+	}
+
 	/**
 	 * 按照account某些属性判断是否存在
+	 * 
 	 * @param predicate
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/checkExist", method = RequestMethod.GET)
-	public JSONObject checkExist(@QuerydslPredicate(root = Account.class) Predicate predicate) throws Exception{
+	public JSONObject checkExist(@QuerydslPredicate(root = Account.class) Predicate predicate) throws Exception {
 		return new JSONObject(ImmutableMap.of("result", accountService.exists(predicate)));
 	}
-	
+
 }

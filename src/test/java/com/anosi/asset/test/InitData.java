@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.anosi.asset.GoalandApplication;
 import com.anosi.asset.component.PasswordEncry;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.DocumentType;
 import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.DocumentTypeService;
 import com.anosi.asset.service.RoleService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,6 +25,8 @@ public class InitData {
 	private AccountService accountService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private DocumentTypeService documentTypeService;
 
 	@Test
 	@Rollback(false)
@@ -73,6 +77,20 @@ public class InitData {
 			e.printStackTrace();
 		}
 		accountService.save(account);
+	}
+	
+	@Test
+	@Rollback(false)
+	public void initType(){
+		DocumentType type = new DocumentType();
+		type.setName("故障文档");
+		documentTypeService.save(type);
+		DocumentType type2 = new DocumentType();
+		type2.setName("技术文档");
+		documentTypeService.save(type2);
+		DocumentType type3 = new DocumentType();
+		type3.setName("设备文档");
+		documentTypeService.save(type3);
 	}
 	
 }

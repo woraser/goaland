@@ -72,7 +72,6 @@
 				obj.append('<span>'+'到第'+'<input type="text" class="zxfinput" value="'+pageinit.current+'"/>'+'页'+'</span>');
 				obj.append('<span class="zxfokbtn" style="background:#0194DC;color:white">'+'确定'+'</span>');
 				/*obj.append('<span class="select" style="color:black">'+'<select class="select"style="width:80px;height:35px;margin-left:20px">'+'<option class="select">'+'10'+'</option>'+'<option class="select">'+'20'+'</option>'+'<option class="select">'+'30'+'</option>'+'</select>'+'</span>')*/
-			    obj.append('<span style="margin-left:20px">'+'共'+'<b>'+30+'</b>'+'条'+'</span>');
 			}());
 		},
 		bindEvent:function(obj,pageinit){

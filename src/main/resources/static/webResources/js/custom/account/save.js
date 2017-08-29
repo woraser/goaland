@@ -14,23 +14,37 @@ $(document).ready(function() {
 				minlength: 2,
 				required : true,
 			},
-			password : {
+			newPassword : {
 				minlength: 2,
 				required : true,
 			},
 			passwordConfirm : {
 				minlength: 2,
 				required : true,
-				equalTo: "#password",
+				equalTo: "#newPassword",
 			},
 			role : {
 				required : true,
 			},
 		},
 		submitHandler: function(form) {  
+			var afaTree = $.fn.zTree.getZTreeObj("accountRoleFunctionTree");
+     	    var afaTrueNodes = afaTree.getCheckedNodes(true);
+     	    var selIdRoleFunction="";
+	   	    for(var i=0;i<afaTrueNodes.length;i++){
+	   	       var id = afaTrueNodes[i].id.toString();
+	   	       if(id!="menu_0") {
+	   	    	   if(selIdRoleFunction==""){
+	   	    		   selIdRoleFunction+=afaTrueNodes[i].id;
+	   	    	   }else{
+	   	    		selIdRoleFunction+=","+afaTrueNodes[i].id;
+	   	    	   }
+	   	       }
+	   	    } 
 			var options = {
 				type : "post",
 				url : '/account/save',
+				data : {'selRolesFunctionNode' : selIdRoleFunction},
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){
@@ -40,6 +54,8 @@ $(document).ready(function() {
 						infoAndFunc('操作成功',func);
 					}else if(data.result=='error'){
 						warning('操作失败:'+data.message);
+					}else{
+						warning('操作失败');
 					}
 				}
 			};
@@ -50,7 +66,7 @@ $(document).ready(function() {
 	});
 	
 	jQuery.validator.addMethod("checkUniqueLoginId", function(value, element) {
-		var flag=true;
+		var flag;
 		$.ajax({
 			url : '/account/checkExist',
 			data : {
@@ -58,9 +74,13 @@ $(document).ready(function() {
 			},
 			type : 'get',
 			dataType : 'json',
+			async:false,
 			success : function(msg) {
+				// true表示已经存在
 				if (msg.result == true) {
 					flag = false;
+				} else{
+					flag = true;
 				}
 			}
 		});
@@ -91,10 +111,12 @@ $(document).ready(function() {
 	};
 	
 	$.ajax({
-		url : '/account/checkExist',
+		url : '/account/roleFunction/tree/data',
+		data : {'accountId' : $('#accountId').val()},
 		type : 'get',
 		dataType : 'json',
 		success : function(zNodes) {
+			console.info(zNodes)
 			$.fn.zTree.init($("#accountRoleFunctionTree"), setting, zNodes);
 		}
 	});

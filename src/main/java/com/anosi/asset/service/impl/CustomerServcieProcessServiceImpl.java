@@ -71,6 +71,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		customerServiceProcess.setProcessInstanceId(processInstance.getId());
 		customerServiceProcess.setFinishType(FinishType.REAMIN);
 		customerServiceProcess.setApplicant(SessionUtil.getCurrentUser());
+		customerServiceProcess.setFile(true);
 		customerServiceProcessDao.save(customerServiceProcess);
 		// 创建记录
 		createNewProcessRecord(processInstance.getId());

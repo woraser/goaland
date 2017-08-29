@@ -44,7 +44,7 @@ class InitRoleFunctionRelated {
 		// 闭包
 		roleFunctions.roleFunction.each{roleFunction->
 			//判断是否有子权限
-			checkSubRoleFunction(roleFunction)
+			checkSubRoleFunction(roleFunction,null)
 		}
 	}
 	
@@ -53,8 +53,8 @@ class InitRoleFunctionRelated {
 	 * @param roleFunction
 	 * @return
 	 */
-	private void checkSubRoleFunction(Object roleFunction){
-		def realRoleFunction = checkRoleFunction(roleFunction.@roleFunctionPageId.toString(),roleFunction.@name.toString())
+	private void checkSubRoleFunction(Object roleFunction,RoleFunction parentRoleFunction){
+		def realRoleFunction = checkRoleFunction(roleFunction.@roleFunctionPageId.toString(),roleFunction.@name.toString(),parentRoleFunction)
 		logger.debug("roleFunction:{}",realRoleFunction.roleFunctionPageId)
 		// 初始化按钮
 		roleFunction.roleFunctionBtn.each{
@@ -62,7 +62,7 @@ class InitRoleFunctionRelated {
 		}
 		roleFunction.roleFunction.each{
 			//递归
-			checkSubRoleFunction(it)
+			checkSubRoleFunction(it,realRoleFunction)
 		}
 	}
 
@@ -71,10 +71,10 @@ class InitRoleFunctionRelated {
 	 * @param roleFunctionPageId
 	 * @return
 	 */
-	private RoleFunction checkRoleFunction(String roleFunctionPageId,String name){
+	private RoleFunction checkRoleFunction(String roleFunctionPageId,String name,RoleFunction parentRoleFunction){
 		def roleFunction = roleFunctionService.findByRoleFunctionPageId(roleFunctionPageId)
 		if(roleFunction==null){
-			roleFunction = new RoleFunction(roleFunctionPageId:roleFunctionPageId,name:name)
+			roleFunction = new RoleFunction(roleFunctionPageId:roleFunctionPageId,name:name,parentRoleFunction:parentRoleFunction)
 			roleFunction = roleFunctionService.save(roleFunction)
 			//为admin添加权限
 			def privilege = new Privilege();

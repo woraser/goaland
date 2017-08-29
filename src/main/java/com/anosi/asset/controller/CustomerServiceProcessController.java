@@ -57,7 +57,8 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/startProcess", method = RequestMethod.POST)
 	public JSONObject startProcess(@RequestParam(value = "engineeDep") String engineeDep,
-			CustomerServiceProcess process, MultipartFile[] multipartFiles) {
+			CustomerServiceProcess process,
+			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) {
 		logger.debug("customerServiceProcess -> start process");
 		try {
 			customerServcieProcessService.startProcess(accountService.findByLoginId(engineeDep),
@@ -65,14 +66,14 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new JSONObject(
-					ImmutableMap.of("result", "error", "message", Objects.requireNonNull(e.getMessage(), "error")));
+					ImmutableMap.of("result", "error", "message", Objects.requireNonNull(e.getMessage(), e.toString())));
 		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
 	@Override
 	protected Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey) {
-		logger.debug("taskDefinitionKey:{},process:customerService",taskDefinitionKey);
+		logger.debug("taskDefinitionKey:{},process:customerService", taskDefinitionKey);
 		Iterable<Account> accounts;
 		switch (taskDefinitionKey) {
 		case "evaluating":

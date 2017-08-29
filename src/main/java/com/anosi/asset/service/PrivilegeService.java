@@ -8,4 +8,6 @@ public interface PrivilegeService extends BaseService<Privilege, Long>{
 	
 	public Privilege findByAccountAndRoleFunction(String loginId,String roleFunctionPageId);
 	
+	public void deleteByAccountLoginId(String accountLoginId);
+	
 }

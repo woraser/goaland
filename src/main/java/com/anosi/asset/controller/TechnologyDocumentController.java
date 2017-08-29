@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
+import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.DocumentTypeService;
 import com.anosi.asset.service.TechnologyDocumentService;
 
 @RestController
@@ -25,6 +27,10 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 
 	@Autowired
 	private TechnologyDocumentService technologyDocumentService;
+	@Autowired
+	private DocumentTypeService documentTypeService;
+	@Autowired
+	private AccountService accountService;
 
 	/***
 	 * 进去文档检索页面
@@ -32,7 +38,17 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	@RequestMapping(value = "/technologyDocument/manage", method = RequestMethod.GET)
 	public ModelAndView toTechnologyDocumentManage() {
 		logger.debug("technologyDocument manage");
-		return new ModelAndView("document/documentManage");
+		return new ModelAndView("document/documentManage").addObject("types", documentTypeService.findAll())
+				.addObject("uploaders", accountService.findByIsUploadDocument(true));
+	}
+	
+	/***
+	 * 进去文档上传页面
+	 */
+	@RequestMapping(value = "/technologyDocument/upload/view", method = RequestMethod.GET)
+	public ModelAndView technologyDocumentUpload() {
+		logger.debug("technologyDocument upload");
+		return new ModelAndView("document/upload").addObject("types", documentTypeService.findAll());
 	}
 
 	/***
@@ -45,16 +61,17 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/technologyDocument/upload", method = RequestMethod.POST)
-	public JSONObject fileUpload(@RequestParam("file_upload") MultipartFile[] multipartFiles,
+	public JSONObject fileUpload(@RequestParam("fileUpLoad") MultipartFile[] multipartFiles,
 			@RequestParam("type") String type) throws Exception {
 		logger.info("technologyDocument upload");
 		JSONObject jsonObject = new JSONObject();
 		if (multipartFiles != null && multipartFiles.length > 0) {
 			logger.debug("is uploading");
 			technologyDocumentService.createTechnologyDocument(multipartFiles, type);
-			jsonObject.put("result", "upload success");
+			jsonObject.put("result", "success");
 		} else {
-			jsonObject.put("result", "file is null");
+			jsonObject.put("result", "error");
+			jsonObject.put("message", "file is null");
 		}
 		logger.info(jsonObject.toString());
 		return jsonObject;
@@ -75,7 +92,7 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	public JSONObject fileDownloadList(@PathVariable ShowType showType, TechnologyDocument technologyDocument,
 			@RequestParam(value = "showAttributes") String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
+			@PageableDefault(sort = { "uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
 			throws Exception {
 		logger.info("to view file list");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());

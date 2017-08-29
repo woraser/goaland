@@ -7,243 +7,83 @@
 	<meta charset="UTF-8" />
 	<title>技术文档管理</title>
 	
+	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
-	<link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie.css">
-    <link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie_theme_02.css">
+	<link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie.css"/>
+    <link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie_theme_02.css"/>
 	<link rel="stylesheet" type="text/css" href="/webResources/css/custom/document.css"/>
+	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
 	
-	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
-	<script type="text/javascript" src="/webResources/js/custom/page/createPageDefault.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/document/documentManage.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/selectJquery/js/selectordie.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/page/createPageDefault.js"></script>
 	
 </head>
 
 <body>
-	<div layout:fragment="content" >
+	<div layout:fragment="content">
 		<div class="col-md-12" style="margin-left:-0.5%;width:102%;background:#242735;height:1200px;">
          <div style="float:left;margin-left:-1%;width: 20%;height: 8%;background: #2A2E3D">
              <div style="float:left;width:80%;margin-left: 10%;margin-top: 10%">
-                 <input style="float:left;width:85%;height: 40px" aria-controls="datatable1" placeholder="Search" class="form-control input-sm" type="text">
+                 <input id="searchContent" name="searchContent" style="float:left;width:85%;height: 40px" aria-controls="datatable1" placeholder="search" class="form-control input-sm" type="text"/>
                  <span class="input-group-btn" style="float: left">
-                     <button type="submit" class="btn btn-success" style="width:45px;height:41px;background-color: #363C4C;border-color: #3B4253;"><i class="fa fa-search"></i></button>
+                     <button id="search" class="btn btn-success" style="width:45px;height:41px;background-color: #363C4C;border-color: #3B4253;"><i class="fa fa-search"></i></button>
                  </span>
              </div>
          </div>
         <div style="float:right;width: 80%;height: 100%;margin-right: 1%;background: #242735">
             <div style="width: 100%;height: 8%;margin-left: 1%">
-                <button class="doButton">上传</button>
+                <button class="doButton" id="upload" th:text="#{document.upload}">上传</button>
             </div>
             <div style="width: 95%;height: 90%;margin-left: 3%">
                 <div style="width: 100%;height: 4%;border-bottom: 1px solid #333848">
-                    <div style="float:left;width: 31%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%">
-                        	文档信息
-                    </div>
-                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%">
-                        	文档类型
-                    </div>
-                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%">
-                      	  	上传人
-                    </div>
-                    <div style="float:left;width: 21%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%">
-                        	上传时间
-                    </div>
-                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%">
-                        	操作
-                    </div>
+                    <div style="float:left;width: 31%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.fileName}">文档名称</div>
+                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.fileType}">文档类型</div>
+                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.uploader}">上传人</div>
+                    <div style="float:left;width: 21%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.uploadTime}">上传时间</div>
+                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.operate}">操作</div>
                 </div>
-                <div style="width:100%;height: 10%;border-bottom: 1px solid #333848"> <!--文档列表 -->
-                    <div style="float:left;width: 9%;height: 100%;">
-                        <img src="./resources/taskpicture/111.png" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%">
-                    </div>
-                    <div class="knowledgeInfo" >
-                        <div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 18px;color: #C1C1C1;padding-left: 8%;padding-top: 8%">LSS1010524515</div>
-                        <div style="float: left;width: 100%;height: 50%;">
-                            <div style="float: left;width: 65%;height: 100%;color: #C1C1C1;padding-left: 8%;font-size: 15px;margin-top: 1%">
-                            直流输电换阀纯水设备
-                            </div>
-                            <div style="float: left;width: 35%;height: 100%;font-size: 13px;color: #C1C1C1;margin-top: 2%">
-                                2017/11/13
-                            </div>
-                        </div>
-                    </div> <!--文档信息 -->
-                    <div class="knowledgeDev" >
-                        产品说明书
-                    </div><!-- 文档类型-->
-                    <div class="upLoader" >
-                        吴洞炎
-                    </div><!--上传人-->
-                    <div class="upTime" >
-                        2017/11/14
-                    </div><!--上传时间 -->
-                    <div class="handle" >
-                        <button >下载</button>
-                        <button >预览</button>
-                    </div>
+                <div id="files" style="width:100%;height:45%">
+                <!--文档列表 -->
+         
                 </div>
-                <div style="width:100%;height: 10%;border-bottom: 1px solid #333848"> <!--文档列表 -->
-                    <div style="float:left;width: 9%;height: 100%;">
-                        <img src="./resources/taskpicture/111.png" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%">
-                    </div>
-                    <div class="knowledgeInfo" >
-                        <div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 18px;color: #C1C1C1;padding-left: 8%;padding-top: 8%">LSS1010524515</div>
-                        <div style="float: left;width: 100%;height: 50%;">
-                            <div style="float: left;width: 65%;height: 100%;color: #C1C1C1;padding-left: 8%;font-size: 15px;margin-top: 1%">
-                                直流输电换阀纯水设备
-                            </div>
-                            <div style="float: left;width: 35%;height: 100%;font-size: 13px;color: #C1C1C1;margin-top: 2%">
-                                2017/11/13
-                            </div>
-                        </div>
-                    </div> <!--文档信息 -->
-                    <div class="knowledgeDev" >
-                        产品说明书
-                    </div><!-- 文档类型-->
-                    <div class="upLoader" >
-                        吴洞炎
-                    </div><!--上传人-->
-                    <div class="upTime" >
-                        2017/11/14
-                    </div><!--上传时间 -->
-                    <div class="handle" >
-                        <button >下载</button>
-                        <button >预览</button>
-                    </div>
-                </div>
-                <div style="width:100%;height: 10%;border-bottom: 1px solid #333848"> <!--文档列表 -->
-                    <div style="float:left;width: 9%;height: 100%;">
-                        <img src="./resources/taskpicture/111.png" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%">
-                    </div>
-                    <div class="knowledgeInfo" >
-                        <div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 18px;color: #C1C1C1;padding-left: 8%;padding-top: 8%">LSS1010524515</div>
-                        <div style="float: left;width: 100%;height: 50%;">
-                            <div style="float: left;width: 65%;height: 100%;color: #C1C1C1;padding-left: 8%;font-size: 15px;margin-top: 1%">
-                                直流输电换阀纯水设备
-                            </div>
-                            <div style="float: left;width: 35%;height: 100%;font-size: 13px;color: #C1C1C1;margin-top: 2%">
-                                2017/11/13
-                            </div>
-                        </div>
-                    </div> <!--文档信息 -->
-                    <div class="knowledgeDev" >
-                        产品说明书
-                    </div><!-- 文档类型-->
-                    <div class="upLoader" >
-                        吴洞炎
-                    </div><!--上传人-->
-                    <div class="upTime" >
-                        2017/11/14
-                    </div><!--上传时间 -->
-                    <div class="handle" >
-                        <button >下载</button>
-                        <button >预览</button>
-                    </div>
-                </div>
-                <div style="width:100%;height: 10%;border-bottom: 1px solid #333848"> <!--文档列表 -->
-                    <div style="float:left;width: 9%;height: 100%;">
-                        <img src="./resources/taskpicture/111.png" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%">
-                    </div>
-                    <div class="knowledgeInfo" >
-                        <div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 18px;color: #C1C1C1;padding-left: 8%;padding-top: 8%">LSS1010524515</div>
-                        <div style="float: left;width: 100%;height: 50%;">
-                            <div style="float: left;width: 65%;height: 100%;color: #C1C1C1;padding-left: 8%;font-size: 15px;margin-top: 1%">
-                                直流输电换阀纯水设备
-                            </div>
-                            <div style="float: left;width: 35%;height: 100%;font-size: 13px;color: #C1C1C1;margin-top: 2%">
-                                2017/11/13
-                            </div>
-                        </div>
-                    </div> <!--文档信息 -->
-                    <div class="knowledgeDev" >
-                        产品说明书
-                    </div><!-- 文档类型-->
-                    <div class="upLoader" >
-                        吴洞炎
-                    </div><!--上传人-->
-                    <div class="upTime" >
-                        2017/11/14
-                    </div><!--上传时间 -->
-                    <div class="handle" >
-                        <button >下载</button>
-                        <button >预览</button>
-                    </div>
-                </div>
-                <div id="caonima" class="zxf_pagediv"></div>
             </div>
         </div>
         <div style="float:left;margin-left:-1%;width: 20%;height: 90%;background: #2A2E3D">
-             <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px">
-                 按文档信息查询
-             </div>
+             <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.message}">按文档信息查询 </div>
              <div style="height: 35%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px">
-                 <div style="width: 80%;height: 20%;margin-top:8%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ui>
-                         <li style="margin-left: -5%">文档编号:</li>
-                     </ui>
+                 <div style="width: 80%;height: 20%;margin-top:3%;margin-left: 10%;font-size: 16px;color: #6F717A">
+                     <ul>
+                         <li style="margin-left: -5%" th:text="#{document.fileType}">文档类型:</li>
+                     </ul>
                      <div class="select">
-                         <select class="myselect">
-                             <option value="111">1111</option>
-                             <option value="222">222</option>
-
-                             <option value="333">333</option>
-
-                             <option value="4444">4444</option>
-                             <option value="55555">55555</option>
-                         </select>
+                       	<select name="type" id="type" class="myselect"> 
+                       		<option value="" th:text="#{document.fileType.all}"></option>
+		            		<option th:each="type : ${types}" th:value="${type.name}" th:text="${type.name}"></option>
+		            	</select>
                      </div>
                  </div>
                  <div style="width: 80%;height: 20%;margin-top:3%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ui>
-                         <li style="margin-left: -5%">产品系列:</li>
-                     </ui>
+                     <ul>
+                         <li style="margin-left: -5%" th:text="#{document.uploader}">上传人:</li>
+                     </ul>
                      <div class="select">
-                         <select class="myselect">
-                             <option value="111">1111</option>
-                             <option value="222">222</option>
-
-                             <option value="333">333</option>
-
-                             <option value="4444">4444</option>
-                             <option value="55555">55555</option>
-                         </select>
-                     </div>
-                 </div>
-                 <div style="width: 80%;height: 20%;margin-top:3%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ui>
-                         <li style="margin-left: -5%">建档日期:</li>
-                     </ui>
-                     <div class="select">
-                         <select class="myselect">
-                             <option value="111">1111</option>
-                             <option value="222">222</option>
-
-                             <option value="333">333</option>
-
-                             <option value="4444">4444</option>
-                             <option value="55555">55555</option>
-                         </select>
-                     </div>
-                 </div>
-                 <div style="width: 80%;height: 20%;margin-top:3%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ui>
-                         <li style="margin-left: -5%">制造单位名称:</li>
-                     </ui>
-                     <div class="select">
-                         <select class="myselect">
-                             <option value="111">1111</option>
-                             <option value="222">222</option>
-
-                             <option value="333">333</option>
-
-                             <option value="4444">4444</option>
-                             <option value="55555">55555</option>
-                         </select>
+                     	 <select name="uploader" id="uploader" class="myselect"> 
+                       		 <option value="" th:text="#{doucument.uploader.all}"></option>
+		            		 <option th:each="uploader : ${uploaders}" th:value="${uploader.loginId}" th:text="${uploader.name}"></option>
+		            	 </select>
                      </div>
                  </div>
              </div>
-             <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px">
-                 按上传日期查询
-             </div>
-             <p class="datep"><input class="datainp" id="dateinfo" type="text" placeholder="请选择"  readonly></p>
+             <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.uploadTime}">按上传日期查询</div>
+             <p class="datep"><span style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.uploadTime.from}"></span><input class="datainp" id="lowerLimit" name="lowerLimit" type="text" placeholder="请选择"/></p>
+             <p class="datep"><span style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.uploadTime.to}"></span><input class="datainp" id="upperLimit" name="upperLimit" type="text" placeholder="请选择"/></p>
          </div><!--文档信息  -->
+	</div>
 	</div>
 </body>
 
