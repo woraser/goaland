@@ -98,5 +98,10 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 		fileMetaDataDao.save(fileMetaDatas);
 		return fileMetaDatas;
 	}
+
+	@Override
+	public FileMetaData save(FileMetaData fileMetaData) {
+		return fileMetaDataDao.save(fileMetaData);
+	}
 	
 }

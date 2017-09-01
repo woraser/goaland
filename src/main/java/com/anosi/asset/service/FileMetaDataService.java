@@ -46,4 +46,6 @@ public interface FileMetaDataService {
 	
 	Page<FileMetaData> findAll(Predicate predicate, Pageable pageable);
 	
+	public FileMetaData save(FileMetaData fileMetaData);
+	
 }

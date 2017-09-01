@@ -1,6 +1,12 @@
 package com.anosi.asset.service.impl;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -35,10 +41,9 @@ import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
+import com.anosi.asset.util.FileConvertUtil;
 import com.anosi.asset.util.FileFetchUtil;
 import com.anosi.asset.util.FileFetchUtil.Suffix;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service("technologyDocumentService")
 @Transactional
@@ -84,7 +89,24 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	private TechnologyDocument saveTechnologyDocument(String fileName, InputStream is, Long fileSize, String content,
 			String type) throws Exception {
 		logger.debug("saveTechnologyDocument,fileName:{},fileSize:{}", fileName, fileSize);
-		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, is, fileSize);
+		byte[] byteArray = IOUtils.toByteArray(is);//流复用
+		
+		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, new ByteArrayInputStream(byteArray), fileSize);
+		
+		// 为filemetadata存储预览pdf文件
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		FileConvertUtil.convert(new ByteArrayInputStream(byteArray),
+				com.anosi.asset.util.FileConvertUtil.Suffix
+						.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()),
+				os, com.anosi.asset.util.FileConvertUtil.Suffix.PDF);
+
+		// 预览文件的元数据
+		FileMetaData preview = fileMetaDataService.saveFile(type,
+				fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf", new ByteArrayInputStream(os.toByteArray()),
+				fileSize);
+		fileMetaData.setPreview(preview.getObjectId());
+		fileMetaDataService.save(fileMetaData);
+
 		TechnologyDocument td = new TechnologyDocument();
 		td.setContent(content);
 		td.setFileId(fileMetaData.getObjectId().toString());
@@ -133,7 +155,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withPageable(pageable);
 		Page<TechnologyDocument> page = technologyDocumentDao.getHighLight(elasticsearchTemplate,
 				parseToQuery(technologyDocument, queryBuilder));
-		//把上传人从登录帐号改为用户名
+		// 把上传人从登录帐号改为用户名
 		page.getContent().forEach(t -> t.setUploader(accountService.findByLoginId(t.getUploader()).getName()));
 		return page;
 	}
@@ -158,30 +180,31 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 			// 判断是否需要插入中央词库,新开一个线程,不在主线程上消耗时间影响用户体验
 			new Thread(() -> searchRecordService.insertInto(searchContent,
 					"search_" + SessionUtil.getCurrentUser().getLoginId())).start();
-			queryBuilder.withQuery(boolQuery().should(matchQuery("content", searchContent))
-					.should(matchQuery("fileName", searchContent)));
+			queryBuilder.withQuery(multiMatchQuery(searchContent, "content", "fileName"));
 		}
 
 		BoolQueryBuilder boolQueryBuilder = null;
 
 		// 查询文档类型
 		if (StringUtils.isNoneBlank(type)) {
-			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, termQuery("type", type));
+			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("type", type));
+		} else {
+			// TODO 根据所有可选type进行查询
 		}
 
 		// 查询文档上传人
 		if (StringUtils.isNoneBlank(uploader)) {
-			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, termQuery("uploader", uploader));
+			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("uploader", uploader));
 		}
 
 		// 查询文档上传时间的下限,上限
 		if (lowerLimit != null && upperLimit != null) {
-			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder,
+			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder,
 					rangeQuery("uploadTime").from(lowerLimit).to(upperLimit));
 		} else if (upperLimit != null) {
-			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, rangeQuery("uploadTime").to(upperLimit));
+			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, rangeQuery("uploadTime").to(upperLimit));
 		} else if (lowerLimit != null) {
-			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, rangeQuery("uploadTime").from(lowerLimit));
+			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, rangeQuery("uploadTime").from(lowerLimit));
 		}
 		if (boolQueryBuilder != null) {
 			queryBuilder.withFilter(boolQueryBuilder);
@@ -189,11 +212,21 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		return queryBuilder;
 	}
 
-	private BoolQueryBuilder checkBoolQueryBuilder(BoolQueryBuilder boolQueryBuilder, QueryBuilder queryBuilder) {
+	private BoolQueryBuilder checkBoolQueryBuilderMust(BoolQueryBuilder boolQueryBuilder, QueryBuilder queryBuilder) {
 		if (boolQueryBuilder == null) {
 			boolQueryBuilder = boolQuery().must(queryBuilder);
 		} else {
 			boolQueryBuilder.must(queryBuilder);
+		}
+		return boolQueryBuilder;
+	}
+
+	@SuppressWarnings("unused")
+	private BoolQueryBuilder checkBoolQueryBuilderShould(BoolQueryBuilder boolQueryBuilder, QueryBuilder queryBuilder) {
+		if (boolQueryBuilder == null) {
+			boolQueryBuilder = boolQuery().should(queryBuilder);
+		} else {
+			boolQueryBuilder.should(queryBuilder);
 		}
 		return boolQueryBuilder;
 	}

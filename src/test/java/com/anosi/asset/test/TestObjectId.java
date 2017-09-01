@@ -13,4 +13,10 @@ public class TestObjectId {
 		System.out.println(FileMetaData.BigIntegerToObjectIdConverter(new BigInteger("27723046081874865598250554642")));
 	}
 	
+	@Test
+	public void testSuffix(){
+		String name="abc.txt";
+		System.out.println(name.substring(0, name.lastIndexOf("."))+".pdf");
+	}
+	
 }

@@ -149,6 +149,11 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	public JSONObject filePreview(@PathVariable BigInteger objectId, HttpServletResponse response) throws Exception {
 		DoResponseOut doResponseOut = (is, os) -> {
 			FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
+			BigInteger preview = fileMetaData.getPreview();
+			if (preview != null) {
+				fileMetaData = fileMetaDataService.findByObjectId(preview);
+				is = fileMetaDataService.getFileByObjectId(preview);
+			}
 			String fileName = fileMetaData.getFileName();
 			try {
 				FileConvertUtil.convert(is,

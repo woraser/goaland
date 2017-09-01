@@ -8,9 +8,7 @@ import java.net.URLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component("uRLConncetUtil")
 public class URLConncetUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(URLConncetUtil.class);

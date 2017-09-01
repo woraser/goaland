@@ -62,6 +62,7 @@
                      </ul>
                      <div class="select">
                        	<select name="type" id="type" class="myselect"> 
+                       		<option value="" th:text="#{document.fileType.all}">所有类型</option>
 		            		<option th:each="type : ${types}" th:value="${type.name}" th:text="${type.name}"></option>
 		            	</select>
                      </div>
@@ -72,7 +73,7 @@
                      </ul>
                      <div class="select">
                      	 <select name="uploader" id="uploader" class="myselect"> 
-                       		 <option value="" th:text="#{doucument.uploader.all}"></option>
+                       		 <option value="" th:text="#{document.uploader.all}"></option>
 		            		 <option th:each="uploader : ${uploaders}" th:value="${uploader.loginId}" th:text="${uploader.name}"></option>
 		            	 </select>
                      </div>

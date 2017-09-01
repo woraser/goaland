@@ -29,6 +29,8 @@ public class FileMetaData extends AbstractDocument{
 	
 	@Indexed(unique=true)
 	private BigInteger objectId;//文件的唯一id
+	
+	private BigInteger preview;//预览文件的唯一id
 
 	public String getIdentification() {
 		return identification;
@@ -61,6 +63,14 @@ public class FileMetaData extends AbstractDocument{
 
 	public void setObjectId(BigInteger objectId) {
 		this.objectId = objectId;
+	}
+	
+	public BigInteger getPreview() {
+		return preview;
+	}
+
+	public void setPreview(BigInteger preview) {
+		this.preview = preview;
 	}
 
 	public Long getFileSize() {
