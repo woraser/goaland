@@ -6,7 +6,7 @@ $(document).ready(function() {
 
      });
 	 //每页显示多少行
-	 var rowNum=10;
+	 var rowNum=6;
 	 var page=0;//初始页
 	 var pageNum=0;//总页数
 	 var url='/technologyDocument/search/REMOTE';
@@ -50,7 +50,7 @@ $(document).ready(function() {
                         '<img src="/webResources/img/file/'+data.suffix+'.png" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>'+
                     '</div>'+
                     '<div class="knowledgeInfo" >'+
-                        '<div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 18px;color: #C1C1C1;padding-left: 8%;padding-top: 8%">'+
+                        '<div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;color: #C1C1C1;padding-left: 5%;padding-top: 13%">'+
                     		data.highLightFileName+
                     	'</div>'+
                     '</div>'+
@@ -64,14 +64,14 @@ $(document).ready(function() {
                        data.uploadTime+
                     '</div>'+
                     '<div class="handle">'+
-                        '<a href='+'/fileDownload/'+data.fileId+'><img src="/webResources/img/file/download.png"/></a>'+
-                        '<a href=http://localhost:8080/webResources/plugins/pdfJS/web/viewer.html?file=http://localhost:8080/filePreview/'+data.fileId+' title="预览" target="_blank"><img src="/webResources/img/file/preview.png"/></a>'+
+                        '<a href=/fileDownload/'+data.fileId+'><img src="/webResources/img/file/download.png"/></a>'+
+                        '<a href=/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+data.fileId+' title="" target="_blank"><img src="/webResources/img/file/preview.png"/></a>'+
                     '</div>'+
                 '</div>')
 	 }
 	 
 	 //加载数据
-	 reloadContent(page);
+	 //reloadContent(page);
 	 
 	 //上传
 	 $("#upload").click(function(){
@@ -91,14 +91,9 @@ $(document).ready(function() {
 	 
 	 //搜索
 	 $("#search").click(function(){
-		 search(0);
-	 })
-	 
-	 var search = function(page){
-		 params['page']=page;
 		 params['searchContent']=$("#searchContent").val();
 		 params['type']=$("#type").val();
-		 params['uploader']=$("#uploader").val();
+		 //params['uploader']=$("#uploader").val();
 		 if($("#lowerLimit").val()!=null&&$("#lowerLimit").val()!=""){
 			 params['lowerLimit']=$("#lowerLimit").val();
 		 }else{
@@ -109,6 +104,11 @@ $(document).ready(function() {
 		 }else{
 			 delete params['upperLimit'];
 		 }
+		 search(0);
+	 })
+	 
+	 var search = function(page){
+		 params['page']=page;
 		 $.ajax({
 				url : url,
 				data : params,
@@ -118,20 +118,28 @@ $(document).ready(function() {
 				success : function( data ) {
 					pageNum=data.total;
 					page=data.page;
+					$("#files").html('')
 					//加载数据
-					if($("#searchContent").val()==""||$("#searchContent").val()==null){
-						$("#files").html('')
+					if(params['searchContent']==""||params['searchContent']==null){
 						$.each(data.content,function(i,value){
 							convertContent(this)
 						})
 					}else{
-						
+						$.each(data.content,function(i,value){
+							convertContent(this)
+							convertContentBySearch(this)
+						})
 					}
 					$("#files").append(' <div class="zxf_pagediv" id="dataPager"></div>');
 					//刷新分页插件
 					createPage($("#dataPager"),pageNum,page,11,search)
 				}
 		 });
+	 }
+	 
+	 //加载摘要
+	 function convertContentBySearch(data){
+		 $("#files").append('<div style="color: #C1C1C1;">'+data.highLightContent+'</div>')
 	 }
 	 
 	 //search autocomplete
@@ -183,5 +191,8 @@ $(document).ready(function() {
           return false;
         }
       }); 
+	 
+	 //加载数据
+	 $("#search").click()
 	 
 })

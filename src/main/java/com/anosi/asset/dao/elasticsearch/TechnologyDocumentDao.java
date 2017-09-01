@@ -23,7 +23,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 
 public interface TechnologyDocumentDao extends ElasticsearchRepository<TechnologyDocument, String> {
-	
+
 	public List<TechnologyDocument> findByTypeEquals(String type);
 
 	/***
@@ -38,12 +38,12 @@ public interface TechnologyDocumentDao extends ElasticsearchRepository<Technolog
 		Field fieldConent = new HighlightBuilder.Field("content");
 		fieldConent.preTags("<font color='#FF0000'>");
 		fieldConent.postTags("</font>");
-		
+
 		Field fieldFileName = new HighlightBuilder.Field("fileName");
 		fieldFileName.preTags("<font color='#FF0000'>");
 		fieldFileName.postTags("</font>");
 
-		SearchQuery searchQuery = queryBuilder.withHighlightFields(fieldConent,fieldFileName).build();
+		SearchQuery searchQuery = queryBuilder.withHighlightFields(fieldConent, fieldFileName).build();
 
 		AggregatedPage<TechnologyDocument> queryForPage = elasticsearchTemplate.queryForPage(searchQuery,
 				TechnologyDocument.class, new SearchResultMapper() {
@@ -58,62 +58,59 @@ public interface TechnologyDocumentDao extends ElasticsearchRepository<Technolog
 								return null;
 							}
 							TechnologyDocument technologyDocument = new TechnologyDocument();
-							
-							//实际的内容
+
+							// 实际的内容
 							String realContent = (String) searchHit.getSource().get("content");
 							StringBuilder cutOut = new StringBuilder();
-							//判断长度进行截取
-							if(realContent.length()<100){
+							// 判断长度进行截取
+							if (realContent.length() < 100) {
 								cutOut.append(realContent);
-							}else{
-								cutOut.append(realContent.substring(0,100));
+							} else {
+								cutOut.append(realContent.substring(0, 100));
 							}
 							cutOut.append(".......");
-							
-							//高亮内容
+
+							// 高亮内容
 							HighlightField content = searchHit.getHighlightFields().get("content");
 							StringBuilder highLightContent = new StringBuilder();
-							if(content!=null){
+							if (content != null) {
 								Text[] hightLightContents = content.fragments();
-								for(Text t : hightLightContents){
+								for (Text t : hightLightContents) {
 									highLightContent.append(".......");
 									highLightContent.append(t.toString());
 									highLightContent.append(".......");
 									highLightContent.append("\t");
 								}
 								technologyDocument.setHighLightContent(highLightContent.toString());
-							}else{
-								//如果没有高亮内容，则在文件内容中截取一段代替
+							} else {
+								// 如果没有高亮内容，则在文件内容中截取一段代替
 								technologyDocument.setHighLightContent(cutOut.toString());
 							}
-							
-							//高亮标题
+
+							// 高亮标题
 							HighlightField fileName = searchHit.getHighlightFields().get("fileName");
 							StringBuilder highLightFileName = new StringBuilder();
-							if(fileName!=null){
+							if (fileName != null) {
 								Text[] hightLightFileNames = fileName.fragments();
-								for(Text t : hightLightFileNames){
-									highLightFileName.append(".......");
-									highLightFileName.append(t.toString());
-									highLightFileName.append(".......");
-									highLightFileName.append("\t");
+								if (hightLightFileNames != null && hightLightFileNames.length != 0) {
+									highLightFileName.append(hightLightFileNames[0].toString());
 								}
 								technologyDocument.setHighLightFileName(highLightFileName.toString());
-							}else{
-								//如果没有高亮标题，就用文件名代替
+							} else {
+								// 如果没有高亮标题，就用文件名代替
 								technologyDocument.setHighLightFileName((String) searchHit.getSource().get("fileName"));
 							}
-							
-							//设置需要展示的属性
+
+							// 设置需要展示的属性
 							technologyDocument.setId(searchHit.getId());
 							technologyDocument.setFileId((String) searchHit.getSource().get("fileId"));
 							technologyDocument.setFileName((String) searchHit.getSource().get("fileName"));
 							technologyDocument.setType((String) searchHit.getSource().get("type"));
 							technologyDocument.setUploader((String) searchHit.getSource().get("uploader"));
 							technologyDocument.setUploadTime(new Date((Long) searchHit.getSource().get("uploadTime")));
-							//截取一段内容作为展示
+							// 截取一段内容作为展示
 							technologyDocument.setContent(cutOut.toString());
-							
+
 							chunk.add(technologyDocument);
 						}
 						return new AggregatedPageImpl<>((List<T>) chunk, pageable, response.getHits().getTotalHits());

@@ -25,7 +25,8 @@ class FileConvertUtil {
 		if(originalSuffix==convertSuffix){
 			IOUtils.copy(is, os)
 		}else if (checkPicture(originalSuffix)) {
-			convertPicture(is, os, originalSuffix, convertSuffix)
+			//convertPicture(is, os, originalSuffix, convertSuffix)
+			IOUtils.copy(is, os)
 		}else{
 			"convert$originalSuffix"(is,os,convertSuffix)
 		}

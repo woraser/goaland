@@ -40,7 +40,7 @@ spring:
 
   #i18n
   messages:
-    basename: i18n/messages
+    basename: static/webResources/i18n/messages
     
   #thymeleaf
   thymeleaf:

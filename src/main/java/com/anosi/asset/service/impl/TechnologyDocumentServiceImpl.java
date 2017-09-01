@@ -181,7 +181,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		} else if (upperLimit != null) {
 			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, rangeQuery("uploadTime").to(upperLimit));
 		} else if (lowerLimit != null) {
-			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, termQuery("uploadTime", lowerLimit));
+			boolQueryBuilder = checkBoolQueryBuilder(boolQueryBuilder, rangeQuery("uploadTime").from(lowerLimit));
 		}
 		if (boolQueryBuilder != null) {
 			queryBuilder.withFilter(boolQueryBuilder);

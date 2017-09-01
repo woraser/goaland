@@ -46,13 +46,13 @@ $(document).ready(function() {
 		 $("#tasks").append('<div class="taskModel" >'+
 			        '<div class="taskAllSimple">'+
 		            '<div class="taskSimple" style="color:#ffff;text-align: center;width:18%;height: 100%;">'+
-		               ' 任务编号:'+data.name+
+		            	$.i18n.prop('customerService.projectNo')+':'+data.name+
 		            '</div>'+
 		            '<div class="taskSimple" style="color:#ABADB3;width:25%;height: 100%;">'+
-		                '申请时间:'+data['historicProcessInstance.startTime']+
+		            	$.i18n.prop('customerService.startTime')+':'+data['historicProcessInstance.startTime']+
 		            '</div>'+
 		            '<div class="taskSimple" style="color:#ABADB3;width:25%;height: 100%;">'+
-	                	'申请人:'+data['applicant.name']+
+		            	$.i18n.prop('customerService.applicant')+':'+data['applicant.name']+
 	                '</div>'+
 		        '</div>'+
 		        '<div class="taskAll">'+
@@ -63,20 +63,16 @@ $(document).ready(function() {
 		                '<table class="table" >'+
 		                    '<tbody >'+
 		                    '<tr>'+
-		                        '<td class="deviceInfo" >设备名称</td>'+
+		                        '<td class="deviceInfo" >'+$.i18n.prop('customerService.projectName')+'</td>'+
 		                        '<td class="deviceNewInfo">'+data['startDetail.projectName']+'</td>'+
 		                    '</tr>'+
 		                    '<tr>'+
-		                        '<td class="deviceInfo">安装位置</td>'+
+		                        '<td class="deviceInfo">'+$.i18n.prop('customerService.projectLocation')+'</td>'+
 		                        '<td class="deviceNewInfo">'+data['startDetail.projectLocation']+'</td>'+
-		                    '</tr>'+
-		                    '<tr>'+
-		                        '<td class="deviceInfo">使用客户</td>'+
-		                        '<td class="deviceNewInfo">国家电网公司哈密南800AV换流站</td>'+
 		                    '</tr>'+
 		                    '</tbody>'+
 		                '</table>'+
-		            '</div> <!--设备信息 -->'+
+		            '</div>' +
 		            '<div class="describeDevice" >'+
 		               	data['startDetail.sceneDescription']+
 		            '</div>'+
@@ -89,7 +85,7 @@ $(document).ready(function() {
 		                '</div>'+
 		            '</div>'+
 		            '<div class="taskButton">'+
-		                '<button class="doButton">详情</button>'+
+		                '<button class="doButton">'+$.i18n.prop('customerService.detail')+'</button>'+
 		            '</div>'+
 		        '</div>'+
 		    '</div>');

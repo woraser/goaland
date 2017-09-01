@@ -56,20 +56,19 @@
         <div style="float:left;margin-left:-1%;width: 20%;height: 90%;background: #2A2E3D">
              <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.message}">按文档信息查询 </div>
              <div style="height: 35%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px">
-                 <div style="width: 80%;height: 20%;margin-top:3%;margin-left: 10%;font-size: 16px;color: #6F717A">
+                 <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
                      <ul>
-                         <li style="margin-left: -5%" th:text="#{document.fileType}">文档类型:</li>
+                         <li style="margin-left: -20%" th:text="#{document.fileType}">文档类型:</li>
                      </ul>
                      <div class="select">
                        	<select name="type" id="type" class="myselect"> 
-                       		<option value="" th:text="#{document.fileType.all}"></option>
 		            		<option th:each="type : ${types}" th:value="${type.name}" th:text="${type.name}"></option>
 		            	</select>
                      </div>
                  </div>
-                 <div style="width: 80%;height: 20%;margin-top:3%;margin-left: 10%;font-size: 16px;color: #6F717A">
+                <!--  <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
                      <ul>
-                         <li style="margin-left: -5%" th:text="#{document.uploader}">上传人:</li>
+                         <li style="margin-left: -20%" th:text="#{document.uploader}">上传人:</li>
                      </ul>
                      <div class="select">
                      	 <select name="uploader" id="uploader" class="myselect"> 
@@ -77,11 +76,17 @@
 		            		 <option th:each="uploader : ${uploaders}" th:value="${uploader.loginId}" th:text="${uploader.name}"></option>
 		            	 </select>
                      </div>
+                 </div> -->
+                 <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
+                     <ul>
+                         <li style="margin-left: -20%" th:text="#{document.search.uploadTime}">按上传日期查询:</li>
+                     </ul>
+                     <div class="select">
+                     	 <input class="form-control input-sm" style="float:left;width:85%;height: 35px" id="lowerLimit" name="lowerLimit" type="text" th:placeholder="#{document.search.uploadTime.from}"/>
+                     	 <input class="form-control input-sm" style="float:left;width:85%;height: 35px" id="upperLimit" name="upperLimit" type="text" th:placeholder="#{document.search.uploadTime.to}"/>
+                     </div>
                  </div>
              </div>
-             <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.uploadTime}">按上传日期查询</div>
-             <p class="datep"><span style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.uploadTime.from}"></span><input class="datainp" id="lowerLimit" name="lowerLimit" type="text" placeholder="请选择"/></p>
-             <p class="datep"><span style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.uploadTime.to}"></span><input class="datainp" id="upperLimit" name="upperLimit" type="text" placeholder="请选择"/></p>
          </div><!--文档信息  -->
 	</div>
 	</div>
