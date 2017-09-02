@@ -33,7 +33,9 @@ public class PropertyUtil extends PropertyUtils {
 	public static Object getNestedProperty(final Object bean, final String name)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Object property = null;
-		String[] names = name.split("-", 2);// 作用2-1次
+		// 作用2-1次,相当于list*.id会被分割成list,id
+		// list*.(id,name,list*.(id,name))分割成[list,(id,name,list*.(id,name))]
+		String[] names = name.split("\\*.", 2);
 		try {
 			property = PropertyUtils.getNestedProperty(bean, names[0]);
 		} catch (NestedNullException e) {
@@ -61,10 +63,18 @@ public class PropertyUtil extends PropertyUtils {
 	 */
 	private static Object parseListToJson(List<Object> propertys, String[] names)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		// 判断name[1]是否是(id,name)这种形式,如果有括号,去掉括号
+		String value = names[1];
+		if (value.startsWith("(")&&value.endsWith(")")) {
+			value = value.substring(1, value.length()-1);
+		}
 		JSONArray jsonArray = new JSONArray();
 		for (Object object : propertys) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(names[1], PropertyUtil.getNestedProperty(object, names[1]));
+			String[] subNames = StringUtil.splitAttributes(value);
+			for (String subName : subNames) {
+				jsonObject.put(subName, PropertyUtil.getNestedProperty(object, subName));
+			}
 			jsonArray.add(jsonObject);
 		}
 		return jsonArray;

@@ -23,6 +23,7 @@ import com.anosi.asset.model.jpa.RoleFunction;
 import com.anosi.asset.service.RoleFunctionService;
 import com.anosi.asset.util.JqgridUtil;
 import com.anosi.asset.util.JsonUtil;
+import com.anosi.asset.util.StringUtil;
 
 public class BaseController<T> extends GlobalController<T> {
 
@@ -91,13 +92,13 @@ public class BaseController<T> extends GlobalController<T> {
 		JSONObject jsonObject = null;
 		switch (showType) {
 		case GRID:
-			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, showAttributes.split(","));
+			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, StringUtil.splitAttributes(showAttributes));
 			break;
 		case REMOTE:
-			jsonObject = jsonUtil.parseAttributesToJson(pages, showAttributes.split(","));
+			jsonObject = jsonUtil.parseAttributesToJson(pages, StringUtil.splitAttributes(showAttributes));
 			break;
 		default:
-			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, showAttributes.split(","));
+			jsonObject = jsonUtil.parseAttributesToJson(pages, StringUtil.splitAttributes(showAttributes));
 		}
 		return jsonObject;
 	}

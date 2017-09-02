@@ -49,7 +49,11 @@ public class JsonUtil<T> {
 	public JSONObject parseAttributesToJson(String[] attributes, T t) throws Exception {
 		JSONObject jsonObject = new JSONObject();
 		for (String attribute : attributes) {
-			jsonObject.put(attribute, PropertyUtil.getNestedProperty(t, attribute));
+			if(attribute.contains("*.")){
+				jsonObject.put(attribute.split("\\*.", 2)[0], PropertyUtil.getNestedProperty(t, attribute));
+			}else{
+				jsonObject.put(attribute, PropertyUtil.getNestedProperty(t, attribute));
+			}
 		}
 		logger.debug("jsonUtil result:{}", JsonOutput.prettyPrint(jsonObject.toString()));
 		return jsonObject;
