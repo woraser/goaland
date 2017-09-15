@@ -63,7 +63,7 @@ public class AccountController extends BaseController<Account> {
 			@QuerydslPredicate(root = Account.class) Predicate predicate,
 			@RequestParam(value = "showAttributes") String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
-		logger.info("find iotx");
+		logger.info("find account");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 

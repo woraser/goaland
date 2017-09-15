@@ -7,7 +7,7 @@ import com.anosi.asset.exception.CustomRunTimeException
 class FileFetchUtil {
 	
 	public static enum Suffix{
-		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF
+		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,DWG
 	}
 
 	/***
@@ -125,6 +125,16 @@ class FileFetchUtil {
 	 */
 	private static String fetchTXT(InputStream is){
 		return TXTUtil.readTXT(is)
+	}
+	
+	/***
+	 * 读取cad的文本内容
+	 * 
+	 * @param is
+	 * @return
+	 */
+	private static String fetchDWG(InputStream is){
+		return null
 	}
 
 }

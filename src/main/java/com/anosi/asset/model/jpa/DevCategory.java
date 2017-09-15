@@ -12,22 +12,22 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "devCategory")
-public class DevCategory extends BaseEntity{
+public class DevCategory extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7974456468757773048L;
-	
-	private String name;
-	
+
+	private String name;// 名字目前就只有5种
+
 	private List<Device> deviceList = new ArrayList<>();
-	
-	private List<DevCategoryStructures> mainDevCategoryStructures=new ArrayList<>();
-	
-	private List<DevCategoryStructures> subDevCategoryStructures=new ArrayList<>();
-	
-	@Column(unique=true,nullable=false)
+
+	private List<DevCategoryStructures> mainDevCategoryStructures = new ArrayList<>();
+
+	private List<DevCategoryStructures> subDevCategoryStructures = new ArrayList<>();
+
+	@Column(unique = true, nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -36,7 +36,8 @@ public class DevCategory extends BaseEntity{
 		this.name = name;
 	}
 
-	@OneToMany(targetEntity = Device.class, cascade = {CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "devCategory")
+	@OneToMany(targetEntity = Device.class, cascade = {
+			CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "devCategory")
 	public List<Device> getDeviceList() {
 		return deviceList;
 	}
@@ -62,5 +63,5 @@ public class DevCategory extends BaseEntity{
 	public void setSubDevCategoryStructures(List<DevCategoryStructures> subDevCategoryStructures) {
 		this.subDevCategoryStructures = subDevCategoryStructures;
 	}
-	
+
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 
 import com.anosi.asset.dao.jpa.BaseJPADao;
+import com.anosi.asset.model.jpa.BaseEntity;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 
@@ -20,7 +21,7 @@ import com.querydsl.core.types.Predicate;
  * @param <T>
  * @param <ID>
  */
-public interface BaseService<T,ID extends Serializable> {
+public interface BaseService<T extends BaseEntity,ID extends Serializable> {
 	
 	public BaseJPADao<T> getRepository();
 	

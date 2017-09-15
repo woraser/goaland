@@ -27,7 +27,7 @@ public class SearchRecordServiceImpl implements SearchRecordService {
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
 
-	private int centerLimit = 2;
+	private int centerLimit = 5;
 
 	@Override
 	public List<SearchRecord> findBySearchContent(String searchContent, Pageable pageable) {

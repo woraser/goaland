@@ -8,7 +8,7 @@ import com.anosi.asset.util.FileConvertUtil.Picture
 class FileConvertUtil {
 
 	static enum Suffix{
-		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,GIF,PNG,JPEG,BMP,ICON
+		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,GIF,PNG,JPEG,BMP,ICON,DWG
 	}
 
 	enum Picture{
@@ -114,4 +114,14 @@ class FileConvertUtil {
 	private static void convertTXT(InputStream is,OutputStream os,Suffix convertSuffix){
 		TXTUtil."convert2$convertSuffix"(is, os)
 	}
+	
+	/***
+	 * 将dwg转为convertSuffix
+	 * @param is
+	 * @return
+	 */
+	private static void convertDWG(InputStream is,OutputStream os,Suffix convertSuffix){
+		CadUtil."convert2$convertSuffix"(is, os)
+	}
+	
 }

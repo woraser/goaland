@@ -14,22 +14,62 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "device")
-public class Device extends BaseEntity{
+public class Device extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 587030319812196854L;
-	
-	private String serialNo;
-	
-	private DevCategory devCategory;
-	
-	private Device parentDevice;
-	
-	private List<Device> subDevices = new ArrayList<>();
 
-	@Column(unique=true,nullable=false)
+	private String projectName;// 项目名称
+
+	private String projectNo;// 项目编号
+
+	private String productName;// 产品名称
+
+	private String productNo;// 产品编号
+
+	private String serialNo;
+
+	private DevCategory devCategory;
+
+	private List<Materiel> materielList = new ArrayList<>();// 物料
+
+	private List<TechnicalParameter> technicalParameterList = new ArrayList<>();// 技术参数
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getProjectNo() {
+		return projectNo;
+	}
+
+	public void setProjectNo(String projectNo) {
+		this.projectNo = projectNo;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getProductNo() {
+		return productNo;
+	}
+
+	public void setProductNo(String productNo) {
+		this.productNo = productNo;
+	}
+
+	@Column(unique = true, nullable = false)
 	public String getSerialNo() {
 		return serialNo;
 	}
@@ -38,27 +78,8 @@ public class Device extends BaseEntity{
 		this.serialNo = serialNo;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pDeviceId")
-	public Device getParentDevice() {
-		return parentDevice;
-	}
-
-	public void setParentDevice(Device parentDevice) {
-		this.parentDevice = parentDevice;
-	}
-
-	@OneToMany(targetEntity = Device.class, cascade = {CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "parentDevice")
-	public List<Device> getSubDevices() {
-		return subDevices;
-	}
-
-	public void setSubDevices(List<Device> subDevices) {
-		this.subDevices = subDevices;
-	}
-
-	@ManyToOne(fetch=FetchType.LAZY,targetEntity=DevCategory.class)
-	@JoinColumn(nullable=false)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = DevCategory.class)
+	@JoinColumn(nullable = false)
 	public DevCategory getDevCategory() {
 		return devCategory;
 	}
@@ -66,5 +87,48 @@ public class Device extends BaseEntity{
 	public void setDevCategory(DevCategory devCategory) {
 		this.devCategory = devCategory;
 	}
-	
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = Materiel.class)
+	public List<Materiel> getMaterielList() {
+		return materielList;
+	}
+
+	public void setMaterielList(List<Materiel> materielList) {
+		this.materielList = materielList;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = TechnicalParameter.class)
+	public List<TechnicalParameter> getTechnicalParameterList() {
+		return technicalParameterList;
+	}
+
+	public void setTechnicalParameterList(List<TechnicalParameter> technicalParameterList) {
+		this.technicalParameterList = technicalParameterList;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((serialNo == null) ? 0 : serialNo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Device other = (Device) obj;
+		if (serialNo == null) {
+			if (other.serialNo != null)
+				return false;
+		} else if (!serialNo.equals(other.serialNo))
+			return false;
+		return true;
+	}
+
 }
