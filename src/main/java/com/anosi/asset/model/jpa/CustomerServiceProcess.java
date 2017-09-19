@@ -20,6 +20,8 @@ public class CustomerServiceProcess extends BaseProcess{
 	
 	private StartDetail startDetail;//发起字段
 	
+	private ExamineDetail examineDetail;//领导审批字段
+	
 	private EvaluatingDetail evaluatingDetail;//评估字段
 	
 	private RepairDetail repairDetail;//维修字段
@@ -60,6 +62,14 @@ public class CustomerServiceProcess extends BaseProcess{
 		this.evaluatingDetail = evaluatingDetail;
 	}
 	
+	public ExamineDetail getExamineDetail() {
+		return examineDetail;
+	}
+
+	public void setExamineDetail(ExamineDetail examineDetail) {
+		this.examineDetail = examineDetail;
+	}
+
 	public boolean isFile() {
 		return file;
 	}
@@ -164,6 +174,26 @@ public class CustomerServiceProcess extends BaseProcess{
 
 		public void setSceneDescription(String sceneDescription) {
 			this.sceneDescription = sceneDescription;
+		}
+		
+	}
+	
+	/***
+	 * 领导审批字段
+	 * @author jinyao
+	 *
+	 */
+	@Embeddable
+	public static class ExamineDetail{
+		
+		private String suggestion;//领导审批意见
+
+		public String getSuggestion() {
+			return suggestion;
+		}
+
+		public void setSuggestion(String suggestion) {
+			this.suggestion = suggestion;
 		}
 		
 	}

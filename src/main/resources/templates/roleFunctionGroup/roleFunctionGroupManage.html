@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>权限组信息管理</title>
+	
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
+	
+	<script type="text/javascript" src="/webResources/plugins/jqgrid/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/page/createPage.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/roleFunctionGroup/roleFunctionGroupManage.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+
+</head>
+
+<body>
+	<div layout:fragment="content" >
+		<div class="col-md-6" style="width:100%">
+			<div class="row">
+				<div style="padding-top:30px;padding-left:30px;">
+					<div class="tab-content">
+						<section class="content">
+							<div class="row">
+								<div class="col-lg-12">
+								<!-- 节点管理的表格 -->
+								<div><table id="roleFunctionGroupTable"></table></div>
+								<div class="zxf_pagediv" style="padding-top:15px;float:left;" id="roleFunctionGroupPager"></div>
+								<!-- 按钮 -->
+								<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" th:type="button" th:value='#{delete}' id='delete'/>
+								<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" th:type="button" th:value='#{edit}' id='edit'/>
+								<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" th:type="button" th:value='#{add}' id='add'/>
+								</div>
+							</div>
+						</section>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>
+

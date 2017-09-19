@@ -10,4 +10,6 @@ public interface PrivilegeDao extends BaseJPADao<Privilege>{
 	
 	public Iterable<Privilege> findByAccount_loginIdEquals(String account_loginId);
 	
+	public Iterable<Privilege> findByAccount_idEquals(String account_id);
+	
 }

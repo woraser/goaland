@@ -26,6 +26,8 @@ public class RoleFunctionBtn extends BaseEntity{
 	
 	private List<Privilege> privilegeList = new ArrayList<Privilege>();
 	
+	private List<RoleFunctionGroup> roleFunctionGroupList = new ArrayList<>();
+	
 	public String getName() {
 		return name;
 	}
@@ -58,6 +60,15 @@ public class RoleFunctionBtn extends BaseEntity{
 
 	public void setPrivilegeList(List<Privilege> privilegeList) {
 		this.privilegeList = privilegeList;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleFunctionBtnList", targetEntity = RoleFunctionGroup.class)
+	public List<RoleFunctionGroup> getRoleFunctionGroupList() {
+		return roleFunctionGroupList;
+	}
+
+	public void setRoleFunctionGroupList(List<RoleFunctionGroup> roleFunctionGroupList) {
+		this.roleFunctionGroupList = roleFunctionGroupList;
 	}
 
 	@Override

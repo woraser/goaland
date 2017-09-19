@@ -22,7 +22,9 @@ import com.anosi.asset.model.jpa.RoleFunctionBtn;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.PrivilegeService;
 import com.anosi.asset.service.RoleFunctionBtnService;
+import com.anosi.asset.service.RoleFunctionGroupService;
 import com.anosi.asset.service.RoleFunctionService;
+import com.anosi.asset.service.RoleService;
 
 @Service("accountService")
 @Transactional
@@ -38,6 +40,10 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 	private PrivilegeService privilegeService;
 	@Autowired
 	private RoleFunctionBtnService roleFunctionBtnService;
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	private RoleFunctionGroupService roleFunctionGroupService;
 
 	@Override
 	public BaseJPADao<Account> getRepository() {
@@ -55,7 +61,8 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 	 * 
 	 */
 	@Override
-	public Account save(Account account, String password,String[] selRolesFunctionNode) {
+	public Account save(Account account, String password, String[] roles, String[] roleFunctionGroups,
+			String[] selRolesFunctionNode) {
 		account.setPassword(password);
 		try {
 			// 设置密码
@@ -63,29 +70,62 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(selRolesFunctionNode!=null&&selRolesFunctionNode.length!=0){
-			return save(account,selRolesFunctionNode);
-		}else{
+		if (selRolesFunctionNode != null && selRolesFunctionNode.length != 0) {
+			return save(account, roles, roleFunctionGroups, selRolesFunctionNode);
+		} else {
 			return save(account);
 		}
 	}
-	
+
 	@Override
-	public Account save(Account account, String[] selRolesFunctionNode) {
+	public Account save(Account account, String[] roles, String[] roleFunctionGroups, String[] selRolesFunctionNode) {
 		account = save(account);
+		account.getRoleList().clear();
+
+		if (roles != null && roles.length != 0) {
+			for (String role : roles) {
+				account.getRoleList().add(roleService.getOne(Long.parseLong(role)));
+			}
+		}
+
+		if (roleFunctionGroups != null && roleFunctionGroups.length != 0) {
+			for (String group : roleFunctionGroups) {
+				account.getRoleFunctionGroupList().add(roleFunctionGroupService.getOne(Long.parseLong(group)));
+			}
+		}
+
 		privilegeService.deleteByAccountLoginId(account.getLoginId());
+		if (selRolesFunctionNode != null && selRolesFunctionNode.length != 0) {
+			resolveRoleFunction(account, selRolesFunctionNode);
+		}
+		return account;
+	}
+
+	@Override
+	public void resolveRoleFunction(Account account, String[] selRolesFunctionNode) {
 		for (String node : selRolesFunctionNode) {
-			if(node.contains("menu_")){
-				Privilege privilege = new Privilege();
-				privilege.setAccount(account);
-				privilege.setRoleFunction(roleFunctionService.getOne(Long.parseLong(node.replace("menu_", ""))));
-				privilegeService.save(privilege);
-			}else{
+			if (node.contains("menu_")) {
+				long roleFunctionId = Long.parseLong(node.replace("menu_", ""));
+				RoleFunction roleFunction = roleFunctionService.getOne(roleFunctionId);
+				// 判断之前是否已经有这个权限了
+				Privilege privilege = privilegeService.findByAccountAndRoleFunction(account.getLoginId(),
+						roleFunction.getRoleFunctionPageId());
+				if (privilege == null) {
+					privilege = new Privilege();
+					privilege.setAccount(account);
+					privilege.setRoleFunction(roleFunction);
+					privilegeService.save(privilege);
+				}
+			} else {
 				RoleFunctionBtn btn = roleFunctionBtnService.getOne(Long.parseLong(node));
-				Privilege privilege = privilegeService.findByAccountAndRoleFunction(account.getLoginId(), btn.getRoleFunction().getRoleFunctionPageId());
-				if(privilege!=null){
-					privilege.getRoleFunctionBtnList().add(btn);
-				}else{
+				Privilege privilege = privilegeService.findByAccountAndRoleFunction(account.getLoginId(),
+						btn.getRoleFunction().getRoleFunctionPageId());
+				if (privilege != null) {
+					// 判断之前是否已有这个按钮权限
+					if (!privilege.getRoleFunctionBtnList().contains(btn)) {
+						privilege.getRoleFunctionBtnList().add(btn);
+					}
+				} else {
 					privilege = new Privilege();
 					privilege.setAccount(account);
 					privilege.setRoleFunction(btn.getRoleFunction());
@@ -94,7 +134,6 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 				}
 			}
 		}
-		return account;
 	}
 
 	@Override
@@ -109,7 +148,7 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 			roleFunctionBtns = privilegeList.stream().map(Privilege::getRoleFunctionBtnList).collect(
 					() -> new ArrayList<RoleFunctionBtn>(), (list, item) -> list.addAll(item),
 					(list1, list2) -> list1.addAll(list2));
-		} 
+		}
 		return roleFunctionService.parseToTree(roleFunctions, roleFunctionBtns);
 	}
 

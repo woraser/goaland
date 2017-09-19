@@ -66,7 +66,7 @@ public class InitData {
 			account.setName("admin");
 			account.setLoginId("admin");
 			account.setPassword("123456");
-			account.setRole(roleService.findByCode("admin"));
+			account.getRoleList().add(roleService.findByCode("admin"));
 			try {
 				//设置密码
 				PasswordEncry.encrypt(account);

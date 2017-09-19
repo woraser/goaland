@@ -7,6 +7,11 @@
 			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
 			<roleFunctionBtn btnId="batadd" name="批量配置"></roleFunctionBtn>
 		</roleFunction>
+		<roleFunction roleFunctionPageId="roleFunctionGroupMgr" name="权限组管理">
+			<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+			<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+		</roleFunction>
 	</roleFunction>
 	<roleFunction roleFunctionPageId="customServiceProcess"
 		name="售后流程">
@@ -17,7 +22,6 @@
 		<roleFunction roleFunctionPageId="historicTasks" name="我办过的任务">
 		</roleFunction>
 	</roleFunction>
-	<roleFunction roleFunctionPageId="documentMgr"
-		name="文档管理">
+	<roleFunction roleFunctionPageId="documentMgr" name="文档管理">
 	</roleFunction>
 </roleFunctions>

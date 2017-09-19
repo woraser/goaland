@@ -10,11 +10,12 @@ public interface AccountService extends BaseService<Account, Long>{
 	/***
 	 * 
 	 * @param account
-	 * @param password
-	 * @param selRolesFunctionNode 
+	 * @param roles
+	 * @param roleFunctionGroups
+	 * @param selRolesFunctionNode
 	 * @return
 	 */
-	public Account save(Account account, String password, String[] selRolesFunctionNode);
+	public Account save(Account account, String[] roles, String[] roleFunctionGroups, String[] selRolesFunctionNode);
 
 	/****
 	 * 将权限转化成zTree
@@ -26,10 +27,13 @@ public interface AccountService extends BaseService<Account, Long>{
 	/***
 	 * 
 	 * @param account
+	 * @param password
+	 * @param roles
+	 * @param roleFunctionGroups
 	 * @param selRolesFunctionNode
 	 * @return
 	 */
-	public Account save(Account account, String[] selRolesFunctionNode);
+	public Account save(Account account, String password, String[] roles,String[] roleFunctionGroups, String[] selRolesFunctionNode);
 
 	/***
 	 * 查找上传过文档的用户
@@ -37,5 +41,12 @@ public interface AccountService extends BaseService<Account, Long>{
 	 * @return
 	 */
 	public Iterable<Account> findByIsUploadDocument(boolean isUploadDocument);
+	
+	/***
+	 * 为account设置权限
+	 * @param account
+	 * @param selRolesFunctionNode
+	 */
+	public void resolveRoleFunction(Account account, String[] selRolesFunctionNode);
 	
 }

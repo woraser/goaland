@@ -24,9 +24,9 @@ import com.anosi.asset.service.RoleFunctionService
  */
 @Component
 class InitRoleFunctionRelated {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(InitRoleFunctionRelated.class);
-	
+
 	@Autowired
 	private PrivilegeService privilegeService;
 	@Autowired
@@ -35,11 +35,11 @@ class InitRoleFunctionRelated {
 	private RoleFunctionBtnService roleFunctionBtnService
 	@Autowired
 	private AccountService accountService;
-	
+
 	private Account account
 
 	protected void initRoleFunctionRelated(){
-		def roleFunctions = new XmlSlurper().parse("src/main/resources/initResources/roleFunctionRelated.xml")
+		def roleFunctions = new XmlSlurper().parse(this.getClass().getResourceAsStream("/initResources/roleFunctionRelated.xml"))
 		account = this.accountService.findByLoginId("admin");
 		// 闭包
 		roleFunctions.roleFunction.each{roleFunction->
@@ -47,13 +47,14 @@ class InitRoleFunctionRelated {
 			checkSubRoleFunction(roleFunction,null)
 		}
 	}
-	
+
 	/***
 	 * 判断是否存在子权限，内部使用递归
 	 * @param roleFunction
 	 * @return
 	 */
 	private void checkSubRoleFunction(Object roleFunction,RoleFunction parentRoleFunction){
+		// TODO 加入url
 		def realRoleFunction = checkRoleFunction(roleFunction.@roleFunctionPageId.toString(),roleFunction.@name.toString(),parentRoleFunction)
 		logger.debug("roleFunction:{}",realRoleFunction.roleFunctionPageId)
 		// 初始化按钮

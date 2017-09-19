@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.QAccount;
+import com.anosi.asset.model.jpa.QRole;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
+import com.anosi.asset.service.RoleService;
 import com.google.common.collect.ImmutableMap;
 
 @RestController
@@ -32,6 +35,8 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	private CustomerServcieProcessService customerServcieProcessService;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private RoleService roleService;
 
 	public CustomerServiceProcessController() {
 		super();
@@ -46,7 +51,26 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 
 	@Override
 	protected Map<String, Object> getStartProcessObjects() {
-		Iterable<Account> accounts = accountService.findAll(QAccount.account.role.code.eq("engineerManager"));
+		String loginId = SessionUtil.getCurrentUser().getLoginId();
+		Account currentAccount = accountService.findByLoginId(loginId);
+		String code = currentAccount.getDepartment().getCode();
+		Iterable<Account> accounts = null;
+		QAccount qAccount = QAccount.account;
+		switch (code) {
+		case "engineerDep":
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineerManager")));
+			break;
+		case "salesDep":
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("salesManager")));
+			break;
+		case "qualityCheckingDep":
+			accounts = accountService
+					.findAll(qAccount.roleList.contains(roleService.findByCode("qualityCheckingManager")));
+			break;
+		default:
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineerManager")));
+			break;
+		}
 		return ImmutableMap.of("accounts", accounts);
 	}
 
@@ -56,7 +80,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @return
 	 */
 	@RequestMapping(value = "/startProcess", method = RequestMethod.POST)
-	public JSONObject startProcess(@RequestParam(value = "engineeDep") String engineeDep,
+	public JSONObject startProcess(@RequestParam(value = "nextAssignee") String engineeDep,
 			CustomerServiceProcess process,
 			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) {
 		logger.debug("customerServiceProcess -> start process");
@@ -65,8 +89,8 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 					process.getStartDetail(), multipartFiles);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new JSONObject(
-					ImmutableMap.of("result", "error", "message", Objects.requireNonNull(e.getMessage(), e.toString())));
+			return new JSONObject(ImmutableMap.of("result", "error", "message",
+					Objects.requireNonNull(e.getMessage(), e.toString())));
 		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
@@ -75,15 +99,18 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	protected Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey) {
 		logger.debug("taskDefinitionKey:{},process:customerService", taskDefinitionKey);
 		Iterable<Account> accounts;
+		QAccount qAccount = QAccount.account;
+		QRole qRole = QRole.role;
 		switch (taskDefinitionKey) {
 		case "evaluating":
-			accounts = accountService.findAll(QAccount.account.role.depGroup.code.eq("customerServiceGroup"));
+			accounts = queryFactory.select(qAccount).from(qAccount, qRole)
+					.where(qRole.depGroup.code.eq("customerServiceGroup"), qAccount.roleList.contains(qRole)).fetch();
 			return ImmutableMap.of("accounts", accounts);
 		case "distribute":
-			accounts = accountService.findAll(QAccount.account.role.code.eq("engineer"));
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
 			return ImmutableMap.of("accounts", accounts);
 		case "repair":
-			accounts = accountService.findAll(QAccount.account.role.code.eq("engineer"));
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
 			return ImmutableMap.of("accounts", accounts);
 		}
 		throw new CustomRunTimeException("taskDefinitionKey is illegal");
@@ -104,6 +131,22 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 		logger.debug("customerServiceProcess -> completeStartDetail");
 		customerServcieProcessService.completeStartDetail(accountService.findByLoginId(engineeDep), taskId,
 				process.getStartDetail());
+		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
+	 * 其他部门领导审批
+	 * 
+	 * @param taskId
+	 * @param evaluatingDetail
+	 * @return
+	 */
+	@RequestMapping(value = "/examine", method = RequestMethod.POST)
+	public JSONObject examine(@RequestParam(value = "taskId") String taskId,
+			@RequestParam(value = "engineeDep") String engineeDep, CustomerServiceProcess process) {
+		logger.debug("customerServiceProcess -> evaluating");
+		customerServcieProcessService.examine(accountService.findByLoginId(engineeDep), taskId,
+				process.getExamineDetail());
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

@@ -7,7 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -16,37 +16,39 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 @Entity
 @Table(name = "account")
-public class Account extends BaseEntity{
+public class Account extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1503690620448714787L;
-	
+
 	private String name;
-	
+
 	private String loginId;
 
 	private String password;
-	
-	private Role role;
-	
-	private boolean uploadDocument = false;//是否上传过文件
+
+	private List<Role> roleList = new ArrayList<>();
+
+	private boolean uploadDocument = false;// 是否上传过文件
 
 	private List<Privilege> privilegeList = new ArrayList<>();
-	
+
+	private List<RoleFunctionGroup> roleFunctionGroupList = new ArrayList<>();
+
 	private List<MessageInfo> formMessageList = new ArrayList<>();
 
 	private List<MessageInfo> toMessageList = new ArrayList<>();
-	
+
 	private List<ProcessRecord> processRecordList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
-	
-	//密码加盐
+
+	// 密码加盐
 	private String salt;
-	
-	@Column(unique=true,nullable=false)
+
+	@Column(unique = true, nullable = false)
 	public String getLoginId() {
 		return loginId;
 	}
@@ -62,17 +64,18 @@ public class Account extends BaseEntity{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@JSONField(serialize=false)
-	@ManyToOne(fetch = FetchType.LAZY) 
-	public Role getRole() {
-		return role;
+
+	@JSONField(serialize = false)
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<Role> getRoleList() {
+		return roleList;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRoleList(List<Role> roleList) {
+		this.roleList = roleList;
 	}
 
-	@JSONField(serialize=false)
+	@JSONField(serialize = false)
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "account", targetEntity = Privilege.class)
 	public List<Privilege> getPrivilegeList() {
 		return privilegeList;
@@ -89,7 +92,7 @@ public class Account extends BaseEntity{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public boolean isUploadDocument() {
 		return uploadDocument;
 	}
@@ -105,7 +108,7 @@ public class Account extends BaseEntity{
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "from", targetEntity = MessageInfo.class)
 	public List<MessageInfo> getFormMessageList() {
 		return formMessageList;
@@ -123,7 +126,7 @@ public class Account extends BaseEntity{
 	public void setToMessageList(List<MessageInfo> toMessageList) {
 		this.toMessageList = toMessageList;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "assignee", targetEntity = ProcessRecord.class)
 	public List<ProcessRecord> getProcessRecordList() {
 		return processRecordList;
@@ -132,7 +135,7 @@ public class Account extends BaseEntity{
 	public void setProcessRecordList(List<ProcessRecord> processRecordList) {
 		this.processRecordList = processRecordList;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "applicant", targetEntity = CustomerServiceProcess.class)
 	public List<CustomerServiceProcess> getCustomerServiceProcesseList() {
 		return customerServiceProcesseList;
@@ -141,16 +144,33 @@ public class Account extends BaseEntity{
 	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
 		this.customerServiceProcesseList = customerServiceProcesseList;
 	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<RoleFunctionGroup> getRoleFunctionGroupList() {
+		return roleFunctionGroupList;
+	}
+
+	public void setRoleFunctionGroupList(List<RoleFunctionGroup> roleFunctionGroupList) {
+		this.roleFunctionGroupList = roleFunctionGroupList;
+	}
 	
-	/**
-	 * 密码盐.
+	/***
+	 * 获取部门
 	 * @return
 	 */
 	@Transient
-    public String getCredentialsSalt(){
-       return this.loginId+this.salt;
-    }
-	
-	
-	
+	public Department getDepartment(){
+		return roleList.get(0).getDepGroup().getDepartment();
+	}
+
+	/**
+	 * 密码盐.
+	 * 
+	 * @return
+	 */
+	@Transient
+	public String getCredentialsSalt() {
+		return this.loginId + this.salt;
+	}
+
 }

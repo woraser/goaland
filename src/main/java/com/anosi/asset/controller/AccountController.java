@@ -1,5 +1,7 @@
 package com.anosi.asset.controller;
 
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.Role;
+import com.anosi.asset.model.jpa.RoleFunctionGroup;
 import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.RoleFunctionGroupService;
 import com.anosi.asset.service.RoleService;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -34,6 +39,8 @@ public class AccountController extends BaseController<Account> {
 	private AccountService accountService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private RoleFunctionGroupService roleFunctionGroupService;
 
 	/***
 	 * 进入查看<b>用户信息管理</b>的页面
@@ -78,14 +85,22 @@ public class AccountController extends BaseController<Account> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/save", method = RequestMethod.GET)
-	public ModelAndView toSaveIotxPage(@RequestParam(value = "id", required = false) Long id) throws Exception {
+	public ModelAndView toSaveAccountPage(@RequestParam(value = "id", required = false) Long id) throws Exception {
 		Account account = null;
+		ModelAndView mv = new ModelAndView("account/save");
 		if (id != null) {
 			account = accountService.getOne(id);
+			/*// 获得当前用户部门下的所有角色
+			roles = account.getDepartment().getDepGroupList().stream().map(depGroup -> depGroup.getRoleList()).collect(
+					() -> new ArrayList<Role>(), (list, item) -> list.addAll(item),
+					(list1, list2) -> list1.addAll(list2));*/
+			mv.addObject("roleIds", account.getRoleList().stream().map(Role::getId).collect(Collectors.toList()));
+			mv.addObject("groupIds", account.getRoleFunctionGroupList().stream().map(RoleFunctionGroup::getId).collect(Collectors.toList()));
 		} else {
 			account = new Account();
 		}
-		return new ModelAndView("account/save").addObject("account", account).addObject("roles", roleService.findAll());
+		return mv.addObject("account", account).addObject("roles", roleService.findAll()).addObject("roleFunctionGroups",
+				roleFunctionGroupService.findAll());
 	}
 
 	/***
@@ -116,19 +131,24 @@ public class AccountController extends BaseController<Account> {
 	 * 添加或者修改account
 	 * 
 	 * @param account
-	 * @param 如果请求中传来了password,说明修改了密码或者新建了用户
+	 * @param password
+	 *            如果请求中传来了password,说明修改了密码或者新建了用户
+	 * @param selRolesFunctionNode
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/save", method = RequestMethod.POST)
 	public JSONObject saveIotx(@ModelAttribute("account") Account account,
-			@RequestParam(name = "newPassword", required = false) String password, String[] selRolesFunctionNode)
+			@RequestParam(name = "newPassword", required = false) String password,
+			@RequestParam(name = "role") String[] roles,
+			@RequestParam(name = "roleFunctionGroup", required = false) String[] roleFunctionGroups,
+			String[] selRolesFunctionNode)
 			throws Exception {
 		logger.debug("saveOrUpdate account");
 		if (StringUtils.isBlank(password)) {
-			accountService.save(account, selRolesFunctionNode);
+			accountService.save(account,roles,roleFunctionGroups, selRolesFunctionNode);
 		} else {
-			accountService.save(account, password, selRolesFunctionNode);
+			accountService.save(account, password,roles,roleFunctionGroups, selRolesFunctionNode);
 		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}

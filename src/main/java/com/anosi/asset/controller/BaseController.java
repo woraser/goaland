@@ -3,6 +3,7 @@ package com.anosi.asset.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,7 @@ import com.anosi.asset.service.RoleFunctionService;
 import com.anosi.asset.util.JqgridUtil;
 import com.anosi.asset.util.JsonUtil;
 import com.anosi.asset.util.StringUtil;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class BaseController<T> extends GlobalController<T> {
 
@@ -33,6 +35,10 @@ public class BaseController<T> extends GlobalController<T> {
 	protected JsonUtil<T> jsonUtil;
 	@Autowired
 	protected RoleFunctionService roleFunctionService;
+	@Autowired
+	protected EntityManager entityManager;
+	
+	protected JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 
 	/***
 	 * 注册date

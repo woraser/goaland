@@ -12,19 +12,8 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-		               	{label:'账号',name:'loginId',index:'loginId', width: '120', sortable:false, align: 'center'},
-						{label:'用户名',name:'name',index:'name', width: '120', sortable:false, align: 'center'},
-						{label:'部门',name:'role.depGroup.department.name', index:'role.depGroup.department.name', width:'120', sortable: false,align: 'center'},
-						{label:'组',name:'role.depGroup.name', index:'role.depGroup.name',sortable: true, width:'120', align: 'center',
-							formatter: function (cellvalue, options, rowObject) {
-			                    var detail="";
-			                    $.each(cellvalue,function(){
-			                    	detail += this["depGroup.name"]+"  ";
-			                    })
-			                    return detail;
-			                }
-						},
-						{label:'角色',name:'role.name', index:'role.name',sortable: true, width:'120', align: 'center',
+		               	{label:'权限组名称',name:'name',index:'name', width: '120', sortable:false, align: 'center'},
+						{label:'权限预览',name:'roleFunction',index:'roleFunction', width: '120', sortable:false, align: 'center',
 							formatter: function (cellvalue, options, rowObject) {
 			                    var detail="";
 			                    $.each(cellvalue,function(){
@@ -32,13 +21,13 @@ $(document).ready(function() {
 			                    })
 			                    return detail;
 			                }
-						},
+		               	},
 				   	  ];
 		 
 		 //每页显示多少行
 		 var rowNum=20;
 		 var page=0;
-		 var url='/account/management/data/GRID';
+		 var url='/roleFunctionGroup/management/data/GRID';
 		 var sort;
 		 var selectRowId;
 		 
@@ -46,13 +35,13 @@ $(document).ready(function() {
 		 var params={}
 		 //设置请求需要的一些参数
 		 params['rowId']='id'
-		 params['showAttributes']='loginId,name,department.name,roleList*.depGroup.name,roleList*.name,';//要获取的属性名
+		 params['showAttributes']='name,roleFunctionList*.name';//要获取的属性名
 		 params['page']=page;
 		 params['size']=rowNum;
 		 params['sort']=sort;
 		 
-		 var myGrid = jQuery("#accountTable");
-		 var myPager = jQuery("#accountPager");
+		 var myGrid = jQuery("#roleFunctionGroupTable");
+		 var myPager = jQuery("#roleFunctionGroupPager");
 		 
 		 myGrid.jqGrid({
 	    		datatype: "json",
@@ -89,14 +78,14 @@ $(document).ready(function() {
 		 //add和edit按钮被点击
 		 $("#add").click(function(){
 			 var func=function(){
-				 if($("#accountForm").valid()){
-					 $("#accountForm").submit();
+				 if($("#roleFunctionGroupForm").valid()){
+					 $("#roleFunctionGroupForm").submit();
 					 return true;
 				 }else{
 					 return false;
 				 }
 			 };
-			 createModalPage("添加用户","/account/save",func); 
+			 createModalPage("添加权限组","/roleFunctionGroup/save",func); 
 		 })
 		 
 		 //add和edit按钮被点击
@@ -104,14 +93,14 @@ $(document).ready(function() {
 			 selectRowId = myGrid.getGridParam('selarrrow');
 			 if(selectRowId!=null&&selectRowId!=""){
 				 var func=function(){
-					 if($("#accountForm").valid()){
-						 $("#accountForm").submit();
+					 if($("#roleFunctionGroupForm").valid()){
+						 $("#roleFunctionGroupForm").submit();
 						 return true;
 					 }else{
 						 return false;
 					 }
 				 };
-				 createModalPage("编辑用户","/account/save?id="+selectRowId,func); 
+				 createModalPage("编辑权限组","/roleFunctionGroup/save?id="+selectRowId,func); 
 			 }else{
 				 warning("编辑时必须选择一行");
 			 }

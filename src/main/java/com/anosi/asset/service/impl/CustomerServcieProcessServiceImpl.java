@@ -21,6 +21,7 @@ import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.ExamineDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
 import com.anosi.asset.model.jpa.MessageInfo;
@@ -92,8 +93,25 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Override
 	public void completeStartDetail(Account engineeDep, String taskId, StartDetail startDetail) {
 		findBytaskId(taskId).setStartDetail(startDetail);
-		completeTask(taskId,
-				() -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
+
+		// 判断是不是工程部的人
+		String loginId = SessionUtil.getCurrentUser().getLoginId();
+		Account currentAccount = accountService.findByLoginId(loginId);
+		String code = currentAccount.getDepartment().getCode();
+		// 如果是工程部
+		if ("engineerDep".equals(code)) {
+			completeTask(taskId, () -> taskService.complete(taskId,
+					ImmutableMap.of("engineeDep", engineeDep.getLoginId(), "isEnginee", true)));
+		} else {
+			completeTask(taskId, () -> taskService.complete(taskId,
+					ImmutableMap.of("depManager", engineeDep.getLoginId(), "isEnginee", false)));
+		}
+	}
+	
+	@Override
+	public void examine(Account engineeDep, String taskId, ExamineDetail examineDetail) {
+		findBytaskId(taskId).setExamineDetail(examineDetail);
+		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
 	}
 
 	@Override

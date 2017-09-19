@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -33,6 +34,8 @@ public class RoleFunction extends BaseEntity{
 	private List<RoleFunctionBtn> roleFunctionBtnList = new ArrayList<RoleFunctionBtn>();
 	
 	private List<Privilege> privilegeList = new ArrayList<Privilege>();
+	
+	private List<RoleFunctionGroup> roleFunctionGroupList = new ArrayList<>();
 	
 	public String getName() {
 		return name;
@@ -86,7 +89,16 @@ public class RoleFunction extends BaseEntity{
 	public void setPrivilegeList(List<Privilege> privilegeList) {
 		this.privilegeList = privilegeList;
 	}
-	
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleFunctionList", targetEntity = RoleFunctionGroup.class)
+	public List<RoleFunctionGroup> getRoleFunctionGroupList() {
+		return roleFunctionGroupList;
+	}
+
+	public void setRoleFunctionGroupList(List<RoleFunctionGroup> roleFunctionGroupList) {
+		this.roleFunctionGroupList = roleFunctionGroupList;
+	}
+
 	@Transient
 	public boolean isFirstNode(){
 		return parentRoleFunction==null;

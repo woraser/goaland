@@ -3,32 +3,31 @@ package com.anosi.asset.model.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "role")
-public class Role extends BaseEntity{
-	
+public class Role extends BaseEntity {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7714418401452387106L;
-	
+
 	private String name;
-	
+
 	private String code;
-	
+
 	private DepGroup depGroup;
-	
+
 	private List<Account> accountList = new ArrayList<Account>();
 
-	@Column(unique=true,nullable=false)
+	@Column(unique = true, nullable = false)
 	public String getCode() {
 		return code;
 	}
@@ -37,7 +36,7 @@ public class Role extends BaseEntity{
 		this.code = code;
 	}
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "role", targetEntity = Account.class)
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleList", targetEntity = Account.class)
 	public List<Account> getAccountList() {
 		return accountList;
 	}
@@ -45,7 +44,8 @@ public class Role extends BaseEntity{
 	public void setAccountList(List<Account> accountList) {
 		this.accountList = accountList;
 	}
-	@ManyToOne(fetch = FetchType.LAZY) 
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	public DepGroup getDepGroup() {
 		return depGroup;
 	}
@@ -62,4 +62,29 @@ public class Role extends BaseEntity{
 		this.name = name;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Role other = (Role) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		return true;
+	}
+	
 }

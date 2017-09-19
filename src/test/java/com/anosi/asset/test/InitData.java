@@ -30,12 +30,21 @@ public class InitData {
 
 	@Test
 	@Rollback(false)
+	public void initData(){
+		initEngineerManager();
+		initCustomerServicer();
+		initEngineer();
+		initType();
+	}
+	
+	@Test
+	@Rollback(false)
 	public void initEngineerManager(){
 		Account account = new Account();
 		account.setName("工程部经理");
 		account.setLoginId("gcbjl");
 		account.setPassword("123456");
-		account.setRole(roleService.findByCode("engineerManager"));
+		account.getRoleList().add(roleService.findByCode("engineerManager"));
 		try {
 			//设置密码
 			PasswordEncry.encrypt(account);
@@ -52,7 +61,7 @@ public class InitData {
 		account.setName("售后服务组人员");
 		account.setLoginId("shfwz");
 		account.setPassword("123456");
-		account.setRole(roleService.findByCode("customerServicer"));
+		account.getRoleList().add(roleService.findByCode("customerServicer"));
 		try {
 			//设置密码
 			PasswordEncry.encrypt(account);
@@ -69,7 +78,7 @@ public class InitData {
 		account.setName("工程师");
 		account.setLoginId("gcs");
 		account.setPassword("123456");
-		account.setRole(roleService.findByCode("engineer"));
+		account.getRoleList().add(roleService.findByCode("engineer"));
 		try {
 			//设置密码
 			PasswordEncry.encrypt(account);

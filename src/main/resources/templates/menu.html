@@ -13,10 +13,10 @@
 			
 			<!-- SIDEBAR MENU -->
 			<ul>
-				<li class="active">
+				<!-- <li class="active"> -->
+				<li>
 					<a href="/index">
 						<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text" th:text="#{indexPage}">首页</span>
-						<span class="selected"></span>
 					</a>
 				</li>
 				<li class="has-sub">
@@ -26,6 +26,7 @@
 					</a>
 					<ul class="sub">
 						<li><a href="/account/management/view"><span class="sub-menu-text" th:text="#{employeeMgr}">人员管理</span></a></li>
+						<li><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">权限组管理</span></a></li>
 					</ul>
 				</li>
 				<li class="has-sub">

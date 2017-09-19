@@ -27,7 +27,7 @@ class InitDepRelated {
 	private RoleService roleService
 
 	protected void initDepRelated(){
-		def departments = new XmlSlurper().parse("src/main/resources/initResources/depRelated.xml")
+		def departments = new XmlSlurper().parse(this.getClass().getResourceAsStream("/initResources/depRelated.xml"))
 		// 初始化前，需要判断是否在数据库中存在
 		// 闭包
 		departments.department.each{department->

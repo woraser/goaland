@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.ExamineDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
 
@@ -26,6 +27,14 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @param startDetail 存放发起流程表单信息的bean
 	 */
 	void completeStartDetail(Account engineeDep,String taskId,StartDetail startDetail);
+	
+	/****
+	 * 领导审批
+	 * @param engineeDep
+	 * @param taskId
+	 * @param examineDetail
+	 */
+	void examine(Account engineeDep, String taskId, ExamineDetail examineDetail);
 	
 	/***
 	 * 工程部问题评估
@@ -53,5 +62,5 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @param mandatary 代理人
 	 */
 	void entrust(String taskId,Account mandatary,String reason);
-	
+
 }

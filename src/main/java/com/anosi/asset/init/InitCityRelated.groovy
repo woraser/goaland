@@ -31,7 +31,7 @@ class InitCityRelated {
 		//由于省市区县数据很少改动，所以这里只判断count是否为0
 		if (provinceService.count() == 0){
 			def provinceList = []
-			def provinces = new XmlSlurper().parse("src/main/resources/initResources/Provinces.xml")
+			def provinces = new XmlSlurper().parse(this.getClass().getResourceAsStream("/initResources/Provinces.xml"))
 			provinces.Province.each{
 				def province = new Province(pid:it.@ID.toString(),name:it.@ProvinceName.toString())
 				provinceList.add(province)
@@ -46,7 +46,7 @@ class InitCityRelated {
 	protected void initCity(){
 		if (cityService.count() == 0){
 			def cityList = []
-			def citys = new XmlSlurper().parse("src/main/resources/initResources/Cities.xml")
+			def citys = new XmlSlurper().parse(this.getClass().getResourceAsStream("/initResources/Cities.xml"))
 			citys.City.each{
 				def province = provinceService.findByPID(it.@PID.toString())
 				def city = new City(cid:it.@ID.toString(),name:it.@CityName.toString(),province:province)
@@ -62,7 +62,7 @@ class InitCityRelated {
 	protected void initDistrict(){
 		if (districtService.count() == 0){
 			def districtList = []
-			def districts = new XmlSlurper().parse("src/main/resources/initResources/Districts.xml")
+			def districts = new XmlSlurper().parse(this.getClass().getResourceAsStream("/initResources/Districts.xml"))
 			districts.District.each{
 				def city = cityService.findByCID(it.@CID.toString())
 				def province = new District(name:it.@DistrictName.toString(),city:city)
