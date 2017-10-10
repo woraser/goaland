@@ -6,43 +6,37 @@
 	<div th:fragment="menu">
 		<div class="sidebar-menu nav-collapse">
 			<div class="divide-20"></div>
-			<!-- SEARCH BAR -->
-			<!--<div id="search-bar">
-				<input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
-			</div>-->
-			
-			<!-- SIDEBAR MENU -->
 			<ul>
 				<!-- <li class="active"> -->
 				<li>
 					<a href="/index">
-						<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text" th:text="#{indexPage}">Ê×Ò³</span>
+						<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text" th:text="#{indexPage}">é¦–é¡µ</span>
 					</a>
 				</li>
-				<li class="has-sub">
+				<li class="has-sub"  shiro:hasPermission="systemMgr:view">
 					<a href="javascript:;" class="">
-					<i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text" th:text="#{systemMgr}">ÏµÍ³¹ÜÀí</span>
+					<i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text" th:text="#{systemMgr}">ç³»ç»Ÿç®¡ç†</span>
 					<span class="arrow"></span>
 					</a>
 					<ul class="sub">
-						<li><a href="/account/management/view"><span class="sub-menu-text" th:text="#{employeeMgr}">ÈËÔ±¹ÜÀí</span></a></li>
-						<li><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">È¨ÏÞ×é¹ÜÀí</span></a></li>
+						<li shiro:hasPermission="employeeMgr:view"><a href="/account/management/view"><span class="sub-menu-text" th:text="#{employeeMgr}">äººå‘˜ç®¡ç†</span></a></li>
+						<li shiro:hasPermission="roleFucntionGroupMgr:view"><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">æƒé™ç»„ç®¡ç†</span></a></li>
 					</ul>
 				</li>
-				<li class="has-sub">
+				<li class="has-sub"  shiro:hasPermission="customServiceProcess:view">
 					<a href="javascript:;" class="">
-					<i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text" th:text="#{customServiceProcess}">ÊÛºóÁ÷³Ì</span>
+					<i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text" th:text="#{customServiceProcess}">å”®åŽæµç¨‹</span>
 					<span class="arrow"></span>
 					</a>
 					<ul class="sub">
-						<li><a href="/customerServiceProcess/startedProcess/view"><span class="sub-menu-text" th:text="#{taskStarted}">ÎÒ·¢ÆðµÄÈÎÎñ</span></a></li>
-						<li><a href="/customerServiceProcess/runtimeTask/view"><span class="sub-menu-text" th:text="#{taskToDo}">ÎÒ´ý°ìµÄÈÎÎñ</span></a></li>
-						<li><a><span class="sub-menu-text" th:text="#{historicTasks}">ÎÒ°ì¹ýµÄÈÎÎñ</span></a></li>
+						<li shiro:hasPermission="taskStarted:view"><a href="/customerServiceProcess/startedProcess/view"><span class="sub-menu-text" th:text="#{taskStarted}">æˆ‘å‘èµ·çš„ä»»åŠ¡</span></a></li>
+						<li shiro:hasPermission="taskToDo:view"><a href="/customerServiceProcess/runtimeTask/view"><span class="sub-menu-text" th:text="#{taskToDo}">æˆ‘å¾…åŠžçš„ä»»åŠ¡</span></a></li>
+						<li shiro:hasPermission="historicTasks:view"><a><span class="sub-menu-text" th:text="#{historicTasks}">æˆ‘åŠžè¿‡çš„ä»»åŠ¡</span></a></li>
 					</ul>
 				</li>
-				<li><a href="/technologyDocument/manage"><i class="fa fa-calendar fa-fw"></i>
-					<span class="menu-text" th:text="#{documentMgr}">×ÊÁÏ¹ÜÀí
-					</span>
+				<li shiro:hasPermission="documentMgr:view">
+					<a href="/technologyDocument/manage"><i class="fa fa-calendar fa-fw"></i>
+						<span class="menu-text" th:text="#{documentMgr}" >èµ„æ–™ç®¡ç†</span>
 					</a>
 				</li>
 			</ul>

@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Document(indexName = "goaland", type = "searchRecord", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
@@ -18,13 +18,12 @@ public class SearchRecord implements Serializable {
 	 */
 	private static final long serialVersionUID = 3416052213981587587L;
 
-	@Field(index = FieldIndex.not_analyzed,store=true)
+	@Id
 	private String id = UUID.randomUUID().toString();
 
-	@Field(searchAnalyzer = "lc_search", analyzer = "lc_index",store=true)
+	@Field(type = FieldType.String, searchAnalyzer = "lc_search", analyzer = "lc_index", store = true)
 	private String searchContent;
 
-	@Id
 	public String getId() {
 		return id;
 	}
@@ -65,5 +64,5 @@ public class SearchRecord implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }

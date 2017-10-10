@@ -88,5 +88,9 @@ spring:
       max-idle: 20
       min-idle: 1
     database: 0
+
+#tomcat port
+server:
+  port: 8088
   
     

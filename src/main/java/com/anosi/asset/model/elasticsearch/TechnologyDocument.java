@@ -8,51 +8,54 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-
-@Document(indexName="goaland",type="technologyDocument",indexStoreType="fs",shards=5,replicas=1,refreshInterval="-1")
+@Document(indexName = "goaland", type = "technologyDocument", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
 @Setting(settingPath = "elasticsearch-analyser.json")
-public class TechnologyDocument implements Serializable{
+public class TechnologyDocument implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7259174821924357576L;
-	
-	@Field(index = FieldIndex.not_analyzed,store=true)
+
+	@Id
 	private String id = UUID.randomUUID().toString();
 
-	@Field(searchAnalyzer="ik_max_word",analyzer="ik_max_word")
+	@Field(type = FieldType.String, index = FieldIndex.analyzed, searchAnalyzer = "ik_max_word", analyzer = "ik_max_word", store = true)
 	private String content;
-	
-	@Field(index = FieldIndex.not_analyzed,store=true)
-	private String fileId;//文件的唯一id
-	
-	@Field(index = FieldIndex.not_analyzed,store=true)
+
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
+	private String fileId;// 文件的唯一id
+
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String type;
-	
-	@Field(index = FieldIndex.not_analyzed,store=true)
+
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String uploader;
-	
-	@Field(index = FieldIndex.not_analyzed,store=true)
+
+	@Field(type = FieldType.Date, index = FieldIndex.not_analyzed, store = true)
 	private Date uploadTime;
-	
+
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String fileName;
 	
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
+	private String suffix;
+
 	private String highLightContent;
-	
+
 	private String highLightFileName;
-	
+
 	// 上传时间下限
 	private Date lowerLimit;
 
 	// 上传时间上限
 	private Date upperLimit;
-	
+
 	private String searchContent;
 
-	@Id
 	public String getId() {
 		return id;
 	}
@@ -124,7 +127,7 @@ public class TechnologyDocument implements Serializable{
 	public void setHighLightFileName(String highLightFileName) {
 		this.highLightFileName = highLightFileName;
 	}
-	
+
 	public Date getLowerLimit() {
 		return lowerLimit;
 	}
@@ -152,5 +155,5 @@ public class TechnologyDocument implements Serializable{
 	public void setSearchContent(String searchContent) {
 		this.searchContent = searchContent;
 	}
-	
+
 }

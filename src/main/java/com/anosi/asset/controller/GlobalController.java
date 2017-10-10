@@ -3,6 +3,8 @@ package com.anosi.asset.controller;
 import java.io.IOException;
 
 import org.apache.shiro.authz.UnauthenticatedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,6 +14,8 @@ import com.anosi.asset.exception.CustomRunTimeException;
 
 @RestController
 public class GlobalController<T> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GlobalController.class);
 	
 	/***
 	 * 全局异常处理
@@ -40,7 +44,7 @@ public class GlobalController<T> {
 			for (StackTraceElement stackTraceElement : stackTrace) {
 				sb.append(stackTraceElement+"\n");
 			}
-			mv.addObject("message", sb.toString());
+			logger.debug(sb.toString());
 			return mv;
 		}
 	}

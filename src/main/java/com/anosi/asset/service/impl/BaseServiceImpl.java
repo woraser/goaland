@@ -1,6 +1,8 @@
 package com.anosi.asset.service.impl;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,12 +35,12 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
 	}
 
 	@Override
-	public Iterable<T> findAll() {
+	public List<T> findAll() {
 		return getRepository().findAll();
 	}
 
 	@Override
-	public Iterable<T> findAll(Iterable<Long> ids) {
+	public List<T> findAll(Iterable<Long> ids) {
 		return getRepository().findAll(ids);
 	}
 

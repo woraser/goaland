@@ -7,16 +7,21 @@ import org.apache.shiro.subject.Subject;
 import com.anosi.asset.model.jpa.Account;
 
 public class SessionUtil {
-	
-	public static Session getSession(){
+
+	public static Session getSession() {
 		Subject currentUser = SecurityUtils.getSubject();
 		Session session = currentUser.getSession();
 		return session;
 	}
 
-	public static Account getCurrentUser(){
+	public static Account getCurrentUser() {
 		Session session = getSession();
-		return (Account) session.getAttribute("user");
+		Object user = session.getAttribute("user");
+		if (user != null) {
+			return (Account) user;
+		} else {
+			return null;
+		}
 	}
-	
+
 }

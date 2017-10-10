@@ -12,8 +12,14 @@ import com.anosi.asset.service.PrivilegeService;
 @Service("privilegeService")
 @Transactional
 public class PrivilegeServiceImpl extends BaseServiceImpl<Privilege> implements PrivilegeService{
+	
 	@Autowired
 	private PrivilegeDao privilegeDao;
+	
+	@Override
+	public BaseJPADao<Privilege> getRepository() {
+		return privilegeDao;
+	}
 
 	@Override
 	public Privilege findByRoleFunctionPageId(String roleFunctionPageId) {
@@ -23,11 +29,6 @@ public class PrivilegeServiceImpl extends BaseServiceImpl<Privilege> implements 
 	@Override
 	public Privilege findByAccountAndRoleFunction(String loginId, String roleFunctionPageId) {
 		return privilegeDao.findByAccount_loginIdEqualsAndRoleFunction_RoleFunctionPageIdEquals(loginId, roleFunctionPageId);
-	}
-
-	@Override
-	public BaseJPADao<Privilege> getRepository() {
-		return privilegeDao;
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class AccountController extends BaseController<Account> {
 	private RoleService roleService;
 	@Autowired
 	private RoleFunctionGroupService roleFunctionGroupService;
-
+	
 	/***
 	 * 进入查看<b>用户信息管理</b>的页面
 	 * 
@@ -121,7 +121,7 @@ public class AccountController extends BaseController<Account> {
 	 * 
 	 */
 	@ModelAttribute
-	public void getIox(@RequestParam(value = "accountId", required = false) Long id, Model model) {
+	public void getAccount(@RequestParam(value = "accountId", required = false) Long id, Model model) {
 		if (id != null) {
 			model.addAttribute("account", accountService.getOne(id));
 		}

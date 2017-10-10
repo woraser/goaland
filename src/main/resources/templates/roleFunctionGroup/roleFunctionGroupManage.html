@@ -32,10 +32,19 @@
 								<!-- 节点管理的表格 -->
 								<div><table id="roleFunctionGroupTable"></table></div>
 								<div class="zxf_pagediv" style="padding-top:15px;float:left;" id="roleFunctionGroupPager"></div>
+								<span style="padding-top:15px;float:left;" class="pull-right" shiro:notAuthenticated="">
+									<span shiro:hasAnyPermissions="roleFunctionGroupMgr:delete,roleFunctionGroupMgr:edit,roleFunctionGroupMgr:add">
+										<font color="#F8F8F8" th:text="#{loginByRememberMe}"></font>
+										<a href="/login" th:text="#{login}"></a>
+										<font color="#F8F8F8" th:text="#{authentication}"></font>
+									</span>
+								</span>
 								<!-- 按钮 -->
-								<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" th:type="button" th:value='#{delete}' id='delete'/>
-								<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" th:type="button" th:value='#{edit}' id='edit'/>
-								<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" th:type="button" th:value='#{add}' id='add'/>
+								<span shiro:authenticated="">
+									<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" shiro:hasPermission="roleFunctionGroupMgr:delete" th:type="button" th:value='#{delete}' id='delete'/>
+									<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" shiro:hasPermission="roleFunctionGroupMgr:edit" th:type="button" th:value='#{edit}' id='edit'/>
+									<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" shiro:hasPermission="roleFunctionGroupMgr:add" th:type="button" th:value='#{add}' id='add'/>
+								</span>
 								</div>
 							</div>
 						</section>

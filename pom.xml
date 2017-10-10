@@ -11,6 +11,25 @@
 	<name>goaland</name>
 	<description>project for goaland</description>
 
+	<repositories>
+		<repository>
+        	<id>nexus</id>
+        	<name>Team Nexus Repository</name>
+        	<url>http://10.2.1.56:8081/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>maven-central</id>
+            <name>maven-central</name>
+            <url>http://10.2.1.56:8081/repository/maven-central/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -168,19 +187,19 @@
         </dependency>
         <!-- easy poi -->
         <dependency>
-		    <groupId>org.jeecg</groupId>
-		    <artifactId>easypoi-base</artifactId>
-		    <version>2.4.0</version>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-base</artifactId>
+			<version>3.0.1</version>
 		</dependency>
-        <dependency>
-		    <groupId>org.jeecg</groupId>
-		    <artifactId>easypoi-web</artifactId>
-		    <version>2.4.0</version>
+		<dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-web</artifactId>
+			<version>3.0.1</version>
 		</dependency>
-        <dependency>
-		    <groupId>org.jeecg</groupId>
-		    <artifactId>easypoi-annotation</artifactId>
-		    <version>2.4.0</version>
+		<dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-annotation</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 		<!-- poi -->
 		<dependency>
@@ -227,6 +246,7 @@
 		    <groupId>com.aspose</groupId>
 		    <artifactId>aspose-words</artifactId>
 		    <version>17.7</version>
+		    <classifier>jdk16</classifier>
 		</dependency>
 		<dependency>
 		    <groupId>com.aspose</groupId>
@@ -247,11 +267,18 @@
 		    <groupId>com.aspose</groupId>
 		    <artifactId>aspose-cad</artifactId>
 		    <version>17.4</version>
+		    <classifier>jdk16</classifier>
 		</dependency>
 		<dependency>
 		    <groupId>net.lingala.zip4j</groupId>
 		    <artifactId>zip4j</artifactId>
 		    <version>1.3.2</version>
+		</dependency>
+		<!-- 私有仓库中的包 -->
+		<dependency>
+		    <groupId>com.anosi.asset</groupId>
+			<artifactId>ExcelUtil</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 
