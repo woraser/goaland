@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
-import com.anosi.asset.component.SessionUtil;
+import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.RoleFunction;
@@ -48,6 +48,8 @@ public class BaseController<T> extends GlobalController<T> {
 	protected EntityManager entityManager;
 	@Autowired
 	protected MessageInfoService messageInfoService;
+	@Autowired
+	protected SessionComponent sessionComponent;
 
 	protected JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 
@@ -89,7 +91,7 @@ public class BaseController<T> extends GlobalController<T> {
 	@ModelAttribute("messages")
 	public Page<MessageInfo> getMessages(
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 5) Pageable pageable) {
-		Account currentUser = SessionUtil.getCurrentUser();
+		Account currentUser = sessionComponent.getCurrentUser();
 		if (currentUser != null) {
 			return messageInfoService.findByToAndReadTime(currentUser.getId(), pageable);
 		}

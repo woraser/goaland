@@ -11,12 +11,14 @@ import javax.servlet.Filter;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -87,17 +89,33 @@ public class ShiroConfiguration {
 		return daap;
 	}
 
+	@Bean
+	public SessionManager getRedisSessionManager() {
+		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+		sessionManager.setSessionDAO(getSessionRedisDao());
+		sessionManager.setGlobalSessionTimeout(1000 * 60 * 30);// 毫秒，设置30分钟过期
+		return sessionManager;
+	}
+
+	@Bean("sessionRedisDao")
+	public SessionRedisDao getSessionRedisDao() {
+		SessionRedisDao sessionRedisDao = new SessionRedisDao();
+		return sessionRedisDao;
+	}
+
 	@Bean(name = "securityManager")
 	public DefaultWebSecurityManager getDefaultWebSecurityManager() {
 		DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
 		dwsm.setRealm(getShiroRealm());
 		// 用户授权/认证信息Cache, 采用EhCache 缓存
-		dwsm.setCacheManager(getEhCacheManager());
+		// dwsm.setCacheManager(getEhCacheManager());
 		// 注入记住我管理器
 		dwsm.setRememberMeManager(rememberMeManager());
+		// 用redis来持久化session,由于使用了redis,就没必要在用EhCache的缓存了
+		dwsm.setSessionManager(getRedisSessionManager());
 		return dwsm;
 	}
-	
+
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilterFactoryBean() {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -110,7 +128,7 @@ public class ShiroConfiguration {
 		Map<String, String> filterChainDefinitionManager = new LinkedHashMap<String, String>();
 
 		// 配置记住我或认证通过可以访问的地址
-		//filterChainDefinitionManager.put("/", "user");
+		// filterChainDefinitionManager.put("/", "user");
 		// anon 可以理解为不拦截
 		filterChainDefinitionManager.put("/logout", "anon");
 
@@ -133,11 +151,11 @@ public class ShiroConfiguration {
 
 		return shiroFilterFactoryBean;
 	}
-	
+
 	@Bean
-    public AddPrincipalToSessionFilter addPrincipalToSessionFilter() {
-        return new AddPrincipalToSessionFilter();
-    }
+	public AddPrincipalToSessionFilter addPrincipalToSessionFilter() {
+		return new AddPrincipalToSessionFilter();
+	}
 
 	/***
 	 * 为了在thymeleaf里使用shiro的标签的bean

@@ -3,16 +3,21 @@ package com.anosi.asset.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.model.jpa.BaseEntity;
 import com.anosi.asset.service.BaseService;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 
 public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseService<T,Long>{
+	
+	@Autowired
+	protected SessionComponent sessionComponent;
 
 	@Override
 	public <S extends T> S save(S entity) {

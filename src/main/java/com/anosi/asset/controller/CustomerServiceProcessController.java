@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
-import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
@@ -51,7 +50,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 
 	@Override
 	protected Map<String, Object> getStartProcessObjects() {
-		String loginId = SessionUtil.getCurrentUser().getLoginId();
+		String loginId = sessionComponent.getCurrentUser().getLoginId();
 		Account currentAccount = accountService.findByLoginId(loginId);
 		String code = currentAccount.getDepartment().getCode();
 		Iterable<Account> accounts = null;

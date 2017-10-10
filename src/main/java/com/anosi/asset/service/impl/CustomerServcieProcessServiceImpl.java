@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.model.jpa.Account;
@@ -66,12 +65,12 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	public void startProcess(Account engineeDep, StartDetail startDetail, MultipartFile[] multipartFiles)
 			throws Exception {
 		// 启动流程，因为下一步为完善清单，所以将发起人设置为下一步的办理人
-		identityService.setAuthenticatedUserId(SessionUtil.getCurrentUser().getLoginId());
+		identityService.setAuthenticatedUserId(sessionComponent.getCurrentUser().getLoginId());
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey());
 		CustomerServiceProcess customerServiceProcess = new CustomerServiceProcess();
 		customerServiceProcess.setProcessInstanceId(processInstance.getId());
 		customerServiceProcess.setFinishType(FinishType.REAMIN);
-		customerServiceProcess.setApplicant(SessionUtil.getCurrentUser());
+		customerServiceProcess.setApplicant(sessionComponent.getCurrentUser());
 		customerServiceProcess.setFile(true);
 		customerServiceProcessDao.save(customerServiceProcess);
 		// 创建记录
@@ -95,7 +94,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		findBytaskId(taskId).setStartDetail(startDetail);
 
 		// 判断是不是工程部的人
-		String loginId = SessionUtil.getCurrentUser().getLoginId();
+		String loginId = sessionComponent.getCurrentUser().getLoginId();
 		Account currentAccount = accountService.findByLoginId(loginId);
 		String code = currentAccount.getDepartment().getCode();
 		// 如果是工程部
@@ -154,7 +153,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 		// 发送委托的站内信
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setFrom(SessionUtil.getCurrentUser());
+		messageInfo.setFrom(sessionComponent.getCurrentUser());
 		messageInfo.setTo(mandatary);
 		messageInfo.setSendTime(new Date());
 		// 从i18n中读取信息
@@ -180,7 +179,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		unFinishRecord.setType(HandleType.ENTRUST);
 		unFinishRecord.setEndTime(new Date());
 		unFinishRecord.setReason(reason);
-		unFinishRecord.setAssignee(SessionUtil.getCurrentUser());
+		unFinishRecord.setAssignee(sessionComponent.getCurrentUser());
 
 		// 生成新的流程记录
 		ProcessRecord newRecord = new ProcessRecord();

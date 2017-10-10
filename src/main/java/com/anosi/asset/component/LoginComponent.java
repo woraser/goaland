@@ -39,6 +39,7 @@ public class LoginComponent {
             logger.info("用户[" + loginId + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)"); 
             //使用shiro提供的session
             Session session = currentUser.getSession();
+            session.setAttribute("loginId", loginId);
             session.setAttribute("user", this.accountService.findByLoginId(loginId));
         }else{  
             token.clear();  

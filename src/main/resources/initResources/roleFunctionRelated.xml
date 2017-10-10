@@ -7,7 +7,8 @@
 			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
 			<roleFunctionBtn btnId="batadd" name="批量配置"></roleFunctionBtn>
 		</roleFunction>
-		<roleFunction roleFunctionPageId="roleFunctionGroupMgr" name="权限组管理">
+		<roleFunction roleFunctionPageId="roleFunctionGroupMgr"
+			name="权限组管理">
 			<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
 			<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
 			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
@@ -23,5 +24,22 @@
 		</roleFunction>
 	</roleFunction>
 	<roleFunction roleFunctionPageId="documentMgr" name="文档管理">
+	</roleFunction>
+	<roleFunction roleFunctionPageId="iotxManagement" name="iotx管理">
+		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+	</roleFunction>
+	<roleFunction roleFunctionPageId="dustManagement" name="微尘管理">
+		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+	</roleFunction>
+	<roleFunction roleFunctionPageId="sensorManagement" name="传感器管理">
+		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+	</roleFunction>
+	<roleFunction roleFunctionPageId="iotxAlarmData" name="告警管理">
 	</roleFunction>
 </roleFunctions>

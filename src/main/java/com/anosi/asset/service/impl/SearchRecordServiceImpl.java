@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.anosi.asset.component.SessionUtil;
+import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.dao.elasticsearch.SearchRecordDao;
 import com.anosi.asset.model.elasticsearch.SearchRecord;
 import com.anosi.asset.service.SearchRecordService;
@@ -26,13 +26,15 @@ public class SearchRecordServiceImpl implements SearchRecordService {
 	private SearchRecordDao searchRecordDao;
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
+	@Autowired
+	private SessionComponent sessionComponent;
 
 	private int centerLimit = 5;
 
 	@Override
 	public List<SearchRecord> findBySearchContent(String searchContent, Pageable pageable) {
 		// 先查询个人词库，再查询中央词库
-		List<SearchRecord> locals = findLocal(searchContent, "search_"+SessionUtil.getCurrentUser().getLoginId(), pageable);
+		List<SearchRecord> locals = findLocal(searchContent, "search_"+sessionComponent.getCurrentUser().getLoginId(), pageable);
 		if (locals.size() < pageable.getPageSize()) {
 			List<SearchRecord> centers = findCenter(searchContent, new PageRequest(pageable.getPageNumber(),
 					pageable.getPageSize() - locals.size(), pageable.getSort()));

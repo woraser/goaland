@@ -27,7 +27,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.component.I18nComponent;
-import com.anosi.asset.component.SessionUtil;
 import com.anosi.asset.component.WebSocketComponent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess;
@@ -189,7 +188,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		processRecord.setType(type);
 		processRecord.setEndTime(new Date());
 		processRecord.setReason(reason);
-		processRecord.setAssignee(SessionUtil.getCurrentUser());
+		processRecord.setAssignee(sessionComponent.getCurrentUser());
 		String processInstanceId = processRecord.getProcessInstanceId();
 
 		messageInfoForApplicant(t, taskId,
@@ -247,7 +246,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public Page<T> findStartedProcess(Pageable pageable) {
 		HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
-				.processDefinitionKey(getDefinitionKey()).startedBy(SessionUtil.getCurrentUser().getLoginId())
+				.processDefinitionKey(getDefinitionKey()).startedBy(sessionComponent.getCurrentUser().getLoginId())
 				.orderByProcessInstanceStartTime().desc();
 		return findHistoricProcessInstance(pageable, historicProcessInstanceQuery);
 	}
@@ -255,7 +254,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public Page<T> findTasksToDo(Pageable pageable) {
 		TaskQuery taskQuery = taskService.createTaskQuery().processDefinitionKey(getDefinitionKey())
-				.orderByTaskCreateTime().desc().taskCandidateOrAssigned(SessionUtil.getCurrentUser().getLoginId());
+				.orderByTaskCreateTime().desc().taskCandidateOrAssigned(sessionComponent.getCurrentUser().getLoginId());
 		return findRuntimeTasks(pageable, taskQuery);
 	}
 
@@ -263,7 +262,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	public Page<T> findHistoricTasks(Pageable pageable) {
 		HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
 				.processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
-				.taskAssignee(SessionUtil.getCurrentUser().getLoginId());
+				.taskAssignee(sessionComponent.getCurrentUser().getLoginId());
 		return findHistoricTasks(pageable, historicTaskInstanceQuery);
 	}
 
@@ -291,7 +290,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
 
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setFrom(SessionUtil.getCurrentUser());
+		messageInfo.setFrom(sessionComponent.getCurrentUser());
 		messageInfo.setTo(nextAssignee);
 		messageInfo.setSendTime(new Date());
 		// 从i18n中读取信息
@@ -310,7 +309,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
 
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setFrom(SessionUtil.getCurrentUser());
+		messageInfo.setFrom(sessionComponent.getCurrentUser());
 		messageInfo.setTo(applicant);
 		messageInfo.setSendTime(new Date());
 		// 从i18n中读取信息

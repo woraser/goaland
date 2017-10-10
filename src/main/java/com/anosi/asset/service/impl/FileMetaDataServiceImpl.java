@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.anosi.asset.component.SessionUtil;
+import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.dao.mongo.FileMetaDataDao;
 import com.anosi.asset.dao.mongo.GridFsDao;
 import com.anosi.asset.model.mongo.FileMetaData;
@@ -31,12 +31,14 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	private FileMetaDataDao fileMetaDataDao;
 	@Autowired
 	private GridFsDao gridFsDao;
+	@Autowired
+	private SessionComponent sessionComponent;
 	
 	@Override
 	public FileMetaData saveFile(String identification, String fileName,InputStream is,Long fileSize) throws Exception{
 		FileMetaData fileMetaData=new FileMetaData();
 		fileMetaData.setIdentification(identification);
-		fileMetaData.setUploader(SessionUtil.getCurrentUser()==null?identification:SessionUtil.getCurrentUser().getLoginId());
+		fileMetaData.setUploader(sessionComponent.getCurrentUser()==null?identification:sessionComponent.getCurrentUser().getLoginId());
 		fileMetaData.setUploadTime(new Date());
 		fileMetaData.setFileName(fileName);
 		fileMetaData.setFileSize(fileSize);

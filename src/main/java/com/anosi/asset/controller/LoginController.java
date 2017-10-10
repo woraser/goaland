@@ -92,5 +92,15 @@ public class LoginController extends BaseController<Account> {
 		currentUser.logout();
 		return new ModelAndView("redirect:/login");
 	}
+	
+	/***
+	 * rememberMe 以后的默认路径
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/")
+	public ModelAndView index() {
+		return new ModelAndView("redirect:/index");
+	}
 
 }

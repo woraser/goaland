@@ -32,7 +32,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.component.I18nComponent;
-import com.anosi.asset.component.SessionUtil;
+import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
@@ -63,6 +63,8 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	private I18nComponent i18nComponent;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private SessionComponent sessionComponent;
 
 	@Override
 	public TechnologyDocument createTechnologyDocument(File file, String type) throws Exception {
@@ -114,7 +116,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		td.setFileName(fileName);
 		td.setUploader(fileMetaData.getUploader());
 		td.setUploadTime(fileMetaData.getUploadTime());
-		accountService.getOne(SessionUtil.getCurrentUser().getId()).setUploadDocument(true);
+		accountService.getOne(sessionComponent.getCurrentUser().getId()).setUploadDocument(true);
 		return technologyDocumentDao.save(td);
 	}
 
@@ -179,7 +181,7 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 		if (StringUtils.isNoneBlank(searchContent)) {
 			// 判断是否需要插入中央词库,新开一个线程,不在主线程上消耗时间影响用户体验
 			new Thread(() -> searchRecordService.insertInto(searchContent,
-					"search_" + SessionUtil.getCurrentUser().getLoginId())).start();
+					"search_" + sessionComponent.getCurrentUser().getLoginId())).start();
 			queryBuilder.withQuery(multiMatchQuery(searchContent, "content", "fileName"));
 		}
 
