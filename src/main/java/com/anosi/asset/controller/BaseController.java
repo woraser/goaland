@@ -31,6 +31,7 @@ import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.RoleFunction;
 import com.anosi.asset.service.MessageInfoService;
 import com.anosi.asset.service.RoleFunctionService;
+import com.anosi.asset.util.DataTablesUtil;
 import com.anosi.asset.util.JqgridUtil;
 import com.anosi.asset.util.JsonUtil;
 import com.anosi.asset.util.StringUtil;
@@ -42,6 +43,8 @@ public class BaseController<T> extends GlobalController<T> {
 	protected JqgridUtil<T> jqgridUtil;
 	@Autowired
 	protected JsonUtil<T> jsonUtil;
+	@Autowired
+	protected DataTablesUtil<T> dataTablesUtil;
 	@Autowired
 	protected RoleFunctionService roleFunctionService;
 	@Autowired
@@ -132,6 +135,10 @@ public class BaseController<T> extends GlobalController<T> {
 		case REMOTE:
 			jsonObject = jsonUtil.parseAttributesToJson(pages, StringUtil.splitAttributes(showAttributes));
 			break;
+		case DATATABLES:
+			jsonObject = dataTablesUtil.parsePageToDataTablesJson(pages, rowId,
+					StringUtil.splitAttributes(showAttributes));
+			break;
 		default:
 			jsonObject = jsonUtil.parseAttributesToJson(pages, StringUtil.splitAttributes(showAttributes));
 		}
@@ -139,7 +146,7 @@ public class BaseController<T> extends GlobalController<T> {
 	}
 
 	enum ShowType {
-		GRID, REMOTE
+		GRID, REMOTE, DATATABLES
 	}
 
 }

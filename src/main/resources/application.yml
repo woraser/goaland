@@ -93,4 +93,11 @@ spring:
 server:
   port: 8088
   
+#remote
+remote:
+  protocol: http
+  host: 127.0.0.1
+  port: 8080
+    
+  
     

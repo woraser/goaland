@@ -21,9 +21,7 @@ public class Device extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 587030319812196854L;
 
-	private String projectName;// 项目名称
-
-	private String projectNo;// 项目编号
+	private Project project;
 
 	private String productName;// 产品名称
 
@@ -36,22 +34,6 @@ public class Device extends BaseEntity {
 	private List<Materiel> materielList = new ArrayList<>();// 物料
 
 	private List<TechnicalParameter> technicalParameterList = new ArrayList<>();// 技术参数
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	public String getProjectNo() {
-		return projectNo;
-	}
-
-	public void setProjectNo(String projectNo) {
-		this.projectNo = projectNo;
-	}
 
 	public String getProductName() {
 		return productName;
@@ -104,6 +86,15 @@ public class Device extends BaseEntity {
 
 	public void setTechnicalParameterList(List<TechnicalParameter> technicalParameterList) {
 		this.technicalParameterList = technicalParameterList;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Project.class)
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	@Override

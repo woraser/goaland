@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title>用户信息管理</title>
+	<title th:text="#{employeeMgr}">用户信息管理</title>
 	
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
@@ -25,6 +25,13 @@
 		<div class="col-md-6" style="width:100%">
 			<div class="row">
 				<div style="padding-top:30px;padding-left:30px;">
+					<ul class="nav nav-tabs">
+						<input id= "toSearch" type="text" class=" input-place form-control" th:placeholder="#{searchContent}"/>
+						<span class="input-group-btn" style="height:35px; float:left; margin-left:-10px;margin-top:20px">
+							<button class=" btn btn-search" id="searchBtn" type="button" ><i class="fa fa-fw fa-search"></i></button>
+						</span>
+					</ul>
+				
 					<div class="tab-content">
 						<section class="content">
 							<div class="row">

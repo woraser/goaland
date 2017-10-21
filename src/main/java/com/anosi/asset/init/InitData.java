@@ -11,6 +11,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.anosi.asset.component.PasswordEncry;
+import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.RoleService;
@@ -71,7 +72,7 @@ public class InitData {
 				//设置密码
 				PasswordEncry.encrypt(account);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new CustomRunTimeException();
 			}
 			accountService.save(account);
 		}

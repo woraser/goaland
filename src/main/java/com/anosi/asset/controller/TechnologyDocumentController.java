@@ -35,7 +35,7 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	/***
 	 * 进去文档检索页面
 	 */
-	@RequestMapping(value = "/technologyDocument/manage", method = RequestMethod.GET)
+	@RequestMapping(value = "/technologyDocument/manage/view", method = RequestMethod.GET)
 	public ModelAndView toTechnologyDocumentManage() {
 		logger.debug("technologyDocument manage");
 		return new ModelAndView("document/documentManage").addObject("types", documentTypeService.findAll())

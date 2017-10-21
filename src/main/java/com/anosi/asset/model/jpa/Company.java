@@ -27,6 +27,7 @@ public class Company extends BaseEntity{
 	
 	private List<Department> departmentList = new ArrayList<>();
 
+	@Column(unique = true, nullable = false)
 	public String getName() {
 		return name;
 	}

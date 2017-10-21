@@ -12,8 +12,8 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-		               	{label:'权限组名称',name:'name',index:'name', width: '120', sortable:false, align: 'center'},
-						{label:'权限预览',name:'roleFunction',index:'roleFunction', width: '120', sortable:false, align: 'center',
+		               	{label:$.i18n.prop('roleFunctionGroup.name'),name:'name',index:'name', width: '120', sortable:false, align: 'center'},
+						{label:$.i18n.prop('roleFunctionGroup.roleFunction'),name:'roleFunction',index:'roleFunction', width: '120', sortable:false, align: 'center',
 							formatter: function (cellvalue, options, rowObject) {
 			                    var detail="";
 			                    $.each(cellvalue,function(){

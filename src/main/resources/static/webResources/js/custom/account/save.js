@@ -48,10 +48,8 @@ $(document).ready(function() {
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){
-						var func = function(){
-							window.location.href="/account/management/view"
-						}
-						infoAndFunc('操作成功',func);
+						info('操作成功');
+						$("#accountTable").trigger("reloadGrid");
 					}else if(data.result=='error'){
 						warning('操作失败:'+data.message);
 					}else{

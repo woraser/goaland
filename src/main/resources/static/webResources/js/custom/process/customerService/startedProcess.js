@@ -106,7 +106,7 @@ $(document).ready(function() {
 				 return false;
 			 }
 		 };
-		 createModalPage("新建售后流程","/customerServiceProcess/startProcess/form",func); 
+		 createModalPage("新建售后流程","/customerServiceProcess/startProcess/form/view",func); 
 	 })
 	 
 	 //加载数据

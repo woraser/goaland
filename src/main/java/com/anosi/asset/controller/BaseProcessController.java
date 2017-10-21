@@ -71,7 +71,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/startProcess/form", method = RequestMethod.GET)
+	@RequestMapping(value = "/startProcess/form/view", method = RequestMethod.GET)
 	public ModelAndView toViewStartProcessForm(T process) throws Exception {
 		logger.debug("view startProcess form");
 		return new ModelAndView("process/" + definitionKey + "/startProcessForm", "process", process)
@@ -128,7 +128,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/runtimeTask/form", method = RequestMethod.GET)
+	@RequestMapping(value = "/runtimeTask/form/view", method = RequestMethod.GET)
 	public ModelAndView toViewRunTimeTaskForm(T process, @RequestParam String taskId) throws Exception {
 		logger.debug("view startProcess form");
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();

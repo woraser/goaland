@@ -1,9 +1,9 @@
 package com.anosi.asset.service.impl;
 
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.ProjectDao;
@@ -20,6 +20,11 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project> implements Proj
 	@Override
 	public BaseJPADao<Project> getRepository() {
 		return projectDao;
+	}
+
+	@Override
+	public Project findByNumber(String number) {
+		return projectDao.findByNumber(number);
 	}
 
 }

@@ -64,7 +64,7 @@
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{account.roleFunctionGroup}">选择权限组</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{account.roleFunctionGroup.choose}">选择权限组</label>  
 		    	<div class="col-sm-8">
 		    	 	<select name="roleFunctionGroup" id="roleFunctionGroup" class="form-control" multiple="multiple" style="width: 390px"> 
 		            	<option th:each="roleFunctionGroup : ${roleFunctionGroups}" th:field="*{roleFunctionGroupList}" th:value="${roleFunctionGroup.id}" th:text="${roleFunctionGroup.name}"></option>
@@ -72,7 +72,7 @@
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{account.roleFunction}">选择权限</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{account.roleFunction.choose}">选择权限</label>  
 		    	<div class="col-sm-8">
 		    	 	<div class="zTreeDemoBackground left">
 						<ul id="accountRoleFunctionTree" class="ztree"></ul>

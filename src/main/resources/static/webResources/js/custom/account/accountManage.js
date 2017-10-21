@@ -12,10 +12,10 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-		               	{label:'账号',name:'loginId',index:'loginId', width: '120', sortable:false, align: 'center'},
-						{label:'用户名',name:'name',index:'name', width: '120', sortable:false, align: 'center'},
-						{label:'部门',name:'role.depGroup.department.name', index:'role.depGroup.department.name', width:'120', sortable: false,align: 'center'},
-						{label:'组',name:'role.depGroup.name', index:'role.depGroup.name',sortable: true, width:'120', align: 'center',
+		               	{label:$.i18n.prop('account.loginId'),name:'loginId',index:'loginId', width: '120', sortable:false, align: 'center'},
+						{label:$.i18n.prop('account.name'),name:'name',index:'name', width: '120', sortable:false, align: 'center'},
+						{label:$.i18n.prop('account.role.group.department'),name:'role.depGroup.department.name', index:'role.depGroup.department.name', width:'120', sortable: false,align: 'center'},
+						{label:$.i18n.prop('account.role.group'),name:'role.depGroup.name', index:'role.depGroup.name',sortable: true, width:'120', align: 'center',
 							formatter: function (cellvalue, options, rowObject) {
 			                    var detail="";
 			                    $.each(cellvalue,function(){
@@ -24,7 +24,7 @@ $(document).ready(function() {
 			                    return detail;
 			                }
 						},
-						{label:'角色',name:'role.name', index:'role.name',sortable: true, width:'120', align: 'center',
+						{label:$.i18n.prop('account.role'),name:'role.name', index:'role.name',sortable: true, width:'120', align: 'center',
 							formatter: function (cellvalue, options, rowObject) {
 			                    var detail="";
 			                    $.each(cellvalue,function(){
@@ -33,6 +33,15 @@ $(document).ready(function() {
 			                    return detail;
 			                }
 						},
+						{label:$.i18n.prop('account.roleFunctionGroup'),name:'roleFunctionGroup.name', index:'roleFunctionGroup.name',sortable: true, width:'120', align: 'center',
+							formatter: function (cellvalue, options, rowObject) {
+			                    var detail="";
+			                    $.each(cellvalue,function(){
+			                    	detail += this.name+"  ";
+			                    })
+			                    return detail;
+			                }
+						}
 				   	  ];
 		 
 		 //每页显示多少行
@@ -46,7 +55,7 @@ $(document).ready(function() {
 		 var params={}
 		 //设置请求需要的一些参数
 		 params['rowId']='id'
-		 params['showAttributes']='loginId,name,department.name,roleList*.depGroup.name,roleList*.name,';//要获取的属性名
+		 params['showAttributes']='loginId,name,department.name,roleList*.depGroup.name,roleList*.name,roleFunctionGroupList*.name';//要获取的属性名
 		 params['page']=page;
 		 params['size']=rowNum;
 		 params['sort']=sort;
@@ -115,6 +124,16 @@ $(document).ready(function() {
 			 }else{
 				 warning("编辑时必须选择一行");
 			 }
+		 })
+		 
+		 //查询按钮点击事件
+		 $('#searchBtn').click(function(){
+			var search = $('#toSearch').val();
+			params['searchContent']=search;
+			myGrid.jqGrid().setGridParam({
+				url:url,
+				postData:params,
+			}).trigger("reloadGrid");
 		 })
 		 
 	});

@@ -32,24 +32,12 @@ public class PropertyUtil extends PropertyUtils {
 	@SuppressWarnings("unchecked")
 	public static Object getNestedProperty(final Object bean, final String name)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		Object property = null;
-		// 作用2-1次,相当于list*.id会被分割成list,id
-		// list*.(id,name,list*.(id,name))分割成[list,(id,name,list*.(id,name))]
-		String[] names = name.split("\\*.", 2);
-		try {
-			property = PropertyUtils.getNestedProperty(bean, names[0]);
-		} catch (NestedNullException e) {
-			// 发生这个异常表示找不到attribute，或者attribute的值为null
-			return null;
-		} catch (NoSuchMethodException e) {
-			// 发生这个异常表示没有这个属性
-			return "there is no property with name:" + names[0];
-		}
+		Object property = getPropertyByName(bean, name);
 		if (property instanceof Date) {
 			Date date = (Date) property;
 			return DateFormatUtil.getFormateDate(date);
 		} else if (property instanceof List) {
-			return parseListToJson((List<Object>) property, names);
+			return parseListToJson((List<Object>) property, name.split("\\*.", 2));
 		}
 		return property;
 	}
@@ -65,8 +53,8 @@ public class PropertyUtil extends PropertyUtils {
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		// 判断name[1]是否是(id,name)这种形式,如果有括号,去掉括号
 		String value = names[1];
-		if (value.startsWith("(")&&value.endsWith(")")) {
-			value = value.substring(1, value.length()-1);
+		if (value.startsWith("(") && value.endsWith(")")) {
+			value = value.substring(1, value.length() - 1);
 		}
 		JSONArray jsonArray = new JSONArray();
 		for (Object object : propertys) {
@@ -78,6 +66,71 @@ public class PropertyUtil extends PropertyUtils {
 			jsonArray.add(jsonObject);
 		}
 		return jsonArray;
+	}
+
+	private static Object getPropertyByName(Object bean, String name)
+			throws IllegalAccessException, InvocationTargetException {
+		Object property = null;
+		// 作用2-1次,相当于list*.id会被分割成list,id
+		// list*.(id,name,list*.(id,name))分割成[list,(id,name,list*.(id,name))]
+		String[] names = name.split("\\*.", 2);
+		try {
+			property = PropertyUtils.getNestedProperty(bean, names[0]);
+		} catch (NestedNullException e) {
+			// 发生这个异常表示找不到attribute，或者attribute的值为null
+			return null;
+		} catch (NoSuchMethodException e) {
+			// 发生这个异常表示没有这个属性
+			return "there is no property with name:" + names[0];
+		}
+		return property;
+	}
+
+	/***
+	 * 将获取的到的值返回toString,如果是嵌套属性,则将值拼接
+	 * 
+	 * @param bean
+	 * @param name
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static String getNestedPropertyString(final Object bean, final String name)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		Object property = getPropertyByName(bean, name);
+		if (property instanceof Date) {
+			Date date = (Date) property;
+			return DateFormatUtil.getFormateDate(date);
+		} else if (property instanceof List) {
+			return parseListToString((List<Object>) property, name.split("\\*.", 2));
+		}
+		return property.toString();
+	}
+
+	/****
+	 * 将list的属性值拼接
+	 * 
+	 * @param propertys
+	 * @param names
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	private static String parseListToString(List<Object> propertys, String[] names)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		// 判断name[1]是否是(id,name)这种形式,如果有括号,去掉括号
+		String value = names[1];
+		if (value.startsWith("(") && value.endsWith(")")) {
+			value = value.substring(1, value.length() - 1);
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Object object : propertys) {
+			String[] subNames = StringUtil.splitAttributes(value);
+			for (String subName : subNames) {
+				sb.append(PropertyUtil.getNestedPropertyString(object, subName)+"\t");
+			}
+		}
+		return sb.toString();
 	}
 
 }

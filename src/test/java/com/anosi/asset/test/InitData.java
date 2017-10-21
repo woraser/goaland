@@ -30,7 +30,7 @@ public class InitData {
 
 	@Test
 	@Rollback(false)
-	public void initData(){
+	public void initData() throws Exception{
 		initEngineerManager();
 		initCustomerServicer();
 		initEngineer();
@@ -39,10 +39,10 @@ public class InitData {
 	
 	@Test
 	@Rollback(false)
-	public void initEngineerManager(){
+	public void initEngineerManager() throws Exception{
 		Account account = new Account();
 		account.setName("工程部经理");
-		account.setLoginId("gcbjl");
+		account.setLoginId("gcbjl5");
 		account.setPassword("123456");
 		account.getRoleList().add(roleService.findByCode("engineerManager"));
 		try {
@@ -52,6 +52,7 @@ public class InitData {
 			e.printStackTrace();
 		}
 		accountService.save(account);
+		System.out.println("success");
 	}
 	
 	@Test
@@ -86,13 +87,14 @@ public class InitData {
 			e.printStackTrace();
 		}
 		accountService.save(account);
+		account.setName("测试工程师");
 	}
 	
 	@Test
 	@Rollback(false)
 	public void initType(){
 		DocumentType type = new DocumentType();
-		type.setName("故障文档");
+		type.setName("储备文档");
 		documentTypeService.save(type);
 		DocumentType type2 = new DocumentType();
 		type2.setName("技术文档");

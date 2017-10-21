@@ -70,10 +70,9 @@ public class URLConncetUtil {
 			connection = realUrl.openConnection();
 			setRequestProperty(connection, headers);
 
-			/*
-			 * connection.setRequestProperty("Cookie",
-			 * "JSESSIONID=0a5910ca-aef8-483f-a947-d34604cecc90");
-			 */
+			// connection.setRequestProperty("Cookie",
+			// "JSESSIONID=a434c43e-7df5-49fa-a05a-214aeae19511");
+
 			// 建立实际的连接
 			connection.connect();
 		} catch (Exception e) {
@@ -122,7 +121,7 @@ public class URLConncetUtil {
 		URLConnection connection = sendPost(url, param, headers);
 		return readAndAppendLines(connection);
 	}
-	
+
 	/****
 	 * 发送get请求，返回字符串
 	 * 
@@ -241,7 +240,7 @@ public class URLConncetUtil {
 	}
 
 	private static void setRequestProperty(URLConnection conn, Map<String, String> headers) {
-		if (headers != null && headers.isEmpty()) {
+		if (headers != null && !headers.isEmpty()) {
 			// 设置通用的请求属性
 			if (!headers.containsKey("accept")) {
 				conn.setRequestProperty("accept", "*/*");

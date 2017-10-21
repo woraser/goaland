@@ -7,29 +7,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.anosi.asset.model.elasticsearch.Content;
+
 @Entity
-@Table(name="customerServiceProcess")
-public class CustomerServiceProcess extends BaseProcess{
+@Table(name = "customerServiceProcess")
+public class CustomerServiceProcess extends BaseProcess {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2663257381437985964L;
-	
-	private Account applicant;//发起人
-	
-	private StartDetail startDetail;//发起字段
-	
-	private ExamineDetail examineDetail;//领导审批字段
-	
-	private EvaluatingDetail evaluatingDetail;//评估字段
-	
-	private RepairDetail repairDetail;//维修字段
-	
-	private boolean file = false;//是否有上传文件
-	
-	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Account.class)
-	@JoinColumn(nullable=false)
+
+	private Account applicant;// 发起人
+
+	@Content(extractFields = { "project.name", "project.number", "project.location" })
+	private Project project;// 涉及的项目
+
+	private StartDetail startDetail;// 发起字段
+
+	private ExamineDetail examineDetail;// 领导审批字段
+
+	private EvaluatingDetail evaluatingDetail;// 评估字段
+
+	private RepairDetail repairDetail;// 维修字段
+
+	private boolean file = false;// 是否有上传文件
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+	@JoinColumn(nullable = false)
 	public Account getApplicant() {
 		return applicant;
 	}
@@ -53,7 +58,7 @@ public class CustomerServiceProcess extends BaseProcess{
 	public void setRepairDetail(RepairDetail repairDetail) {
 		this.repairDetail = repairDetail;
 	}
-	
+
 	public EvaluatingDetail getEvaluatingDetail() {
 		return evaluatingDetail;
 	}
@@ -61,7 +66,7 @@ public class CustomerServiceProcess extends BaseProcess{
 	public void setEvaluatingDetail(EvaluatingDetail evaluatingDetail) {
 		this.evaluatingDetail = evaluatingDetail;
 	}
-	
+
 	public ExamineDetail getExamineDetail() {
 		return examineDetail;
 	}
@@ -78,115 +83,177 @@ public class CustomerServiceProcess extends BaseProcess{
 		this.file = file;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Project.class)
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
 	/***
 	 * 流程发起时的表单字段
+	 * 
 	 * @author jinyao
 	 *
 	 */
 	@Embeddable
-	public static class StartDetail{
+	public static class StartDetail {
+
+		private String belong;// 归属
+
+		private String productName;// 产品名称
+
+		private String productNo;// 产品编号
+
+		private String productSpecifications;// 产品规格
 		
-		private String projectNo;//项目编号
+		private ProductType productType;//产品类型
+
+		private String customerMan;// 客户联系人
+
+		private String customerNumber;// 客户联系人电话
+
+		private String projectMan;// 项目联系人
+
+		private String projectNumber;// 项目联系人电话
+
+		private String estimatedTime;// 预估维修时间
+
+		private String baseDemands;// 基本要求
+
+		private String specialDemands;// 特殊要求
 		
-		private String projectName;//项目名称
-		
-		private String projectLocation;//项目地址
-		
-		private String contactMan;//联系人
-		
-		private String contactNumber;//联系电话
-		
-		private String proposeTime;//提出时间
-		
-		private String sceneDescription;//现场描述
-		
-		private String estimateDevices;//预估维修设备
-		
-		private String otherDemands;//其他要求
-		
-		public String getProjectNo() {
-			return projectNo;
+		public String getBelong() {
+			return belong;
 		}
 
-		public void setProjectNo(String projectNo) {
-			this.projectNo = projectNo;
+		public void setBelong(String belong) {
+			this.belong = belong;
 		}
 
-		public String getProjectName() {
-			return projectName;
+		public String getProductName() {
+			return productName;
 		}
 
-		public void setProjectName(String projectName) {
-			this.projectName = projectName;
+		public void setProductName(String productName) {
+			this.productName = productName;
 		}
 
-		public String getProjectLocation() {
-			return projectLocation;
+		public String getProductNo() {
+			return productNo;
 		}
 
-		public void setProjectLocation(String projectLocation) {
-			this.projectLocation = projectLocation;
+		public void setProductNo(String productNo) {
+			this.productNo = productNo;
 		}
 
-		public String getContactMan() {
-			return contactMan;
+		public String getProductSpecifications() {
+			return productSpecifications;
 		}
 
-		public void setContactMan(String contactMan) {
-			this.contactMan = contactMan;
-		}
-
-		public String getContactNumber() {
-			return contactNumber;
-		}
-
-		public void setContactNumber(String contactNumber) {
-			this.contactNumber = contactNumber;
-		}
-
-		public String getProposeTime() {
-			return proposeTime;
-		}
-
-		public void setProposeTime(String proposeTime) {
-			this.proposeTime = proposeTime;
-		}
-
-		public String getEstimateDevices() {
-			return estimateDevices;
-		}
-
-		public void setEstimateDevices(String estimateDevices) {
-			this.estimateDevices = estimateDevices;
-		}
-
-		public String getOtherDemands() {
-			return otherDemands;
-		}
-
-		public void setOtherDemands(String otherDemands) {
-			this.otherDemands = otherDemands;
-		}
-
-		public String getSceneDescription() {
-			return sceneDescription;
-		}
-
-		public void setSceneDescription(String sceneDescription) {
-			this.sceneDescription = sceneDescription;
+		public void setProductSpecifications(String productSpecifications) {
+			this.productSpecifications = productSpecifications;
 		}
 		
+		public ProductType getProductType() {
+			return productType;
+		}
+
+		public void setProductType(ProductType productType) {
+			this.productType = productType;
+		}
+
+		public String getCustomerMan() {
+			return customerMan;
+		}
+
+		public void setCustomerMan(String customerMan) {
+			this.customerMan = customerMan;
+		}
+
+		public String getCustomerNumber() {
+			return customerNumber;
+		}
+
+		public void setCustomerNumber(String customerNumber) {
+			this.customerNumber = customerNumber;
+		}
+
+		public String getProjectMan() {
+			return projectMan;
+		}
+
+		public void setProjectMan(String projectMan) {
+			this.projectMan = projectMan;
+		}
+
+		public String getProjectNumber() {
+			return projectNumber;
+		}
+
+		public void setProjectNumber(String projectNumber) {
+			this.projectNumber = projectNumber;
+		}
+
+		public String getEstimatedTime() {
+			return estimatedTime;
+		}
+
+		public void setEstimatedTime(String estimatedTime) {
+			this.estimatedTime = estimatedTime;
+		}
+
+		public String getBaseDemands() {
+			return baseDemands;
+		}
+
+		public void setBaseDemands(String baseDemands) {
+			this.baseDemands = baseDemands;
+		}
+
+		public String getSpecialDemands() {
+			return specialDemands;
+		}
+
+		public void setSpecialDemands(String specialDemands) {
+			this.specialDemands = specialDemands;
+		}
+
+		public static enum ProductType {
+
+			DC("直流类"), FACTS("FACTS(含SVC,TCSC,STATCOM)"), NEWENERGY("新能源类(含风电,光伏,高压变频)"), LABPROJECT("实验室项目"), OTHER(
+					"其他");
+
+			private String name;
+
+			private ProductType(String name) {
+				this.name = name;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void setName(String name) {
+				this.name = name;
+			}
+
+		}
+
 	}
-	
+
 	/***
 	 * 领导审批字段
+	 * 
 	 * @author jinyao
 	 *
 	 */
 	@Embeddable
-	public static class ExamineDetail{
-		
-		private String suggestion;//领导审批意见
+	public static class ExamineDetail {
+
+		private String suggestion;// 领导审批意见
 
 		public String getSuggestion() {
 			return suggestion;
@@ -195,18 +262,19 @@ public class CustomerServiceProcess extends BaseProcess{
 		public void setSuggestion(String suggestion) {
 			this.suggestion = suggestion;
 		}
-		
+
 	}
-	
+
 	/***
 	 * 工程师评估字段
+	 * 
 	 * @author jinyao
 	 *
 	 */
 	@Embeddable
-	public static class EvaluatingDetail{
-		
-		private String breakdownDevice;//故障设备
+	public static class EvaluatingDetail {
+
+		private String breakdownDevice;// 故障设备
 
 		public String getBreakdownDevice() {
 			return breakdownDevice;
@@ -215,22 +283,23 @@ public class CustomerServiceProcess extends BaseProcess{
 		public void setBreakdownDevice(String breakdownDevice) {
 			this.breakdownDevice = breakdownDevice;
 		}
-		
+
 	}
-	
+
 	/***
 	 * 维修的表单字段
+	 * 
 	 * @author jinyao
 	 *
 	 */
 	@Embeddable
-	public static class RepairDetail{
-		
-		private String problemDescription;//问题描述
-		
-		private String failureCause;//故障原因
-		
-		private String processMode;//处理方式
+	public static class RepairDetail {
+
+		private String problemDescription;// 问题描述
+
+		private String failureCause;// 故障原因
+
+		private String processMode;// 处理方式
 
 		public String getProblemDescription() {
 			return problemDescription;
@@ -255,7 +324,7 @@ public class CustomerServiceProcess extends BaseProcess{
 		public void setProcessMode(String processMode) {
 			this.processMode = processMode;
 		}
-		
+
 	}
 
 }

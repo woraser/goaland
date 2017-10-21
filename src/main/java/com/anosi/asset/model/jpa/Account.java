@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
 @Table(name = "account")
@@ -23,18 +24,22 @@ public class Account extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 1503690620448714787L;
 
+	@Content
 	private String name;
 
+	@Content
 	private String loginId;
 
 	private String password;
 
+	@Content(extractFields = { "roleList*.name","roleList*.depGroup.name","roleList*.depGroup.department.name" })
 	private List<Role> roleList = new ArrayList<>();
 
 	private boolean uploadDocument = false;// 是否上传过文件
 
 	private List<Privilege> privilegeList = new ArrayList<>();
 
+	@Content(extractFields = { "roleFunctionGroupList*.name" })
 	private List<RoleFunctionGroup> roleFunctionGroupList = new ArrayList<>();
 
 	private List<MessageInfo> formMessageList = new ArrayList<>();

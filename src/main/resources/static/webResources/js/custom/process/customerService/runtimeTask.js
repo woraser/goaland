@@ -106,7 +106,7 @@ $(document).ready(function() {
 				 return false;
 			 }
 		 };
-		 createModalPage("办理"+$(this).attr('taskName'),"/customerServiceProcess/runtimeTask/form?taskId="+$(this).attr('taskId'),func);   
+		 createModalPage("办理"+$(this).attr('taskName'),"/customerServiceProcess/runtimeTask/form/view?taskId="+$(this).attr('taskId'),func);   
 	 })
 	 
 	 //加载数据

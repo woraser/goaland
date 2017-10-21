@@ -5,7 +5,6 @@
 <body>
 	<div th:fragment="menu">
 		<div class="sidebar-menu nav-collapse">
-			<div class="divide-20"></div>
 			<ul>
 				<!-- <li class="active"> -->
 				<li>
@@ -20,7 +19,7 @@
 					</a>
 					<ul class="sub">
 						<li shiro:hasPermission="employeeMgr:view"><a href="/account/management/view"><span class="sub-menu-text" th:text="#{employeeMgr}">人员管理</span></a></li>
-						<li shiro:hasPermission="roleFucntionGroupMgr:view"><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">权限组管理</span></a></li>
+						<li shiro:hasPermission="roleFunctionGroupMgr:view"><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">权限组管理</span></a></li>
 					</ul>
 				</li>
 				<li class="has-sub"  shiro:hasPermission="customServiceProcess:view">
@@ -35,7 +34,7 @@
 					</ul>
 				</li>
 				<li shiro:hasPermission="documentMgr:view">
-					<a href="/technologyDocument/manage"><i class="fa fa-calendar fa-fw"></i>
+					<a href="/technologyDocument/manage/view"><i class="fa fa-calendar fa-fw"></i>
 						<span class="menu-text" th:text="#{documentMgr}" >资料管理</span>
 					</a>
 				</li>

@@ -4,27 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.component.PasswordEncry;
 import com.anosi.asset.dao.jpa.AccountDao;
 import com.anosi.asset.dao.jpa.BaseJPADao;
+import com.anosi.asset.exception.CustomRunTimeException;
+import com.anosi.asset.model.elasticsearch.AccountContent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Privilege;
+import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.RoleFunction;
 import com.anosi.asset.model.jpa.RoleFunctionBtn;
+import com.anosi.asset.service.AccountContentService;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.PrivilegeService;
 import com.anosi.asset.service.RoleFunctionBtnService;
 import com.anosi.asset.service.RoleFunctionGroupService;
 import com.anosi.asset.service.RoleFunctionService;
 import com.anosi.asset.service.RoleService;
+import com.querydsl.core.types.Predicate;
 
 @Service("accountService")
 @Transactional
@@ -44,6 +52,8 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 	private RoleService roleService;
 	@Autowired
 	private RoleFunctionGroupService roleFunctionGroupService;
+	@Autowired
+	private AccountContentService accountContentService;
 
 	@Override
 	public BaseJPADao<Account> getRepository() {
@@ -56,38 +66,24 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 		return this.accountDao.findByLoginId(loginId);
 	}
 
-	/***
-	 * 复写save方法
-	 * 
-	 */
 	@Override
 	public Account save(Account account, String password, String[] roles, String[] roleFunctionGroups,
-			String[] selRolesFunctionNode) {
-		account.setPassword(password);
-		try {
+			String[] selRolesFunctionNode) throws Exception {
+		if (StringUtils.isNoneBlank(password)) {
+			account.setPassword(password);
 			// 设置密码
 			PasswordEncry.encrypt(account);
-		} catch (Exception e) {
-			e.printStackTrace();
+			account = accountDao.save(account);
 		}
-		if (selRolesFunctionNode != null && selRolesFunctionNode.length != 0) {
-			return save(account, roles, roleFunctionGroups, selRolesFunctionNode);
-		} else {
-			return save(account);
-		}
-	}
 
-	@Override
-	public Account save(Account account, String[] roles, String[] roleFunctionGroups, String[] selRolesFunctionNode) {
-		account = save(account);
 		account.getRoleList().clear();
-
 		if (roles != null && roles.length != 0) {
 			for (String role : roles) {
 				account.getRoleList().add(roleService.getOne(Long.parseLong(role)));
 			}
 		}
 
+		account.getRoleFunctionGroupList().clear();
 		if (roleFunctionGroups != null && roleFunctionGroups.length != 0) {
 			for (String group : roleFunctionGroups) {
 				account.getRoleFunctionGroupList().add(roleFunctionGroupService.getOne(Long.parseLong(group)));
@@ -98,7 +94,37 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 		if (selRolesFunctionNode != null && selRolesFunctionNode.length != 0) {
 			resolveRoleFunction(account, selRolesFunctionNode);
 		}
+		return save(account);
+	}
+
+	/***
+	 * 重写save,保存account的同时，将@Content标记的字段内容提取，存储到accountContent中
+	 * 
+	 */
+	@Override
+	public <S extends Account> S save(S account) {
+		account = accountDao.save(account);
+		logger.debug("roleList:{}", account.getRoleList().get(0).getName());
+		try {
+			accountContentService.save(account);
+		} catch (Exception e) {
+			throw new CustomRunTimeException(e.getMessage());
+		}
 		return account;
+	}
+
+	/***
+	 * 重写批量添加
+	 */
+	@Override
+	public <S extends Account> Iterable<S> save(Iterable<S> accounts) {
+		accounts = accountDao.save(accounts);
+		try {
+			accountContentService.save(accounts);
+		} catch (Exception e) {
+			throw new CustomRunTimeException(e.getMessage());
+		}
+		return accounts;
 	}
 
 	@Override
@@ -155,6 +181,17 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 	@Override
 	public Iterable<Account> findByIsUploadDocument(boolean isUploadDocument) {
 		return accountDao.findByUploadDocument(isUploadDocument);
+	}
+
+	@Override
+	public Page<Account> findByContentSearch(String content, Predicate predicate, Pageable pageable) {
+		// 防止sort报错，只获取pageable的页数和size
+		logger.debug("page:{},size:{}", pageable.getPageNumber(), pageable.getPageSize());
+		Pageable contentPage = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
+		Page<AccountContent> accountContents = accountContentService.findByContent(content, contentPage);
+		List<Long> ids = accountContents.getContent().stream().map(c -> Long.parseLong(c.getId()))
+				.collect(Collectors.toList());
+		return findAll(QAccount.account.id.in(ids).and(predicate), pageable);
 	}
 
 }

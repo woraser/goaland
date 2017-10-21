@@ -1,22 +1,16 @@
 package com.anosi.asset.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Account;
+import com.querydsl.core.types.Predicate;
 
 public interface AccountService extends BaseService<Account, Long>{
 	
 	public Account findByLoginId(String loginId);
 	
-	/***
-	 * 
-	 * @param account
-	 * @param roles
-	 * @param roleFunctionGroups
-	 * @param selRolesFunctionNode
-	 * @return
-	 */
-	public Account save(Account account, String[] roles, String[] roleFunctionGroups, String[] selRolesFunctionNode);
-
 	/****
 	 * 将权限转化成zTree
 	 * @param id
@@ -32,8 +26,9 @@ public interface AccountService extends BaseService<Account, Long>{
 	 * @param roleFunctionGroups
 	 * @param selRolesFunctionNode
 	 * @return
+	 * @throws Exception 
 	 */
-	public Account save(Account account, String password, String[] roles,String[] roleFunctionGroups, String[] selRolesFunctionNode);
+	public Account save(Account account, String password, String[] roles,String[] roleFunctionGroups, String[] selRolesFunctionNode) throws Exception;
 
 	/***
 	 * 查找上传过文档的用户
@@ -48,5 +43,15 @@ public interface AccountService extends BaseService<Account, Long>{
 	 * @param selRolesFunctionNode
 	 */
 	public void resolveRoleFunction(Account account, String[] selRolesFunctionNode);
+
+	/***
+	 * 根据模糊搜索的content,获取到accountContent,进而获取到account
+	 * 
+	 * @param content
+	 * @param predicate
+	 * @param pageable
+	 * @return
+	 */
+	public Page<Account> findByContentSearch(String content, Predicate predicate, Pageable pageable);
 	
 }

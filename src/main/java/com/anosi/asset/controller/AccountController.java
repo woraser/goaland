@@ -6,10 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +43,7 @@ public class AccountController extends BaseController<Account> {
 	private RoleService roleService;
 	@Autowired
 	private RoleFunctionGroupService roleFunctionGroupService;
-	
+
 	/***
 	 * 进入查看<b>用户信息管理</b>的页面
 	 * 
@@ -69,12 +71,20 @@ public class AccountController extends BaseController<Account> {
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = Account.class) Predicate predicate,
 			@RequestParam(value = "showAttributes") String showAttributes,
-			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "searchContent", required = false) String searchContent) throws Exception {
 		logger.info("find account");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(accountService.findAll(predicate, pageable), rowId, showAttributes, showType);
+		Page<Account> accounts;
+		if (StringUtils.isNoneBlank(searchContent)) {
+			accounts = accountService.findByContentSearch(searchContent, predicate, pageable);
+		} else {
+			accounts = accountService.findAll(predicate, pageable);
+		}
+
+		return parseToJson(accounts, rowId, showAttributes, showType);
 	}
 
 	/***
@@ -90,17 +100,21 @@ public class AccountController extends BaseController<Account> {
 		ModelAndView mv = new ModelAndView("account/save");
 		if (id != null) {
 			account = accountService.getOne(id);
-			/*// 获得当前用户部门下的所有角色
-			roles = account.getDepartment().getDepGroupList().stream().map(depGroup -> depGroup.getRoleList()).collect(
-					() -> new ArrayList<Role>(), (list, item) -> list.addAll(item),
-					(list1, list2) -> list1.addAll(list2));*/
+			/*
+			 * // 获得当前用户部门下的所有角色 roles =
+			 * account.getDepartment().getDepGroupList().stream().map(depGroup
+			 * -> depGroup.getRoleList()).collect( () -> new ArrayList<Role>(),
+			 * (list, item) -> list.addAll(item), (list1, list2) ->
+			 * list1.addAll(list2));
+			 */
 			mv.addObject("roleIds", account.getRoleList().stream().map(Role::getId).collect(Collectors.toList()));
-			mv.addObject("groupIds", account.getRoleFunctionGroupList().stream().map(RoleFunctionGroup::getId).collect(Collectors.toList()));
+			mv.addObject("groupIds", account.getRoleFunctionGroupList().stream().map(RoleFunctionGroup::getId)
+					.collect(Collectors.toList()));
 		} else {
 			account = new Account();
 		}
-		return mv.addObject("account", account).addObject("roles", roleService.findAll()).addObject("roleFunctionGroups",
-				roleFunctionGroupService.findAll());
+		return mv.addObject("account", account).addObject("roles", roleService.findAll())
+				.addObject("roleFunctionGroups", roleFunctionGroupService.findAll());
 	}
 
 	/***
@@ -137,19 +151,15 @@ public class AccountController extends BaseController<Account> {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional
 	@RequestMapping(value = "/account/save", method = RequestMethod.POST)
-	public JSONObject saveIotx(@ModelAttribute("account") Account account,
+	public JSONObject save(@ModelAttribute("account") Account account,
 			@RequestParam(name = "newPassword", required = false) String password,
 			@RequestParam(name = "role") String[] roles,
 			@RequestParam(name = "roleFunctionGroup", required = false) String[] roleFunctionGroups,
-			String[] selRolesFunctionNode)
-			throws Exception {
+			String[] selRolesFunctionNode) throws Exception {
 		logger.debug("saveOrUpdate account");
-		if (StringUtils.isBlank(password)) {
-			accountService.save(account,roles,roleFunctionGroups, selRolesFunctionNode);
-		} else {
-			accountService.save(account, password,roles,roleFunctionGroups, selRolesFunctionNode);
-		}
+		accountService.save(account, password, roles, roleFunctionGroups, selRolesFunctionNode);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

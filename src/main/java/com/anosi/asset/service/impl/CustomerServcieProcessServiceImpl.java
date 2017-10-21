@@ -3,8 +3,6 @@ package com.anosi.asset.service.impl;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import javax.transaction.Transactional;
-
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
@@ -13,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.ExamineDetail;
@@ -25,7 +25,6 @@ import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
-import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.FileMetaDataService;
@@ -106,11 +105,12 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 					ImmutableMap.of("depManager", engineeDep.getLoginId(), "isEnginee", false)));
 		}
 	}
-	
+
 	@Override
 	public void examine(Account engineeDep, String taskId, ExamineDetail examineDetail) {
 		findBytaskId(taskId).setExamineDetail(examineDetail);
-		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
+		completeTask(taskId,
+				() -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
 	}
 
 	@Override

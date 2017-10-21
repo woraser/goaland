@@ -8,14 +8,15 @@ import java.net.URLConnection;
 
 import org.junit.Test;
 
+import com.alibaba.fastjson.JSON;
 import com.anosi.asset.util.URLConncetUtil;
 
 public class TestHttp {
 
 	@Test
 	public void testGet() {
-		String url = "http://127.0.0.1:8080/iotxData/dynamicData";
-		String param = "sensorSN=f843b474-1a16-46e1-9b85-e101ae279b7c&showAttributes=collectTime,val";
+		String url = "http://127.0.0.1:8080//iotx/management/data/REMOTE";
+		String param = "showAttributes=serialNo,id";
 		URLConnection connection = URLConncetUtil.sendGet(url, param);
 		StringBuilder result = new StringBuilder();
 		try (InputStream inputStream = connection.getInputStream(); // 获取文件流
@@ -29,7 +30,7 @@ public class TestHttp {
 			e.printStackTrace();
 		}
 		/* end:trywithresource */
-		System.out.println(result.toString());
+		System.out.println(JSON.parseObject(result.toString()).toString());
 	}
 
 }

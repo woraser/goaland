@@ -1,0 +1,99 @@
+#main-content{
+    height: 1050px;
+    background: #F4F4F4;
+}
+.logo-top{
+    width: 60%;height: 100%;margin-left: 16%
+}
+.dashboard{
+    width:100%;height: 100%;background: #E2E2E2;padding: 0.8%;
+}
+.dashboardin{
+    width: 100%;height: 100%;background: #F1F1F1;padding: 1.8%;
+}
+
+.dhtop{
+    width: 100%;height: 12%;
+}
+.category-goaland{
+    width: 18.6%;height: 100%;float: left;border:solid #CCCCCC 1px;background: #FFFFFF;
+}
+.category-number{
+    width: 100%;
+    height: 40%;
+    text-align: center;
+    font-size: 26px;
+    padding-top: 6.2%;
+    color: #DC4F28;
+}
+.eng-name{
+    width: 100%;
+    height: 15%;
+    text-align: center;
+    font-size: 16px;
+    color: #B3B1B1;
+    padding-top: 1%;
+}
+.cha-name{
+    width: 100%;
+    height: 45%;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 3%;
+}
+.dhcenter{
+    width: 100%;height: 83%;margin-top: 1.8%;border:solid #CCCCCC 1px;background: #FFFFFF;
+}
+.allmap{
+    width: 71%;height: 100%;padding-top: 3%;float: left;
+}
+.dhright{
+    width: 26%;height: 30%;float: right;margin-top: 1.3333%;
+}
+.dhright-title{
+    width: 100%;height: 10%;font-weight: 900;font-size: 16px;color: #737782;
+}
+.right-charts{
+    width: 100%;height: 90%;
+}
+.companyMgr-page{
+    padding-left: 2%;padding-right:2%;width:100%;height:100%;padding-top: 1%;
+}
+.company-top{
+    width: 100%;height: 4%;
+}
+.company-big{
+    width: 7%;height: 100%;float: left;font-size: 24px;color: #96A6B8;
+}
+.company-small{
+    width: 60%;height: 100%;float: left;font-size: 14px;padding-top: 0.8%;color: #96A6B8;font-weight: 700;
+}
+.company-tab{
+    width: 100%;height: 6.5%;
+}
+.company-subtab{
+    color:#9FAFBD;width: 8.5%;height: 100%;float: left;font-size: 16px;font-weight: 700;padding-top: 1.5%;padding-left:2.5% ;
+}
+.tab-active{
+    border-bottom:solid 3px #EE9B7A;color: #F55F2A;
+}
+.company-search{
+    width: 20%;
+    height: 100%;
+    float: left;padding-top: 1%;margin-left: 25%;
+}
+.company-button{
+    width: 5%;height: 100%;float: right;
+}
+.company-button-import{
+    width: 100%;height: 45%;background: #7FB8DA;color: #FFFFFF;border: 0px;border-radius: 3px;margin-top: 20%;
+}
+.company-button-new{
+    width: 100%;height: 45%;background: #EB8B64;color: #FFFFFF;border: 0px;border-radius: 3px;margin-top: 20%;
+    margin-right: 3%;
+}
+.data-table{
+    width: 100%;height: 60%;margin-top: 1%;
+}
+
+
