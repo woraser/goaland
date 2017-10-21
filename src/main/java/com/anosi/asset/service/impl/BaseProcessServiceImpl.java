@@ -58,7 +58,7 @@ import com.anosi.asset.service.ProcessRecordService;
  * @param <T>
  */
 @Transactional
-public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends BaseServiceImpl<T>
+public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends BaseJPAServiceImpl<T>
 		implements BaseProcessService<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseProcessServiceImpl.class);

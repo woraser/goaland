@@ -12,7 +12,7 @@ import com.anosi.asset.service.DevCategoryService;
 
 @Service("devCategoryService")
 @Transactional
-public class DevCategoryServiceImpl extends BaseServiceImpl<DevCategory> implements DevCategoryService{
+public class DevCategoryServiceImpl extends BaseJPAServiceImpl<DevCategory> implements DevCategoryService{
 	
 	@Autowired
 	private DevCategoryDao devCategoryDao;

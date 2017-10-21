@@ -14,16 +14,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.anosi.asset.component.SessionComponent;
+import com.anosi.asset.dao.mongo.BaseMongoDao;
 import com.anosi.asset.dao.mongo.FileMetaDataDao;
 import com.anosi.asset.dao.mongo.GridFsDao;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
-import com.querydsl.core.types.Predicate;
 
 @Service("fileMetaDataService")
 @Transactional
-public class FileMetaDataServiceImpl implements FileMetaDataService{
+public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> implements FileMetaDataService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(FileMetaDataServiceImpl.class);
 
@@ -31,8 +30,11 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	private FileMetaDataDao fileMetaDataDao;
 	@Autowired
 	private GridFsDao gridFsDao;
-	@Autowired
-	private SessionComponent sessionComponent;
+	
+	@Override
+	public BaseMongoDao<FileMetaData> getRepository() {
+		return fileMetaDataDao;
+	}
 	
 	@Override
 	public FileMetaData saveFile(String identification, String fileName,InputStream is,Long fileSize) throws Exception{
@@ -82,11 +84,6 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 	}
 
 	@Override
-	public Page<FileMetaData> findAll(Predicate predicate, Pageable pageable) {
-		return fileMetaDataDao.findAll(predicate, pageable);
-	}
-
-	@Override
 	public List<FileMetaData> findByIdentification(String identification) {
 		return fileMetaDataDao.findByIdentification(identification);
 	}
@@ -101,9 +98,4 @@ public class FileMetaDataServiceImpl implements FileMetaDataService{
 		return fileMetaDatas;
 	}
 
-	@Override
-	public FileMetaData save(FileMetaData fileMetaData) {
-		return fileMetaDataDao.save(fileMetaData);
-	}
-	
 }

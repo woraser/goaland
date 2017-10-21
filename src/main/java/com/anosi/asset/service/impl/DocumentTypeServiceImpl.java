@@ -13,7 +13,7 @@ import com.anosi.asset.service.TechnologyDocumentService;
 
 @Service("documentTypeService")
 @Transactional
-public class DocumentTypeServiceImpl extends BaseServiceImpl<DocumentType> implements DocumentTypeService {
+public class DocumentTypeServiceImpl extends BaseJPAServiceImpl<DocumentType> implements DocumentTypeService {
 
 	@Autowired
 	private DocumentTypeDao documentTypeDao;

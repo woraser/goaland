@@ -12,7 +12,7 @@ import com.anosi.asset.service.ProjectService;
 
 @Service("projectService")
 @Transactional
-public class ProjectServiceImpl extends BaseServiceImpl<Project> implements ProjectService{
+public class ProjectServiceImpl extends BaseJPAServiceImpl<Project> implements ProjectService{
 	
 	@Autowired
 	private ProjectDao projectDao;

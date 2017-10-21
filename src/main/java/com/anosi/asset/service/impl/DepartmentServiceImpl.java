@@ -12,7 +12,7 @@ import com.anosi.asset.service.DepartmentService;
 
 @Service("departmentService")
 @Transactional
-public class DepartmentServiceImpl extends BaseServiceImpl<Department> implements DepartmentService{
+public class DepartmentServiceImpl extends BaseJPAServiceImpl<Department> implements DepartmentService{
 	
 	@Autowired
 	private DepartmentDao departmentDao;

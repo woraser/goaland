@@ -11,7 +11,7 @@ import com.anosi.asset.service.DistrictService;
 
 @Service("districtService")
 @Transactional
-public class DistrictServiceImpl extends BaseServiceImpl<District> implements DistrictService{
+public class DistrictServiceImpl extends BaseJPAServiceImpl<District> implements DistrictService{
 	
 	@Autowired
 	private DistrictDao districtDao;

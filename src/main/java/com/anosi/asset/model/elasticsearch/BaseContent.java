@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-public class BaseContent implements Serializable {
+public class BaseContent extends BaseElasticSearchModel implements Serializable {
 
 	/**
 	 * 

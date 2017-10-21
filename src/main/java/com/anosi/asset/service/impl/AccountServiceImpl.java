@@ -36,7 +36,7 @@ import com.querydsl.core.types.Predicate;
 
 @Service("accountService")
 @Transactional
-public class AccountServiceImpl extends BaseServiceImpl<Account> implements AccountService {
+public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements AccountService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
@@ -106,7 +106,7 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 		account = accountDao.save(account);
 		logger.debug("roleList:{}", account.getRoleList().get(0).getName());
 		try {
-			accountContentService.save(account);
+			accountContentService.saveContent(account);
 		} catch (Exception e) {
 			throw new CustomRunTimeException(e.getMessage());
 		}
@@ -120,7 +120,7 @@ public class AccountServiceImpl extends BaseServiceImpl<Account> implements Acco
 	public <S extends Account> Iterable<S> save(Iterable<S> accounts) {
 		accounts = accountDao.save(accounts);
 		try {
-			accountContentService.save(accounts);
+			accountContentService.saveContent(accounts);
 		} catch (Exception e) {
 			throw new CustomRunTimeException(e.getMessage());
 		}

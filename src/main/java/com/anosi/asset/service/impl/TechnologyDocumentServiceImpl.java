@@ -31,8 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.anosi.asset.component.I18nComponent;
-import com.anosi.asset.component.SessionComponent;
+import com.anosi.asset.dao.elasticsearch.BaseElasticSearchDao;
 import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
@@ -47,7 +46,8 @@ import com.anosi.asset.util.FileFetchUtil.Suffix;
 
 @Service("technologyDocumentService")
 @Transactional
-public class TechnologyDocumentServiceImpl implements TechnologyDocumentService {
+public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<TechnologyDocument, String>
+		implements TechnologyDocumentService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TechnologyDocumentServiceImpl.class);
 
@@ -60,11 +60,12 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	@Autowired
 	private FileMetaDataService fileMetaDataService;
 	@Autowired
-	private I18nComponent i18nComponent;
-	@Autowired
 	private AccountService accountService;
-	@Autowired
-	private SessionComponent sessionComponent;
+	
+	@Override
+	public BaseElasticSearchDao<TechnologyDocument, String> getRepository() {
+		return technologyDocumentDao;
+	}
 
 	@Override
 	public TechnologyDocument createTechnologyDocument(File file, String type) throws Exception {
@@ -91,10 +92,11 @@ public class TechnologyDocumentServiceImpl implements TechnologyDocumentService 
 	private TechnologyDocument saveTechnologyDocument(String fileName, InputStream is, Long fileSize, String content,
 			String type) throws Exception {
 		logger.debug("saveTechnologyDocument,fileName:{},fileSize:{}", fileName, fileSize);
-		byte[] byteArray = IOUtils.toByteArray(is);//流复用
-		
-		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, new ByteArrayInputStream(byteArray), fileSize);
-		
+		byte[] byteArray = IOUtils.toByteArray(is);// 流复用
+
+		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, new ByteArrayInputStream(byteArray),
+				fileSize);
+
 		// 为filemetadata存储预览pdf文件
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		FileConvertUtil.convert(new ByteArrayInputStream(byteArray),

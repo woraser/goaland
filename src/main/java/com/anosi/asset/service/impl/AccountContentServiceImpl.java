@@ -27,7 +27,7 @@ public class AccountContentServiceImpl extends BaseContentServiceImpl<AccountCon
 	}
 
 	@Override
-	public AccountContent save(Account account) throws Exception {
+	public AccountContent saveContent(Account account) throws Exception {
 		String id = String.valueOf(account.getId());
 		AccountContent accountContent = accountContentDao.findOne(id);
 		if (accountContent == null) {
@@ -39,7 +39,7 @@ public class AccountContentServiceImpl extends BaseContentServiceImpl<AccountCon
 	}
 
 	@Override
-	public <S extends Account> Iterable<AccountContent> save(Iterable<S> obs) throws Exception {
+	public <S extends Account> Iterable<AccountContent> saveContent(Iterable<S> obs) throws Exception {
 		List<AccountContent> accountContents = new ArrayList<>();
 		for (Account account : obs) {
 			String id = String.valueOf(account.getId());

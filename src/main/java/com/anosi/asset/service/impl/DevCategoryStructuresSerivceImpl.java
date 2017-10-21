@@ -20,7 +20,7 @@ import com.google.common.collect.Multiset;
 
 @Service("devCategoryStructuresSerivce")
 @Transactional
-public class DevCategoryStructuresSerivceImpl extends BaseServiceImpl<DevCategoryStructures> implements DevCategoryStructuresService {
+public class DevCategoryStructuresSerivceImpl extends BaseJPAServiceImpl<DevCategoryStructures> implements DevCategoryStructuresService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DevCategoryStructuresSerivceImpl.class);
 

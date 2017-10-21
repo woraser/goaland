@@ -12,7 +12,7 @@ import com.anosi.asset.service.ProcessRecordService;
 
 @Service("processRecordService")
 @Transactional
-public class ProcessRecordServiceImpl extends BaseServiceImpl<ProcessRecord> implements ProcessRecordService {
+public class ProcessRecordServiceImpl extends BaseJPAServiceImpl<ProcessRecord> implements ProcessRecordService {
 	
 	@Autowired
 	private ProcessRecordDao processRecordDao;

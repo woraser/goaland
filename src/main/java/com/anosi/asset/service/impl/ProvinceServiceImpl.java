@@ -11,7 +11,7 @@ import com.anosi.asset.service.ProvinceService;
 
 @Service("provinceService")
 @Transactional
-public class ProvinceServiceImpl extends BaseServiceImpl<Province> implements ProvinceService{
+public class ProvinceServiceImpl extends BaseJPAServiceImpl<Province> implements ProvinceService{
 
 	@Autowired
 	private ProvinceDao provinceDao;

@@ -11,7 +11,7 @@ import com.anosi.asset.service.RoleFunctionBtnService;
 
 @Service("roleFunctionBtnService")
 @Transactional
-public class RoleFunctionBtnServiceImpl extends BaseServiceImpl<RoleFunctionBtn> implements RoleFunctionBtnService{
+public class RoleFunctionBtnServiceImpl extends BaseJPAServiceImpl<RoleFunctionBtn> implements RoleFunctionBtnService{
 	
 	@Autowired
 	private RoleFunctionBtnDao roleFunctionBtnDao;

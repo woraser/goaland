@@ -12,7 +12,7 @@ import com.anosi.asset.service.CompanyService;
 
 @Service("companyService")
 @Transactional
-public class CompanyServiceImpl extends BaseServiceImpl<Company> implements CompanyService{
+public class CompanyServiceImpl extends BaseJPAServiceImpl<Company> implements CompanyService{
 	
 	@Autowired
 	private CompanyDao companyDao;

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.model.jpa.MessageInfo;
 
-public interface MessageInfoService extends BaseService<MessageInfo, Long> {
+public interface MessageInfoService extends BaseJPAService<MessageInfo> {
 
 	public Page<MessageInfo> findByToAndReadTime(Long id, Pageable pageable);
 

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.RoleFunctionGroup;
 
-public interface RoleFunctionGroupService extends BaseService<RoleFunctionGroup, Long> {
+public interface RoleFunctionGroupService extends BaseJPAService<RoleFunctionGroup> {
 
 	/***
 	 * 将菜单权限转化为zTree字符串

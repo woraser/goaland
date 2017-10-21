@@ -11,7 +11,7 @@ import com.anosi.asset.service.TechnicalParameterService;
 
 @Service("technicalParameterService")
 @Transactional
-public class TechnicalParameterServiceImpl extends BaseServiceImpl<TechnicalParameter> implements TechnicalParameterService{
+public class TechnicalParameterServiceImpl extends BaseJPAServiceImpl<TechnicalParameter> implements TechnicalParameterService{
 
 	@Autowired
 	private TechnicalParameterDao technicalParameterDao;

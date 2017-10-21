@@ -11,7 +11,7 @@ import com.anosi.asset.service.RoleService;
 
 @Service("roleService")
 @Transactional
-public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleService{
+public class RoleServiceImpl extends BaseJPAServiceImpl<Role> implements RoleService{
 
 	@Autowired
 	private RoleDao roleDao;

@@ -13,7 +13,7 @@ import com.anosi.asset.service.MessageInfoService;
 
 @Service("messageInfoService")
 @Transactional
-public class MessageInfoServiceImpl extends BaseServiceImpl<MessageInfo> implements MessageInfoService {
+public class MessageInfoServiceImpl extends BaseJPAServiceImpl<MessageInfo> implements MessageInfoService {
 
 	@Autowired
 	private MessageInfoDao messageInfoDao;

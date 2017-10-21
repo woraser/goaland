@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.RoleFunction;
 import com.anosi.asset.model.jpa.RoleFunctionBtn;
 
-public interface RoleFunctionService extends BaseService<RoleFunction, Long>{
+public interface RoleFunctionService extends BaseJPAService<RoleFunction>{
 
 	public RoleFunction findByRoleFunctionPageId(String roleFunctionPageId);
 	

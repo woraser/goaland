@@ -19,7 +19,7 @@ import com.anosi.asset.service.impl.BaseProcessServiceImpl.DoInComplete;
  *
  * @param <T>
  */
-public interface BaseProcessService<T extends BaseProcess> extends BaseService<T, Long>{
+public interface BaseProcessService<T extends BaseProcess> extends BaseJPAService<T>{
 	
 	/***
 	 * 设置运行时属性

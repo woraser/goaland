@@ -2,7 +2,7 @@ package com.anosi.asset.service;
 
 import com.anosi.asset.model.jpa.DocumentType;
 
-public interface DocumentTypeService extends BaseService<DocumentType, Long> {
+public interface DocumentTypeService extends BaseJPAService<DocumentType> {
 
 	/***
 	 * 更新type的name,会一同更新fileMetaData和technologyDocument

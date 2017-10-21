@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.model.elasticsearch.SearchRecord;
 
-public interface SearchRecordService {
+public interface SearchRecordService extends BaseElasticSearchService<SearchRecord, String>{
 
 	/***
 	 * autocomplete

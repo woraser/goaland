@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Account;
 import com.querydsl.core.types.Predicate;
 
-public interface AccountService extends BaseService<Account, Long>{
+public interface AccountService extends BaseJPAService<Account>{
 	
 	public Account findByLoginId(String loginId);
 	

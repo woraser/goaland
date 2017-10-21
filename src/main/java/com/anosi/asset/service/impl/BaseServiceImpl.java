@@ -1,156 +1,77 @@
 package com.anosi.asset.service.impl;
 
-
-import java.util.List;
+import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.component.SessionComponent;
-import com.anosi.asset.model.jpa.BaseEntity;
-import com.anosi.asset.service.BaseService;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
 
 @Transactional
-public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseService<T,Long>{
-	
+public abstract class BaseServiceImpl<T,ID extends Serializable> {
+
 	@Autowired
 	protected SessionComponent sessionComponent;
-
-	@Override
+	@Autowired
+	protected I18nComponent i18nComponent;
+	
+	public abstract PagingAndSortingRepository<T,ID> getRepository();
+	
 	public <S extends T> S save(S entity) {
 		return getRepository().save(entity);
 	}
 
-	@Override
 	public <S extends T> Iterable<S> save(Iterable<S> entities) {
 		return getRepository().save(entities);
 	}
 
-	@Override
-	public T findOne(Long id) {
+	public T findOne(ID id) {
 		return getRepository().findOne(id);
 	}
 
-	@Override
-	public boolean exists(Long id) {
+	public boolean exists(ID id) {
 		return getRepository().exists(id);
 	}
 
-	@Override
-	public List<T> findAll() {
+	public Iterable<T> findAll() {
 		return getRepository().findAll();
 	}
 
-	@Override
-	public List<T> findAll(Iterable<Long> ids) {
+	public Iterable<T> findAll(Iterable<ID> ids) {
 		return getRepository().findAll(ids);
 	}
 
-	@Override
 	public long count() {
 		return getRepository().count();
 	}
 
-	@Override
-	public void delete(Long id) {
+	public void delete(ID id) {
 		getRepository().delete(id);
 	}
 
-	@Override
 	public void delete(T entity) {
 		getRepository().delete(entity);
 	}
 
-	@Override
 	public void delete(Iterable<? extends T> entities) {
 		getRepository().delete(entities);
 	}
 
-	@Override
 	public void deleteAll() {
 		getRepository().deleteAll();
 	}
 
-	@Override
 	public Iterable<T> findAll(Sort sort) {
 		return getRepository().findAll(sort);
 	}
 
-	@Override
 	public Page<T> findAll(Pageable pageable) {
 		return getRepository().findAll(pageable);
 	}
-
-	@Override
-	public void flush() {
-		getRepository().flush();
-	}
-
-	@Override
-	public <S extends T> S saveAndFlush(S entity) {
-		return getRepository().saveAndFlush(entity);
-	}
-
-	@Override
-	public void deleteInBatch(Iterable<T> entities) {
-		getRepository().deleteInBatch(entities);
-	}
-
-	@Override
-	public void deleteAllInBatch() {
-		getRepository().deleteAllInBatch();
-	}
-
-	@Override
-	public T getOne(Long id) {
-		return getRepository().getOne(id);
-	}
-
-	@Override
-	public T findOne(Predicate predicate) {
-		return getRepository().findOne(predicate);
-	}
-
-	@Override
-	public Iterable<T> findAll(Predicate predicate) {
-		return getRepository().findAll(predicate);
-	}
-
-	@Override
-	public Iterable<T> findAll(Predicate predicate, Sort sort) {
-		return getRepository().findAll(predicate, sort);
-	}
-
-	@Override
-	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
-		return getRepository().findAll(predicate,orders);
-	}
-
-	@Override
-	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
-		return getRepository().findAll(orders);
-	}
-
-	@Override
-	public Page<T> findAll(Predicate predicate, Pageable pageable) {
-		return getRepository().findAll(predicate, pageable);
-	}
-
-	@Override
-	public long count(Predicate predicate) {
-		return getRepository().count(predicate);
-	}
-
-	@Override
-	public boolean exists(Predicate predicate) {
-		return getRepository().exists(predicate);
-	}
-
-	
 	
 }

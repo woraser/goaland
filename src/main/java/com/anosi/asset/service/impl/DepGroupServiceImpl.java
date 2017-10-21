@@ -12,7 +12,7 @@ import com.anosi.asset.service.DepGroupService;
 
 @Service("depGroupService")
 @Transactional
-public class DepGroupServiceImpl extends BaseServiceImpl<DepGroup> implements DepGroupService{
+public class DepGroupServiceImpl extends BaseJPAServiceImpl<DepGroup> implements DepGroupService{
 	
 	@Autowired
 	private DepGroupDao depGroupDao;

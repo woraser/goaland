@@ -5,7 +5,9 @@ import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface BaseContentService<T, ID extends Serializable, OriginalBean> {
+import com.anosi.asset.model.elasticsearch.BaseContent;
+
+public interface BaseContentService<T extends BaseContent, ID extends Serializable, OriginalBean> extends BaseElasticSearchService<T, ID>{
 
 	/***
 	 * 重载
@@ -32,7 +34,7 @@ public interface BaseContentService<T, ID extends Serializable, OriginalBean> {
 	 * @return
 	 * @throws Exception
 	 */
-	public T save(OriginalBean o) throws Exception;
+	public T saveContent(OriginalBean o) throws Exception;
 	
 	/***
 	 * 批量保存
@@ -41,7 +43,7 @@ public interface BaseContentService<T, ID extends Serializable, OriginalBean> {
 	 * @return
 	 * @throws Exception
 	 */
-	public <S extends OriginalBean> Iterable<T> save(Iterable<S> obs) throws Exception;
+	public <S extends OriginalBean> Iterable<T> saveContent(Iterable<S> obs) throws Exception;
 
 	/***
 	 * 用来设置一些通用的内容

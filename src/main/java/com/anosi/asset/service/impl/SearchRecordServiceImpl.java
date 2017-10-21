@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.anosi.asset.component.SessionComponent;
+import com.anosi.asset.dao.elasticsearch.BaseElasticSearchDao;
 import com.anosi.asset.dao.elasticsearch.SearchRecordDao;
 import com.anosi.asset.model.elasticsearch.SearchRecord;
 import com.anosi.asset.service.SearchRecordService;
@@ -20,16 +20,19 @@ import com.anosi.asset.util.PinyinUtil;
 
 @Service("searchRecordService")
 @Transactional
-public class SearchRecordServiceImpl implements SearchRecordService {
+public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<SearchRecord, String> implements SearchRecordService {
 
 	@Autowired
 	private SearchRecordDao searchRecordDao;
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
-	@Autowired
-	private SessionComponent sessionComponent;
 
 	private int centerLimit = 5;
+	
+	@Override
+	public BaseElasticSearchDao<SearchRecord, String> getRepository() {
+		return searchRecordDao;
+	}
 
 	@Override
 	public List<SearchRecord> findBySearchContent(String searchContent, Pageable pageable) {

@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Document(indexName = "goaland", type = "searchRecord", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
 @Setting(settingPath = "elasticsearch-analyser.json")
-public class SearchRecord implements Serializable {
+public class SearchRecord extends BaseElasticSearchModel implements Serializable {
 
 	/**
 	 * 

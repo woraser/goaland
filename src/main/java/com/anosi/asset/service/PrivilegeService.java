@@ -2,7 +2,7 @@ package com.anosi.asset.service;
 
 import com.anosi.asset.model.jpa.Privilege;
 
-public interface PrivilegeService extends BaseService<Privilege, Long>{
+public interface PrivilegeService extends BaseJPAService<Privilege>{
 
 	public Privilege findByRoleFunctionPageId(String roleFunctionPageId);
 	

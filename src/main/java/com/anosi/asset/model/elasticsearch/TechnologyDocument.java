@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Document(indexName = "goaland", type = "technologyDocument", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
 @Setting(settingPath = "elasticsearch-analyser.json")
-public class TechnologyDocument implements Serializable {
+public class TechnologyDocument extends BaseElasticSearchModel implements Serializable {
 
 	/**
 	 * 

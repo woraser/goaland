@@ -28,7 +28,7 @@ import com.google.common.collect.Sets;
 
 @Service("roleFunctionGroupService")
 @Transactional
-public class RoleFunctionGroupServiceImpl extends BaseServiceImpl<RoleFunctionGroup>
+public class RoleFunctionGroupServiceImpl extends BaseJPAServiceImpl<RoleFunctionGroup>
 		implements RoleFunctionGroupService {
 
 	@Autowired

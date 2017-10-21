@@ -11,7 +11,7 @@ import com.anosi.asset.service.CityService;
 
 @Service("cityService")
 @Transactional
-public class CityServiceImpl extends BaseServiceImpl<City> implements CityService{
+public class CityServiceImpl extends BaseJPAServiceImpl<City> implements CityService{
 
 	@Autowired
 	private CityDao cityDao;

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.anosi.asset.model.jpa.DevCategory;
 import com.anosi.asset.model.jpa.DevCategoryStructures;
 
-public interface DevCategoryStructuresService extends BaseService<DevCategoryStructures, Long>{
+public interface DevCategoryStructuresService extends BaseJPAService<DevCategoryStructures>{
 	
 	/***
 	 * 比对导入数据和数据库数据结构是否相同

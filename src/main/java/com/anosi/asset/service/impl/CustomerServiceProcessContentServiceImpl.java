@@ -28,7 +28,7 @@ public class CustomerServiceProcessContentServiceImpl
 	}
 
 	@Override
-	public CustomerServiceProcessContent save(CustomerServiceProcess customerServiceProcess) throws Exception {
+	public CustomerServiceProcessContent saveContent(CustomerServiceProcess customerServiceProcess) throws Exception {
 		String id = String.valueOf(customerServiceProcess.getId());
 		CustomerServiceProcessContent customerServiceProcessContent = customerServiceProcessContentDao.findOne(id);
 		if (customerServiceProcessContent == null) {
@@ -40,7 +40,7 @@ public class CustomerServiceProcessContentServiceImpl
 	}
 
 	@Override
-	public <S extends CustomerServiceProcess> Iterable<CustomerServiceProcessContent> save(Iterable<S> obs)
+	public <S extends CustomerServiceProcess> Iterable<CustomerServiceProcessContent> saveContent(Iterable<S> obs)
 			throws Exception {
 		List<CustomerServiceProcessContent> customerServiceProcessContents = new ArrayList<>();
 		for (CustomerServiceProcess customerServiceProcess : obs) {

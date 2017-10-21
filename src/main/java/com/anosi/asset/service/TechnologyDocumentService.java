@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 
-public interface TechnologyDocumentService {
+public interface TechnologyDocumentService extends BaseElasticSearchService<TechnologyDocument, String>{
 
 	/***
 	 * 创建TechnologyDocument

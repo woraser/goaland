@@ -8,9 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.model.mongo.FileMetaData;
-import com.querydsl.core.types.Predicate;
 
-public interface FileMetaDataService {
+public interface FileMetaDataService extends BaseMongoService<FileMetaData>{
 	
 	/****
 	 * 保存文件
@@ -43,9 +42,5 @@ public interface FileMetaDataService {
 	public FileMetaData findByObjectId(BigInteger objectId);
 	
 	public InputStream getFileByObjectId(BigInteger objectId);
-	
-	Page<FileMetaData> findAll(Predicate predicate, Pageable pageable);
-	
-	public FileMetaData save(FileMetaData fileMetaData);
 	
 }

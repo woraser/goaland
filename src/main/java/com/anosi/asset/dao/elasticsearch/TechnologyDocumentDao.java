@@ -18,11 +18,10 @@ import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 
-public interface TechnologyDocumentDao extends ElasticsearchRepository<TechnologyDocument, String> {
+public interface TechnologyDocumentDao extends BaseElasticSearchDao<TechnologyDocument, String> {
 
 	public List<TechnologyDocument> findByTypeEquals(String type);
 

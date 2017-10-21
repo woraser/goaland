@@ -15,7 +15,8 @@ import com.anosi.asset.model.elasticsearch.BaseContent;
 import com.anosi.asset.model.elasticsearch.Content;
 import com.anosi.asset.util.PropertyUtil;
 
-public abstract class BaseContentServiceImpl<T extends BaseContent, ID extends Serializable, OriginalBean> {
+public abstract class BaseContentServiceImpl<T extends BaseContent, ID extends Serializable, OriginalBean>
+		extends BaseElasticSearchServiceImpl<T, ID> {
 
 	public abstract BaseContentDao<T, ID> getRepository();
 

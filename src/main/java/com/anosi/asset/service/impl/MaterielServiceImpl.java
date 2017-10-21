@@ -11,7 +11,7 @@ import com.anosi.asset.service.MaterielService;
 
 @Service("materielService")
 @Transactional
-public class MaterielServiceImpl extends BaseServiceImpl<Materiel> implements MaterielService{
+public class MaterielServiceImpl extends BaseJPAServiceImpl<Materiel> implements MaterielService{
 
 	@Autowired
 	private MaterielDao materielDao;

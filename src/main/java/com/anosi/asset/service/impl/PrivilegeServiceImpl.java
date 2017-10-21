@@ -11,7 +11,7 @@ import com.anosi.asset.service.PrivilegeService;
 
 @Service("privilegeService")
 @Transactional
-public class PrivilegeServiceImpl extends BaseServiceImpl<Privilege> implements PrivilegeService{
+public class PrivilegeServiceImpl extends BaseJPAServiceImpl<Privilege> implements PrivilegeService{
 	
 	@Autowired
 	private PrivilegeDao privilegeDao;
