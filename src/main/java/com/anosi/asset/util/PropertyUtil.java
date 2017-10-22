@@ -97,6 +97,9 @@ public class PropertyUtil extends PropertyUtils {
 	public static String getNestedPropertyString(final Object bean, final String name)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Object property = getPropertyByName(bean, name);
+		if (property == null) {
+			return "";
+		}
 		if (property instanceof Date) {
 			Date date = (Date) property;
 			return DateFormatUtil.getFormateDate(date);
@@ -127,7 +130,7 @@ public class PropertyUtil extends PropertyUtils {
 		for (Object object : propertys) {
 			String[] subNames = StringUtil.splitAttributes(value);
 			for (String subName : subNames) {
-				sb.append(PropertyUtil.getNestedPropertyString(object, subName)+"\t");
+				sb.append(PropertyUtil.getNestedPropertyString(object, subName) + "\t");
 			}
 		}
 		return sb.toString();

@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
 
 import com.anosi.asset.GoalandApplication
-import com.anosi.asset.init.InitCityRelated
 import com.anosi.asset.init.InitDepRelated
 import com.anosi.asset.init.InitRoleFunctionRelated
 
@@ -25,8 +24,6 @@ class InitTest {
 	private InitDepRelated initDepRelated;
 	@Autowired
 	private InitRoleFunctionRelated initRoleFunctionRelated;
-	@Autowired
-	private InitCityRelated initCityRelated;
 
 	@Test
 	public void test() {
@@ -37,14 +34,6 @@ class InitTest {
 	@Rollback(false)
 	public void testInitDep(){
 		initDepRelated.initDepRelated()
-	}
-	
-	@Test
-	@Rollback(false)
-	public void testInitCity(){
-		initCityRelated.initProvince();
-		initCityRelated.initCity();
-		initCityRelated.initDistrict();
 	}
 	
 	@Test

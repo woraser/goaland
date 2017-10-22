@@ -15,15 +15,15 @@ public class CityServiceImpl extends BaseJPAServiceImpl<City> implements CitySer
 
 	@Autowired
 	private CityDao cityDao;
-
+	
 	@Override
 	public BaseJPADao<City> getRepository() {
 		return cityDao;
 	}
-	
+
 	@Override
-	public City findByCID(String CID) {
-		return cityDao.findByCid(CID);
+	public City findByName(String name) {
+		return cityDao.findByName(name);
 	}
-	
+
 }

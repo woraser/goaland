@@ -17,8 +17,8 @@ public class ProvinceServiceImpl extends BaseJPAServiceImpl<Province> implements
 	private ProvinceDao provinceDao;
 
 	@Override
-	public Province findByPID(String PID) {
-		return provinceDao.findByPid(PID);
+	public Province findByName(String name) {
+		return provinceDao.findByName(name);
 	}
 
 	@Override

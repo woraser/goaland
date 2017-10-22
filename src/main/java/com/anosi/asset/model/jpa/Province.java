@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -20,9 +21,9 @@ public class Province extends BaseEntity{
 
 	private String name;
 	
-	private String pid;
-	
 	private List<City> cityList = new ArrayList<City>();
+	
+	private Country country;
 
 	public String getName() {
 		return name;
@@ -39,12 +40,13 @@ public class Province extends BaseEntity{
 	public void setCityList(List<City> cityList) {
 		this.cityList = cityList;
 	}
-
-	public String getPid() {
-		return pid;
+	@ManyToOne(fetch = FetchType.LAZY) 
+	public Country getCountry() {
+		return country;
 	}
 
-	public void setPid(String pid) {
-		this.pid = pid;
+	public void setCountry(Country country) {
+		this.country = country;
 	}
+	
 }

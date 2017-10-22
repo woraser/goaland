@@ -35,6 +35,17 @@ public class Device extends BaseEntity {
 
 	private List<TechnicalParameter> technicalParameterList = new ArrayList<>();// 技术参数
 
+	private Double longitude;// 经度
+
+	private Double latitude;// 纬度
+
+	// 为了在百度地图上显示点，还需要存储百度坐标
+	private Double baiduLongitude;// 经度
+
+	private Double baiduLatitude;// 纬度
+
+	private District district;// 所属区县
+
 	public String getProductName() {
 		return productName;
 	}
@@ -95,6 +106,47 @@ public class Device extends BaseEntity {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getBaiduLongitude() {
+		return baiduLongitude;
+	}
+
+	public void setBaiduLongitude(Double baiduLongitude) {
+		this.baiduLongitude = baiduLongitude;
+	}
+
+	public Double getBaiduLatitude() {
+		return baiduLatitude;
+	}
+
+	public void setBaiduLatitude(Double baiduLatitude) {
+		this.baiduLatitude = baiduLatitude;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = District.class)
+	public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
 	}
 
 	@Override

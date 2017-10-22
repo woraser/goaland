@@ -25,8 +25,6 @@ public class City extends BaseEntity{
 	
 	private Province province;
 	
-	private String cid;
-
 	public String getName() {
 		return name;
 	}
@@ -51,12 +49,4 @@ public class City extends BaseEntity{
 		this.province = province;
 	}
 
-	public String getCid() {
-		return cid;
-	}
-
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
-	
 }

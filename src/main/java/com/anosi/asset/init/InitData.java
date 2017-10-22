@@ -35,8 +35,6 @@ public class InitData {
 	@Autowired
 	private InitRoleFunctionRelated initRoleFunctionRelated;
 	@Autowired
-	private InitCityRelated initCityRelated;
-	@Autowired
 	private RoleService roleService;
 	
 	@PostConstruct
@@ -49,9 +47,6 @@ public class InitData {
 				initDepRelated.initDepRelated();
 				initAdmin();
 				initRoleFunctionRelated.initRoleFunctionRelated();
-				initCityRelated.initProvince();
-				initCityRelated.initCity();
-				initCityRelated.initDistrict();
 			}
 		});
 	}
