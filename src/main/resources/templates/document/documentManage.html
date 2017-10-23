@@ -48,8 +48,32 @@
                     <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.operate}">操作</div>
                 </div>
                 <div id="files" style="width:100%;height:45%">
-                <!--文档列表 -->
-         
+                	<!--文档列表 -->
+         			<div v-for="fileData in fileDatas" style="width:100%;height: 22%;border-bottom: 1px solid #333848">
+                    	<div style="float:left;width: 9%;height: 100%;">
+                        	<img v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
+                    	</div>
+	                    <div class="knowledgeInfo" >
+	                        <div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;color: #C1C1C1;padding-left: 5%;padding-top: 13%">
+	                    		{{fileData.highLightFileName}}
+	                    	</div>
+	                    </div>
+	                    <div class="knowledgeDev">
+	                    	{{fileData.type}}
+	                    </div>
+	                    <div class="upLoader">
+	                    	{{fileData.uploader}}
+	                    </div>
+	                    <div class="upTime">
+	                    	{{fileData.uploadTime}}
+	                    </div>
+	                    <div class="handle">
+	                        <a v-bind:href="'/fileDownload/'+fileData.fileId"><img src="/webResources/img/file/download.png"/></a>
+	                        <a v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
+	                    </div>
+	                    <div v-if="seenDetail" style="color: #C1C1C1;">{{fileData.highLightContent}}</div>
+                	</div>
+                	<div class="zxf_pagediv" id="dataPager"></div>
                 </div>
             </div>
         </div>
@@ -67,17 +91,6 @@
 		            	</select>
                      </div>
                  </div>
-                <!--  <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ul>
-                         <li style="margin-left: -20%" th:text="#{document.uploader}">上传人:</li>
-                     </ul>
-                     <div class="select">
-                     	 <select name="uploader" id="uploader" class="myselect"> 
-                       		 <option value="" th:text="#{document.uploader.all}"></option>
-		            		 <option th:each="uploader : ${uploaders}" th:value="${uploader.loginId}" th:text="${uploader.name}"></option>
-		            	 </select>
-                     </div>
-                 </div> -->
                  <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
                      <ul>
                          <li style="margin-left: -20%" th:text="#{document.search.uploadTime}">按上传日期查询:</li>
