@@ -98,6 +98,12 @@ remote:
   protocol: http
   host: 127.0.0.1
   port: 8080
+  
+#baiduMap
+baidu:
+  map:
+    baseUrl: http://api.map.baidu.com
+    ak: 5CszUV7dPeeTfhUi2OR8hXncqKYz2WqW
     
   
     

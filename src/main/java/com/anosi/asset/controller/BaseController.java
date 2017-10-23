@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.MessageInfo;
@@ -53,6 +54,8 @@ public class BaseController<T> extends GlobalController<T> {
 	protected MessageInfoService messageInfoService;
 	@Autowired
 	protected SessionComponent sessionComponent;
+	@Autowired
+	protected I18nComponent i18nComponent;
 
 	protected JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 
