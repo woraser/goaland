@@ -2,9 +2,13 @@
  * 
  */
 $(document).ready(function() {
-	 $('select').selectOrDie({
-
-     });
+	var files = new Vue({
+	  el: '#files',
+	  data: {
+	    fileDatas:[],
+	    seenDetail:false,
+	  }
+	})
 	 //每页显示多少行
 	 var rowNum=6;
 	 var page=0;//初始页
@@ -32,46 +36,12 @@ $(document).ready(function() {
 				success : function( data ) {
 					pageNum=data.total;
 					page=data.page;
-					//加载数据
-					$("#files").html('')
-					$.each(data.content,function(i,value){
-						convertContent(this)
-					})
-					$("#files").append(' <div class="zxf_pagediv" id="dataPager"></div>');
+					files.fileDatas = data.content;
 					//刷新分页插件
-					createPage($("#dataPager"),pageNum,page,11,reloadContent)
+					createPage($("#dataPager"),pageNum,page,11,reloadContent);
 				}
 		 });
 	 }
-	 
-	 function convertContent(data){
-		 $("#files").append('<div style="width:100%;height: 22%;border-bottom: 1px solid #333848">'+
-                    '<div style="float:left;width: 9%;height: 100%;">'+
-                        '<img src="/webResources/img/file/'+data.suffix+'.png" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>'+
-                    '</div>'+
-                    '<div class="knowledgeInfo" >'+
-                        '<div style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;color: #C1C1C1;padding-left: 5%;padding-top: 13%">'+
-                    		data.highLightFileName+
-                    	'</div>'+
-                    '</div>'+
-                    '<div class="knowledgeDev">'+
-                        data.type+
-                    '</div>'+
-                    '<div class="upLoader">'+
-                        data.uploader+
-                    '</div>'+
-                    '<div class="upTime">'+
-                       data.uploadTime+
-                    '</div>'+
-                    '<div class="handle">'+
-                        '<a href=/fileDownload/'+data.fileId+'><img src="/webResources/img/file/download.png"/></a>'+
-                        '<a href=/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+data.fileId+' title="" target="_blank"><img src="/webResources/img/file/preview.png"/></a>'+
-                    '</div>'+
-                '</div>')
-	 }
-	 
-	 //加载数据
-	 //reloadContent(page);
 	 
 	 //上传
 	 $("#upload").click(function(){
@@ -93,7 +63,6 @@ $(document).ready(function() {
 	 $("#search").click(function(){
 		 params['searchContent']=$("#searchContent").val();
 		 params['type']=$("#type").val();
-		 //params['uploader']=$("#uploader").val();
 		 if($("#lowerLimit").val()!=null&&$("#lowerLimit").val()!=""){
 			 params['lowerLimit']=$("#lowerLimit").val();
 		 }else{
@@ -118,28 +87,16 @@ $(document).ready(function() {
 				success : function( data ) {
 					pageNum=data.total;
 					page=data.page;
-					$("#files").html('')
-					//加载数据
-					if(params['searchContent']==""||params['searchContent']==null){
-						$.each(data.content,function(i,value){
-							convertContent(this)
-						})
+					if(params.searchContent==""||params.searchContent==null){
+						files.seenDetail=false;
 					}else{
-						$.each(data.content,function(i,value){
-							convertContent(this)
-							convertContentBySearch(this)
-						})
+						files.seenDetail=true;
 					}
-					$("#files").append(' <div class="zxf_pagediv" id="dataPager"></div>');
+					files.fileDatas = data.content;
 					//刷新分页插件
 					createPage($("#dataPager"),pageNum,page,11,search)
 				}
 		 });
-	 }
-	 
-	 //加载摘要
-	 function convertContentBySearch(data){
-		 $("#files").append('<div style="color: #C1C1C1;">'+data.highLightContent+'</div>')
 	 }
 	 
 	 //search autocomplete
