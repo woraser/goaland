@@ -1,5 +1,8 @@
 package com.anosi.asset.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -123,23 +126,34 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	/***
 	 * 获取发起的流程，默认实现
 	 * @param pageable
+	 * @param endTime 
+	 * @param beginTime 
+	 * @param timeType 
+	 * @param searchContent 
 	 * @return
 	 */
-	Page<T> findStartedProcess(Pageable pageable);
+	Page<T> findStartedProcess(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
 	
 	/***
 	 * 获取待办任务，默认实现
 	 * @param pageable
+	 * @param endTime 
+	 * @param beginTime 
+	 * @param searchContent 
 	 * @return
 	 */
-	Page<T> findTasksToDo(Pageable pageable);
+	Page<T> findTasksToDo(Pageable pageable, String searchContent, Date beginTime, Date endTime);
 	
 	/***
 	 * 获取历史任务，默认实现
 	 * @param pageable
+	 * @param endTime 
+	 * @param beginTime 
+	 * @param timeType 
+	 * @param searchContent 
 	 * @return
 	 */
-	Page<T> findHistoricTasks(Pageable pageable);
+	Page<T> findHistoricTasks(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
 	
 	/***
 	 * 查出下一步任务id，发给下一步代办人
@@ -165,5 +179,13 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * @param applicant
 	 */
 	public void messageInfoForApplicant(T t,String taskId,Account applicant);
+	
+	/***
+	 * 根据查询内容获取关联流程
+	 * 
+	 * @param searchContent
+	 * @return
+	 */
+	public List<String> getProcessInstanceIdsBySearchContent(String searchContent);
 	
 }

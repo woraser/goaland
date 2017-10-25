@@ -110,6 +110,7 @@ public class BaseController<T> extends GlobalController<T> {
 	 * @param id
 	 * @param model
 	 */
+	@ModelAttribute
 	public void setMenuIdIntoSession(@RequestParam(value = "menuId", required = false) String menuId) {
 		if (StringUtils.isNoneBlank(menuId)) {
 			Subject currentUser = SecurityUtils.getSubject();

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="base">
+<head>
+	<meta charset="UTF-8"/>
+	<title></title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="table-top">
+			<div class="title-big" th:text="#{customServiceProcess}">
+				售后流程
+			</div>
+		    <div class="title-small" th:text="#{${session.menuId}}">
+		                    我发起的任务
+		    </div>
+		</div>
+		<div class="companyMgr-page">
+    		<div class="company-tab">
+		        <a href="#" style="text-decoration: none" shiro:hasPermission="customServiceProcessAllTaks:view">
+		            <div class="company-subtab " style="margin-left: 2%">
+		                <div class="right-border" th:text="#{customServiceProcessAllTaks}">
+		                	任务总览
+		                </div>
+		            </div>
+		        </a>
+		        <a th:href="@{/customerServiceProcess/startedProcess/view(menuId=customServiceProcessTaskStarted)}" style="text-decoration: none" shiro:hasPermission="customServiceProcessTaskStarted:view">
+		            <div th:class="${session.menuId=='customServiceProcessTaskStarted'?'company-subtab tab-active':'company-subtab'}">
+		                <div class="right-border" th:text="#{customServiceProcessTaskStarted}">
+		               	 我发起的任务
+		                </div>
+		            </div>
+		        </a>
+		        <a th:href="@{/customerServiceProcess/runtimeTask/view(menuId=customServiceProcessTaskToDo)}" style="text-decoration: none" shiro:hasPermission="customServiceProcessTaskToDo:view">
+		            <div th:class="${session.menuId=='customServiceProcessTaskToDo'?'company-subtab tab-active':'company-subtab'}">
+		                <div class="right-border" th:text="#{customServiceProcessTaskToDo}">
+		                	我待办的任务
+		                <span class="badge" style="float: right;margin-top: -6%;margin-right: 10%;background: #4497C9">3</span>
+		                </div>
+		            </div>
+		        </a>
+		        <a href="#" style="text-decoration: none" shiro:hasPermission="customServiceProcessHistoricTasks:view">
+		            <div class="company-subtab">
+		                <div class="right-border" th:text="#{customServiceProcessHistoricTasks}">
+		                	我办过的任务
+		                </div>
+		            </div>
+		        </a>
+   			</div>
+   			<div id="selects" layout:fragment="company-select" class="company-select"></div>
+   			<div id="processes" layout:fragment="processContent" class="process-table"></div>
+    	</div>
+    </div>
+</body>
+</html>

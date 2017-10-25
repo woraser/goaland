@@ -3,6 +3,7 @@ package com.anosi.asset.service.impl;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,9 +35,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.component.WebSocketComponent;
+import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.model.jpa.MessageInfo;
@@ -256,25 +259,97 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
-	public Page<T> findStartedProcess(Pageable pageable) {
+	public Page<T> findStartedProcess(Pageable pageable, String searchContent, String timeType, Date beginTime,
+			Date endTime) {
 		HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
 				.processDefinitionKey(getDefinitionKey()).startedBy(sessionComponent.getCurrentUser().getLoginId())
 				.orderByProcessInstanceStartTime().desc();
+		if (beginTime != null) {
+			if ("start".equals(timeType)) {
+				historicProcessInstanceQuery.startedAfter(beginTime);
+			} else if ("end".equals(timeType)) {
+				historicProcessInstanceQuery.finishedAfter(endTime);
+			} else {
+				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (endTime != null) {
+			if ("start".equals(timeType)) {
+				historicProcessInstanceQuery.startedBefore(beginTime);
+			} else if ("end".equals(timeType)) {
+				historicProcessInstanceQuery.finishedBefore(endTime);
+			} else {
+				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (StringUtils.isNoneBlank(searchContent)) {
+			List<String> processInstanceIdsBySearchContent = getProcessInstanceIdsBySearchContent(searchContent);
+			if (!CollectionUtils.isEmpty(processInstanceIdsBySearchContent)) {
+				historicProcessInstanceQuery
+						.processInstanceIds(new HashSet<>(getProcessInstanceIdsBySearchContent(searchContent)));
+			} else {
+				// 如果查询结果为null,返回空的page
+				return new PageImpl<>(new ArrayList<>(), pageable, 0);
+			}
+		}
 		return findHistoricProcessInstance(pageable, historicProcessInstanceQuery);
 	}
 
 	@Override
-	public Page<T> findTasksToDo(Pageable pageable) {
+	public Page<T> findTasksToDo(Pageable pageable, String searchContent, Date beginTime, Date endTime) {
 		TaskQuery taskQuery = taskService.createTaskQuery().processDefinitionKey(getDefinitionKey())
 				.orderByTaskCreateTime().desc().taskCandidateOrAssigned(sessionComponent.getCurrentUser().getLoginId());
+		if (beginTime != null) {
+			taskQuery.taskCreatedAfter(beginTime);
+		}
+		if (endTime != null) {
+			taskQuery.taskCreatedBefore(endTime);
+		}
+		if (StringUtils.isNoneBlank(searchContent)) {
+			List<String> processInstanceIdsBySearchContent = getProcessInstanceIdsBySearchContent(searchContent);
+			if (!CollectionUtils.isEmpty(processInstanceIdsBySearchContent)) {
+				taskQuery.processInstanceIdIn(getProcessInstanceIdsBySearchContent(searchContent));
+			} else {
+				// 如果查询结果为null,返回空的page
+				return new PageImpl<>(new ArrayList<>(), pageable, 0);
+			}
+		}
 		return findRuntimeTasks(pageable, taskQuery);
 	}
 
 	@Override
-	public Page<T> findHistoricTasks(Pageable pageable) {
+	public Page<T> findHistoricTasks(Pageable pageable, String searchContent, String timeType, Date beginTime,
+			Date endTime) {
 		HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
 				.processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
 				.taskAssignee(sessionComponent.getCurrentUser().getLoginId());
+		if (beginTime != null) {
+			if ("start".equals(timeType)) {
+				historicTaskInstanceQuery.taskCreatedAfter(beginTime);
+			} else if ("end".equals(timeType)) {
+				historicTaskInstanceQuery.taskCompletedAfter(endTime);
+			} else {
+				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (endTime != null) {
+			if ("start".equals(timeType)) {
+				historicTaskInstanceQuery.taskCreatedBefore(beginTime);
+			} else if ("end".equals(timeType)) {
+				historicTaskInstanceQuery.taskCompletedBefore(endTime);
+			} else {
+				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (StringUtils.isNoneBlank(searchContent)) {
+			List<String> processInstanceIdsBySearchContent = getProcessInstanceIdsBySearchContent(searchContent);
+			if (!CollectionUtils.isEmpty(processInstanceIdsBySearchContent)) {
+				historicTaskInstanceQuery.processInstanceIdIn(getProcessInstanceIdsBySearchContent(searchContent));
+			} else {
+				// 如果查询结果为null,返回空的page
+				return new PageImpl<>(new ArrayList<>(), pageable, 0);
+			}
+		}
 		return findHistoricTasks(pageable, historicTaskInstanceQuery);
 	}
 

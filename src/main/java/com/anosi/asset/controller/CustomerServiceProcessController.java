@@ -1,5 +1,6 @@
 package com.anosi.asset.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,6 +19,8 @@ import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.QRole;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail.Belong;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail.ProductType;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
@@ -70,7 +73,11 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineerManager")));
 			break;
 		}
-		return ImmutableMap.of("accounts", accounts);
+		Map<String, Object> map = new HashMap<>();
+		map.put("accounts", accounts);
+		map.put("belongs", Belong.values());
+		map.put("productTypes", ProductType.values());
+		return map;
 	}
 
 	/***

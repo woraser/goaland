@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -19,22 +18,13 @@ public class DevCategory extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 7974456468757773048L;
 
-	private String name;// 名字目前就只有5种
+	private CategoryType categoryType;
 
 	private List<Device> deviceList = new ArrayList<>();
 
 	private List<DevCategoryStructures> mainDevCategoryStructures = new ArrayList<>();
 
 	private List<DevCategoryStructures> subDevCategoryStructures = new ArrayList<>();
-
-	@Column(unique = true, nullable = false)
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	@OneToMany(targetEntity = Device.class, cascade = {
 			CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "devCategory")
@@ -62,6 +52,47 @@ public class DevCategory extends BaseEntity {
 
 	public void setSubDevCategoryStructures(List<DevCategoryStructures> subDevCategoryStructures) {
 		this.subDevCategoryStructures = subDevCategoryStructures;
+	}
+
+	public CategoryType getCategoryType() {
+		return categoryType;
+	}
+
+	public void setCategoryType(CategoryType categoryType) {
+		this.categoryType = categoryType;
+	}
+
+	public static enum CategoryType {
+
+		HVSCCOOLING("直流输电换流阀水冷设备", "HVSC COOLING"), FACTS("柔性交流输配电晶闸管阀纯水冷却设备", "FACTS"), ELECTRICDRIVECOOLING(
+				"新能源发电变流器纯水冷却设备", "ELECTRIC DRIVE COOLING"), RENEWABLEENERGYCOOLING("大功率电气传动变频器纯水冷却设备",
+						"RENEWABLE ENERGY COOLING "), ACCUMULATIONOFCOLD("蓄冷设备", "ACCUMULATION OF COLD");
+
+		private String chinese;
+
+		private String english;
+
+		private CategoryType(String chinese, String english) {
+			this.chinese = chinese;
+			this.english = english;
+		}
+
+		public String getChinese() {
+			return chinese;
+		}
+
+		public void setChinese(String chinese) {
+			this.chinese = chinese;
+		}
+
+		public String getEnglish() {
+			return english;
+		}
+
+		public void setEnglish(String english) {
+			this.english = english;
+		}
+
 	}
 
 }

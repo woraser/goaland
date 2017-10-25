@@ -1,6 +1,7 @@
 package com.anosi.asset.service;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,14 @@ import com.anosi.asset.model.elasticsearch.BaseContent;
 
 public interface BaseContentService<T extends BaseContent, ID extends Serializable, OriginalBean> extends BaseElasticSearchService<T, ID>{
 
+	/***
+	 * 根据内容模糊查询
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public List<T> findByContent(String content);
+	
 	/***
 	 * 重载
 	 * 

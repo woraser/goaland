@@ -1,5 +1,7 @@
 package com.anosi.asset.test;
 
+import java.util.UUID;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.anosi.asset.GoalandApplication;
 import com.anosi.asset.component.PasswordEncry;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.DocumentType;
 import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.DevCategoryService;
+import com.anosi.asset.service.DeviceService;
 import com.anosi.asset.service.DocumentTypeService;
 import com.anosi.asset.service.RoleService;
 
@@ -27,6 +32,10 @@ public class InitData {
 	private RoleService roleService;
 	@Autowired
 	private DocumentTypeService documentTypeService;
+	@Autowired
+	private DeviceService deviceService;
+	@Autowired
+	private DevCategoryService devCategoryService;
 
 	@Test
 	@Rollback(false)
@@ -102,6 +111,18 @@ public class InitData {
 		DocumentType type3 = new DocumentType();
 		type3.setName("设备文档");
 		documentTypeService.save(type3);
+	}
+	
+	@Test
+	@Rollback(false)
+	public void initDevice(){
+		Device device = new Device();
+		device.setSerialNo(UUID.randomUUID().toString());
+		device.setDevCategory(devCategoryService.getOne((long) 1));
+		deviceService.save(device);
+		device.setLongitude(114.3118287971);
+		device.setLatitude(30.5984342798);
+		deviceService.setDeviceDistrict(device);
 	}
 	
 }

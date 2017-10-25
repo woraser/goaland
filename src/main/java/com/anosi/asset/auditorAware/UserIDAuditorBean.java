@@ -23,7 +23,7 @@ public class UserIDAuditorBean implements AuditorAware<String> {
 		Session session = currentUser.getSession();
 		if (session == null) {
 			return null;
-		} else if (StringUtils.isNoneBlank((String) session.getAttribute("loginId"))) {
+		} else if (StringUtils.isBlank((String) session.getAttribute("loginId"))) {
 			return null;
 		} else {
 			return (String) session.getAttribute("loginId");

@@ -1,5 +1,7 @@
 package com.anosi.asset.controller;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.Project;
 import com.anosi.asset.service.ProjectService;
@@ -51,6 +54,26 @@ public class ProjectController extends BaseController<Project> {
 		logger.debug("saveOrUpdate project");
 		projectService.save(project);
 		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
+	 * 获取根据number模糊搜索的project
+	 * 
+	 * @param number
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/project/autocomplete", method = RequestMethod.GET)
+	public JSONArray autocomplete(@RequestParam(value = "number") String number) throws Exception {
+		JSONArray jsonArray = new JSONArray();
+		List<Project> projects = projectService.findByNumberStartsWith(number);
+		for (Project project : projects) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("label", project.getNumber() + "-" + project.getName() + "-" + project.getLocation());
+			jsonObject.put("value", project.getId());
+			jsonArray.add(jsonObject);
+		}
+		return jsonArray;
 	}
 
 }

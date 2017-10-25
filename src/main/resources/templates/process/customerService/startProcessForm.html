@@ -1,102 +1,255 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
 
 <head>
 	<meta charset="UTF-8" />
-	<title></title>
+	<title th:text="#{customerService.startProcess}"></title>
 	
 	<link href="/webResources/plugins/fileinput/css/fileinput.css" rel="stylesheet"/>
 	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
 	
-	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
-	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
-	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
-	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<style type="text/css">
+		.form-control[readonly]{
+		    cursor: default;
+		    background-color: #c7c7c7;
+		}
+	</style>
+	
+	
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/startProcessForm.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/fileinput/js/fileinput.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/fileinput/js/locales/zh.js" ></script>
-	<script type="text/javascript" src="/webResources/js/custom/process/customerService/startProcessForm.js" ></script>
 	
 </head>
 
-<body class="skin-blue sidebar-mini">
-	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
-		<input type="hidden" id="customerServiceId" name="customerServiceId" th:value="${process.id}"/>  
-	    <fieldset>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectNo}" for="projectNo">项目号</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.projectNo}" id="projectNo" class="form-control" th:placeholder="#{customerService.projectNo}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectName}" for="projectName">项目名称</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.projectName}" id="projectName" class="form-control" th:placeholder="#{customerService.projectName}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectLocation}" for="projectLocation">项目地址</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.projectLocation}" id="projectLocation" class="form-control" th:placeholder="#{customerService.projectLocation}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.contactMan}" for="contactMan">联系人</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.contactMan}" id="contactMan" class="form-control" th:placeholder="#{customerService.contactMan}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.contactNumber}" for="contactNumber">联系方式</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.contactNumber}" id="contactNumber" class="form-control" th:placeholder="#{customerService.contactNumber}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.proposeTime}" for="proposeTime">提出时间</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.proposeTime}" id="proposeTime" class="form-control" th:placeholder="#{customerService.proposeTime}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.sceneDescription}" for="sceneDescription">现场描述</label>  
-		    	<div class="col-sm-8">
-		    		<textarea th:field="*{startDetail.sceneDescription}" id="sceneDescription" class="form-control" th:placeholder="#{customerService.sceneDescription}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.estimateDevices}" for="estimateDevices">预估维修设备</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{startDetail.estimateDevices}" id="estimateDevices" class="form-control" th:placeholder="#{customerService.estimateDevices}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.otherDemands}" for="otherDemands">其他要求</label>  
-		    	<div class="col-sm-8">
-		    		<textarea th:field="*{startDetail.otherDemands}" id="otherDemands" class="form-control" th:placeholder="#{customerService.otherDemands}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{nextAssignee}" for="engineeDep">选择工程部人员</label>  
-		    	<div class="col-sm-8">
-		    	 	<select name="engineeDep" id="engineeDep" class="form-control"> 
-		            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
-		            </select>
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.uploadFile}" for="file">文件上传</label>  
-		    	<div class="col-sm-8">
-		    		<input type="file" id="fileUpLoad" multiple="multiple"  name="fileUpLoad" data-show-caption="true"/>
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-	    		<label class="col-sm-7 control-label" th:text="#{multipleUpload}"></label>
-	    	</div>
-	    </fieldset>  
-	</form>  
+<body>
+	<div layout:fragment="content">
+		<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+	        <fieldset>
+				<div class="companyMgr-edge" style="height: 1200px">
+				    <div class="company-top">
+				        <div class="company-big" th:text="#{customServiceProcess}">
+				            	业务流程
+				        </div>
+				        <div class="company-small" th:text="#{customerService.startProcess}">
+				            -发起流程
+				        </div>
+				    </div>
+				    <div class="taskTodo" >
+				        <div class="taskTodo-title">
+				            <div class="apply-detail-img">
+				            </div>
+				            <div class="apply-detail-title">
+				                	<span th:text="#{customerService.applicant}"></span>
+				                	&nbsp;&nbsp;&nbsp;
+				                	<span th:text="${session.user.name}"></span>
+				            </div>
+				        </div>
+				        <div class="taskTodo-Info">
+				            <div class="taskTodo-Info-in">
+				                <div class="taskTodo-Info-action">
+				                	<a th:href="@{/customerServiceProcess/startedProcess/view}">
+				                		<input type="button" class="out-button" th:value="#{return}"/>
+				                	</a>
+				                    <input type="submit" class="save-button" th:value="#{startProcess}"/>
+				                </div>
+				                <div class="project-info-title" style="margin-top: 4%;" th:text="#{project.message}">
+				                    	项目信息
+				                </div>
+				                <div class="project-info">
+				                    <div class="project-text">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.belong}">
+				                                	归属：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <select name="startDetail.belong" id="startDetail.belong" class="form-control"> 
+									            	<option th:each="belong : ${belongs}" th:value="${belong}" th:text="${belong.name}"></option>
+									            </select>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text">
+				                    	<div class="project-text-in">
+				                    		<input type="hidden" name="project.id" id="project.id" value=""/>
+				                            <div class="project-text-left" th:text="#{customerService.projectNo}">
+				                               	 项目编号：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{project.number}" th:placeholder="#{customerService.projectNo}"/>
+				                            </div>
+				                        </div>
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.projectName}">
+				                               	 项目名称：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{project.name}" th:placeholder="#{customerService.projectName}" readonly="readonly"/>
+				                            </div>
+				                        </div>
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.projectLocation}">
+				                               	 项目地址：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{project.location}" th:placeholder="#{customerService.projectLocation}" readonly="readonly"/>
+				                            </div>
+				                        </div>
+				                        
+				                    </div>
+				                    <div class="project-text">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.productName}">
+				                               	 产品名称：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.productName}" th:placeholder="#{customerService.productName}"/>
+				                            </div>
+				                        </div>
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.productNo}">
+				                               	 产品编号：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.productNo}" th:placeholder="#{customerService.productNo}"/>
+				                            </div>
+				                        </div>
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.productSpecifications}">
+				                                	产品规则：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.productSpecifications}" th:placeholder="#{customerService.productSpecifications}"/>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text">
+				                        <div class="form-group">
+				                            <label class="project-text-left" style="padding: 0%;font-weight: 300;width: 8.5%" th:text="#{customerService.productType}">产品类型：</label>
+				                            <div class="col-md-8" style="padding-left: 0%">
+				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"> <input name="startDetail.productType" class="uniform" th:value="${productType}" th:text="${productType.name}" type="radio"/></label>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				                <div class="project-info-title" th:text="#{customerService.contactWay}">
+				                    	联系方式
+				                </div>
+				                <div class="project-info" style="height: 12%">
+				                    <div class="project-text">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left"  th:text="#{customerService.customerMan}">
+				                               	 客户联系人：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.customerMan}" th:placeholder="#{customerService.customerMan}"/>
+				                            </div>
+				                        </div>
+				                        <div class="project-text-in">
+				                            <div class="project-text-left"  th:text="#{customerService.customerNumber}">
+				                                	联系电话：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.customerNumber}" th:placeholder="#{customerService.customerNumber}"/>
+				                            </div>
+				                        </div>
+				
+				                    </div>
+				                    <div class="project-text" style="margin-top: 3.5%">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.projectMan}">
+				                                	项目联系人：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.projectMan}" th:placeholder="#{customerService.projectMan}"/>
+				                            </div>
+				                        </div>
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.projectNumber}">
+				                                	联系电话：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.projectNumber}" th:placeholder="#{customerService.projectNumber}"/>
+				                            </div>
+				                        </div>
+				
+				                    </div>
+				                </div>
+				                <div class="project-info-title" style="margin-top: 2%"  th:text="#{customerService.otherDemands}">
+				                    	其他要求
+				                </div>
+				                <div class="project-info">
+				                	 <div class="project-text">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{nextAssignee}">
+				                               	 下一步办理人：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <select name="nextAssignee" id="nextAssignee" class="form-control"> 
+									            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
+									            </select>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.estimatedTime}">
+				                               	 预估维修时间：
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input class="form-control" type="text" th:field="*{startDetail.estimatedTime}" th:placeholder="#{customerService.estimatedTime}"/>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text">
+				                        <div class="project-text-in" style="width: 65%">
+				                            <div class="project-text-left" style="width: 13%" th:text="#{customerService.baseDemands}">
+				                                	基本要求：
+				                            </div>
+				                            <div class="project-text-right" style="width:87% ">
+				                                <textarea th:field="*{startDetail.baseDemands}" th:placeholder="#{customerService.baseDemands}" rows="6" cols="5" name="textarea" class="autosize form-control textarea-transition" style="overflow: hidden; overflow-wrap: break-word; resize: horizontal; height: 91px;"></textarea>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text" style="margin-top: 6%">
+				                        <div class="project-text-in" style="width: 65%">
+				                            <div class="project-text-left" style="width: 13%" th:text="#{customerService.specialDemands}">
+				                                	特殊要求：
+				                            </div>
+				                            <div class="project-text-right" style="width:87% ">
+				                                <textarea th:field="*{startDetail.specialDemands}" th:placeholder="#{customerService.specialDemands}" rows="6" cols="5" name="textarea" class="autosize form-control textarea-transition" style="overflow: hidden; overflow-wrap: break-word; resize: horizontal; height: 91px;"></textarea>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text" style="margin-top: 6%">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.uploadFile}">
+				                               	 上传附件
+				                            </div>
+				                            <div class="project-text-right">
+				                                <input type="file" id="fileUpLoad" multiple="multiple"  name="fileUpLoad" data-show-caption="true"/>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>            			
+				            </div>
+				        </div>
+				    </div>
+				</div>
+			</fieldset>
+	   	</form>
+	</div>
 </body>
 
 </html>

@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" 
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-    layout:decorator="base">
+    layout:decorator="process/customerService/customerProcessTop">
 
 <head>
 	<meta charset="UTF-8" />
-	<title>售后流程-我待办的任务</title>
+	<title th:text="#{customerService.tasksToDo}">售后流程-我待办的任务</title>
 	
 	<link href="/webResources/css/custom/process.css" rel="stylesheet"/>
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
+	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 	
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/process/customerService/runtimeTask.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
@@ -18,37 +21,131 @@
 </head>
 
 <body>
-	<div layout:fragment="content" >
-		<div class="col-md-12" style="width:90%;height:1050px;margin-top:30px;margin-left: 5%">
-		    <div class="typeTitle">
-		        售后流程
-		    </div>
-		
-		    <div class="nav-tabs-custom" style="float:left;padding-top:2.5%;width: 50%;height: 10%;">
-		        <ul class="nav nav-tabs" style="border-bottom:0px;">
-		             <li style="width: 25%;height:100%;text-align: center"><a href="#tab_1_1" data-toggle="tab"> 任务总览</a></li>
-            	     <li style="width: 25%;height:100%;background: #292D3C;text-align: center"><a href="#tab_1_2" data-toggle="tab"> 我发起的任务</a></li>
-            	     <li class="active" id="taskToDoList" style="width: 25%;height:100%;background: #292D3C;text-align: center"><a href="#tab_1_3" data-toggle="tab">我待办的任务</a></li>
-                     <li style="width: 25%;height:100%;background: #292D3C;text-align: center"><a href="#tab_1_3" data-toggle="tab">我办过的任务</a></li>
-		        </ul>
-		    </div>
-		    
-		    <div style="float: left;width: 50%;height: 10%">
-		        <div class="dataTables_filter" id="datatable1_filter" style="float:left;width:50%;margin-left: 25%;margin-top: 5.5%"><input aria-controls="datatable1" placeholder="Search" class="form-control input-sm" type="text"/></div>
-		    </div>
-		    
-		    <div style="width:100%;height: 6%;margin-top:7%;background: #343A4A">
-		        <div class="topTitle" style="width: 45%" th:text="#{task}">任务</div>
-		        <div class="topTitle" style="width: 20%" th:text="#{describe}">描述</div>
-		        <div class="topTitle" style="width: 17.5%" th:text="#{processStatus}">工单状态</div>
-		        <div class="topTitle" style="width: 17.5%" th:text="#{operate}">操作</div>
-		    </div>
-		    
-		    <div id="tasks" style="width:100% ;height: 63%">
-		    	
-		    </div>
-		</div>
-	</div>
+	<div layout:fragment="company-select" >
+        <div class="company-select-title" th:text="#{customerService.select}">
+           	 筛选：
+        </div>
+        <div class="time-select1" th:text="#{customerService.time}">
+           	 时间范围
+        </div>
+        <div class="time-select">
+            <input class="form-control" type="text" id="beginTime" size="10" th:placeholder="#{customerService.beginTime}" value=""/>
+        </div>
+        <div class="time-select2">
+            to
+        </div>
+        <div class="time-select">
+            <input class="form-control" type="text" id="endTime" size="10" th:placeholder="#{customerService.endTime}" value=""/>
+        </div>
+
+        <div class="company-button" style="margin-right: 6%;">
+            <button class="company-button-new" style="height: 100%;margin-top: 0%" th:text="#{add}">
+               	 新增
+            </button>
+        </div>
+        <div class="company-search" style="float: right;margin-top: -1%;margin-right: 1%">
+           <div class="input-group input-medium">
+               <input class="form-control" v-model="searchContent" th:placeholder="#{searchContent}" type="text"/>
+               <span class="input-group-btn">
+                   <button type="button" id="search" class="btn btn-success" style="background: #D3D5DD;border: 0px"><i class="fa fa-search"></i></button>
+               </span>
+           </div>
+        </div>
+   </div>
+      <div layout:fragment="processContent">
+        <div class="table-in">
+            <div class="table-title">
+                <div class="title-first" th:text="#{customerService.information}">
+                    	工单信息
+                </div>
+                <div class="title-second" th:text="#{customerService.agreement.status}">
+                    	合同状态
+                </div>
+                <div class="title-third" th:text="#{customerService.status}">
+                    	工单状态
+                </div>
+                <div class="title-fourth" th:text="#{operate}">
+                    	操作
+                </div>
+            </div>
+            <div class="processList">
+                <div class="process-in" v-for="processData in processDatas">
+                    <div class="process-in-title">
+                        <div class="process-in-title-left">
+                            	<span th:text="#{customerService.name}">工单编号</span>
+                            	<span>:{{processData.name}}</span>
+                        </div>
+                        <div class="process-in-title-right">
+                        		<span th:text="#{customerService.name}">发起人</span>
+                            	<span>:{{processData["applicant.name"]}}</span>
+                            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            	<span th:text="#{customerService.name}">发起时间</span>
+                            	<span>:{{processData["historicProcessInstance.startTime"]}}</span>
+                        </div>
+                    </div>
+                    <div class="process-Info-first">
+                        <div class="process-img">
+                           <div style="width: 60px;height: 60px;background: red;">
+                           </div>
+
+                        </div>
+                        <div class="process-info-name">
+
+                            <div class="process-info-detail">
+                            	<span th:text="#{customerService.projectNo}">项目编号</span>
+                            	<span>:{{processData["project.number"]}}</span>
+                            </div>
+                            <div class="process-info-center">
+                            	<span th:text="#{customerService.projectName}">项目名称</span>
+                            	<span>:{{processData["project.name"]}}</span>
+                            </div>
+                            <div class="process-info-detail2">
+                            	<span th:text="#{customerService.projectLocation}">项目地址</span>
+                            	<span>:{{processData["project.location"]}}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="process-border-right" >
+                    </div>
+                    <div class="process-Info-second">
+                        <div class="process-apply">
+                            	{{processData["agreementStatus.agreement.name"]}}
+                        </div>
+                        <div v-if="'historicProcessInstance.endTime' in processData" class="process-applyTime">
+                            {{processData["agreementStatus.beginTime"]}}-{{processData["agreementStatus.endTime"]}}
+                        </div>
+                    </div>
+                    <div class="process-border-right" >
+                    </div>
+                    <div class="process-Info-third">
+                        <div class="process-apply" style="color: #FC8060;font-weight: 600">
+                            	{{processData["finishType.name"]}}
+                        </div>
+                        <div v-if="'historicProcessInstance.endTime' in processData" class="process-applyTime" style="padding-left: 32%">
+                            {{processData["historicProcessInstance.endTime"]}}
+                        </div>
+                    </div>
+                    <div class="process-border-right" >
+                    </div>
+                    <div class="process-Info-fourth">
+						<div class="doing-button">
+                            <button v-on:click="handle(processData['task.name'],processData['task.id'])" class="doingbutton" th:text="#{customerService.handle}">
+                               	 办理
+                            </button>
+                        </div>
+                        <div class="detail-button">
+                            <button v-on:click="detail(processData['task.id'])" class="detailbutton" th:text="#{customerService.detail}">
+                                	详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="dataPager" class="zxf_pagediv"></div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

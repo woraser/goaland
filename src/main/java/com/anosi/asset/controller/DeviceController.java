@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.service.DeviceService;
@@ -81,7 +82,16 @@ public class DeviceController extends BaseController<Device> {
 		}
 	}
 
-	@RequestMapping(value = "/device/setDistrict", method = RequestMethod.GET)
+	/**
+	 * 为设备添加坐标
+	 * 
+	 * @param deviceSN
+	 * @param longitude
+	 * @param latitude
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/setDistrict", method = RequestMethod.POST)
 	public JSONObject setDeviceDistrict(@RequestParam(name = "deviceSN") String deviceSN,
 			@RequestParam(name = "longitude") Double longitude, @RequestParam(name = "latitude") Double latitude)
 			throws Exception {
@@ -96,5 +106,17 @@ public class DeviceController extends BaseController<Device> {
 		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
-
+	
+	/***
+	 * 获取设备的分布
+	 * 
+	 * @param predicate
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/distribute/data", method = RequestMethod.GET)
+	public JSONArray deviceDistribute(@QuerydslPredicate(root = Device.class) Predicate predicate) throws Exception {
+		return deviceService.ascertainArea(predicate);
+	}
+	
 }

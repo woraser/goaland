@@ -15,6 +15,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable{
@@ -24,12 +26,16 @@ public class BaseEntity implements Serializable{
 	 */
 	private static final long serialVersionUID = 7228019992691023040L;
 	
+	@JSONField(serialize=false)  
 	private Date createdDate;
 	
+	@JSONField(serialize=false)  
 	private Date lastModifiedDate;
 	
+	@JSONField(serialize=false)  
 	private String createBy;
 	
+	@JSONField(serialize=false)  
 	private String lastModifiedBy;
 	
 	private Long id;

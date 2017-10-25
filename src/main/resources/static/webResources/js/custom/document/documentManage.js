@@ -79,23 +79,23 @@ $(document).ready(function() {
 	 var search = function(page){
 		 params['page']=page;
 		 $.ajax({
-				url : url,
-				data : params,
-				type : 'get',
-				dataType : 'json',
-				async : false,
-				success : function( data ) {
-					pageNum=data.total;
-					page=data.page;
-					if(params.searchContent==""||params.searchContent==null){
-						files.seenDetail=false;
-					}else{
-						files.seenDetail=true;
-					}
-					files.fileDatas = data.content;
-					//刷新分页插件
-					createPage($("#dataPager"),pageNum,page,11,search)
+			url : url,
+			data : params,
+			type : 'get',
+			dataType : 'json',
+			async : false,
+			success : function( data ) {
+				pageNum=data.total;
+				page=data.page;
+				if(params.searchContent==""||params.searchContent==null){
+					files.seenDetail=false;
+				}else{
+					files.seenDetail=true;
 				}
+				files.fileDatas = data.content;
+				//刷新分页插件
+				createPage($("#dataPager"),pageNum,page,11,search)
+			}
 		 });
 	 }
 	 

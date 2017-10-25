@@ -1,7 +1,7 @@
 package com.anosi.asset.controller;
 
+import java.util.Date;
 import java.util.Map;
-
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -51,6 +51,8 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @param pageable
 	 * @param showAttributes
 	 * @param rowId
+	 * @param searchContent
+	 *            模糊搜索的内容
 	 * @return
 	 * @throws Exception
 	 */
@@ -58,12 +60,18 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	public JSONObject findStartedProcess(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@RequestParam(value = "showAttributes") String showAttributes,
-			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "searchContent", required = false) String searchContent,
+			@RequestParam(value = "timeType", required = false) String timeType,
+			@RequestParam(value = "beginTime", required = false) Date beginTime,
+			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
 		logger.info("find runtimeTask");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getPorcessService().findStartedProcess(pageable), rowId, showAttributes, showType);
+		return parseToJson(
+				getPorcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime), rowId,
+				showAttributes, showType);
 	}
 
 	/***
@@ -112,12 +120,16 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	public JSONObject findRuntimeTaskDatas(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@RequestParam(value = "showAttributes") String showAttributes,
-			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "searchContent", required = false) String searchContent,
+			@RequestParam(value = "beginTime", required = false) Date beginTime,
+			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
 		logger.info("find customerServiceProcess runtimeTask");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getPorcessService().findTasksToDo(pageable), rowId, showAttributes, showType);
+		return parseToJson(getPorcessService().findTasksToDo(pageable, searchContent, beginTime, endTime), rowId,
+				showAttributes, showType);
 	}
 
 	/***
@@ -169,12 +181,17 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	public JSONObject findHistoricTasks(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@RequestParam(value = "showAttributes") String showAttributes,
-			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "searchContent", required = false) String searchContent,
+			@RequestParam(value = "timeType", required = false) String timeType,
+			@RequestParam(value = "beginTime", required = false) Date beginTime,
+			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
 		logger.info("find customerServiceProcess runtimeTask");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getPorcessService().findHistoricTasks(pageable), rowId, showAttributes, showType);
+		return parseToJson(getPorcessService().findHistoricTasks(pageable, searchContent, timeType, beginTime, endTime),
+				rowId, showAttributes, showType);
 	}
 
 }

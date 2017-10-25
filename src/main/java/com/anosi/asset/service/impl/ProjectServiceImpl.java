@@ -1,6 +1,8 @@
 package com.anosi.asset.service.impl;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,11 @@ public class ProjectServiceImpl extends BaseJPAServiceImpl<Project> implements P
 	@Override
 	public Project findByNumber(String number) {
 		return projectDao.findByNumber(number);
+	}
+
+	@Override
+	public List<Project> findByNumberStartsWith(String number) {
+		return projectDao.findByNumberStartsWith(number);
 	}
 
 }

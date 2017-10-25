@@ -5,34 +5,49 @@ $(document).ready(function() {
 	$("#customerServiceForm").validate({
 		//debug:true,
 		rules : {
-			"startDetail.projectNo" : {
+			"startDetail.belong" : {
 				required : true,
 			},
-			"startDetail.projectName" : {
+			"project.number" : {
 				required : true,
 			},
-			"startDetail.projectLocation" : {
+			"project.name" : {
 				required : true,
 			},
-			"startDetail.contactMan" : {
+			"startDetail.productName" : {
 				required : true,
 			},
-			"startDetail.contactNumber" : {
+			"startDetail.productNo" : {
+				required : true,
+			},
+			"startDetail.productSpecifications" : {
+				required : true,
+			},
+			"startDetail.productType" : {
+				required : true,
+			},
+			"startDetail.customerMan" : {
+				required : true,
+			},
+			"startDetail.customerNumber" : {
 				required : true,
 				digits: true,
 				minlength : 11,
 				isMobile : true,
 			},
-			"startDetail.proposeTime" : {
+			"startDetail.projectMan" : {
 				required : true,
 			},
-			"startDetail.sceneDescription" : {
+			"startDetail.projectNumber" : {
+				required : true,
+				digits: true,
+				minlength : 11,
+				isMobile : true,
+			},
+			"nextAssignee" : {
 				required : true,
 			},
-			"startDetail.estimateDevices" : {
-				required : true,
-			},
-			engineeDep : {
+			"startDetail.estimatedTime" : {
 				required : true,
 			},
 		},
@@ -67,7 +82,7 @@ $(document).ready(function() {
 		return this.optional(element) || (length == 11 && mobile.test(value));
 	}, "请正确填写您的手机号码");
 
-	$("#proposeTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
+	$("#startDetail\\.estimatedTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
 	
 	$("#fileUpLoad").fileinput({
 		language: 'zh', //设置语言
@@ -75,5 +90,58 @@ $(document).ready(function() {
 		showUpload: false, //是否显示上传按钮
 		allowedFileExtensions: ["jpg","jpeg","png"]
 	});
+	
+	//search autocomplete
+	 $( "#project\\.number" )
+     // 当选择一个条目时不离开文本域
+     .bind( "keydown", function( event ) {
+       if ( event.keyCode === $.ui.keyCode.TAB &&
+           $( this ).data( "ui-autocomplete" ).menu.active ) {
+         event.preventDefault();
+       }
+     })
+     .autocomplete({
+       source: function( request, response ) {
+       	
+         $.ajax({
+				url : '/project/autocomplete',
+				data : {
+					'number' :  request.term,
+				},
+				type : 'get',
+				dataType : 'json',
+				async : false,
+				success : function( datas ) {
+					response($.each(datas,function(i,value) {
+						return {
+							label : this.label,
+							value : this.value
+						}
+					}));
+				}
+			
+         });
+         
+       },
+       search: function() {
+         // 自定义最小长度
+         var term = this.value;
+         if ( term.length < 1 ) {
+           return false;
+         }
+       },
+       focus: function() {
+         // 防止在获得焦点时插入值
+         return false;
+       },
+       select: function( event, ui ) {
+         var words=ui.item.label.split("-")
+         $( "#project\\.number" ).val(words[0]);
+         $( "#project\\.name" ).val(words[1]);
+         $( "#project\\.location" ).val(words[2]);
+         $( "#project\\.id" ).val(ui.item.value);
+         return false;
+       }
+     }); 
 	 
 })

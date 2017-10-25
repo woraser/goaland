@@ -5,7 +5,7 @@
     
 <head>
 	<meta charset="UTF-8" />
-	<title>首页</title>
+	<title th:text="#{indexPage}">首页</title>
 	
 	<style type="text/css">
 	#allMap {
@@ -24,6 +24,9 @@
 	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/bMap/bmap.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/dashboard/dashboard.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/dashboard/map.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/dashboard/distribute.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/dashboard/chart.js" ></script>
 	
 </head>
 
@@ -31,60 +34,60 @@
 	<div layout:fragment="content" >
 		<div class="dashboard">
 		    <div class="dashboardin">
-		        <div class="dhtop">
+		        <div id="devices" class="dhtop">
 		            <div class="category-goaland" style="border-left: solid #338DC5 8px">
 		                <div class="category-number">
-		                    88
+		                    {{deviceDatas[0].count}}
 		                </div>
 		                <div class="eng-name">
-		                    HVSC  COOLING
+		                    {{deviceDatas[0].english}}
 		                </div>
 		                <div class="cha-name">
-		                    直流输电换流阀水冷设备
+		                   	{{deviceDatas[0].chinese}}
 		                </div>
 		            </div>
 		            <div class="category-goaland" style="margin-left: 1.75%;border-left: solid #0071B6 8px">
 		                <div class="category-number">
-		                    421
+		                    {{deviceDatas[1].count}}
 		                </div>
 		                <div class="eng-name">
-		                    FACTS  FACTS
+		                    {{deviceDatas[1].english}}
 		                </div>
 		                <div class="cha-name">
-		                    柔性交流输配电晶闸管阀纯水冷却设备
+		                 	{{deviceDatas[1].chinese}}
 		                </div>
 		            </div>
 		            <div class="category-goaland" style="margin-left: 1.75%;border-left: solid #338DC5 8px">
 		                <div class="category-number">
-		                    269
+		                    {{deviceDatas[2].count}}
 		                </div>
 		                <div class="eng-name">
-		                    ELECTRIC  DRIVE  COOLING
+		                    {{deviceDatas[2].english}}
 		                </div>
 		                <div class="cha-name">
-		                    新能源发电变流器纯水冷却设备
+		                   	{{deviceDatas[2].chinese}}
 		                </div>
 		            </div>
 		            <div class="category-goaland" style="margin-left: 1.75%;background: #FF5E3B">
 		                <div class="category-number" style="color: #FFFFFF">
-		                    12,314
+		                    {{deviceDatas[3].count}}
 		                </div>
 		                <div class="eng-name" style="color: #FFE2DB">
-		                    RENEWABLE  ENERGY  COOLING
+		                    {{deviceDatas[3].english}}
 		                </div>
 		                <div class="cha-name" style="color: #fefffd">
-		                    大功率电气传动变频器纯水冷却设备
+		                    {{deviceDatas[3].chinese}}
 		                </div>
 		            </div>
 		            <div class="category-goaland" style="margin-left: 1.75%;background: #FF9501">
 		                <div class="category-number" style="color: #FFFFFF">
-		                    12,314
+		                    {{deviceDatas[4].count}}
 		                </div>
 		                <div class="eng-name" style="color: #FFE2DB">
-		                    RENEWABLE  ENERGY  COOLING
+		                    {{deviceDatas[4].english}}
 		                </div>
 		                <div class="cha-name" style="color: #fefffd">
-		                    蓄冷设备
+		                   	{{deviceDatas[4].chinese}}
 		                </div>
 		            </div>
 		        </div>
@@ -92,22 +95,19 @@
 		            <div class="allmap" id="allmap">
 		            </div>
 		            <div class="dhright">
-		                <div class="dhright-title">
-		                    设备分布
+		                <div class="dhright-title" th:text="#{device.distribute}">
 		                </div>
 		                <div class="right-charts" id="right-pie">
 		                </div>
 		            </div>
 		            <div class="dhright">
-		                <div class="dhright-title">
-		                    告警数据
+		                <div class="dhright-title" th:text="#{alarm.data}">
 		                </div>
 		                <div class="right-charts" id="right-bar">
 		                </div>
 		            </div>
 		            <div class="dhright">
-		                <div class="dhright-title">
-		                    IOT-X数据
+		                <div class="dhright-title" th:text="#{iotx.data}">
 		                </div>
 		                <div class="right-charts" id="right-line">
 		                </div>

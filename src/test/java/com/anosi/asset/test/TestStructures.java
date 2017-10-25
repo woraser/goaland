@@ -39,10 +39,6 @@ public class TestStructures {
 		DevCategory devCategory2 = new DevCategory();
 		DevCategory devCategory3 = new DevCategory();
 		
-		devCategory1.setName("abc");
-		devCategory2.setName("efg");
-		devCategory3.setName("cde");
-		
 		devCategoryStructures1.setSubDevCategory(devCategory1);
 		devCategoryStructures1.setAmount(2);
 		devCategoryStructures2.setSubDevCategory(devCategory2);

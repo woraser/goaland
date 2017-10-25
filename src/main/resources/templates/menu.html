@@ -13,7 +13,7 @@
 					</a>
 				</li>
 				<li class="has-sub"  shiro:hasPermission="systemMgr:view">
-					<a href="javascript:;" class="">
+					<a href="#" class="">
 					<i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text" th:text="#{systemMgr}">系统管理</span>
 					<span class="arrow"></span>
 					</a>
@@ -23,14 +23,15 @@
 					</ul>
 				</li>
 				<li class="has-sub"  shiro:hasPermission="customServiceProcess:view">
-					<a href="javascript:;" class="">
+					<a href="#" class="">
 					<i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text" th:text="#{customServiceProcess}">售后流程</span>
 					<span class="arrow"></span>
 					</a>
 					<ul class="sub">
-						<li shiro:hasPermission="taskStarted:view"><a href="/customerServiceProcess/startedProcess/view"><span class="sub-menu-text" th:text="#{taskStarted}">我发起的任务</span></a></li>
-						<li shiro:hasPermission="taskToDo:view"><a href="/customerServiceProcess/runtimeTask/view"><span class="sub-menu-text" th:text="#{taskToDo}">我待办的任务</span></a></li>
-						<li shiro:hasPermission="historicTasks:view"><a><span class="sub-menu-text" th:text="#{historicTasks}">我办过的任务</span></a></li>
+						<li shiro:hasPermission="customServiceProcessTaskStarted:view"><a th:href="@{/customerServiceProcess/startedProcess/view(menuId=customServiceProcessTaskStarted)}"><span class="sub-menu-text" th:text="#{customServiceProcessTaskStarted}">我发起的任务</span></a></li>
+						<li shiro:hasPermission="customServiceProcessTaskToDo:view"><a th:href="@{/customerServiceProcess/runtimeTask/view(menuId=customServiceProcessTaskToDo)}"><span class="sub-menu-text" th:text="#{customServiceProcessTaskToDo}">我待办的任务</span></a></li>
+						<li shiro:hasPermission="customServiceProcessHistoricTasks:view"><a><span class="sub-menu-text" th:text="#{customServiceProcessHistoricTasks}">我办过的任务</span></a></li>
+						<li shiro:hasPermission="customServiceProcessAllTaks:view"><a><span class="sub-menu-text" th:text="#{customServiceProcessAllTaks}">我办过的任务</span></a></li>
 					</ul>
 				</li>
 				<li shiro:hasPermission="documentMgr:view">

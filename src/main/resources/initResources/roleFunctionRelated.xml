@@ -16,11 +16,13 @@
 	</roleFunction>
 	<roleFunction roleFunctionPageId="customServiceProcess"
 		name="售后流程">
-		<roleFunction roleFunctionPageId="taskStarted" name="我发起的任务">
+		<roleFunction roleFunctionPageId="customServiceProcessTaskStarted" name="我发起的任务">
 		</roleFunction>
-		<roleFunction roleFunctionPageId="taskToDo" name="我待办的任务">
+		<roleFunction roleFunctionPageId="customServiceProcessTaskToDo" name="我待办的任务">
 		</roleFunction>
-		<roleFunction roleFunctionPageId="historicTasks" name="我办过的任务">
+		<roleFunction roleFunctionPageId="customServiceProcessHistoricTasks" name="我办过的任务">
+		</roleFunction>
+		<roleFunction roleFunctionPageId="customServiceProcessAllTaks" name="任务总览">
 		</roleFunction>
 	</roleFunction>
 	<roleFunction roleFunctionPageId="documentMgr" name="文档管理">

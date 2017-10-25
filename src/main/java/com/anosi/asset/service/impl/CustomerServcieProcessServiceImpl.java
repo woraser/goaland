@@ -2,6 +2,8 @@ package com.anosi.asset.service.impl;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
+import com.anosi.asset.model.elasticsearch.CustomerServiceProcessContent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
@@ -27,6 +30,7 @@ import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.CustomerServcieProcessService;
+import com.anosi.asset.service.CustomerServiceProcessContentService;
 import com.anosi.asset.service.FileMetaDataService;
 import com.google.common.collect.ImmutableMap;
 
@@ -42,6 +46,8 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	private CustomerServiceProcessDao customerServiceProcessDao;
 	@Autowired
 	private FileMetaDataService fileMetaDataService;
+	@Autowired
+	private CustomerServiceProcessContentService customerServiceProcessContentService;
 
 	public CustomerServcieProcessServiceImpl() {
 		super();
@@ -71,7 +77,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		customerServiceProcess.setFinishType(FinishType.REAMIN);
 		customerServiceProcess.setApplicant(sessionComponent.getCurrentUser());
 		customerServiceProcess.setFile(true);
+
 		customerServiceProcessDao.save(customerServiceProcess);
+		customerServiceProcessContentService.saveContent(customerServiceProcess);
+
 		// 创建记录
 		createNewProcessRecord(processInstance.getId());
 
@@ -190,6 +199,16 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		newRecord.setType(HandleType.REAMIN_TO_DO);
 		newRecord.setRemain(mandatary.getLoginId());// 待办人
 		processRecordService.save(newRecord);
+	}
+
+	@Override
+	public List<String> getProcessInstanceIdsBySearchContent(String searchContent) {
+		List<CustomerServiceProcessContent> contents = customerServiceProcessContentService
+				.findByContent(searchContent);
+		List<String> ids = contents.parallelStream()
+				.map(c -> customerServiceProcessDao.getOne(Long.parseLong(c.getId())).getProcessInstanceId())
+				.collect(Collectors.toList());
+		return ids;
 	}
 
 }

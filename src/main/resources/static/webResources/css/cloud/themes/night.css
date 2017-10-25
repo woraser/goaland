@@ -1,7 +1,7 @@
 /* Colors */
 /* Primary colors */
 #page {
-  background: none repeat scroll 0 0 #454241;
+  background: none repeat scroll 0 0 #4D4948;
 }
 /* Start Navbar */
 .navbar {
@@ -9,7 +9,7 @@
   border: none;
   border-radius: 0;
   margin: 0;
-  height: 74px;
+  height: 50px;
 }
 .navbar .navbar-brand {
   float: left;
@@ -17,7 +17,7 @@
   line-height: 20px;
   padding: 15px;
   width: 500px;
-  height: 74px;
+  height: 50px;
 }
 .navbar .navbar-brand img {
   position: absolute;
@@ -71,7 +71,7 @@
 }
 .navbar .nav.navbar-nav.pull-right {
   min-width: 300px;
-  height: 74px;
+  height: 50px;
 }
 .navbar .nav > li > a:hover,
 .navbar .nav > li > a:focus,
@@ -276,11 +276,11 @@
 /* End Navbar */
 /* Start Sidebar */
 #sidebar {
-  background: none repeat scroll 0 0 #2d323d;
-  padding: 0 !important;
+  background: none repeat scroll 0 0 #4D4948;
+  /*padding: 0 !important;*/
   width: 250px;
   position: absolute;
-  border-bottom: 1px solid #22262e;
+  border-bottom: 1px solid #22262e;padding-top: 10px;
 }
 .sidebar-fixed {
   position: fixed !important;
@@ -293,15 +293,15 @@
   margin: 0;
   padding: 0;
   margin-top: 2px;
-  border-bottom: 1px solid #383e4c !important;
-  border-top: 1px solid #383e4c !important;
+  border-bottom: 1px solid #4D4948 !important;
+  border-top: 1px solid #4D4948 !important;/* 第一个菜单栏上下间距*/
 }
 .sidebar-menu > ul > li {
   display: block;
   margin: 0;
   padding: 0;
   border: 0px;
-  background: #3E3B3A;
+  background: #4D4948;/* 菜单小图标 */
 }
 .sidebar-menu > ul > li > a {
   display: block;
@@ -321,12 +321,12 @@
 }
 .sidebar-menu > ul > li.has-sub {
   position: relative;
-  background: #3E3B3A;
+  background: #4D4948;
 }
 .sidebar-menu > ul > li.has-sub .sub {
   position: relative;
-  background: #22262e;
-  border-top: 1px solid #22262e;
+  background: #4D4948;
+  border-top: 1px solid #4D4948;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
 }
 .sidebar-menu > ul > li.has-sub .sub .has-sub-sub .sub-sub {
@@ -461,17 +461,18 @@
 .sidebar-menu > ul > li.has-sub.open > a,
 .sidebar-menu > ul > li > a:hover,
 .sidebar-menu > ul > li:hover > a {
-  background: #4d5669;
+  background: #5F5C5B;/* 菜单栏选中  */
+  border-left: solid #1F8DE5 3px;
 }
 .sidebar-menu > ul > li.has-sub.open > ul > li.has-sub-sub.open > a {
   background: #4d5669;
 }
 .sidebar-menu > ul > li.active > a {
-  background: #242735 !important;
+  background: #5F5C5B !important;
   border-top-color: transparent !important;
   color: #fff;
   border-left: solid #1F8DE5 3px;
-  padding-left: 23px;
+  padding-left: 24px;
 }
 .sidebar-menu > ul > li > a.open {
   background: #313131;
@@ -606,10 +607,12 @@
 }
 /* Min Menu */
 .mini-menu#sidebar {/* 菜单宽度 */
-  width: 80px;
+  width: 70px;
+  height: 70px;
 }
 .mini-menu#sidebar:before {
-  width: 80px;
+  width: 70px;
+  height: 70px;
 }
 .mini-menu#sidebar .sidebar-menu > ul > li > a > .menu-text .badge {
   top: 15px;
@@ -624,7 +627,7 @@
   background-color: #2d323d;
   display: none;
   height: 50px;
-  left: 77px;
+  left: 67px;
   line-height: 38px;
   padding-left: 12px;
   position: absolute;
@@ -645,7 +648,7 @@
   background-color: #22262e;
   border: 1px solid #0d0e11;
   display: none !important;
-  left: 80px;
+  left: 70px;
   padding-bottom: 2px;
   padding-top: 50px;
   position: absolute;

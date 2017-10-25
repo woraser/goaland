@@ -57,6 +57,10 @@ public abstract class BaseContentServiceImpl<T extends BaseContent, ID extends S
 		}
 		return sb.toString();
 	}
+	
+	public List<T> findByContent(String content){
+		return getRepository().findByContentContaining(StringUtils.deleteWhitespace(content));
+	}
 
 	public Page<T> findByContent(String content, Pageable pageable) {
 		return getRepository().findByContentContaining(StringUtils.deleteWhitespace(content), pageable);

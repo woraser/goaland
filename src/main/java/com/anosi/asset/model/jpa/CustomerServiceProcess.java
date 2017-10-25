@@ -1,5 +1,7 @@
 package com.anosi.asset.model.jpa;
 
+import java.util.Date;
+
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +20,7 @@ public class CustomerServiceProcess extends BaseProcess {
 	 */
 	private static final long serialVersionUID = 2663257381437985964L;
 
+	@Content(extractFields = { "applicant.name" })
 	private Account applicant;// 发起人
 
 	@Content(extractFields = { "project.name", "project.number", "project.location" })
@@ -30,6 +33,8 @@ public class CustomerServiceProcess extends BaseProcess {
 	private EvaluatingDetail evaluatingDetail;// 评估字段
 
 	private RepairDetail repairDetail;// 维修字段
+
+	private AgreementStatus agreementStatus;// 合同状态
 
 	private boolean file = false;// 是否有上传文件
 
@@ -75,6 +80,14 @@ public class CustomerServiceProcess extends BaseProcess {
 		this.examineDetail = examineDetail;
 	}
 
+	public AgreementStatus getAgreementStatus() {
+		return agreementStatus;
+	}
+
+	public void setAgreementStatus(AgreementStatus agreementStatus) {
+		this.agreementStatus = agreementStatus;
+	}
+
 	public boolean isFile() {
 		return file;
 	}
@@ -101,15 +114,15 @@ public class CustomerServiceProcess extends BaseProcess {
 	@Embeddable
 	public static class StartDetail {
 
-		private String belong;// 归属
+		private Belong belong;// 归属
 
 		private String productName;// 产品名称
 
 		private String productNo;// 产品编号
 
 		private String productSpecifications;// 产品规格
-		
-		private ProductType productType;//产品类型
+
+		private ProductType productType;// 产品类型
 
 		private String customerMan;// 客户联系人
 
@@ -119,17 +132,17 @@ public class CustomerServiceProcess extends BaseProcess {
 
 		private String projectNumber;// 项目联系人电话
 
-		private String estimatedTime;// 预估维修时间
+		private Date estimatedTime;// 预估维修时间
 
 		private String baseDemands;// 基本要求
 
 		private String specialDemands;// 特殊要求
 		
-		public String getBelong() {
+		public Belong getBelong() {
 			return belong;
 		}
 
-		public void setBelong(String belong) {
+		public void setBelong(Belong belong) {
 			this.belong = belong;
 		}
 
@@ -156,7 +169,7 @@ public class CustomerServiceProcess extends BaseProcess {
 		public void setProductSpecifications(String productSpecifications) {
 			this.productSpecifications = productSpecifications;
 		}
-		
+
 		public ProductType getProductType() {
 			return productType;
 		}
@@ -197,11 +210,11 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.projectNumber = projectNumber;
 		}
 
-		public String getEstimatedTime() {
+		public Date getEstimatedTime() {
 			return estimatedTime;
 		}
 
-		public void setEstimatedTime(String estimatedTime) {
+		public void setEstimatedTime(Date estimatedTime) {
 			this.estimatedTime = estimatedTime;
 		}
 
@@ -241,6 +254,25 @@ public class CustomerServiceProcess extends BaseProcess {
 			}
 
 		}
+		
+		public static enum Belong{
+			
+			SOUTHERNPART("南部销售区"),NORTHPART("北部销售区");
+			
+			private String name;
+
+			private Belong(String name) {
+				this.name = name;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void setName(String name) {
+				this.name = name;
+			}
+		}
 
 	}
 
@@ -261,6 +293,56 @@ public class CustomerServiceProcess extends BaseProcess {
 
 		public void setSuggestion(String suggestion) {
 			this.suggestion = suggestion;
+		}
+
+	}
+
+	/***
+	 * 合同状态
+	 * 
+	 * @author jinyao
+	 *
+	 */
+	@Embeddable
+	public static class AgreementStatus {
+
+		private Date beginTime;
+
+		private Date endTime;
+
+		public static enum Agreement {
+			UNDERGUARANTEE("保修期"), BEYONDGUARANTEE("不在保修期");
+
+			private String name;
+
+			private Agreement(String name) {
+				this.name = name;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void setName(String name) {
+				this.name = name;
+			}
+
+		}
+
+		public Date getBeginTime() {
+			return beginTime;
+		}
+
+		public void setBeginTime(Date beginTime) {
+			this.beginTime = beginTime;
+		}
+
+		public Date getEndTime() {
+			return endTime;
+		}
+
+		public void setEndTime(Date endTime) {
+			this.endTime = endTime;
 		}
 
 	}

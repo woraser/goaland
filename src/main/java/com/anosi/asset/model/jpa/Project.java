@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /***
  * 项目
  * 
@@ -31,8 +33,10 @@ public class Project extends BaseEntity {
 
 	private String location;// 项目地址
 
+	@JSONField(serialize=false)  
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<Device> deviceList = new ArrayList<>();
 
 	public String getName() {
