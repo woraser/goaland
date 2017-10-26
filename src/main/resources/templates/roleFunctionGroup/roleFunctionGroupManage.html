@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title>权限组信息管理</title>
+	<title th:text="#{roleFucntionGroupMgr}">权限组信息管理</title>
 	
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
@@ -22,36 +22,37 @@
 
 <body>
 	<div layout:fragment="content" >
-		<div class="col-md-6" style="width:100%">
-			<div class="row">
-				<div style="padding-top:30px;padding-left:30px;">
-					<div class="tab-content">
-						<section class="content">
-							<div class="row">
-								<div class="col-lg-12">
-								<!-- 节点管理的表格 -->
-								<div><table id="roleFunctionGroupTable"></table></div>
-								<div class="zxf_pagediv" style="padding-top:15px;float:left;" id="roleFunctionGroupPager"></div>
-								<span style="padding-top:15px;float:left;" class="pull-right" shiro:notAuthenticated="">
-									<span shiro:hasAnyPermissions="roleFunctionGroupMgr:delete,roleFunctionGroupMgr:edit,roleFunctionGroupMgr:add">
-										<font color="#F8F8F8" th:text="#{loginByRememberMe}"></font>
-										<a href="/login" th:text="#{login}"></a>
-										<font color="#F8F8F8" th:text="#{authentication}"></font>
-									</span>
-								</span>
-								<!-- 按钮 -->
-								<span shiro:authenticated="">
-									<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" shiro:hasPermission="roleFunctionGroupMgr:delete" th:type="button" th:value='#{delete}' id='delete'/>
-									<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" shiro:hasPermission="roleFunctionGroupMgr:edit" th:type="button" th:value='#{edit}' id='edit'/>
-									<input class="btn btn-info" style="margin-top:20px;margin-right:20px;float:right" shiro:hasPermission="roleFunctionGroupMgr:add" th:type="button" th:value='#{add}' id='add'/>
-								</span>
-								</div>
-							</div>
-						</section>
-					</div>
-					
-				</div>
+		<div class="companyMgr-edge">
+		    <div class="company-top">
+		        <div class="company-big" th:text="#{systemMgr}">
+		            	公司管理
+		        </div>
+		        <div class="company-small" th:text="#{roleFucntionGroupMgr}">
+		            -权限组管理
+		        </div>
+		    </div>
+		  	<div class="company-tab" style="border:0px">
+		  		<div shiro:hasPermission="roleFunctionGroupMgr:delete" class="company-button" style="margin-right: 1%">
+		            <button id="delete" class="company-button-import" th:text="#{edit}">
+		           		删除
+		            </button>
+		        </div>
+		        <div shiro:hasPermission="roleFunctionGroupMgr:edit" class="company-button" style="margin-right: 1%">
+		            <button id="edit" class="company-button-new" th:text="#{edit}">
+		           		编辑
+		            </button>
+		        </div>
+		        <div shiro:hasPermission="roleFunctionGroupMgr:add" class="company-button" style="margin-right: 1%">
+		            <button id="add" class="company-button-import" th:text="#{add}">
+		           		 新增
+		            </button>
+		        </div>
 			</div>
+			<div class="data-table">
+				<!-- 节点管理的表格 -->
+				<div><table id="roleFunctionGroupTable"></table></div>
+				<div class="zxf_pagediv" id="roleFunctionGroupPager"></div>
+	    	</div>
 		</div>
 	</div>
 </body>

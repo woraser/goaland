@@ -2,11 +2,11 @@ package com.anosi.asset.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +26,7 @@ import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.RoleService;
 import com.google.common.collect.ImmutableMap;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @RestController
 @RequestMapping("/customerServiceProcess")
@@ -84,20 +85,13 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * 发起流程
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/startProcess", method = RequestMethod.POST)
-	public JSONObject startProcess(@RequestParam(value = "nextAssignee") String engineeDep,
-			CustomerServiceProcess process,
-			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) {
+	public JSONObject startProcess(@ModelAttribute("process") CustomerServiceProcess process,
+			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) throws Exception {
 		logger.debug("customerServiceProcess -> start process");
-		try {
-			customerServcieProcessService.startProcess(accountService.findByLoginId(engineeDep),
-					process.getStartDetail(), multipartFiles);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new JSONObject(ImmutableMap.of("result", "error", "message",
-					Objects.requireNonNull(e.getMessage(), e.toString())));
-		}
+		customerServcieProcessService.startProcess(process, multipartFiles);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -108,7 +102,11 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 		QAccount qAccount = QAccount.account;
 		QRole qRole = QRole.role;
 		switch (taskDefinitionKey) {
+		case "examine":
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineerManager")));
+			return ImmutableMap.of("accounts", accounts);
 		case "evaluating":
+			JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 			accounts = queryFactory.select(qAccount).from(qAccount, qRole)
 					.where(qRole.depGroup.code.eq("customerServiceGroup"), qAccount.roleList.contains(qRole)).fetch();
 			return ImmutableMap.of("accounts", accounts);
@@ -133,10 +131,9 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/completeStartDetail", method = RequestMethod.POST)
 	public JSONObject completeStartDetail(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "engineeDep") String engineeDep, CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> completeStartDetail");
-		customerServcieProcessService.completeStartDetail(accountService.findByLoginId(engineeDep), taskId,
-				process.getStartDetail());
+		customerServcieProcessService.completeStartDetail(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -146,13 +143,15 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param evaluatingDetail
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/examine", method = RequestMethod.POST)
 	public JSONObject examine(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "engineeDep") String engineeDep, CustomerServiceProcess process) {
-		logger.debug("customerServiceProcess -> evaluating");
-		customerServcieProcessService.examine(accountService.findByLoginId(engineeDep), taskId,
-				process.getExamineDetail());
+			@ModelAttribute("process") CustomerServiceProcess process) throws Exception {
+		logger.debug("customerServiceProcess -> examine");
+		logger.debug("processId,{}", process.getId());
+		logger.debug("suggestion,{}", process.getExamineDetail().getSuggestion());
+		customerServcieProcessService.examine(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -166,10 +165,9 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/evaluating", method = RequestMethod.POST)
 	public JSONObject evaluating(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "servicer") String servicer, CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> evaluating");
-		customerServcieProcessService.evaluating(accountService.findByLoginId(servicer), taskId,
-				process.getEvaluatingDetail());
+		customerServcieProcessService.evaluating(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -182,9 +180,9 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/distribute", method = RequestMethod.POST)
 	public JSONObject distribute(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "engineer") String engineer) {
+			@ModelAttribute("process") CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> distribute");
-		customerServcieProcessService.distribute(accountService.findByLoginId(engineer), taskId);
+		customerServcieProcessService.distribute(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -196,9 +194,10 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @return
 	 */
 	@RequestMapping(value = "/repair", method = RequestMethod.POST)
-	public JSONObject repair(@RequestParam(value = "taskId") String taskId, CustomerServiceProcess process) {
+	public JSONObject repair(@RequestParam(value = "taskId") String taskId,
+			@ModelAttribute("process") CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> repair");
-		customerServcieProcessService.repair(taskId, process.getRepairDetail());
+		customerServcieProcessService.repair(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -211,9 +210,10 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/entrust", method = RequestMethod.POST)
 	public JSONObject entrust(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "mandatary") String mandatary, @RequestParam(value = "reason") String reason) {
+			@RequestParam(value = "mandatary") String mandatary, @RequestParam(value = "reason") String reason,
+			@ModelAttribute("process") CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> entrust");
-		customerServcieProcessService.entrust(taskId, accountService.findByLoginId(mandatary), reason);
+		customerServcieProcessService.entrust(taskId, accountService.findByLoginId(mandatary), reason, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

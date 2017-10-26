@@ -32,11 +32,15 @@ public class CustomerServiceProcess extends BaseProcess {
 
 	private EvaluatingDetail evaluatingDetail;// 评估字段
 
+	private DistributeDetail distributeDetail;// 派单字段
+
 	private RepairDetail repairDetail;// 维修字段
 
 	private AgreementStatus agreementStatus;// 合同状态
 
 	private boolean file = false;// 是否有上传文件
+
+	private Device device;
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
 	@JoinColumn(nullable = false)
@@ -87,6 +91,14 @@ public class CustomerServiceProcess extends BaseProcess {
 	public void setAgreementStatus(AgreementStatus agreementStatus) {
 		this.agreementStatus = agreementStatus;
 	}
+	
+	public DistributeDetail getDistributeDetail() {
+		return distributeDetail;
+	}
+
+	public void setDistributeDetail(DistributeDetail distributeDetail) {
+		this.distributeDetail = distributeDetail;
+	}
 
 	public boolean isFile() {
 		return file;
@@ -103,6 +115,15 @@ public class CustomerServiceProcess extends BaseProcess {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Device.class)
+	public Device getDevice() {
+		return device;
+	}
+
+	public void setDevice(Device device) {
+		this.device = device;
 	}
 
 	/***
@@ -137,7 +158,9 @@ public class CustomerServiceProcess extends BaseProcess {
 		private String baseDemands;// 基本要求
 
 		private String specialDemands;// 特殊要求
-		
+
+		private String nextAssignee;// 下一步办理人
+
 		public Belong getBelong() {
 			return belong;
 		}
@@ -234,6 +257,14 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.specialDemands = specialDemands;
 		}
 
+		public String getNextAssignee() {
+			return nextAssignee;
+		}
+
+		public void setNextAssignee(String nextAssignee) {
+			this.nextAssignee = nextAssignee;
+		}
+
 		public static enum ProductType {
 
 			DC("直流类"), FACTS("FACTS(含SVC,TCSC,STATCOM)"), NEWENERGY("新能源类(含风电,光伏,高压变频)"), LABPROJECT("实验室项目"), OTHER(
@@ -254,11 +285,11 @@ public class CustomerServiceProcess extends BaseProcess {
 			}
 
 		}
-		
-		public static enum Belong{
-			
-			SOUTHERNPART("南部销售区"),NORTHPART("北部销售区");
-			
+
+		public static enum Belong {
+
+			SOUTHERNPART("南部销售区"), NORTHPART("北部销售区");
+
 			private String name;
 
 			private Belong(String name) {
@@ -285,7 +316,19 @@ public class CustomerServiceProcess extends BaseProcess {
 	@Embeddable
 	public static class ExamineDetail {
 
+		private boolean reject = false;// 领导驳回
+
 		private String suggestion;// 领导审批意见
+
+		private String engineeDep;// 工程部评估人
+
+		public boolean getReject() {
+			return reject;
+		}
+
+		public void setReject(boolean reject) {
+			this.reject = reject;
+		}
 
 		public String getSuggestion() {
 			return suggestion;
@@ -293,6 +336,14 @@ public class CustomerServiceProcess extends BaseProcess {
 
 		public void setSuggestion(String suggestion) {
 			this.suggestion = suggestion;
+		}
+
+		public String getEngineeDep() {
+			return engineeDep;
+		}
+
+		public void setEngineeDep(String engineeDep) {
+			this.engineeDep = engineeDep;
 		}
 
 	}
@@ -358,12 +409,43 @@ public class CustomerServiceProcess extends BaseProcess {
 
 		private String breakdownDevice;// 故障设备
 
+		private String servicer;// 服务组人员
+
 		public String getBreakdownDevice() {
 			return breakdownDevice;
 		}
 
 		public void setBreakdownDevice(String breakdownDevice) {
 			this.breakdownDevice = breakdownDevice;
+		}
+
+		public String getServicer() {
+			return servicer;
+		}
+
+		public void setServicer(String servicer) {
+			this.servicer = servicer;
+		}
+
+	}
+
+	/***
+	 * 派单字段
+	 * 
+	 * @author jinyao
+	 *
+	 */
+	@Embeddable
+	public static class DistributeDetail {
+
+		private String engineer;// 工程师
+
+		public String getEngineer() {
+			return engineer;
+		}
+
+		public void setEngineer(String engineer) {
+			this.engineer = engineer;
 		}
 
 	}

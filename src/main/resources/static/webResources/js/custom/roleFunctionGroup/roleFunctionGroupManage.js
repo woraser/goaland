@@ -12,17 +12,17 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-		               	{label:$.i18n.prop('roleFunctionGroup.name'),name:'name',index:'name', width: '120', sortable:false, align: 'center'},
-						{label:$.i18n.prop('roleFunctionGroup.roleFunction'),name:'roleFunction',index:'roleFunction', width: '120', sortable:false, align: 'center',
-							formatter: function (cellvalue, options, rowObject) {
-			                    var detail="";
-			                    $.each(cellvalue,function(){
-			                    	detail += this.name+"  ";
-			                    })
-			                    return detail;
-			                }
-		               	},
-				   	  ];
+           	{label:$.i18n.prop('roleFunctionGroup.name'),name:'name',index:'name', width: '120', sortable:false, align: 'center'},
+			{label:$.i18n.prop('roleFunctionGroup.roleFunction'),name:'roleFunction',index:'roleFunction', width: '120', sortable:false, align: 'center',
+				formatter: function (cellvalue, options, rowObject) {
+                    var detail="";
+                    $.each(cellvalue,function(){
+                    	detail += this.name+"  ";
+                    })
+                    return detail;
+                }
+           	},
+	   	  ];
 		 
 		 //每页显示多少行
 		 var rowNum=20;
@@ -49,7 +49,6 @@ $(document).ready(function() {
 	    		postData:params,
 	    		height: '100%',
 	    	   	colModel:colModel,
-	    	   	caption:'用户信息管理',
 	    	   	multiselect: true,
 	    	   	multiboxonly: true,
 	    	   	multiselectWidth: 30,

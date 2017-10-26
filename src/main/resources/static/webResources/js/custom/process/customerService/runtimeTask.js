@@ -8,7 +8,7 @@ $(document).ready(function() {
 		   processDatas:[],
 	   },
 	   methods: {
-		  handle: function (taskName,taskId) {
+		  handle: function (taskName,taskId,processId) {
 			 var func=function(){
 				 if($("#customerServiceForm").valid()){
 					 $("#customerServiceForm").submit();
@@ -17,7 +17,7 @@ $(document).ready(function() {
 					 return false;
 				 }
 			 }
-			 createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId,func)
+			 createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId+"&id="+processId,func)
 		  },
 	   	  detail: function(taskId){
 	   		  
@@ -34,7 +34,7 @@ $(document).ready(function() {
 		 
 	 //请求参数
 	 var params={}
-	 params['showAttributes']='name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime';//要获取的属性名
+	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime,task.id,task.name';//要获取的属性名
 	 params['size']=rowNum;
 	 params['sort']=sort;
 	 params['searchContent']=null;

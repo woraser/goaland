@@ -10,21 +10,23 @@ function createModalPage(title,url,func) {
         },
         buttons: [{
             id: 'btn-1',
-            label: '确定'
+            label: '确定',
+            cssClass: 'btn-info',
         },{
             id: 'btn-2',
-            label: '取消'
+            label: '取消',
+            cssClass: 'btn-warning',
         }],
         closable: false,
         draggable: true,
     });
 	dialog.realize();
-    dialog.getModalHeader().css('background-color', '#0088cc');
+    /*dialog.getModalHeader().css('background-color', '#0088cc');
     dialog.getModalHeader().css('color', '#fff');
     dialog.getModalBody().css('background-color', '#0088cc');
     dialog.getModalBody().css('color', '#fff');
     dialog.getModalFooter().css('background-color', '#0088cc');
-    dialog.getModalFooter().css('color', '#fff');
+    dialog.getModalFooter().css('color', '#fff');*/
 	
 	var btn1 = dialog.getButton('btn-1');
 	var btn2 = dialog.getButton('btn-2');

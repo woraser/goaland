@@ -5,6 +5,8 @@
 	<meta charset="UTF-8" />
 	<title></title>
 	
+	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
+	
 	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
@@ -13,24 +15,38 @@
 	
 </head>
 
-<body class="skin-blue sidebar-mini">
+<body>
 	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
 		<input type="hidden" id="taskId" name="taskId" th:value="${task.id}"/>  
+		<input type="hidden" id="processId" name="processId" th:value="${process.id}"/>  
 	    <fieldset>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.breakdownDevice}" for="breakdownDevice">故障设备</label>  
-		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{evaluatingDetail.breakdownDevice}" id="breakdownDevice" class="form-control" th:placeholder="#{customerService.breakdownDevice}"/>  
-    			</div>
-	    	</div>
-	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{nextAssignee}">选择服务组人员</label>  
-		    	<div class="col-sm-8">
-		    	 	<select name="servicer" id="servicer" class="form-control"> 
-		            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
-		            </select>
-    			</div>
-	    	</div>
+	    	<div style="width: 490px;height: 300px;padding-top: 3%">
+			    <div class="dialog-title">
+			        <div class="dialog-img">
+			            <img src="/webResources/img/icon/dialogtitle.png"/>
+			        </div>
+			        <div class="dialog-title-info">
+		            	<span th:text="#{customerService.evaluating}"></span>
+		               	&nbsp;&nbsp;&nbsp;
+		               	<span th:text="${session.user.name}"></span>
+			        </div>
+			    </div>
+			    <hr />
+			    <div class="form-group">
+			    	<label class="col-sm-3 control-label"  th:text="#{customerService.breakdownDevice}" for="evaluatingDetail.breakdownDevice">故障设备</label>  
+			    	<div class="col-sm-8">
+			    		<textarea th:placeholder="#{customerService.breakdownDevice}" rows="6" cols="5" th:field="*{evaluatingDetail.breakdownDevice}" class="autosize form-control textarea-transition" style="overflow: hidden; overflow-wrap: break-word; resize: horizontal; height: 100%;margin-top: 0%"></textarea> 
+	    			</div>
+		    	</div>
+		    	<div class="form-group">
+			    	<label class="col-sm-3 control-label"  th:text="#{customerService.distribute.choose}">选择服务组人员</label>  
+			    	<div class="col-sm-8">
+			    	 	<select th:field="*{evaluatingDetail.servicer}" class="form-control"> 
+			            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
+			            </select>
+	    			</div>
+		    	</div>
+			</div>
 	    </fieldset>  
 	</form>  
 </body>

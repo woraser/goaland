@@ -11,6 +11,9 @@ $(document).ready(function() {
 		   detail: function(taskId){
 		   		  
 		   },
+		   rejectRewrit: function(id){
+			   window.location.href="/customerServiceProcess/startProcess/form/view?processId="+id
+		   }
 	   },
 	 })
 	 
@@ -23,7 +26,7 @@ $(document).ready(function() {
 		 
 	 //请求参数
 	 var params={}
-	 params['showAttributes']='name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime';//要获取的属性名
+	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime,examineDetail.reject';//要获取的属性名
 	 params['size']=rowNum;
 	 params['sort']=sort;
 	 params['timeType']="start";

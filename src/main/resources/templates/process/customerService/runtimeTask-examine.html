@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	
+	<link href="/webResources/css/custom/checkbox.css" rel="stylesheet"/>
+	<link href="/webResources/css/custom/switch.css" rel="stylesheet"/>
+	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
+	
+	<style>
+		div.bg_con {
+		    margin-right: 0%;
+		}
+	</style>
+	
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/examine.js" ></script>
+	
+</head>
+
+<body>
+	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+		<input type="hidden" id="taskId" name="taskId" th:value="${task.id}"/>  
+		<input type="hidden" id="processId" name="processId" th:value="${process.id}"/>  
+	    <fieldset>
+	    	<div style="width: 490px;height: 300px;padding-top: 3%">
+			    <div class="dialog-title">
+			        <div class="dialog-img">
+			            <img src="/webResources/img/icon/dialogtitle.png"/>
+			        </div>
+			        <div class="dialog-title-info">
+		            	<span th:text="#{examiner}"></span>
+		               	&nbsp;&nbsp;&nbsp;
+		               	<span th:text="${session.user.name}"></span>
+			        </div>
+			    </div>
+			    <hr />
+			    <div class="dialog-in">
+			       	<div class="form-group">
+				    	<label class="col-sm-3 control-label"  th:text="#{examine}"></label>  
+				    	<div class="bg_con" style="float: left;margin-top: 1%">
+				    	 	<input v-on:click="reject = !reject" id="checked_1" name="checked_1" class="theHelper" type="checkbox"/>
+			            	<label for="checked_1"></label>
+		    			</div>
+		    			<label v-if="!reject" class="col-sm-3 control-label" style="float:left;width:10%" th:text="#{yes}">是</label> 
+		    			<label v-if="reject" class="col-sm-3 control-label" style="float:left;width:10%" th:text="#{no}">否</label> 
+			    	</div>
+			    </div>
+			    <div class="dialog-in" style="width: 100%;height: 33%;margin-top: 7%">
+			        <div class="form-group">
+				    	<label class="col-sm-3 control-label"  th:text="#{customerService.examine.suggestion}"></label>  
+				    	<div class="col-sm-8">
+				    	 	<textarea th:placeholder="#{customerService.examine.suggestion}" rows="6" cols="5" th:field="*{examineDetail.suggestion}" class="autosize form-control textarea-transition" style="overflow: hidden; overflow-wrap: break-word; resize: horizontal; height: 100%;margin-top: 0%"></textarea>
+		    			</div>
+			    	</div>
+			    </div>
+			    <div v-if="!reject" class="dialog-in" style="width: 100%;height: 33%;margin-top: 10%">
+			        <div class="form-group">
+				    	<label class="col-sm-3 control-label"  th:text="#{customerService.evaluating.choose}"></label>  
+				    	<div class="col-sm-8">
+				    	 	<select th:field="*{examineDetail.engineeDep}" class="form-control"> 
+				            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
+				            </select>
+		    			</div>
+			    	</div>
+			    </div>
+			    
+			</div>
+	    </fieldset>
+	</form>
+	
+</body>
+
+</html>
+

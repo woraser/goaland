@@ -195,7 +195,6 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public void completeTask(String taskId, DoInComplete doInComplete) {
 		T t = findBytaskId(taskId);
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
 		ProcessRecord processRecord = processRecordService.findByTaskIdNotEnd(taskId);
@@ -214,9 +213,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		// 所以如果是组任务，将发送信息的代码自行写到DoInComplete中
 		// 然后由此模板方法完成发送及创建记录
 		/*-----注意以下三步的顺序，要先发送消息，再创建下一步的记录，不然不会发送--*/
-		if (StringUtils.isNotBlank(task.getAssignee())) {
-			searchNextTaskAndSend(t, processInstanceId, accountService.findByLoginId(task.getAssignee()));// 生成发给下一步办理人的信息
-		}
+		searchNextTaskAndSend(t, processInstanceId);// 生成发给下一步办理人的信息
 		saveMessageInfoAndSend();// 发送
 		createNewProcessRecord(processInstanceId);// 生成新的待办任务记录
 	}
@@ -360,12 +357,14 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
-	public void searchNextTaskAndSend(T t, String processInstanceId, Account nextAssignee) {
+	public void searchNextTaskAndSend(T t, String processInstanceId) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		for (Task task : tasks) {
 			// 如果是新生成的任务
 			if (processRecordService.findByTaskIdNotEnd(task.getId()) == null) {
-				messageInfoForAssignee(t, task.getId(), nextAssignee);
+				if(StringUtils.isNoneBlank(task.getAssignee())){
+					messageInfoForAssignee(t, task.getId(), accountService.findByLoginId(task.getAssignee()));
+				}
 			}
 		}
 	}

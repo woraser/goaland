@@ -2,20 +2,28 @@
  * 
  */
 $(document).ready(function() {
+	var customerService = new Vue({
+	  el: '#customerServiceForm',
+	  data: {
+	    reject:false,
+	  }
+	})
+	
 	$("#customerServiceForm").validate({
 		//debug:true,
 		rules : {
-			"evaluatingDetail.breakdownDevice" : {
+			"examineDetail.engineeDep" : {
 				required : true,
 			},
-			"evaluatingDetail.servicer" : {
+			"examineDetail.suggestion" : {
 				required : true,
 			},
 		},
 		submitHandler: function(form) {  
 			var options = {
 				type : "post",
-				url : '/customerServiceProcess/evaluating',
+				url : '/customerServiceProcess/examine',
+				data : {'examineDetail.reject' : customerService.reject},
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){

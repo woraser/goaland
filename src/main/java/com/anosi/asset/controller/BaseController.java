@@ -36,7 +36,6 @@ import com.anosi.asset.util.DataTablesUtil;
 import com.anosi.asset.util.JqgridUtil;
 import com.anosi.asset.util.JsonUtil;
 import com.anosi.asset.util.StringUtil;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class BaseController<T> extends GlobalController<T> {
 
@@ -56,8 +55,6 @@ public class BaseController<T> extends GlobalController<T> {
 	protected SessionComponent sessionComponent;
 	@Autowired
 	protected I18nComponent i18nComponent;
-
-	protected JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 
 	/***
 	 * 注册date

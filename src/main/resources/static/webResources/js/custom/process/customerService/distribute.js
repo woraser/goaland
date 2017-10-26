@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$("#customerServiceForm").validate({
 		//debug:true,
 		rules : {
-			engineer : {
+			"distributeDetail.engineer" : {
 				required : true,
 			},
 		},

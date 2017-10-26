@@ -45,6 +45,8 @@ public class Device extends BaseEntity {
 	private Double baiduLatitude;// 纬度
 
 	private District district;// 所属区县
+	
+	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 
 	public String getProductName() {
 		return productName;
@@ -147,6 +149,15 @@ public class Device extends BaseEntity {
 
 	public void setDistrict(District district) {
 		this.district = district;
+	}
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getCustomerServiceProcesseList() {
+		return customerServiceProcesseList;
+	}
+
+	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
+		this.customerServiceProcesseList = customerServiceProcesseList;
 	}
 
 	@Override

@@ -1,0 +1,89 @@
+.nav > li {
+    position: relative;
+    display: block;
+    margin-left: 1%;
+    border: 0px;
+}
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #262626;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+div.bg_con{
+    float: right;
+    margin-right: 38%;
+    width: 9%;
+    height: 50%;margin-left: 5%;
+}
+div.bg_con input.theHelper{
+    display:none;
+}
+div.bg_con label{
+    position:relative;
+    display: block;
+    padding: 1px;
+    border-radius: 24px;
+    height: 22px;
+    background-color: #eee;
+    cursor: pointer;
+    vertical-align: top;
+    -webkit-user-select: none;
+    -webkit-transition: all 0.3s ease;
+}
+div.bg_con label:before{
+    content: '';
+    display: block;
+    border-radius: 24px;
+    height: 22px;
+    background-color: #9BB1BA;
+    -webkit-transform: scale(1, 1);
+    -webkit-transition: all 0.3s ease;
+}
+div.bg_con label:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin-top: -11px;
+    margin-left: -11px;
+    display: block;
+    border-radius: 100%;
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.08);
+    -webkit-transform: translateX(-9px);
+    -webkit-transition: all 0.3s ease;
+}
+input.theHelper:checked~label:after{
+    -webkit-transform: translateX(9px);
+}
+input.theHelper:checked~label:before{
+    background-color:#398FD0;
+}
+.demo--radioInput {
+
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 100%;
+    display: inline-block;
+    height: 16px;
+    margin-right: 10px;
+    margin-top: 0px;
+    vertical-align: middle;
+    width: 16px;
+    line-height: 1;
+
+}
+@-webkit-keyframes rotation{
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+}
+
+.loading-img{
+    -webkit-transform: rotate(360deg);
+    animation: rotation 3s linear infinite;
+    -moz-animation: rotation 3s linear infinite;
+    -webkit-animation: rotation 3s linear infinite;
+    -o-animation: rotation 3s linear infinite;
+}

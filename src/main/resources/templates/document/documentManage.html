@@ -71,7 +71,7 @@
 	                        <a v-bind:href="'/fileDownload/'+fileData.fileId"><img src="/webResources/img/file/download.png"/></a>
 	                        <a v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
 	                    </div>
-	                    <div v-if="seenDetail" style="color: #C1C1C1;">{{fileData.highLightContent}}</div>
+	                    <div v-if="seenDetail" style="color: #C1C1C1;" v-html="fileData.highLightContent"></div>
                 	</div>
                 	<div class="zxf_pagediv" id="dataPager"></div>
                 </div>

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,6 +75,20 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 				getPorcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime), rowId,
 				showAttributes, showType);
 	}
+	
+	/****
+	 * 在执行update前，先获取持久化的process对象
+	 * 
+	 * @param id
+	 * @param model
+	 * 
+	 */
+	@ModelAttribute
+	public void getAccount(@RequestParam(value = "processId", required = false) Long id, Model model) {
+		if (id != null) {
+			model.addAttribute("process", getPorcessService().getOne(id));
+		}
+	}
 
 	/***
 	 * 进入<b>发起流程</b>的页面
@@ -80,7 +96,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @return
 	 */
 	@RequestMapping(value = "/startProcess/form/view", method = RequestMethod.GET)
-	public ModelAndView toViewStartProcessForm(T process) throws Exception {
+	public ModelAndView toViewStartProcessForm(@ModelAttribute("process")T process) throws Exception {
 		logger.debug("view startProcess form");
 		return new ModelAndView("process/" + definitionKey + "/startProcessForm", "process", process)
 				.addAllObjects(getStartProcessObjects());

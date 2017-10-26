@@ -59,6 +59,12 @@ $(document).ready(function() {
 		 params['page']=page;
 		 params['size']=rowNum;
 		 params['sort']=sort;
+		 params['searchContent']=null;
+		 
+		 var companySearch = new Vue({
+			   el: '#companySearch',
+			   data: params,
+		 })
 		 
 		 var myGrid = jQuery("#accountTable");
 		 var myPager = jQuery("#accountPager");
@@ -69,7 +75,6 @@ $(document).ready(function() {
 	    		postData:params,
 	    		height: '100%',
 	    	   	colModel:colModel,
-	    	   	caption:'用户信息管理',
 	    	   	multiselect: true,
 	    	   	multiboxonly: true,
 	    	   	multiselectWidth: 30,
@@ -126,14 +131,11 @@ $(document).ready(function() {
 			 }
 		 })
 		 
-		 //查询按钮点击事件
-		 $('#searchBtn').click(function(){
-			var search = $('#toSearch').val();
-			params['searchContent']=search;
-			myGrid.jqGrid().setGridParam({
-				url:url,
-				postData:params,
-			}).trigger("reloadGrid");
+		 $("#search").click(function(){
+			 myGrid.jqGrid().setGridParam({
+					url:url,
+					postData:params,
+			 }).trigger("reloadGrid");
 		 })
 		 
 	});

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,6 +120,7 @@ public class RoleFunctionGroupController extends BaseController<RoleFunctionGrou
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/roleFunctionGroup/save", method = RequestMethod.POST)
+	@Transactional
 	public JSONObject saveIotx(@ModelAttribute("roleFunctionGroup") RoleFunctionGroup roleFunctionGroup,
 			String[] selRolesFunctionNode) throws Exception {
 		logger.debug("saveOrUpdate roleFunctionGroup");

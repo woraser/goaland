@@ -2,9 +2,19 @@
  * 
  */
 $(document).ready(function() {
+	var customerService = new Vue({
+	  el: '#customerServiceForm',
+	  data: {
+	    isEntrust:false,
+	  }
+	})
+	
 	$("#customerServiceForm").validate({
 		//debug:true,
 		rules : {
+			"device.serialNo" : {
+				required : true,
+			},
 			"repairDetail.problemDescription" : {
 				required : true,
 			},
@@ -51,14 +61,56 @@ $(document).ready(function() {
 		}  
 	});
 	
-	$('#isEntrust').click(function(){
-		if($(this).is(':checked')) {
-			$("#entrust").show();
-			$("#notEntrust").hide();
-		}else{
-			$("#entrust").hide();
-			$("#notEntrust").show();
-		}
-	})
-
+	//search autocomplete
+	 $(document)
+    // 当选择一个条目时不离开文本域
+    .on( "keydown","#device\\.serialNo", function( event ) {
+      if ( event.keyCode === $.ui.keyCode.TAB &&
+          $( this ).data( "ui-autocomplete" ).menu.active ) {
+        event.preventDefault();
+      };
+      $(this).autocomplete({
+          source: function( request, response ) {
+            	
+              $.ajax({
+      				url : '/device/autocomplete',
+      				data : {
+      					'number' :  request.term,
+      					'label' : 'serialNo',
+      					'value' : 'id',
+      				},
+      				type : 'get',
+      				dataType : 'json',
+      				async : false,
+      				success : function( datas ) {
+      					response($.each(datas,function(i,value) {
+      						return {
+      							label : this.label,
+      							value : this.value
+      						}
+      					}));
+      				}
+      			
+              });
+              
+            },
+            search: function() {
+              // 自定义最小长度
+              var term = this.value;
+              if ( term.length < 1 ) {
+                return false;
+              }
+            },
+            focus: function() {
+              // 防止在获得焦点时插入值
+              return false;
+            },
+            select: function( event, ui ) {
+              $( "#device\\.serialNo" ).val(ui.item.label);
+              $( "#device\\.id" ).val(ui.item.value);
+              return false;
+            }
+          })
+    }); 
+	
 })

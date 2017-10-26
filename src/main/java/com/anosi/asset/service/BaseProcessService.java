@@ -159,9 +159,8 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * 查出下一步任务id，发给下一步代办人
 	 * @param t
 	 * @param processInstanceId
-	 * @param nextAssignee
 	 */
-	public void searchNextTaskAndSend(T t,String processInstanceId,Account nextAssignee);
+	public void searchNextTaskAndSend(T t,String processInstanceId);
 	
 	/***
 	 * 将信息发送给办理人

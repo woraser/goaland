@@ -119,4 +119,19 @@ public class DeviceController extends BaseController<Device> {
 		return deviceService.ascertainArea(predicate);
 	}
 	
+	/***
+	 * 获取autocomplete的source
+	 * 
+	 * @param predicate
+	 * @param label
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/autocomplete", method = RequestMethod.GET)
+	public JSONArray autocomplete(@QuerydslPredicate(root = Device.class) Predicate predicate, @RequestParam(value = "label") String label,
+			String value) throws Exception {
+		return jsonUtil.parseAttributesToAutocomplete(label, value, deviceService.findAll(predicate));
+	}
+	
 }

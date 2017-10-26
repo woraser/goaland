@@ -38,12 +38,7 @@
             <input class="form-control" type="text" id="endTime" size="10" th:placeholder="#{customerService.endTime}" value=""/>
         </div>
 
-        <div class="company-button" style="margin-right: 6%;">
-            <button class="company-button-new" style="height: 100%;margin-top: 0%" th:text="#{add}">
-               	 新增
-            </button>
-        </div>
-        <div class="company-search" style="float: right;margin-top: -1%;margin-right: 1%">
+        <div class="company-search" style="float: right;margin-top: -1%;margin-right: 6%">
            <div class="input-group input-medium">
                <input class="form-control" v-model="searchContent" th:placeholder="#{searchContent}" type="text"/>
                <span class="input-group-btn">
@@ -85,7 +80,8 @@
                     </div>
                     <div class="process-Info-first">
                         <div class="process-img">
-                           <div style="width: 60px;height: 60px;background: red;">
+                           <div style="width: 60px;height: 60px;">
+                               <img src="/webResources/img/icon/order.png"/>
                            </div>
 
                         </div>
@@ -131,7 +127,7 @@
                     </div>
                     <div class="process-Info-fourth">
 						<div class="doing-button">
-                            <button v-on:click="handle(processData['task.name'],processData['task.id'])" class="doingbutton" th:text="#{customerService.handle}">
+                            <button v-on:click="handle(processData['task.name'],processData['task.id'],processData['id'])" class="doingbutton" th:text="#{customerService.handle}">
                                	 办理
                             </button>
                         </div>

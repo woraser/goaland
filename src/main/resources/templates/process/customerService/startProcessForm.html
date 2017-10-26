@@ -36,6 +36,7 @@
 <body>
 	<div layout:fragment="content">
 		<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+			<input type="hidden" id="processId" name="processId" th:value="${process.id}"/> 
 	        <fieldset>
 				<div class="companyMgr-edge" style="height: 1200px">
 				    <div class="company-top">
@@ -62,7 +63,7 @@
 				                	<a th:href="@{/customerServiceProcess/startedProcess/view}">
 				                		<input type="button" class="out-button" th:value="#{return}"/>
 				                	</a>
-				                    <input type="submit" class="save-button" th:value="#{startProcess}"/>
+				                    <input type="submit" class="save-button" th:value="#{commit}"/>
 				                </div>
 				                <div class="project-info-title" style="margin-top: 4%;" th:text="#{project.message}">
 				                    	项目信息
@@ -74,7 +75,7 @@
 				                                	归属：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <select name="startDetail.belong" id="startDetail.belong" class="form-control"> 
+				                                <select th:field="*{startDetail.belong}" name="startDetail.belong" id="startDetail.belong" class="form-control"> 
 									            	<option th:each="belong : ${belongs}" th:value="${belong}" th:text="${belong.name}"></option>
 									            </select>
 				                            </div>
@@ -138,7 +139,7 @@
 				                        <div class="form-group">
 				                            <label class="project-text-left" style="padding: 0%;font-weight: 300;width: 8.5%" th:text="#{customerService.productType}">产品类型：</label>
 				                            <div class="col-md-8" style="padding-left: 0%">
-				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"> <input name="startDetail.productType" class="uniform" th:value="${productType}" th:text="${productType.name}" type="radio"/></label>
+				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"> <input th:field="*{startDetail.productType}" name="startDetail.productType" class="uniform" th:value="${productType}" th:text="${productType.name}" type="radio"/></label>
 				                            </div>
 				                        </div>
 				                    </div>
@@ -196,7 +197,7 @@
 				                               	 下一步办理人：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <select name="nextAssignee" id="nextAssignee" class="form-control"> 
+				                                <select th:field="*{startDetail.nextAssignee}" name="startDetail.nextAssignee" id="startDetail.nextAssignee" class="form-control"> 
 									            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
 									            </select>
 				                            </div>
@@ -238,7 +239,7 @@
 				                               	 上传附件
 				                            </div>
 				                            <div class="project-text-right">
-				                                <input type="file" id="fileUpLoad" multiple="multiple"  name="fileUpLoad" data-show-caption="true"/>
+				                                <input type="file" id="fileUpLoad" multiple="multiple" name="fileUpLoad" data-show-caption="true"/>
 				                            </div>
 				                        </div>
 				                    </div>

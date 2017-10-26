@@ -44,7 +44,7 @@ $(document).ready(function() {
 				minlength : 11,
 				isMobile : true,
 			},
-			"nextAssignee" : {
+			"startDetail.nextAssignee" : {
 				required : true,
 			},
 			"startDetail.estimatedTime" : {
@@ -55,6 +55,7 @@ $(document).ready(function() {
 			var options = {
 				type : "post",
 				url : '/customerServiceProcess/startProcess',
+				data : {"examineDetail.reject" : false},
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){

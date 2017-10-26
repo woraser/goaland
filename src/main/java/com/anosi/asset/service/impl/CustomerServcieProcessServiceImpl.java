@@ -22,10 +22,6 @@ import com.anosi.asset.model.elasticsearch.CustomerServiceProcessContent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.EvaluatingDetail;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.ExamineDetail;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
@@ -67,39 +63,36 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	}
 
 	@Override
-	public void startProcess(Account engineeDep, StartDetail startDetail, MultipartFile[] multipartFiles)
-			throws Exception {
+	public void startProcess(CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception {
 		// 启动流程，因为下一步为完善清单，所以将发起人设置为下一步的办理人
 		identityService.setAuthenticatedUserId(sessionComponent.getCurrentUser().getLoginId());
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey());
-		CustomerServiceProcess customerServiceProcess = new CustomerServiceProcess();
-		customerServiceProcess.setProcessInstanceId(processInstance.getId());
-		customerServiceProcess.setFinishType(FinishType.REAMIN);
-		customerServiceProcess.setApplicant(sessionComponent.getCurrentUser());
-		customerServiceProcess.setFile(true);
-
-		customerServiceProcessDao.save(customerServiceProcess);
-		customerServiceProcessContentService.saveContent(customerServiceProcess);
+		process.setProcessInstanceId(processInstance.getId());
+		process.setFinishType(FinishType.REAMIN);
+		process.setApplicant(sessionComponent.getCurrentUser());
+		process.setFile(true);
+		
+		customerServiceProcessDao.save(process);
+		customerServiceProcessContentService.saveContent(process);
 
 		// 创建记录
 		createNewProcessRecord(processInstance.getId());
 
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
-				this.fileMetaDataService.saveFile("customerService_" + customerServiceProcess.getName(),
+				this.fileMetaDataService.saveFile("customerService_" + process.getName(),
 						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
 			}
 		}
 
 		// 自动完成清单任务
-		completeStartDetail(engineeDep,
+		completeStartDetail(
 				taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult().getId(),
-				startDetail);
+				process);
 	}
 
 	@Override
-	public void completeStartDetail(Account engineeDep, String taskId, StartDetail startDetail) {
-		findBytaskId(taskId).setStartDetail(startDetail);
+	public void completeStartDetail(String taskId, CustomerServiceProcess process) {
 
 		// 判断是不是工程部的人
 		String loginId = sessionComponent.getCurrentUser().getLoginId();
@@ -108,41 +101,44 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		// 如果是工程部
 		if ("engineerDep".equals(code)) {
 			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("engineeDep", engineeDep.getLoginId(), "isEnginee", true)));
+					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)));
 		} else {
 			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("depManager", engineeDep.getLoginId(), "isEnginee", false)));
+					ImmutableMap.of("depManager", process.getStartDetail().getNextAssignee(), "isEnginee", false)));
 		}
 	}
 
 	@Override
-	public void examine(Account engineeDep, String taskId, ExamineDetail examineDetail) {
-		findBytaskId(taskId).setExamineDetail(examineDetail);
-		completeTask(taskId,
-				() -> taskService.complete(taskId, ImmutableMap.of("engineeDep", engineeDep.getLoginId())));
+	public void examine(String taskId, CustomerServiceProcess process) throws Exception {
+		if (process.getExamineDetail().getReject()) {
+			// 被驳回，回退到完成工单节点
+			this.turnTransition(taskId, "completeStartDetail", null);
+		} else {
+			completeTask(taskId, () -> taskService.complete(taskId,
+					ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep())));
+		}
 	}
 
 	@Override
-	public void evaluating(Account servicer, String taskId, EvaluatingDetail evaluatingDetail) {
-		findBytaskId(taskId).setEvaluatingDetail(evaluatingDetail);
-		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("servicer", servicer.getLoginId())));
+	public void evaluating(String taskId, CustomerServiceProcess process) {
+		completeTask(taskId, () -> taskService.complete(taskId,
+				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())));
 	}
 
 	@Override
-	public void distribute(Account engineer, String taskId) {
-		completeTask(taskId, () -> taskService.complete(taskId, ImmutableMap.of("engineer", engineer.getLoginId())));
+	public void distribute(String taskId, CustomerServiceProcess process) {
+		completeTask(taskId, () -> taskService.complete(taskId,
+				ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer())));
 	}
 
 	@Override
-	public void repair(String taskId, RepairDetail repairDetail) {
-		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
-		customerServiceProcess.setRepairDetail(repairDetail);
-		customerServiceProcess.setFinishType(FinishType.FINISHED);
+	public void repair(String taskId, CustomerServiceProcess process) {
+		process.setFinishType(FinishType.FINISHED);
 		completeTask(taskId, () -> taskService.complete(taskId));
 	}
 
 	@Override
-	public void entrust(String taskId, Account mandatary, String reason) {
+	public void entrust(String taskId, Account mandatary, String reason, CustomerServiceProcess process) {
 		taskService.setAssignee(taskId, mandatary.getLoginId());// 任务委托
 		// 完成相应的流程记录
 		entrustProcessRecord(taskId, mandatary, reason);
