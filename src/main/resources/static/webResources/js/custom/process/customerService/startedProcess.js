@@ -8,12 +8,17 @@ $(document).ready(function() {
 		   processDatas:[],
 	   },
 	   methods: {
-		   detail: function(taskId){
+		   detail: function(id){
 		   		  
 		   },
 		   rejectRewrit: function(id){
 			   window.location.href="/customerServiceProcess/startProcess/form/view?processId="+id
 		   }
+	   },
+	   filters: {
+		  dateFormat: function (value) {
+			  return value.split(" ")[0];
+		  }
 	   },
 	 })
 	 
@@ -57,7 +62,6 @@ $(document).ready(function() {
 			data : params,
 			type : 'get',
 			dataType : 'json',
-			async : false,
 			success : function( data ) {
 				pageNum=data.total;
 				page=data.page;

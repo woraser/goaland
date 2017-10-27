@@ -189,5 +189,16 @@ public class AccountController extends BaseController<Account> {
 	public JSONObject checkExist(@QuerydslPredicate(root = Account.class) Predicate predicate) throws Exception {
 		return new JSONObject(ImmutableMap.of("result", accountService.exists(predicate)));
 	}
+	
+	/***
+	 * 判断是否是depCode这个部门的人
+	 * 
+	 * @param depCode
+	 * @return
+	 */
+	@RequestMapping(value = "/account/checkDep", method = RequestMethod.GET)
+	public JSONObject checkDep(@RequestParam("depCode")String depCode){
+		return new JSONObject(ImmutableMap.of("result", "success","dep",sessionComponent.getCurrentUser().getDepartment().getCode().equals(depCode)));
+	}
 
 }

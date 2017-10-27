@@ -123,7 +123,7 @@
                             	{{processData["agreementStatus.agreement.name"]}}
                         </div>
                         <div v-if="'agreementStatus.agreement.name' in processData" class="process-applyTime">
-                            {{processData["agreementStatus.beginTime"]}} - {{processData["agreementStatus.endTime"]}}
+                            {{processData["agreementStatus.beginTime"] | dateFormat}} - {{processData["agreementStatus.endTime"] | dateFormat}}
                         </div>
                     </div>
                     <div class="process-border-right" >
@@ -145,7 +145,7 @@
                             </button>
                         </div>
                         <div class="detail-button">
-                            <button v-on:click="detail(processData['task.id'])" class="detailbutton" th:text="#{customerService.detail}">
+                            <button v-on:click="detail(processData['id'])" class="detailbutton" th:text="#{customerService.detail}">
                                 	详情
                             </button>
                         </div>

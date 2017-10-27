@@ -22,7 +22,7 @@
 						<li shiro:hasPermission="roleFunctionGroupMgr:view"><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">权限组管理</span></a></li>
 					</ul>
 				</li>
-				<li class="has-sub"  shiro:hasPermission="customServiceProcess:view">
+				<li class="has-sub" shiro:hasPermission="customServiceProcess:view">
 					<a href="#" class="">
 					<i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text" th:text="#{customServiceProcess}">售后流程</span>
 					<span class="arrow"></span>
@@ -30,8 +30,8 @@
 					<ul class="sub">
 						<li shiro:hasPermission="customServiceProcessTaskStarted:view"><a th:href="@{/customerServiceProcess/startedProcess/view(menuId=customServiceProcessTaskStarted)}"><span class="sub-menu-text" th:text="#{customServiceProcessTaskStarted}">我发起的任务</span></a></li>
 						<li shiro:hasPermission="customServiceProcessTaskToDo:view"><a th:href="@{/customerServiceProcess/runtimeTask/view(menuId=customServiceProcessTaskToDo)}"><span class="sub-menu-text" th:text="#{customServiceProcessTaskToDo}">我待办的任务</span></a></li>
-						<li shiro:hasPermission="customServiceProcessHistoricTasks:view"><a><span class="sub-menu-text" th:text="#{customServiceProcessHistoricTasks}">我办过的任务</span></a></li>
-						<li shiro:hasPermission="customServiceProcessAllTaks:view"><a><span class="sub-menu-text" th:text="#{customServiceProcessAllTaks}">我办过的任务</span></a></li>
+						<li shiro:hasPermission="customServiceProcessHistoricTasks:view"><a th:href="@{/customerServiceProcess/historicTasks/view(menuId=customServiceProcessHistoricTasks)}"><span class="sub-menu-text" th:text="#{customServiceProcessHistoricTasks}">我办过的任务</span></a></li>
+						<li shiro:hasPermission="customServiceProcessAllProcesses:view"><a th:href="@{/customerServiceProcess/allProcesses/view(menuId=customServiceProcessAllProcesses)}"><span class="sub-menu-text" th:text="#{customServiceProcessAllProcesses}">任务总览</span></a></li>
 					</ul>
 				</li>
 				<li shiro:hasPermission="documentMgr:view">

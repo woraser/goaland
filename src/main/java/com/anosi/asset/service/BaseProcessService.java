@@ -28,7 +28,6 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * 设置运行时属性
 	 * @param t
 	 * @param task
-	 * @param runtimeService
 	 * @return
 	 */
 	T setRunTimeValueForProcess(T t,Task task);
@@ -37,7 +36,6 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * 设置historic属性
 	 * @param t
 	 * @param historicTaskInstance
-	 * @param historyService
 	 * @return
 	 */
 	T setHistoricValueForProcess(T t,HistoricTaskInstance historicTaskInstance);
@@ -45,6 +43,8 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	/***
 	 * 为T设置HistoricProcessInstance
 	 * 内部通过调用父接口的findAndSetRunTimeValue来减少重复代码
+	 * 
+	 * @param instance
 	 * @return
 	 */
 	T findAndSetInstanceValue(HistoricProcessInstance instance);
@@ -52,6 +52,8 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	/***
 	 * 为T设置运行时属性
 	 * 内部通过调用父接口的findAndSetRunTimeValue来减少重复代码
+	 * 
+	 * @param task
 	 * @return
 	 */
 	T findAndSetRunTimeValue(Task task);
@@ -59,28 +61,35 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	/***
 	 * 为T设置historic属性
 	 * 内部通过调用父接口的findAndSetHistoricValue来减少重复代码
+	 * 
+	 * @param historicTaskInstance
 	 * @return
 	 */
 	T findAndSetHistoricValue(HistoricTaskInstance historicTaskInstance);
 	
 	/***
 	 * 获取所有发起的流程
+	 * 
 	 * @param pageable
-	 * @param taskQuery
+	 * @param historicProcessInstanceQuery
 	 * @return
 	 */
 	public Page<T> findHistoricProcessInstance(Pageable pageable,HistoricProcessInstanceQuery historicProcessInstanceQuery);
 	
 	/***
 	 * 获取等待办理的任务
+	 * 
 	 * @param pageable
+	 * @param taskQuery
 	 * @return
 	 */
 	Page<T> findRuntimeTasks(Pageable pageable,TaskQuery taskQuery);
 	
 	/***
 	 * 获取办理过的任务
+	 * 
 	 * @param pageable
+	 * @param historicTaskInstanceQuery
 	 * @return
 	 */
 	Page<T> findHistoricTasks(Pageable pageable,HistoricTaskInstanceQuery historicTaskInstanceQuery);
@@ -156,6 +165,18 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	Page<T> findHistoricTasks(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
 	
 	/***
+	 * 获取所有发起的流程，默认实现
+	 * 
+	 * @param pageable
+	 * @param searchContent
+	 * @param timeType
+	 * @param beginTime
+	 * @param endTime
+	 * @return
+	 */
+	Page<T> findAllProcesses(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
+	
+	/***
 	 * 查出下一步任务id，发给下一步代办人
 	 * @param t
 	 * @param processInstanceId
@@ -186,5 +207,5 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * @return
 	 */
 	public List<String> getProcessInstanceIdsBySearchContent(String searchContent);
-	
+
 }

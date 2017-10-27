@@ -111,7 +111,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	public Page<T> findHistoricProcessInstance(Pageable pageable,
 			HistoricProcessInstanceQuery historicProcessInstanceQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-		int maxResults = firstResult + pageable.getPageSize();
+		int maxResults = pageable.getPageSize();
 
 		List<HistoricProcessInstance> instances = historicProcessInstanceQuery.listPage(firstResult, maxResults);
 		long total = historicProcessInstanceQuery.count(); // 总数
@@ -126,7 +126,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public Page<T> findRuntimeTasks(Pageable pageable, TaskQuery taskQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-		int maxResults = firstResult + pageable.getPageSize();
+		int maxResults = pageable.getPageSize();
 
 		List<Task> tasks = taskQuery.listPage(firstResult, maxResults); // 分页task
 		long total = taskQuery.count(); // task总数
@@ -141,7 +141,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Override
 	public Page<T> findHistoricTasks(Pageable pageable, HistoricTaskInstanceQuery historicTaskInstanceQuery) {
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-		int maxResults = firstResult + pageable.getPageSize();
+		int maxResults = pageable.getPageSize();
 
 		List<HistoricTaskInstance> historicTaskInstances = historicTaskInstanceQuery.listPage(firstResult, maxResults);
 		long total = historicTaskInstanceQuery.count(); // task总数
@@ -351,6 +351,42 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
+	public Page<T> findAllProcesses(Pageable pageable, String searchContent, String timeType, Date beginTime,
+			Date endTime) {
+		HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+				.processDefinitionKey(getDefinitionKey()).orderByProcessInstanceStartTime().desc();
+		if (beginTime != null) {
+			if ("start".equals(timeType)) {
+				historicProcessInstanceQuery.startedAfter(beginTime);
+			} else if ("end".equals(timeType)) {
+				historicProcessInstanceQuery.finishedAfter(endTime);
+			} else {
+				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (endTime != null) {
+			if ("start".equals(timeType)) {
+				historicProcessInstanceQuery.startedBefore(beginTime);
+			} else if ("end".equals(timeType)) {
+				historicProcessInstanceQuery.finishedBefore(endTime);
+			} else {
+				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (StringUtils.isNoneBlank(searchContent)) {
+			List<String> processInstanceIdsBySearchContent = getProcessInstanceIdsBySearchContent(searchContent);
+			if (!CollectionUtils.isEmpty(processInstanceIdsBySearchContent)) {
+				historicProcessInstanceQuery
+						.processInstanceIds(new HashSet<>(getProcessInstanceIdsBySearchContent(searchContent)));
+			} else {
+				// 如果查询结果为null,返回空的page
+				return new PageImpl<>(new ArrayList<>(), pageable, 0);
+			}
+		}
+		return findHistoricProcessInstance(pageable, historicProcessInstanceQuery);
+	}
+
+	@Override
 	public T findBytaskId(String taskId) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		return findByProcessInstanceId(task.getProcessInstanceId());
@@ -362,7 +398,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		for (Task task : tasks) {
 			// 如果是新生成的任务
 			if (processRecordService.findByTaskIdNotEnd(task.getId()) == null) {
-				if(StringUtils.isNoneBlank(task.getAssignee())){
+				if (StringUtils.isNoneBlank(task.getAssignee())) {
 					messageInfoForAssignee(t, task.getId(), accountService.findByLoginId(task.getAssignee()));
 				}
 			}

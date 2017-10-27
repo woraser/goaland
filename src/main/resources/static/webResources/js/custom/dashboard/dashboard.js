@@ -13,7 +13,6 @@ $(document).ready(function(){
 			url : "/devCategory/count",
 			type : 'get',
 			dataType : 'json',
-			async : false,
 			success : function( data ) {
 				devices.deviceDatas = data;
 			}

@@ -6,10 +6,14 @@ $(document).ready(function() {
 	   el: '#processes',
 	   data: {
 		   processDatas:[],
+		   customServiceDep:false,
 	   },
 	   methods: {
-		  handle: function (taskName,taskId,processId) {
-			 var func=function(){
+		   detail: function(id){
+		   		  
+		   },
+		   fillIn: function(id){
+		     var func=function(){
 				 if($("#customerServiceForm").valid()){
 					 $("#customerServiceForm").submit();
 					 return true;
@@ -17,11 +21,8 @@ $(document).ready(function() {
 					 return false;
 				 }
 			 }
-			 createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId+"&processId="+processId,func)
-		  },
-	   	  detail: function(id){
-	   		  
-	   	  },
+			 createModalPage("填写合同状态","/customerServiceProcess/fillInAgreement/view?processId="+id,func)
+		   }
 	   },
 	   filters: {
 		  dateFormat: function (value) {
@@ -30,18 +31,32 @@ $(document).ready(function() {
 	   },
 	 })
 	 
+	 // 判断是否是客服部的人
+	 $.ajax({
+			url : "/account/checkDep",
+			data : {"depCode" : "customServiceDep"},
+			type : 'get',
+			dataType : 'json',
+			success : function( data ) {
+				if(data.result=='success'){
+					processes.customServiceDep = data.dep
+				}
+			}
+		 });
+	 
 	 //每页显示多少行
 	 var rowNum=4;
 	 var page=0;//初始页
 	 var pageNum=0;//总页数
-	 var url='/customerServiceProcess/runtimeTask/data/REMOTE';
+	 var url='/customerServiceProcess/allProcesses/data/REMOTE';
 	 var sort;
 		 
 	 //请求参数
 	 var params={}
-	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime,task.id,task.name';//要获取的属性名
+	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime';//要获取的属性名
 	 params['size']=rowNum;
 	 params['sort']=sort;
+	 params['timeType']="start";
 	 params['searchContent']=null;
 	 
 	 var selects = new Vue({
@@ -65,17 +80,17 @@ $(document).ready(function() {
 			 delete params['endTime']
 		 }
 		 $.ajax({
-				url : url,
-				data : params,
-				type : 'get',
-				dataType : 'json',
-				success : function( data ) {
-					pageNum=data.total;
-					page=data.page;
-					processes.processDatas = data.content;
-					//刷新分页插件
-					createPage($("#dataPager"),pageNum,page,11,reloadContent)
-				}
+			url : url,
+			data : params,
+			type : 'get',
+			dataType : 'json',
+			success : function( data ) {
+				pageNum=data.total;
+				page=data.page;
+				processes.processDatas = data.content;
+				//刷新分页插件
+				createPage($("#dataPager"),pageNum,page,11,reloadContent)
+			}
 		 });
 	 }
 	 

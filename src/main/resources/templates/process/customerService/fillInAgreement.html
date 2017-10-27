@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	
+	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
+	
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/fillInAgreement.js" ></script>
+	
+</head>
+
+<body>
+	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+		<input type="hidden" id="processId" name="processId" th:value="${process.id}"/> 
+	    <fieldset>
+	    	<div style="width: 490px;height: 300px;padding-top: 3%">
+			    <div class="dialog-title">
+			        <div class="dialog-img">
+			            <img src="/webResources/img/icon/dialogtitle.png"/>
+			        </div>
+			        <div class="dialog-title-info">
+		            	<span th:text="#{customerService.customServiceDep}"></span>
+		               	&nbsp;&nbsp;&nbsp;
+		               	<span th:text="${session.user.name}"></span>
+			        </div>
+			    </div>
+			    <hr />
+			    <div class="form-group">
+		    		<label class="col-sm-3 control-label"  th:text="#{customerService.agreement.beginTime}" for="problemDescription">合同开始时间</label>  
+		    		<div class="col-sm-8">
+		    			<input type="text" th:field="*{agreementStatus.beginTime}" class="form-control" th:placeholder="#{customerService.agreement.beginTime}"/>
+    				</div>
+	    		</div>
+	    		<div class="form-group">
+		    		<label class="col-sm-3 control-label"  th:text="#{customerService.agreement.endTime}" for="problemDescription">合同结束时间</label>  
+		    		<div class="col-sm-8">
+		    			<input type="text" th:field="*{agreementStatus.endTime}" class="form-control" th:placeholder="#{customerService.agreement.endTime}"/>
+    				</div>
+	    		</div>
+			</div>
+	    	
+	    </fieldset>  
+	</form>  
+</body>
+
+</html>
+

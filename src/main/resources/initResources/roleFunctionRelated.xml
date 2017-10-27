@@ -22,7 +22,7 @@
 		</roleFunction>
 		<roleFunction roleFunctionPageId="customServiceProcessHistoricTasks" name="我办过的任务">
 		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessAllTaks" name="任务总览">
+		<roleFunction roleFunctionPageId="customServiceProcessAllProcesses" name="任务总览">
 		</roleFunction>
 	</roleFunction>
 	<roleFunction roleFunctionPageId="documentMgr" name="文档管理">

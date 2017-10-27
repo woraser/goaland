@@ -111,7 +111,6 @@ $(document).ready(function() {
 				},
 				type : 'get',
 				dataType : 'json',
-				async : false,
 				success : function( datas ) {
 					response($.each(datas,function(i,value) {
 						return {

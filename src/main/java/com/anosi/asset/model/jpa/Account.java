@@ -17,6 +17,13 @@ import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
 @Table(name = "account")
+/*@NamedEntityGraphs({
+		@NamedEntityGraph(name = "account.department", attributeNodes = @NamedAttributeNode(value = "roleList", subgraph = "depGroup"), // 延伸roles中的depGroup
+			subgraphs = {
+					@NamedSubgraph(name = "depGroup", attributeNodes = @NamedAttributeNode(value = "depGroup", subgraph = "department")), // 再延伸depGroup的department
+					@NamedSubgraph(name = "department", attributeNodes = @NamedAttributeNode(value = "department")) 
+			}), 
+})*/
 public class Account extends BaseEntity {
 
 	/**
@@ -32,7 +39,7 @@ public class Account extends BaseEntity {
 
 	private String password;
 
-	@Content(extractFields = { "roleList*.name","roleList*.depGroup.name","roleList*.depGroup.department.name" })
+	@Content(extractFields = { "roleList*.name", "roleList*.depGroup.name", "roleList*.depGroup.department.name" })
 	private List<Role> roleList = new ArrayList<>();
 
 	private boolean uploadDocument = false;// 是否上传过文件
@@ -158,13 +165,14 @@ public class Account extends BaseEntity {
 	public void setRoleFunctionGroupList(List<RoleFunctionGroup> roleFunctionGroupList) {
 		this.roleFunctionGroupList = roleFunctionGroupList;
 	}
-	
+
 	/***
 	 * 获取部门
+	 * 
 	 * @return
 	 */
 	@Transient
-	public Department getDepartment(){
+	public Department getDepartment() {
 		return roleList.get(0).getDepGroup().getDepartment();
 	}
 

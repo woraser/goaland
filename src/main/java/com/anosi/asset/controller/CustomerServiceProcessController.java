@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.exception.CustomRunTimeException;
@@ -85,7 +86,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * 发起流程
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/startProcess", method = RequestMethod.POST)
 	public JSONObject startProcess(@ModelAttribute("process") CustomerServiceProcess process,
@@ -214,6 +215,27 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 			@ModelAttribute("process") CustomerServiceProcess process) {
 		logger.debug("customerServiceProcess -> entrust");
 		customerServcieProcessService.entrust(taskId, accountService.findByLoginId(mandatary), reason, process);
+		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
+	 * 进入填写合同状态的页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/fillInAgreement/view", method = RequestMethod.GET)
+	public ModelAndView toViewFillInAgreement() {
+		return new ModelAndView("/process/customerService/fillInAgreement");
+	}
+
+	/***
+	 * 进入填写合同状态的页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/fillInAgreement", method = RequestMethod.POST)
+	public JSONObject toFillInAgreement(@ModelAttribute("process") CustomerServiceProcess process) {
+		customerServcieProcessService.save(process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

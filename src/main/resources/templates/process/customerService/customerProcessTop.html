@@ -20,9 +20,9 @@
 		</div>
 		<div class="companyMgr-page">
     		<div class="company-tab">
-		        <a href="#" style="text-decoration: none" shiro:hasPermission="customServiceProcessAllTaks:view">
-		            <div class="company-subtab " style="margin-left: 2%">
-		                <div class="right-border" th:text="#{customServiceProcessAllTaks}">
+		        <a th:href="@{/customerServiceProcess/allProcesses/view(menuId=customServiceProcessAllProcesses)}" style="text-decoration: none" shiro:hasPermission="customServiceProcessAllProcesses:view">
+		            <div th:class="${session.menuId=='customServiceProcessAllProcesses'?'company-subtab tab-active':'company-subtab'}" style="margin-left: 2%">
+		                <div class="right-border" th:text="#{customServiceProcessAllProcesses}">
 		                	任务总览
 		                </div>
 		            </div>
@@ -42,8 +42,8 @@
 		                </div>
 		            </div>
 		        </a>
-		        <a href="#" style="text-decoration: none" shiro:hasPermission="customServiceProcessHistoricTasks:view">
-		            <div class="company-subtab">
+		        <a th:href="@{/customerServiceProcess/historicTasks/view(menuId=customServiceProcessHistoricTasks)}" style="text-decoration: none" shiro:hasPermission="customServiceProcessHistoricTasks:view">
+		            <div th:class="${session.menuId=='customServiceProcessHistoricTasks'?'company-subtab tab-active':'company-subtab'}">
 		                <div class="right-border" th:text="#{customServiceProcessHistoricTasks}">
 		                	我办过的任务
 		                </div>

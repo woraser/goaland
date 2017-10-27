@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.anosi.asset.model.elasticsearch.Content;
 
@@ -91,7 +92,7 @@ public class CustomerServiceProcess extends BaseProcess {
 	public void setAgreementStatus(AgreementStatus agreementStatus) {
 		this.agreementStatus = agreementStatus;
 	}
-	
+
 	public DistributeDetail getDistributeDetail() {
 		return distributeDetail;
 	}
@@ -394,6 +395,15 @@ public class CustomerServiceProcess extends BaseProcess {
 
 		public void setEndTime(Date endTime) {
 			this.endTime = endTime;
+		}
+
+		@Transient
+		public Agreement getAgreement() {
+			if (System.currentTimeMillis() < endTime.getTime()) {
+				return Agreement.UNDERGUARANTEE;
+			} else {
+				return Agreement.BEYONDGUARANTEE;
+			}
 		}
 
 	}

@@ -32,7 +32,6 @@ $(document).ready(function() {
 				data : params,
 				type : 'get',
 				dataType : 'json',
-				async : false,
 				success : function( data ) {
 					pageNum=data.total;
 					page=data.page;
@@ -83,7 +82,6 @@ $(document).ready(function() {
 			data : params,
 			type : 'get',
 			dataType : 'json',
-			async : false,
 			success : function( data ) {
 				pageNum=data.total;
 				page=data.page;
@@ -118,7 +116,6 @@ $(document).ready(function() {
 				},
 				type : 'get',
 				dataType : 'json',
-				async : false,
 				success : function( datas ) {
 					response($.each(datas,function(i,value) {
 						return {

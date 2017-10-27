@@ -71,7 +71,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		process.setFinishType(FinishType.REAMIN);
 		process.setApplicant(sessionComponent.getCurrentUser());
 		process.setFile(true);
-		
+
 		customerServiceProcessDao.save(process);
 		customerServiceProcessContentService.saveContent(process);
 
@@ -201,10 +201,13 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	public List<String> getProcessInstanceIdsBySearchContent(String searchContent) {
 		List<CustomerServiceProcessContent> contents = customerServiceProcessContentService
 				.findByContent(searchContent);
-		List<String> ids = contents.parallelStream()
-				.map(c -> customerServiceProcessDao.getOne(Long.parseLong(c.getId())).getProcessInstanceId())
-				.collect(Collectors.toList());
-		return ids;
+		// 所有CustomerServiceProcess的id
+		List<Long> ids = contents.parallelStream().map(c -> Long.parseLong(c.getId())).collect(Collectors.toList());
+		List<CustomerServiceProcess> allCustomerServiceProcesses = customerServiceProcessDao.findAll(ids);
+		// 所有processInstanceIds
+		List<String> processInstanceIds = allCustomerServiceProcesses.parallelStream()
+				.map(c -> c.getProcessInstanceId()).collect(Collectors.toList());
+		return processInstanceIds;
 	}
 
 }

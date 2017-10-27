@@ -67,7 +67,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 			@RequestParam(value = "timeType", required = false) String timeType,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
 			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
-		logger.info("find runtimeTask");
+		logger.info("find startedProcess");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
@@ -75,7 +75,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 				getPorcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime), rowId,
 				showAttributes, showType);
 	}
-	
+
 	/****
 	 * 在执行update前，先获取持久化的process对象
 	 * 
@@ -96,9 +96,9 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @return
 	 */
 	@RequestMapping(value = "/startProcess/form/view", method = RequestMethod.GET)
-	public ModelAndView toViewStartProcessForm(@ModelAttribute("process")T process) throws Exception {
+	public ModelAndView toViewStartProcessForm() throws Exception {
 		logger.debug("view startProcess form");
-		return new ModelAndView("process/" + definitionKey + "/startProcessForm", "process", process)
+		return new ModelAndView("process/" + definitionKey + "/startProcessForm")
 				.addAllObjects(getStartProcessObjects());
 	}
 
@@ -140,7 +140,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 			@RequestParam(value = "searchContent", required = false) String searchContent,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
 			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
-		logger.info("find customerServiceProcess runtimeTask");
+		logger.info("find runtimeTask");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
@@ -157,11 +157,11 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/runtimeTask/form/view", method = RequestMethod.GET)
-	public ModelAndView toViewRunTimeTaskForm(T process, @RequestParam String taskId) throws Exception {
+	public ModelAndView toViewRunTimeTaskForm(@RequestParam String taskId) throws Exception {
 		logger.debug("view startProcess form");
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		return new ModelAndView("process/" + definitionKey + "/runtimeTask-" + task.getTaskDefinitionKey(), "process",
-				process).addObject("task", task).addAllObjects(getRunTimeTaskObjects(task.getTaskDefinitionKey()));
+		return new ModelAndView("process/" + definitionKey + "/runtimeTask-" + task.getTaskDefinitionKey())
+				.addObject("task", task).addAllObjects(getRunTimeTaskObjects(task.getTaskDefinitionKey()));
 	}
 
 	/***
@@ -202,11 +202,53 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 			@RequestParam(value = "timeType", required = false) String timeType,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
 			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
-		logger.info("find customerServiceProcess runtimeTask");
+		logger.info("find historicTasks");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
 		return parseToJson(getPorcessService().findHistoricTasks(pageable, searchContent, timeType, beginTime, endTime),
+				rowId, showAttributes, showType);
+	}
+
+	/***
+	 * 进入查看<b>所有发起任务</b>的页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/allProcesses/view", method = RequestMethod.GET)
+	public ModelAndView toViewAllProcesses() {
+		logger.debug("view allProcesses");
+		return new ModelAndView("process/" + definitionKey + "/allProcesses");
+	}
+
+	/***
+	 * 获取所有发起的流程
+	 * 
+	 * @param showType
+	 * @param pageable
+	 * @param showAttributes
+	 * @param rowId
+	 * @param searchContent
+	 * @param timeType
+	 * @param beginTime
+	 * @param endTime
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/allProcesses/data/{showType}", method = RequestMethod.GET)
+	public JSONObject findAllProcesses(@PathVariable ShowType showType,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
+			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "searchContent", required = false) String searchContent,
+			@RequestParam(value = "timeType", required = false) String timeType,
+			@RequestParam(value = "beginTime", required = false) Date beginTime,
+			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
+		logger.info("find allProcesses");
+		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
+
+		return parseToJson(getPorcessService().findAllProcesses(pageable, searchContent, timeType, beginTime, endTime),
 				rowId, showAttributes, showType);
 	}
 

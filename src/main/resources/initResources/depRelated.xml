@@ -35,4 +35,9 @@
 			<role code="qualityCheckingClerk" name="质检部文员"></role>
 		</depGroup>
 	</department>
+	<department code="customServiceDep" name="客服部">
+		<depGroup code="customServicClerkGroup" name="文员组">
+			<role code="customServicClerk" name="客服部文员"></role>
+		</depGroup>
+	</department>
 </departments>

@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title th:text="#{customerService.tasksToDo}">售后流程-我待办的任务</title>
+	<title th:text="#{customerService.historicTasks}">售后流程-我待办的任务</title>
 	
 	<link href="/webResources/css/custom/process.css" rel="stylesheet"/>
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
@@ -13,7 +13,7 @@
 	
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
-	<script type="text/javascript" src="/webResources/js/custom/process/customerService/runtimeTask.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/historicTasks.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/page/createPageDefault.js" ></script>
@@ -110,7 +110,7 @@
                             	{{processData["agreementStatus.agreement.name"]}}
                         </div>
                         <div v-if="'agreementStatus.agreement.name' in processData" class="process-applyTime">
-                           {{processData["agreementStatus.beginTime"] | dateFormat}} - {{processData["agreementStatus.endTime"] | dateFormat}}
+                            {{processData["agreementStatus.beginTime"] | dateFormat}} - {{processData["agreementStatus.endTime"] | dateFormat}}
                         </div>
                     </div>
                     <div class="process-border-right" >
@@ -126,11 +126,6 @@
                     <div class="process-border-right" >
                     </div>
                     <div class="process-Info-fourth">
-						<div class="doing-button">
-                            <button v-on:click="handle(processData['task.name'],processData['task.id'],processData['id'])" class="doingbutton" th:text="#{customerService.handle}">
-                               	 办理
-                            </button>
-                        </div>
                         <div class="detail-button">
                             <button v-on:click="detail(processData['id'])" class="detailbutton" th:text="#{customerService.detail}">
                                 	详情
