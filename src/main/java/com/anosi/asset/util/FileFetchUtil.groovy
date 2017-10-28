@@ -7,7 +7,7 @@ import com.anosi.asset.exception.CustomRunTimeException
 class FileFetchUtil {
 	
 	public static enum Suffix{
-		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,DWG
+		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF
 	}
 
 	/***
@@ -43,7 +43,7 @@ class FileFetchUtil {
 	 * @throws FileNotFoundException
 	 */
 	public static String fetchContent(File file) throws FileNotFoundException {
-		def suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1)
+		def suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1).toUpperCase()
 		return fetchContent(suffix, new FileInputStream(file))
 	}
 
@@ -53,17 +53,22 @@ class FileFetchUtil {
 	 * @param is
 	 * @return
 	 */
-	public static String fetchContent(Suffix suffix, InputStream is) {
-		return "fetch$suffix"(is)
+	public static String fetchContent(String suffix, InputStream is) {
+		if(checkSuffix(suffix)){
+			return "fetch$suffix"(is)
+		}else{
+			return ""
+		}
 	}
 
-	private static void checkSuffix(String suffix){
+	private static Boolean checkSuffix(String suffix){
 		try {
 			//如果不在枚举类中直接报错
 			Suffix.valueOf(suffix)
 		} catch (IllegalArgumentException e) {
-			throw new CustomRunTimeException("不支持该类型文件:" + suffix.toLowerCase())
+			return false
 		}
+		return true
 	}
 
 	/***
@@ -127,14 +132,4 @@ class FileFetchUtil {
 		return TXTUtil.readTXT(is)
 	}
 	
-	/***
-	 * 读取cad的文本内容
-	 * 
-	 * @param is
-	 * @return
-	 */
-	private static String fetchDWG(InputStream is){
-		return null
-	}
-
 }

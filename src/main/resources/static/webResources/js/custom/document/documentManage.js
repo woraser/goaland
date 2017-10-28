@@ -7,6 +7,8 @@ $(document).ready(function() {
 	  data: {
 	    fileDatas:[],
 	    seenDetail:false,
+	    pdf:['TXT','XLS','XLSX','DOC','DOCX','CSV','PDF','DWG'],
+	    picture:['GIF','PNG','JPEG','BMP','ICON'],
 	  }
 	})
 	 //每页显示多少行

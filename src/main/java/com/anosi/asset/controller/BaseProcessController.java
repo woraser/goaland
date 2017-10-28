@@ -96,9 +96,9 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @return
 	 */
 	@RequestMapping(value = "/startProcess/form/view", method = RequestMethod.GET)
-	public ModelAndView toViewStartProcessForm() throws Exception {
+	public ModelAndView toViewStartProcessForm(@ModelAttribute("process") T process) throws Exception {
 		logger.debug("view startProcess form");
-		return new ModelAndView("process/" + definitionKey + "/startProcessForm")
+		return new ModelAndView("process/" + definitionKey + "/startProcessForm", "process", process)
 				.addAllObjects(getStartProcessObjects());
 	}
 
@@ -251,5 +251,5 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		return parseToJson(getPorcessService().findAllProcesses(pageable, searchContent, timeType, beginTime, endTime),
 				rowId, showAttributes, showType);
 	}
-
+	
 }

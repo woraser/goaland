@@ -15,10 +15,12 @@ import com.anosi.asset.component.PasswordEncry;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.DocumentType;
+import com.anosi.asset.model.jpa.Project;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.DevCategoryService;
 import com.anosi.asset.service.DeviceService;
 import com.anosi.asset.service.DocumentTypeService;
+import com.anosi.asset.service.ProjectService;
 import com.anosi.asset.service.RoleService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,6 +38,8 @@ public class InitData {
 	private DeviceService deviceService;
 	@Autowired
 	private DevCategoryService devCategoryService;
+	@Autowired
+	private ProjectService projectService;
 
 	@Test
 	@Rollback(false)
@@ -44,6 +48,8 @@ public class InitData {
 		initCustomerServicer();
 		initEngineer();
 		initType();
+		initDevice();
+		initProject();
 	}
 	
 	@Test
@@ -123,6 +129,16 @@ public class InitData {
 		device.setLongitude(114.3118287971);
 		device.setLatitude(30.5984342798);
 		deviceService.setDeviceDistrict(device);
+	}
+	
+	@Test
+	@Rollback(false)
+	public void initProject(){
+		Project project = new Project();
+		project.setNumber("123abc");
+		project.setName("测试1");
+		project.setLocation("无锡");
+		projectService.save(project);
 	}
 	
 }

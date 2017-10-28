@@ -2,6 +2,111 @@
  * 
  */
 $(document).ready(function() {
+	 var objectId = null;
+	 var hotbox = null;
+	 
+	 seajs.config({
+	    base: '/webResources/plugins/hotbox/src'
+	 });
+		
+	//初始化
+	seajs.use(['hotbox'],function (hotbox){
+		hotbox = new hotbox('#hotbox');
+	    hotbox.control();
+	    hotbox.hintDeactiveMainState = true;
+	    hotbox.openOnContextMenu = true;
+	    var main = hotbox.state('main');
+	    var ringButtons = '下载|预览|删除附件|附件信息'.split('|');
+	    ringButtons.forEach(function(button) {
+	        main.button({
+	            position: 'ring',
+	            label: button,
+				action:function(){
+					if(button=="下载"){
+						window.location.href="/fileDownload/"+objectId
+					}else if(button=="预览"){
+						$("#"+objectId).click()
+					}else if(button=="删除附件"){
+						$.blockUI({message: '<img src="/webResources/img/loading/loading.gif" /> '});
+						$.ajax({
+							url : '/deleteUploadFile/'+objectId,
+							type : 'post',
+							dataType : 'json',
+							success : function( data ) {
+								$.unblockUI();
+								if(data.result=='success'){
+									loadFile();//重新加载文件列表
+									info('操作成功');
+								}else if(data.result=='error'){
+									warning('操作失败:'+data.message);
+								}else{
+									warning('操作失败');
+								}
+							}
+						});
+					}else if(button=="附件信息"){
+						createModalPageToView("附件信息","/fileMetaData/"+objectId+"/view")
+					}
+					objectId = null;
+				},
+				enable:function(){
+					if(objectId==null){
+						return false;							
+					}else{
+						return true;	
+					}
+				}
+	        });
+	    });
+	    
+	    //右键显示
+	    $(document).on("contextmenu","#existFiles",function(event){
+	    	// 获取相对文档坐标
+			var e = event || window.event;
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = e.pageX || e.clientX + scrollX;
+            var y = e.pageY || e.clientY + scrollY;
+            hotbox.active('main', { x: x, y: y });	
+			return false;
+		})
+		 
+		//单击隐藏
+		document.onmousedown=function(e){
+			hotbox.active("idle");	
+			objectId = null;
+		} 
+	 });
+	
+	 var files = new Vue({
+		 el: '#customerServiceForm',
+		 data: {
+			 fileDatas : [],// 用来渲染已上传附件
+		 }
+	 })
+	 
+	 var loadFile = function(){
+		 if($("#reject").val()=="true"){
+			 $.ajax({
+				url : '/fileDownload/list/group/customerService_'+$("#processName").val(),
+				type : 'get',
+				dataType : 'json',
+				success : function( data ) {
+					files.fileDatas = data.content
+					$.each(data.content,function(){
+						var stringObjectId = this.stringObjectId;
+						//绑定右击事件
+						$(document).on("contextmenu","#"+stringObjectId,function(){
+							objectId = stringObjectId;
+						})
+					})
+				}
+			 });
+		 }
+	 }
+	 //加载文件列表
+	 loadFile();
+	 
 	$("#customerServiceForm").validate({
 		//debug:true,
 		rules : {

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,21 +65,28 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public void startProcess(CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception {
+		ProcessInstance processInstance;
 		// 启动流程，因为下一步为完善清单，所以将发起人设置为下一步的办理人
-		identityService.setAuthenticatedUserId(sessionComponent.getCurrentUser().getLoginId());
-		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey());
-		process.setProcessInstanceId(processInstance.getId());
-		process.setFinishType(FinishType.REAMIN);
-		process.setApplicant(sessionComponent.getCurrentUser());
-		process.setFile(true);
+		if (StringUtils.isBlank(process.getProcessInstanceId())) {
+			identityService.setAuthenticatedUserId(sessionComponent.getCurrentUser().getLoginId());
+			processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey());
+			process.setProcessInstanceId(processInstance.getId());
+			process.setFinishType(FinishType.REAMIN);
+			process.setApplicant(sessionComponent.getCurrentUser());
 
-		customerServiceProcessDao.save(process);
+			customerServiceProcessDao.save(process);
+		} else {
+			processInstance = runtimeService.createProcessInstanceQuery()
+					.processInstanceId(process.getProcessInstanceId()).singleResult();
+		}
+
 		customerServiceProcessContentService.saveContent(process);
 
 		// 创建记录
 		createNewProcessRecord(processInstance.getId());
 
 		if (multipartFiles != null && multipartFiles.length != 0) {
+			process.setFile(true);
 			for (MultipartFile multipartFile : multipartFiles) {
 				this.fileMetaDataService.saveFile("customerService_" + process.getName(),
 						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());

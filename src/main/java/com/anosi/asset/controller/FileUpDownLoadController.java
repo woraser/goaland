@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.component.I18nComponent;
@@ -32,6 +33,7 @@ import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.util.FileConvertUtil;
 import com.anosi.asset.util.FileConvertUtil.Suffix;
+import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
 
 /***
@@ -49,6 +51,19 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	private FileMetaDataService fileMetaDataService;
 	@Autowired
 	private I18nComponent i18nComponent;
+
+	/***
+	 * 查看某个文件的元数据
+	 * 
+	 * @param objectId
+	 * @return
+	 */
+	@RequestMapping(value = "/fileMetaData/{objectId}/view", method = RequestMethod.GET)
+	public ModelAndView toViewFileMetaData(@PathVariable BigInteger objectId) {
+		logger.debug("view FileMetaData");
+		FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
+		return new ModelAndView("fileMetaData/viewFileMetaData", "fileMetaData", fileMetaData);
+	}
 
 	/***
 	 * 上传文件
@@ -166,6 +181,19 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 			}
 		};
 		return fileResponse(objectId, response, doResponseOut);
+	}
+
+	/***
+	 * 删除上传的文件
+	 * 
+	 * @param objectId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/deleteUploadFile/{objectId}", method = RequestMethod.POST)
+	public JSONObject deleteUploadFile(@PathVariable BigInteger objectId) throws Exception {
+		fileMetaDataService.deleteFile(fileMetaDataService.findByObjectId(objectId));
+		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
 	/***

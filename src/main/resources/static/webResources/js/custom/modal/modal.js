@@ -44,6 +44,33 @@ function createModalPage(title,url,func) {
     dialog.open();
 }
 
+//展示页面
+function createModalPageToView(title,url) {
+	var dialog = new BootstrapDialog({
+		title: title,
+        message: function(dialogRef){
+            var $message =$('<div></div>').load(url);
+            return $message;
+        },
+        buttons: [{
+            id: 'btn-1',
+            label: '确定',
+            cssClass: 'btn-info',
+        }],
+        closable: false,
+        draggable: true,
+    });
+	dialog.realize();
+	
+	var btn1 = dialog.getButton('btn-1');
+	
+	btn1.click(function(event){
+		dialog.close();
+	});
+   
+    dialog.open();
+}
+
 function warning(message){
 	var dialog = new BootstrapDialog({
 		title: '错误',

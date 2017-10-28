@@ -17,7 +17,7 @@ $(document).ready(function() {
 					$.unblockUI();
 					if(data.result=='success'){
 						var func = function(){
-							window.location.href="/technologyDocument/manage"
+							window.location.href="/technologyDocument/manage/view"
 						}
 						infoAndFunc('操作成功',func);
 					}else if(data.result=='error'){
@@ -37,7 +37,7 @@ $(document).ready(function() {
 		language: 'zh', //设置语言
 		maxFileCount: 10,
 		showUpload: false, //是否显示上传按钮
-		allowedFileExtensions: ["xlsx","xls","pdf","doc","docx","csv","txt","dwg"]
+		allowedFileExtensions: ["xlsx","xls","pdf","doc","docx","csv","txt","dwg","gif","png","jpeg","bmp","icon"]
 	});
 	 
 })

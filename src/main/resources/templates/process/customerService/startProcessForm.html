@@ -11,11 +11,18 @@
 	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
 	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/jquery-lighter/stylesheets/jquery.lighter.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/hotbox/hotbox.css" rel="stylesheet"/>
 	
 	<style type="text/css">
 		.form-control[readonly]{
 		    cursor: default;
 		    background-color: #c7c7c7;
+		}
+		.form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline {
+		    padding-top: 0px;
+		    margin-top: 0;
+		    margin-bottom: 0;
 		}
 	</style>
 	
@@ -30,6 +37,8 @@
 	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/fileinput/js/fileinput.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/fileinput/js/locales/zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-lighter/javascripts/jquery.lighter.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/hotbox/bower_components/seajs/dist/sea.js" ></script>
 	
 </head>
 
@@ -37,8 +46,10 @@
 	<div layout:fragment="content">
 		<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
 			<input type="hidden" id="processId" name="processId" th:value="${process.id}"/> 
+			<input type="hidden" id="processName" name="processName" th:value="${process.name}"/> 
+			<input type="hidden" id="reject" name="reject" th:value="${process.examineDetail.reject}"/> 
 	        <fieldset>
-				<div class="companyMgr-edge" style="height: 1200px">
+				<div class="companyMgr-edge" style="height: 1550px">
 				    <div class="company-top">
 				        <div class="company-big" th:text="#{customServiceProcess}">
 				            	业务流程
@@ -83,7 +94,7 @@
 				                    </div>
 				                    <div class="project-text">
 				                    	<div class="project-text-in">
-				                    		<input type="hidden" name="project.id" id="project.id" value=""/>
+				                    		<input type="hidden" th:field="*{project.id}"/>
 				                            <div class="project-text-left" th:text="#{customerService.projectNo}">
 				                               	 项目编号：
 				                            </div>
@@ -138,8 +149,8 @@
 				                    <div class="project-text">
 				                        <div class="form-group">
 				                            <label class="project-text-left" style="padding: 0%;font-weight: 300;width: 8.5%" th:text="#{customerService.productType}">产品类型：</label>
-				                            <div class="col-md-8" style="padding-left: 0%">
-				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"> <input th:field="*{startDetail.productType}" name="startDetail.productType" class="uniform" th:value="${productType}" th:text="${productType.name}" type="radio"/></label>
+				                            <div class="col-md-10" style="padding-left: 0%">
+				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"><input th:field="*{startDetail.productType}" name="startDetail.productType" class="uniform" th:value="${productType}" th:text="${productType.name}" type="radio"/></label>
 				                            </div>
 				                        </div>
 				                    </div>
@@ -233,7 +244,26 @@
 				                            </div>
 				                        </div>
 				                    </div>
-				                    <div class="project-text" style="margin-top: 6%">
+				                    <div th:if="${process.examineDetail.reject}" class="project-text" style="margin-top: 6%">
+				                        <div class="project-text-in">
+				                            <div class="project-text-left" th:text="#{customerService.uploadFile.exist}">
+				                               	 已上传附件
+				                            </div>
+				                            <div id="existFiles" class="project-text-right">
+				                            	<table>
+				                            		<tr>
+				                            			<td v-for="fileData in fileDatas"> 
+				                            				<a v-bind:href="'/fileDownload/'+fileData.stringObjectId" data-lighter="data-lighter">
+															  <img v-bind:src="'/fileDownload/'+fileData.stringObjectId" v-bind:id="fileData.stringObjectId" style="width: 80px;height: 80px;"/>
+															</a>
+				                            			</td>
+				                            		</tr>
+				                            	</table>
+				                            	
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="project-text" style="margin-top: 5%">
 				                        <div class="project-text-in">
 				                            <div class="project-text-left" th:text="#{customerService.uploadFile}">
 				                               	 上传附件
@@ -243,6 +273,7 @@
 				                            </div>
 				                        </div>
 				                    </div>
+				                    <div id="hotbox"></div>
 				                </div>            			
 				            </div>
 				        </div>

@@ -32,4 +32,16 @@ public class AbstractDocument implements Serializable{
 		return source == null ? null : new ObjectId(source.toString(16));
 	}
 	
+	/***
+	 * 由于前端不能识别bigInteger这种大数字，需要提供一个id的string版本
+	 * 
+	 * @return
+	 */
+	public String getStringId(){
+		if(id!=null){
+			return id.toString();
+		}
+		return null;
+	}
+	
 }

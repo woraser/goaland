@@ -8,7 +8,7 @@ import com.anosi.asset.util.FileConvertUtil.Picture
 class FileConvertUtil {
 
 	static enum Suffix{
-		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,GIF,PNG,JPEG,BMP,ICON,DWG
+		TXT,XLS,XLSX,DOC,DOCX,CSV,PDF,DWG
 	}
 
 	enum Picture{
@@ -30,6 +30,16 @@ class FileConvertUtil {
 		}else{
 			"convert$originalSuffix"(is,os,convertSuffix)
 		}
+	}
+	
+	static Boolean checkSuffix(String suffix){
+		try {
+			//如果不在枚举类中直接报错
+			Suffix.valueOf(suffix)
+		} catch (IllegalArgumentException e) {
+			return false
+		}
+		return true
 	}
 
 	private static boolean checkPicture(Suffix originalSuffix){

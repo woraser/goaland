@@ -10,12 +10,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -33,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.dao.elasticsearch.BaseElasticSearchDao;
 import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
-import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.AccountService;
@@ -42,7 +39,6 @@ import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.anosi.asset.util.FileConvertUtil;
 import com.anosi.asset.util.FileFetchUtil;
-import com.anosi.asset.util.FileFetchUtil.Suffix;
 
 @Service("technologyDocumentService")
 @Transactional
@@ -61,7 +57,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 	private FileMetaDataService fileMetaDataService;
 	@Autowired
 	private AccountService accountService;
-	
+
 	@Override
 	public BaseElasticSearchDao<TechnologyDocument, String> getRepository() {
 		return technologyDocumentDao;
@@ -75,41 +71,33 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 	@Override
 	public TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize, String type)
 			throws Exception {
-		byte[] byteArray = IOUtils.toByteArray(is);
-		String content;
-		try {
-			// 如果不在枚举类中直接报错
-			content = FileFetchUtil.fetchContent(
-					Suffix.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()),
-					new ByteArrayInputStream(byteArray));
-		} catch (IllegalArgumentException e) {
-			throw new CustomRunTimeException(MessageFormat.format(i18nComponent.getMessage("exception.unSupportSuffix"),
-					fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()));
-		}
-		return saveTechnologyDocument(fileName, new ByteArrayInputStream(byteArray), fileSize, content, type);
+		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, is, fileSize);
+		InputStream fileByObjectId = fileMetaDataService.getFileByObjectId(fileMetaData.getObjectId());
+		String content = FileFetchUtil.fetchContent(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase(),
+				fileByObjectId);
+		return saveTechnologyDocument(fileName, fileByObjectId, fileSize, content, type, fileMetaData);
 	}
 
 	private TechnologyDocument saveTechnologyDocument(String fileName, InputStream is, Long fileSize, String content,
-			String type) throws Exception {
+			String type, FileMetaData fileMetaData) throws Exception {
 		logger.debug("saveTechnologyDocument,fileName:{},fileSize:{}", fileName, fileSize);
-		byte[] byteArray = IOUtils.toByteArray(is);// 流复用
 
-		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, new ByteArrayInputStream(byteArray),
-				fileSize);
+		// 判断文件是否可以预览
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+		if (FileConvertUtil.checkSuffix(suffix)) {
+			// 为filemetadata存储预览pdf文件
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			FileConvertUtil.convert(fileMetaDataService.getFileByObjectId(fileMetaData.getObjectId()),
+					com.anosi.asset.util.FileConvertUtil.Suffix.valueOf(suffix), os,
+					com.anosi.asset.util.FileConvertUtil.Suffix.PDF);
 
-		// 为filemetadata存储预览pdf文件
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		FileConvertUtil.convert(new ByteArrayInputStream(byteArray),
-				com.anosi.asset.util.FileConvertUtil.Suffix
-						.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()),
-				os, com.anosi.asset.util.FileConvertUtil.Suffix.PDF);
-
-		// 预览文件的元数据
-		FileMetaData preview = fileMetaDataService.saveFile(type,
-				fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf", new ByteArrayInputStream(os.toByteArray()),
-				fileSize);
-		fileMetaData.setPreview(preview.getObjectId());
-		fileMetaDataService.save(fileMetaData);
+			// 预览文件的元数据
+			FileMetaData preview = fileMetaDataService.saveFile(type,
+					fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf",
+					new ByteArrayInputStream(os.toByteArray()), fileSize);
+			fileMetaData.setPreview(preview.getObjectId());
+			fileMetaDataService.save(fileMetaData);
+		}
 
 		TechnologyDocument td = new TechnologyDocument();
 		td.setContent(content);
@@ -124,12 +112,9 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 
 	@Override
 	public List<TechnologyDocument> createTechnologyDocument(List<File> files, String type) throws Exception {
-		List<String> contents = FileFetchUtil.fetchContent(files);
 		List<TechnologyDocument> documents = new ArrayList<>();
-		for (int i = 0; i < files.size(); i++) {
-			File file = files.get(i);
-			documents.add(saveTechnologyDocument(file.getName(), new FileInputStream(file), file.length(),
-					contents.get(i), type));
+		for (File file : files) {
+			documents.add(createTechnologyDocument(file.getName(), new FileInputStream(file), file.length(), type));
 		}
 		return documents;
 	}
@@ -137,14 +122,6 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 	@Override
 	public List<TechnologyDocument> createTechnologyDocument(MultipartFile[] multipartFiles, String type)
 			throws Exception {
-		List<String> suffixs = new ArrayList<>();
-		for (MultipartFile multipartFile : multipartFiles) {
-			String it = multipartFile.getOriginalFilename();
-			suffixs.add(it.substring(it.lastIndexOf(".") + 1));
-		}
-		// 先进行检查,提高效率,否则执行到一半发现问题就太浪费时间了
-		FileFetchUtil.checkSuffixs(suffixs);
-
 		List<TechnologyDocument> documents = new ArrayList<>();
 		for (MultipartFile multipartFile : multipartFiles) {
 			documents.add(createTechnologyDocument(multipartFile.getOriginalFilename(), multipartFile.getInputStream(),

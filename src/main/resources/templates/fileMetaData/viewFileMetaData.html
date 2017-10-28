@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	
+</head>
+
+<body>
+	<form class="form-horizontal" role="form" th:object="${fileMetaData}" id="fileMetaDataForm">
+	    <fieldset>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label" th:text="#{fileMetaData.fileName}" for="loginId"></label>  
+		    	<div class="col-sm-8">
+    				<input type="text" th:field="*{fileName}" class="form-control" th:placeholder="#{fileMetaData.fileName}" readonly="readonly"/>
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label" th:text="#{fileMetaData.fileSize}" for="loginId"></label>  
+		    	<div class="col-sm-8">
+    				<input type="text" th:field="*{fileSizeH}" class="form-control" th:placeholder="#{fileMetaData.fileSize}" readonly="readonly"/>
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label" th:text="#{fileSize.suffix}" for="loginId"></label>  
+		    	<div class="col-sm-8">
+    				<input type="text" th:field="*{suffix}" class="form-control" th:placeholder="#{fileSize.suffix}" readonly="readonly"/>
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label" th:text="#{fileMetaData.uploader}" for="loginId"></label>  
+		    	<div class="col-sm-8">
+    				<input type="text" th:field="*{uploader}" class="form-control" th:placeholder="#{fileMetaData.uploader}" readonly="readonly"/>
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label" th:text="#{fileMetaData.uploadTime}" for="loginId"></label>  
+		    	<div class="col-sm-8">
+    				<input type="text" th:field="*{uploadTime}" class="form-control" th:placeholder="#{fileMetaData.uploadTime}" readonly="readonly"/>
+    			</div>
+	    	</div>
+	    </fieldset>  
+	</form>  
+</body>
+
+</html>
+

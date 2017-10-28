@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie_theme_02.css"/>
 	<link rel="stylesheet" type="text/css" href="/webResources/css/custom/document.css"/>
 	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/jquery-lighter/stylesheets/jquery.lighter.css" rel="stylesheet"/>
 	
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
@@ -21,6 +22,7 @@
 	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/page/createPageDefault.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-lighter/javascripts/jquery.lighter.js" ></script>
 	
 </head>
 
@@ -69,7 +71,8 @@
 	                    </div>
 	                    <div class="handle">
 	                        <a v-bind:href="'/fileDownload/'+fileData.fileId"><img src="/webResources/img/file/download.png"/></a>
-	                        <a v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
+	                        <a v-if="pdf.indexOf(fileData.suffix) > 0 " v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
+	                    	<a v-if="picture.indexOf(fileData.suffix) > 0" v-bind:href="'/fileDownload/'+fileData.fileId" data-lighter="data-lighter"><img src="/webResources/img/file/preview.png"/></a>
 	                    </div>
 	                    <div v-if="seenDetail" style="color: #C1C1C1;" v-html="fileData.highLightContent"></div>
                 	</div>
