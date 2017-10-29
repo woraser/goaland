@@ -38,9 +38,9 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 	@Field(type = FieldType.Date, index = FieldIndex.not_analyzed, store = true)
 	private Date uploadTime;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
+	@Field(type = FieldType.String, index = FieldIndex.analyzed, searchAnalyzer = "ik_max_word", analyzer = "ik_max_word", store = true)
 	private String fileName;
-	
+
 	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String suffix;
 

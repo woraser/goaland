@@ -5,8 +5,6 @@ import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -37,7 +35,6 @@ import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
-import com.anosi.asset.util.FileConvertUtil;
 import com.anosi.asset.util.FileFetchUtil;
 
 @Service("technologyDocumentService")
@@ -84,20 +81,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 
 		// 判断文件是否可以预览
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
-		if (FileConvertUtil.checkSuffix(suffix)) {
-			// 为filemetadata存储预览pdf文件
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			FileConvertUtil.convert(fileMetaDataService.getFileByObjectId(fileMetaData.getObjectId()),
-					com.anosi.asset.util.FileConvertUtil.Suffix.valueOf(suffix), os,
-					com.anosi.asset.util.FileConvertUtil.Suffix.PDF);
-
-			// 预览文件的元数据
-			FileMetaData preview = fileMetaDataService.saveFile(type,
-					fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf",
-					new ByteArrayInputStream(os.toByteArray()), fileSize);
-			fileMetaData.setPreview(preview.getObjectId());
-			fileMetaDataService.save(fileMetaData);
-		}
+		fileMetaDataService.createPreview(suffix, type, fileName, fileSize, fileMetaData);
 
 		TechnologyDocument td = new TechnologyDocument();
 		td.setContent(content);
@@ -159,8 +143,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		// 如果查询内容不为空，那么默认查询内容或者标题
 		if (StringUtils.isNoneBlank(searchContent)) {
 			// 判断是否需要插入中央词库,新开一个线程,不在主线程上消耗时间影响用户体验
-			new Thread(() -> searchRecordService.insertInto(searchContent,
-					"search_" + sessionComponent.getCurrentUser().getLoginId())).start();
+			searchRecordService.insertInto(searchContent, "search_" + sessionComponent.getCurrentUser().getLoginId());
 			queryBuilder.withQuery(multiMatchQuery(searchContent, "content", "fileName"));
 		}
 

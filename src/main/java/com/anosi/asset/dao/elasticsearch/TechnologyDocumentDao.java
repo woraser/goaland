@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
@@ -57,18 +58,9 @@ public interface TechnologyDocumentDao extends BaseElasticSearchDao<TechnologyDo
 								return null;
 							}
 							TechnologyDocument technologyDocument = new TechnologyDocument();
-
+							
 							// 实际的内容
 							String realContent = (String) searchHit.getSource().get("content");
-							StringBuilder cutOut = new StringBuilder();
-							// 判断长度进行截取
-							if (realContent.length() < 100) {
-								cutOut.append(realContent);
-							} else {
-								cutOut.append(realContent.substring(0, 100));
-							}
-							cutOut.append(".......");
-
 							// 高亮内容
 							HighlightField content = searchHit.getHighlightFields().get("content");
 							StringBuilder highLightContent = new StringBuilder();
@@ -81,9 +73,19 @@ public interface TechnologyDocumentDao extends BaseElasticSearchDao<TechnologyDo
 									highLightContent.append("\t");
 								}
 								technologyDocument.setHighLightContent(highLightContent.toString());
-							} else {
+							} else if(StringUtils.isNoneBlank(realContent)){
+								StringBuilder cutOut = new StringBuilder();
+								// 判断长度进行截取
+								if (realContent.length() < 100) {
+									cutOut.append(realContent);
+								} else {
+									cutOut.append(realContent.substring(0, 100));
+								}
+								cutOut.append(".......");
 								// 如果没有高亮内容，则在文件内容中截取一段代替
 								technologyDocument.setHighLightContent(cutOut.toString());
+								// 截取一段内容作为展示
+								technologyDocument.setContent(cutOut.toString());
 							}
 
 							// 高亮标题
@@ -107,8 +109,6 @@ public interface TechnologyDocumentDao extends BaseElasticSearchDao<TechnologyDo
 							technologyDocument.setType((String) searchHit.getSource().get("type"));
 							technologyDocument.setUploader((String) searchHit.getSource().get("uploader"));
 							technologyDocument.setUploadTime(new Date((Long) searchHit.getSource().get("uploadTime")));
-							// 截取一段内容作为展示
-							technologyDocument.setContent(cutOut.toString());
 
 							chunk.add(technologyDocument);
 						}
