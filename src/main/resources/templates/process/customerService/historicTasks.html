@@ -107,9 +107,9 @@
                     </div>
                     <div class="process-Info-second">
                         <div class="process-apply">
-                            	{{processData["agreementStatus.agreement.name"]}}
+                            	{{processData["agreementStatus.agreement"]}}
                         </div>
-                        <div v-if="'agreementStatus.agreement.name' in processData" class="process-applyTime">
+                        <div v-if="'agreementStatus.agreement' in processData" class="process-applyTime">
                             {{processData["agreementStatus.beginTime"] | dateFormat}} - {{processData["agreementStatus.endTime"] | dateFormat}}
                         </div>
                     </div>

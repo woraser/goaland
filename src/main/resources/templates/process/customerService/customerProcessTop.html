@@ -18,7 +18,7 @@
 		                    我发起的任务
 		    </div>
 		</div>
-		<div class="companyMgr-page">
+		<div class="companyMgr-page" style="height: 900px">
     		<div class="company-tab">
 		        <a th:href="@{/customerServiceProcess/allProcesses/view(menuId=customServiceProcessAllProcesses)}" style="text-decoration: none" shiro:hasPermission="customServiceProcessAllProcesses:view">
 		            <div th:class="${session.menuId=='customServiceProcessAllProcesses'?'company-subtab tab-active':'company-subtab'}" style="margin-left: 2%">

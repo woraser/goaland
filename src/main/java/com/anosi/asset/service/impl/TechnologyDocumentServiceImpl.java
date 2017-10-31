@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.anosi.asset.bean.FileMetaDataBean;
 import com.anosi.asset.dao.elasticsearch.BaseElasticSearchDao;
 import com.anosi.asset.dao.elasticsearch.TechnologyDocumentDao;
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
@@ -36,6 +37,7 @@ import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.service.SearchRecordService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.anosi.asset.util.FileFetchUtil;
+import com.google.common.collect.Lists;
 
 @Service("technologyDocumentService")
 @Transactional
@@ -70,19 +72,18 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 			throws Exception {
 		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, is, fileSize);
 		InputStream fileByObjectId = fileMetaDataService.getFileByObjectId(fileMetaData.getObjectId());
+		// 判断文件是否可以预览
+		fileMetaDataService.createPreview(fileMetaData);
 		String content = FileFetchUtil.fetchContent(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase(),
 				fileByObjectId);
-		return saveTechnologyDocument(fileName, fileByObjectId, fileSize, content, type, fileMetaData);
+		TechnologyDocument document = createTechnologyDocument(fileName, fileByObjectId, fileSize, content, type,
+				fileMetaData);
+		return technologyDocumentDao.save(document);
 	}
 
-	private TechnologyDocument saveTechnologyDocument(String fileName, InputStream is, Long fileSize, String content,
+	private TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize, String content,
 			String type, FileMetaData fileMetaData) throws Exception {
 		logger.debug("saveTechnologyDocument,fileName:{},fileSize:{}", fileName, fileSize);
-
-		// 判断文件是否可以预览
-		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
-		fileMetaDataService.createPreview(suffix, type, fileName, fileSize, fileMetaData);
-
 		TechnologyDocument td = new TechnologyDocument();
 		td.setContent(content);
 		td.setFileId(fileMetaData.getObjectId().toString());
@@ -91,27 +92,48 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		td.setUploader(fileMetaData.getUploader());
 		td.setUploadTime(fileMetaData.getUploadTime());
 		accountService.getOne(sessionComponent.getCurrentUser().getId()).setUploadDocument(true);
-		return technologyDocumentDao.save(td);
+		return td;
 	}
 
 	@Override
 	public List<TechnologyDocument> createTechnologyDocument(List<File> files, String type) throws Exception {
-		List<TechnologyDocument> documents = new ArrayList<>();
+		List<FileMetaDataBean> fileMetaDataBeans = new ArrayList<>();
 		for (File file : files) {
-			documents.add(createTechnologyDocument(file.getName(), new FileInputStream(file), file.length(), type));
+			FileMetaDataBean fileMetaDataBean = new FileMetaDataBean(type, file.getName(), new FileInputStream(file),
+					file.length());
+			fileMetaDataBeans.add(fileMetaDataBean);
 		}
-		return documents;
+		return createTechnologyDocumentBatch(fileMetaDataBeans);
 	}
 
 	@Override
 	public List<TechnologyDocument> createTechnologyDocument(MultipartFile[] multipartFiles, String type)
 			throws Exception {
-		List<TechnologyDocument> documents = new ArrayList<>();
+		List<FileMetaDataBean> fileMetaDataBeans = new ArrayList<>();
 		for (MultipartFile multipartFile : multipartFiles) {
-			documents.add(createTechnologyDocument(multipartFile.getOriginalFilename(), multipartFile.getInputStream(),
-					multipartFile.getSize(), type));
+			FileMetaDataBean fileMetaDataBean = new FileMetaDataBean(type, multipartFile.getOriginalFilename(),
+					multipartFile.getInputStream(), multipartFile.getSize());
+			fileMetaDataBeans.add(fileMetaDataBean);
 		}
-		return documents;
+		return createTechnologyDocumentBatch(fileMetaDataBeans);
+	}
+
+	private List<TechnologyDocument> createTechnologyDocumentBatch(List<FileMetaDataBean> fileMetaDataBeans)
+			throws Exception {
+		List<TechnologyDocument> technologyDocuments = new ArrayList<>();
+		List<FileMetaData> fileMetaDatas = fileMetaDataService.saveFile(fileMetaDataBeans);
+		fileMetaDataService.createPreview(fileMetaDatas);
+		for (FileMetaData fileMetaData : fileMetaDatas) {
+			String fileName = fileMetaData.getFileName();
+			InputStream fileByObjectId = fileMetaDataService.getFileByObjectId(fileMetaData.getObjectId());
+			TechnologyDocument technologyDocument = createTechnologyDocument(fileName, fileByObjectId,
+					fileMetaData.getFileSize(),
+					FileFetchUtil.fetchContent(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase(),
+							fileByObjectId),
+					fileMetaData.getIdentification(), fileMetaData);
+			technologyDocuments.add(technologyDocument);
+		}
+		return Lists.newArrayList(technologyDocumentDao.save(technologyDocuments));
 	}
 
 	@Override

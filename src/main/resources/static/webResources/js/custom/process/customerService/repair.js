@@ -14,6 +14,7 @@ $(document).ready(function() {
 		rules : {
 			"device.serialNo" : {
 				required : true,
+				checkExist : true,
 			},
 			"repairDetail.problemDescription" : {
 				required : true,
@@ -56,10 +57,36 @@ $(document).ready(function() {
 				}
 			};
 			
-			$.blockUI({message: '<img src="/webResources/img/loading/loading.gif" /> '});
+			$.blockUI({
+				message: '<div class="lds-css ng-scope"><div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>',
+				// 指的是提示框的css
+				css: {
+                    width: "0px",
+                    top: "40%",
+                    left: "50%"
+                },
+			});
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	jQuery.validator.addMethod("checkExist", function(value, element) {
+		var flag;
+		$.ajax({
+			url : '/device/checkExist',
+			data : {
+				'serialNo' : $("#device\\.serialNo").val(),
+			},
+			type : 'get',
+			dataType : 'json',
+			async:false,
+			success : function(msg) {
+				// true表示已经存在
+				flag = msg.result;
+			}
+		});
+		return flag;
+	}, "您输入的设备不存在");
 	
 	//search autocomplete
 	 $(document)
@@ -75,7 +102,7 @@ $(document).ready(function() {
               $.ajax({
       				url : '/device/autocomplete',
       				data : {
-      					'number' :  request.term,
+      					'serialNo' :  "like$"+request.term,
       					'label' : 'serialNo',
       					'value' : 'id',
       				},

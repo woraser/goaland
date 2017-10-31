@@ -9,7 +9,7 @@ $(document).ready(function() {
 	   },
 	   methods: {
 		   detail: function(id){
-		   		  
+			   window.location.href="/customerServiceProcess/process/detail/view?id="+id 
 		   },
 		   rejectRewrit: function(id){
 			   window.location.href="/customerServiceProcess/startProcess/form/view?processId="+id
@@ -31,7 +31,7 @@ $(document).ready(function() {
 		 
 	 //请求参数
 	 var params={}
-	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement.name,agreementStatus.beginTime,agreementStatus.endTime,examineDetail.reject';//要获取的属性名
+	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement,agreementStatus.beginTime,agreementStatus.endTime,examineDetail.reject';//要获取的属性名
 	 params['size']=rowNum;
 	 params['sort']=sort;
 	 params['timeType']="start";
@@ -65,7 +65,13 @@ $(document).ready(function() {
 			success : function( data ) {
 				pageNum=data.total;
 				page=data.page;
-				processes.processDatas = data.content;
+				var content = data.content;
+				$.each(content,function(){
+					if('agreementStatus.agreement' in this){
+						this['agreementStatus.agreement'] = $.i18n.prop('customerService.agreement.status.'+this['agreementStatus.agreement'])
+					}
+				})
+				processes.processDatas = content;
 				//刷新分页插件
 				createPage($("#dataPager"),pageNum,page,11,reloadContent)
 			}

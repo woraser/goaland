@@ -2,6 +2,7 @@ package com.anosi.asset.service.impl;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
@@ -52,9 +56,6 @@ import com.anosi.asset.service.ProcessRecordService;
 
 /***
  * 所有流程service集成的抽象类，实现了上层接口的部分方法,剩余方法在具体流程中实现
- * <p>
- * 继承于它的子类要使用<b>多例模式@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)</b>
- * </p>
  * 
  * @author jinyao
  *
@@ -87,25 +88,9 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	@Autowired
 	protected AccountService accountService;
 
+	protected String quene = "/queue/private/message/";
+
 	protected String definitionKey;// 由于每个子类的definitionKey都是一样的，所以不会有线程安全问题
-
-	/*--------------------------------------*/
-
-	/*----- 设置为成员变量是因为会在多个方法中使用,这样子参数列表会清晰一些,不必每个方法后面都写几个参数,
-	 * 		而且以后一旦参数变化,也不必把涉及到的方法的参数都改一遍,
-	 * 
-	 * 		但这样在单例模式会引起线程安全问题，所以需要多例@Scope(@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)),
-	 * 		以下参数都是可选参数,都是在完成任务的时候设置的-----*/
-
-	protected List<MessageInfo> messageInfos = new ArrayList<>();
-
-	protected HandleType type = HandleType.PASS;// 办理的类型
-
-	protected String reason;// 办理的理由
-
-	protected String reamin;// 组任务的待办人
-
-	/*--------------------------------------*/
 
 	@Override
 	public Page<T> findHistoricProcessInstance(Pageable pageable,
@@ -193,7 +178,26 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
-	public void completeTask(String taskId, DoInComplete doInComplete) {
+	public void completeTask(String taskId, DoInComplete doInComplete, List<MessageInfo> messageInfos)
+			throws Exception {
+		completeTask(taskId, doInComplete, HandleType.PASS, null, messageInfos, null);
+	}
+
+	@Override
+	public void completeTask(String taskId, DoInComplete doInComplete, List<MessageInfo> messageInfos, String remain)
+			throws Exception {
+		completeTask(taskId, doInComplete, HandleType.PASS, null, messageInfos, remain);
+	}
+
+	@Override
+	public void completeTask(String taskId, DoInComplete doInComplete, HandleType type, String reason,
+			List<MessageInfo> messageInfos) throws Exception {
+		completeTask(taskId, doInComplete, type, reason, messageInfos, null);
+	}
+
+	@Override
+	public void completeTask(String taskId, DoInComplete doInComplete, HandleType type, String reason,
+			List<MessageInfo> messageInfos, String remain) throws Exception {
 		T t = findBytaskId(taskId);
 
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
@@ -205,21 +209,25 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		processRecord.setAssignee(sessionComponent.getCurrentUser());
 		String processInstanceId = processRecord.getProcessInstanceId();
 
-		messageInfoForApplicant(t, taskId,
-				accountService.findByLoginId((String) taskService.getVariable(taskId, "applicant")));// 生成发送给发起人的信息
+		if (!Objects.equals((String) taskService.getVariable(taskId, "applicant"),
+				sessionComponent.getCurrentUser().getLoginId())) {
+			messageInfoForApplicant(t, taskId,
+					accountService.findByLoginId((String) taskService.getVariable(taskId, "applicant")), messageInfos,
+					reason);// 生成发送给发起人的信息
+		}
 		doInComplete.excute();// 办理任务
 
 		// 这里只发送个人任务的信息，由于组任务相对较少，且封装复杂
 		// 所以如果是组任务，将发送信息的代码自行写到DoInComplete中
 		// 然后由此模板方法完成发送及创建记录
 		/*-----注意以下三步的顺序，要先发送消息，再创建下一步的记录，不然不会发送--*/
-		searchNextTaskAndSend(t, processInstanceId);// 生成发给下一步办理人的信息
-		saveMessageInfoAndSend();// 发送
-		createNewProcessRecord(processInstanceId);// 生成新的待办任务记录
+		searchNextTaskAndSend(t, processInstanceId, messageInfos);// 生成发给下一步办理人的信息
+		saveMessageInfoAndSend(messageInfos);// 发送
+		createNewProcessRecord(processInstanceId, remain);// 生成新的待办任务记录
 	}
 
 	@Override
-	public void createNewProcessRecord(String processInstanceId) {
+	public void createNewProcessRecord(String processInstanceId, String remain) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		for (Task task : tasks) {
 			if (processRecordService.findByTaskIdNotEnd(task.getId()) == null) {
@@ -229,21 +237,20 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				processRecord.setTaskName(task.getName());
 				processRecord.setStartTime(new Date());
 				processRecord.setType(HandleType.REAMIN_TO_DO);
-				processRecord.setRemain(StringUtils.isBlank(task.getAssignee()) ? reamin : task.getAssignee());
+				processRecord.setRemain(StringUtils.isBlank(task.getAssignee()) ? remain : task.getAssignee());
 				processRecordService.save(processRecord);
 			}
 		}
 	}
 
 	@Override
-	public void saveMessageInfoAndSend() {
+	public void saveMessageInfoAndSend(List<MessageInfo> messageInfos) {
 		for (MessageInfo messageInfo : messageInfos) {
 			messageInfoService.save(messageInfo);
 			try {
 				// 利用websocket向浏览器发送消息
-				webSocketComponent.sendByQuene(messageInfo.getTo().getLoginId(),
-						MessageFormat.format(i18nComponent.getMessage("message.template"),
-								messageInfo.getFrom().getName(), messageInfo.getTitle()));
+				webSocketComponent.sendByQuene(messageInfo.getTo().getLoginId(), quene, MessageFormat
+						.format(i18nComponent.getMessage("message.template.simple"), messageInfo.getFrom().getName()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -393,27 +400,32 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
-	public void searchNextTaskAndSend(T t, String processInstanceId) {
+	public void searchNextTaskAndSend(T t, String processInstanceId, List<MessageInfo> messageInfos) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		for (Task task : tasks) {
 			// 如果是新生成的任务
 			if (processRecordService.findByTaskIdNotEnd(task.getId()) == null) {
 				if (StringUtils.isNoneBlank(task.getAssignee())) {
-					messageInfoForAssignee(t, task.getId(), accountService.findByLoginId(task.getAssignee()));
+					logger.debug("next task name:{}", task.getName());
+					logger.debug("next task assignee:{}", task.getAssignee());
+					messageInfoForAssignee(t, task.getId(), accountService.findByLoginId(task.getAssignee()),
+							messageInfos);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void messageInfoForAssignee(T t, String taskId, Account nextAssignee) {
+	public void messageInfoForAssignee(T t, String taskId, Account nextAssignee, List<MessageInfo> messageInfos) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
 
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setFrom(sessionComponent.getCurrentUser());
-		messageInfo.setTo(nextAssignee);
+		logger.debug("current task assignee:{}", sessionComponent.getCurrentUser().getLoginId());
+		messageInfo.setFrom(sessionComponent.getCurrentUser());// 当前任务办理人
+		logger.debug("next task assignee:{}", nextAssignee.getLoginId());
+		messageInfo.setTo(nextAssignee);// 下一步办理人
 		messageInfo.setSendTime(new Date());
 		// 从i18n中读取信息
 		messageInfo.setTitle(MessageFormat.format(i18nComponent.getMessage("message.titile.taskToDo"),
@@ -425,14 +437,17 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	}
 
 	@Override
-	public void messageInfoForApplicant(T t, String taskId, Account applicant) {
+	public void messageInfoForApplicant(T t, String taskId, Account applicant, List<MessageInfo> messageInfos,
+			String reason) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
 				.processInstanceId(task.getProcessInstanceId()).singleResult();
 
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setFrom(sessionComponent.getCurrentUser());
-		messageInfo.setTo(applicant);
+		logger.debug("current task assignee:{}", sessionComponent.getCurrentUser().getLoginId());
+		messageInfo.setFrom(sessionComponent.getCurrentUser());// 当前任务办理人
+		logger.debug("applicant:{}", applicant.getLoginId());
+		messageInfo.setTo(applicant); // 流程发起人
 		messageInfo.setSendTime(new Date());
 		// 从i18n中读取信息
 		messageInfo.setTitle(MessageFormat.format(i18nComponent.getMessage("message.titile.taskComplete"),
@@ -441,6 +456,47 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				t.getName(), task.getName(), messageInfo.getFrom().getName(), reason));// 你发起的流程{0},{1}已经被办理,办理人为{2},办理说明:{3}
 
 		messageInfos.add(messageInfo);
+	}
+
+	@Override
+	public T getDetail(T t) {
+		String processInstanceId = t.getProcessInstanceId();
+		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId).singleResult();
+		if (historicProcessInstance.getEndTime() == null) {
+			Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+					.processInstanceId(processInstanceId).singleResult();
+			t.setTask(task);
+			t.setProcessInstance(processInstance);
+		}
+		t.setHistoricProcessInstance(historicProcessInstance);
+		return t;
+	}
+
+	@Override
+	public List<HistoricTaskInstance> getTaskDatas(T t) {
+		List<HistoricTaskInstance> historicTaskInstances = new ArrayList<>();
+		String processInstanceId = t.getProcessInstanceId();
+		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId).singleResult();
+		// 先获取所有任务节点的定义
+		BpmnModel model = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
+		if (model != null) {
+			Collection<FlowElement> flowElements = model.getMainProcess().getFlowElements();
+			for (FlowElement e : flowElements) {
+				if (e instanceof UserTask) {
+					// 获取最近的一个任务
+					List<HistoricTaskInstance> hTaskInstances = historyService.createHistoricTaskInstanceQuery()
+							.taskDefinitionKey(e.getId()).processInstanceId(processInstanceId).orderByTaskCreateTime()
+							.desc().list();
+					if (!CollectionUtils.isEmpty(hTaskInstances)) {
+						historicTaskInstances.add(hTaskInstances.get(0));
+					}
+				}
+			}
+		}
+		return historicTaskInstances;
 	}
 
 	/**

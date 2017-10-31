@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -32,7 +33,16 @@ public class PropertyUtil extends PropertyUtils {
 	@SuppressWarnings("unchecked")
 	public static Object getNestedProperty(final Object bean, final String name)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		Object property = getPropertyByName(bean, name);
+		Object property = null;
+		if (name.endsWith("*")) {
+			// 如果以"*"结果,代表获取这个bean下的所有属性
+			// 首先获取t中以attribute为名的属性
+			String propertyName = name.substring(0, name.length() - 1);
+			Object value = PropertyUtils.getNestedProperty(bean, propertyName);
+			property = JSON.parseObject(JSON.toJSONString(value));
+		} else {
+			property = getPropertyByName(bean, name);
+		}
 		if (property instanceof Date) {
 			Date date = (Date) property;
 			return DateFormatUtil.getFormateDate(date);

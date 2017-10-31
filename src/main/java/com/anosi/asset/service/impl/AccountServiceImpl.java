@@ -32,7 +32,6 @@ import com.anosi.asset.service.RoleFunctionBtnService;
 import com.anosi.asset.service.RoleFunctionGroupService;
 import com.anosi.asset.service.RoleFunctionService;
 import com.anosi.asset.service.RoleService;
-import com.querydsl.core.types.Predicate;
 
 @Service("accountService")
 @Transactional
@@ -184,14 +183,14 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 	}
 
 	@Override
-	public Page<Account> findByContentSearch(String content, Predicate predicate, Pageable pageable) {
+	public Page<Account> findByContentSearch(String content, Pageable pageable) {
 		// 防止sort报错，只获取pageable的页数和size
 		logger.debug("page:{},size:{}", pageable.getPageNumber(), pageable.getPageSize());
 		Pageable contentPage = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
 		Page<AccountContent> accountContents = accountContentService.findByContent(content, contentPage);
 		List<Long> ids = accountContents.getContent().stream().map(c -> Long.parseLong(c.getId()))
 				.collect(Collectors.toList());
-		return findAll(QAccount.account.id.in(ids).and(predicate), pageable);
+		return findAll(QAccount.account.id.in(ids), contentPage);
 	}
 
 }

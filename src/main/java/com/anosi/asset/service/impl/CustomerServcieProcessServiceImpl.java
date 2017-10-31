@@ -1,6 +1,7 @@
 package com.anosi.asset.service.impl;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,14 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
+import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.elasticsearch.CustomerServiceProcessContent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
@@ -32,7 +32,6 @@ import com.anosi.asset.service.FileMetaDataService;
 import com.google.common.collect.ImmutableMap;
 
 @Service("customerServcieProcessService")
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Transactional
 public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<CustomerServiceProcess>
 		implements CustomerServcieProcessService {
@@ -83,7 +82,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		customerServiceProcessContentService.saveContent(process);
 
 		// 创建记录
-		createNewProcessRecord(processInstance.getId());
+		createNewProcessRecord(processInstance.getId(), null);
 
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			process.setFile(true);
@@ -100,7 +99,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	}
 
 	@Override
-	public void completeStartDetail(String taskId, CustomerServiceProcess process) {
+	public void completeStartDetail(String taskId, CustomerServiceProcess process) throws Exception {
 
 		// 判断是不是工程部的人
 		String loginId = sessionComponent.getCurrentUser().getLoginId();
@@ -109,40 +108,52 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		// 如果是工程部
 		if ("engineerDep".equals(code)) {
 			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)));
+					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)),
+					new ArrayList<>());
 		} else {
 			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("depManager", process.getStartDetail().getNextAssignee(), "isEnginee", false)));
+					ImmutableMap.of("depManager", process.getStartDetail().getNextAssignee(), "isEnginee", false)),
+					new ArrayList<>());
 		}
 	}
 
 	@Override
 	public void examine(String taskId, CustomerServiceProcess process) throws Exception {
 		if (process.getExamineDetail().getReject()) {
-			// 被驳回，回退到完成工单节点
-			this.turnTransition(taskId, "completeStartDetail", null);
+			HandleType type = HandleType.REFUSE;
+			String reason = process.getExamineDetail().getSuggestion();
+			completeTask(taskId, () -> {
+				// 被驳回，回退到完成工单节点
+				try {
+					this.turnTransition(taskId, "completeStartDetail", null);
+				} catch (Exception e) {
+					throw new CustomRunTimeException();
+				}
+			}, type, reason, new ArrayList<>());
 		} else {
-			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep())));
+			completeTask(taskId,
+					() -> taskService.complete(taskId,
+							ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep())),
+					new ArrayList<>());
 		}
 	}
 
 	@Override
-	public void evaluating(String taskId, CustomerServiceProcess process) {
+	public void evaluating(String taskId, CustomerServiceProcess process) throws Exception {
 		completeTask(taskId, () -> taskService.complete(taskId,
-				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())));
+				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())), new ArrayList<>());
 	}
 
 	@Override
-	public void distribute(String taskId, CustomerServiceProcess process) {
+	public void distribute(String taskId, CustomerServiceProcess process) throws Exception {
 		completeTask(taskId, () -> taskService.complete(taskId,
-				ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer())));
+				ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer())), new ArrayList<>());
 	}
 
 	@Override
-	public void repair(String taskId, CustomerServiceProcess process) {
+	public void repair(String taskId, CustomerServiceProcess process) throws Exception {
 		process.setFinishType(FinishType.FINISHED);
-		completeTask(taskId, () -> taskService.complete(taskId));
+		completeTask(taskId, () -> taskService.complete(taskId), new ArrayList<>());
 	}
 
 	@Override
@@ -174,8 +185,9 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.entrust"),
 				messageInfo.getFrom().getName(), customerServiceProcess.getName(), task.getName(), reason));
 
+		List<MessageInfo> messageInfos = new ArrayList<>();
 		messageInfos.add(messageInfo);
-		saveMessageInfoAndSend();
+		saveMessageInfoAndSend(messageInfos);
 	}
 
 	/**

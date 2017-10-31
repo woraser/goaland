@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:text="#{customerService.detail}"></title>
+	
+	<link href="/webResources/plugins/jquery-lighter/stylesheets/jquery.lighter.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/hotbox/hotbox.css" rel="stylesheet"/>
+	
+	<style type="text/css">
+		.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+            padding: 8px;
+            line-height: 1.1;
+            vertical-align: top;
+            border-top: 0px solid #dddddd;
+        }
+        .aaa{
+            text-align: right;width: 26%;
+            color: #A1ACB2;
+        }
+        .bbb{
+            padding-left: 30px;
+            color: #5A7387;
+        }
+	</style>
+	
+	<script type="text/javascript" src="/webResources/js/custom/process/customerService/detail.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-lighter/javascripts/jquery.lighter.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/hotbox/bower_components/seajs/dist/sea.js" ></script>
+	
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div id="hotbox"></div>
+		<input type="hidden" id="processId" th:value="${id}"/>
+		<div id="detail" class="companyMgr-page" style="height: 900px">
+		    <div class="process-table" style="height: 97%;padding-top: 1.5%;padding-left: 3%;padding-right: 3%">
+		        <div class="table-in">
+		            <div class="processList" style="height: 100%;background: #FFFFFF;border: solid #D9D9D9 1px">
+		                <div class="process-in" style="height: 6%;border-top:0px;border-left:0px;border-right:0px;background: #F2F7F9;margin-top: 0%">
+		                    <div class="process-in-title" style="height: 100%;background: none;border-bottom: 0px">
+		                        <div class="process-in-title-left" style="font-size: 15px;padding-top: 0.2%">
+		                           	<span th:text="#{customerService.name}">工单编号</span>
+                            		<span>:{{detailData.name}}</span>
+		                        </div>
+		                        <div class="process-in-title-right" style="width: 6%;color: #F77A4B;font-size: 14px;font-weight: 500">
+		                            <button v-if="detailData['task.assignee'] == loginId" v-on:click="handle(detailData['task.taskDefinitionKey'],detailData['task.name'],detailData['task.id'],detailData.id)" th:text="#{customerService.handle}" style="width: 80%;height: 80%;border:0px;border-radius: 5px;background: #FC8060;color: #FFFFFF;font-size: 14px;font-weight: 800">
+		                                	发起
+		                            </button>
+		                        </div>
+		                        <div class="process-in-title-right" style="width:4%">
+		                            <img src="/webResources/img/process/decice-state.png" style="margin-top: -13%"/>
+		                        </div>
+		                        <div class="process-in-title-right" style="width: 18%;padding-top: 0.2%">
+		                            	<span th:text="#{customerService.name}">发起人</span>
+		                            	<span>:{{detailData["applicant.name"]}}</span>
+		                            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                            	<span th:text="#{customerService.name}">发起时间</span>
+		                            	<span>:{{detailData["historicProcessInstance.startTime"]}}</span>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="time-detail-top">
+		                </div>
+		                <div class="timeline-left" style="width: 4%;margin-left: 3.5%">
+		                    <div class="timeline-title">
+		                        <div class="timeline-title-img" style="float:left;font-weight:500;width: 15px;height: 15px;border-radius: 7.5px;background: #FC8060;color: #FFFFFF">
+		                        </div>
+		                        <div class="timeline-title-info">
+		                            	{{active}}
+		                        </div>
+		                    </div>
+		                    <div class="task-tab" style="margin-top: 20px;float: left" th:text="#{customerService.task.completeStartDetail}">
+		                        	发起
+		                    </div>
+		                    <div class="task-tab-right" style="margin-top:20px;">
+		                    </div>
+		                    <div v-if="'endTime' in examine" class="task-tab" style="margin-top: 78px;float: left" th:text="#{customerService.task.examine}">
+		                        	审批
+		                    </div>
+		                    <div v-if="'endTime' in examine" class="task-tab-right" style="margin-top: 78px;">
+		                    </div>
+		                    <div v-if="'endTime' in evaluating" class="task-tab" style="margin-top: 104px;float: left" th:text="#{customerService.task.evaluating}">
+		                        	评估
+		                    </div>
+		                    <div v-if="'endTime' in evaluating" class="task-tab-right" style="margin-top: 104px;">
+		                    </div>
+		                    <div v-if="'endTime' in distribute" class="task-tab" style="margin-top: 108px;float: left" th:text="#{customerService.task.distribute}">
+		                        	派单
+		                    </div>
+		                    <div v-if="'endTime' in distribute" class="task-tab-right" style="margin-top: 108px;">
+		                    </div>
+		                    <div v-if="'endTime' in repair" class="task-tab" style="margin-top: 110px;float: left" th:text="#{customerService.task.repair}">
+		                        	维修
+		                    </div>
+		                    <div v-if="'endTime' in repair" class="task-tab-right" style="margin-top: 110px;">
+		                    </div>
+		
+		                </div>
+		                <div class="timeline-center">
+		
+		                    <div v-if="completeStartDetail.active" v-on:click="completeForm = true" class="circle-timeline-head">
+		                    </div>
+		                    <a v-if="!completeStartDetail.active" href="#" v-on:click="completeForm = true">
+			                    <div class="circle-timeline-time">
+			                        <div class="circle-timeline-small" id="circle-timeline-small1">
+			                        </div>
+			                    </div>
+		                    </a>
+		                    <div v-if="'endTime' in completeStartDetail" class="circle-timeline">
+		                        {{completeStartDetail.endTime | yearFormat}}<br/>{{completeStartDetail.endTime | timeFormat}}
+		                    </div>
+		                    
+		                    <div v-if="'endTime' in examine" class="circle-line" id="line-1">
+		                    </div>
+		                    <div v-if="examine.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    </div>
+		                    <a v-if="'endTime' in examine" href="#" v-on:click="completeForm = false">
+			                    <div class="circle-timeline-time">
+			                        <div class="circle-timeline-small" id="circle-timeline-small1">
+			                        </div>
+			                    </div>
+		                    </a>
+		                    <div v-if="'endTime' in examine" class="circle-timeline">
+		                        {{examine.endTime | yearFormat}}<br/>{{examine.endTime | timeFormat}}
+		                    </div>
+		
+		                    <div v-if="'endTime' in evaluating" class="circle-line" id="line-2">
+		                    </div>
+		                    <div v-if="evaluating.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    </div>
+		                    <a v-if="'endTime' in evaluating" href="#" v-on:click="completeForm = false">
+			                    <div class="circle-timeline-time">
+			                        <div class="circle-timeline-small" id="circle-timeline-small2">
+			                        </div>
+			                    </div>
+		                    </a>
+		                    <div v-if="'endTime' in evaluating" class="circle-timeline">
+		                       {{evaluating.endTime | yearFormat}}<br/>{{evaluating.endTime | timeFormat}}
+		                    </div>
+		
+		                    <div v-if="'endTime' in distribute" class="circle-line" id="line-3">
+		                    </div>
+		                    <div v-if="distribute.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    </div>
+		                    <a v-if="'endTime' in distribute" href="#" v-on:click="completeForm = false"> 
+			                    <div class="circle-timeline-time">
+			                        <div class="circle-timeline-small" id="circle-timeline-small3">
+			                        </div>
+			                    </div>
+		                    </a>
+		                    <div v-if="'endTime' in distribute" class="circle-timeline">
+		                        {{distribute.endTime | yearFormat}}<br/>{{distribute.endTime | timeFormat}}
+		                    </div>
+		
+		                    <div v-if="'endTime' in repair" class="circle-line" id="line-4">
+		                    </div>
+		                    <div v-if="repair.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    </div>
+		                    <a v-if="'endTime' in repair" href="#" v-on:click="completeForm = false">
+			                    <div class="circle-timeline-time">
+			                        <div class="circle-timeline-small" id="circle-timeline-small4">
+			                        </div>
+			                    </div>
+		                    </a>
+		                    <div v-if="'endTime' in repair" class="circle-timeline">
+		                        {{repair.endTime | yearFormat}}<br/>{{repair.endTime | timeFormat}}
+		                    </div>
+		
+		                </div>
+		                <!-- 引入发起detail -->
+		                <div v-if="completeForm" class="detail-div" th:include="process/customerService/detail-completeForm::completeStartDetail"></div>
+		            	<!-- 引入其他节点detail -->
+		                <div v-if="!completeForm" class="detail-div" th:include="process/customerService/detail-other::other"></div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</body>
+
+</html>
+

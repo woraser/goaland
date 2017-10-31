@@ -49,9 +49,15 @@ public class JsonUtil<T> {
 	public JSONObject parseAttributesToJson(String[] attributes, T t) throws Exception {
 		JSONObject jsonObject = new JSONObject();
 		for (String attribute : attributes) {
-			if(attribute.contains("*.")){
+			if (attribute.contains("*.")) {
+				// 2代表只对*.分割一次
 				jsonObject.put(attribute.split("\\*.", 2)[0], PropertyUtil.getNestedProperty(t, attribute));
-			}else{
+			} else if (attribute.endsWith("*")) {
+				// 如果以"*"结果,代表获取这个bean下的所有属性
+				// key为attribute去掉结尾的*
+				jsonObject.put(attribute.substring(0, attribute.length() - 1),
+						PropertyUtil.getNestedProperty(t, attribute));
+			} else {
 				jsonObject.put(attribute, PropertyUtil.getNestedProperty(t, attribute));
 			}
 		}

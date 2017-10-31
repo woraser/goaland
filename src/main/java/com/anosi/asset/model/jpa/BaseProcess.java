@@ -11,6 +11,8 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.anosi.asset.model.elasticsearch.Content;
 import com.anosi.asset.util.DateFormatUtil;
 
 /***
@@ -29,14 +31,19 @@ public class BaseProcess extends BaseEntity {
 
 	protected String processInstanceId;
 
+	@Content
 	protected String name = DateFormatUtil.getFormateDate(new Date(), "yyyyMMddHHmmssSSS");
 
+	@JSONField(serialize=false)  
 	protected Task task;
 
+	@JSONField(serialize=false)  
 	protected HistoricTaskInstance historicTaskInstance;
 
+	@JSONField(serialize=false)  
 	protected ProcessInstance processInstance;
 
+	@JSONField(serialize=false)  
 	protected HistoricProcessInstance historicProcessInstance;
 	
 	protected FinishType finishType;

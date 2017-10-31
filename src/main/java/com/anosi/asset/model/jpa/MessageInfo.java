@@ -34,6 +34,8 @@ public class MessageInfo extends BaseEntity{
 	
 	private MessageType messageType = MessageType.DEFAULT;
 	
+	private MessageStatus messageStatus = MessageStatus.UNREAD;
+	
 	//信息的种类，内部枚举类
 	public static enum MessageType{
 		
@@ -53,6 +55,11 @@ public class MessageInfo extends BaseEntity{
 			this.type = type;
 		}
 		
+	}
+	
+	//信息状态
+	public static enum MessageStatus{
+		READ,UNREAD
 	}
 	
 	public MessageType getMessageType() {
@@ -123,6 +130,14 @@ public class MessageInfo extends BaseEntity{
 		this.url = url;
 	}
 	
+	public MessageStatus getMessageStatus() {
+		return messageStatus;
+	}
+
+	public void setMessageStatus(MessageStatus messageStatus) {
+		this.messageStatus = messageStatus;
+	}
+
 	@Transient
 	public boolean isRead(){
 		return readTime!=null;

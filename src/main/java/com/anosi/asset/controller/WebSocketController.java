@@ -20,7 +20,7 @@ public class WebSocketController {
 	
 	@MessageMapping("/welcomeQuene")
 	public void welcomeQuene(String msg) throws Exception{
-		webSocketComponent.sendByQuene("zhangsan", "this is quene,"+msg);
+		webSocketComponent.sendByQuene("admin", "this is quene,"+msg);
 	}
 
 }

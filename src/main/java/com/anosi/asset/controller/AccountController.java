@@ -79,7 +79,7 @@ public class AccountController extends BaseController<Account> {
 
 		Page<Account> accounts;
 		if (StringUtils.isNoneBlank(searchContent)) {
-			accounts = accountService.findByContentSearch(searchContent, predicate, pageable);
+			accounts = accountService.findByContentSearch(searchContent, pageable);
 		} else {
 			accounts = accountService.findAll(predicate, pageable);
 		}

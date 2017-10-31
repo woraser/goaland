@@ -61,6 +61,7 @@
 				    <div class="taskTodo" >
 				        <div class="taskTodo-title">
 				            <div class="apply-detail-img">
+				            	<img style="width: 40px;height: 40px;float: right;margin-top: 12%" src="/webResources/img/icon/dialogtitle.png"/>
 				            </div>
 				            <div class="apply-detail-title">
 				                	<span th:text="#{customerService.applicant}"></span>
@@ -87,7 +88,7 @@
 				                            </div>
 				                            <div class="project-text-right">
 				                                <select th:field="*{startDetail.belong}" name="startDetail.belong" id="startDetail.belong" class="form-control"> 
-									            	<option th:each="belong : ${belongs}" th:value="${belong}" th:text="${belong.name}"></option>
+									            	<option th:each="belong : ${belongs}" th:value="${belong}" th:text="#{'customerService.belong.'+${belong}}"></option>
 									            </select>
 				                            </div>
 				                        </div>
@@ -150,7 +151,7 @@
 				                        <div class="form-group">
 				                            <label class="project-text-left" style="padding: 0%;font-weight: 300;width: 8.5%" th:text="#{customerService.productType}">产品类型：</label>
 				                            <div class="col-md-10" style="padding-left: 0%">
-				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"><input th:field="*{startDetail.productType}" name="startDetail.productType" class="uniform" th:value="${productType}" th:text="${productType.name}" type="radio"/></label>
+				                                <label th:each="productType : ${productTypes}" class="checkbox-inline"><input th:field="*{startDetail.productType}" name="startDetail.productType" class="uniform" th:value="${productType}" th:text="#{'customerService.productType.'+${productType}}" type="radio"/></label>
 				                            </div>
 				                        </div>
 				                    </div>
@@ -161,7 +162,7 @@
 				                <div class="project-info" style="height: 12%">
 				                    <div class="project-text">
 				                        <div class="project-text-in">
-				                            <div class="project-text-left"  th:text="#{customerService.customerMan}">
+				                            <div class="project-text-left" th:text="#{customerService.customerMan}">
 				                               	 客户联系人：
 				                            </div>
 				                            <div class="project-text-right">
@@ -169,7 +170,7 @@
 				                            </div>
 				                        </div>
 				                        <div class="project-text-in">
-				                            <div class="project-text-left"  th:text="#{customerService.customerNumber}">
+				                            <div class="project-text-left" th:text="#{customerService.customerNumber}">
 				                                	联系电话：
 				                            </div>
 				                            <div class="project-text-right">
@@ -198,7 +199,7 @@
 				
 				                    </div>
 				                </div>
-				                <div class="project-info-title" style="margin-top: 2%"  th:text="#{customerService.otherDemands}">
+				                <div class="project-info-title" style="margin-top: 2%" th:text="#{customerService.otherDemands}">
 				                    	其他要求
 				                </div>
 				                <div class="project-info">

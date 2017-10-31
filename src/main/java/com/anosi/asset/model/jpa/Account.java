@@ -42,7 +42,7 @@ public class Account extends BaseEntity {
 	@Content(extractFields = { "roleList*.name", "roleList*.depGroup.name", "roleList*.depGroup.department.name" })
 	private List<Role> roleList = new ArrayList<>();
 
-	private boolean uploadDocument = false;// 是否上传过文件
+	private boolean uploadDocument = false;// 是否上传过技术文档
 
 	private List<Privilege> privilegeList = new ArrayList<>();
 

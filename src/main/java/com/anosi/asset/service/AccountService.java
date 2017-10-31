@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Account;
-import com.querydsl.core.types.Predicate;
 
 public interface AccountService extends BaseJPAService<Account>{
 	
@@ -48,10 +47,9 @@ public interface AccountService extends BaseJPAService<Account>{
 	 * 根据模糊搜索的content,获取到accountContent,进而获取到account
 	 * 
 	 * @param content
-	 * @param predicate
 	 * @param pageable
 	 * @return
 	 */
-	public Page<Account> findByContentSearch(String content, Predicate predicate, Pageable pageable);
+	public Page<Account> findByContentSearch(String content, Pageable pageable);
 	
 }

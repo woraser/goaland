@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<body>
+	<div th:fragment="completeStartDetail">
+       <div class="detail-div-in">
+           <div class="detail-div-title">
+               <div class="detail-div-title1">
+                   <img src="/webResources/img/process/process-title.png" style="margin-left: 40%;margin-top: 10%"/>
+               </div>
+               <div class="detail-div-title2" th:text="#{customerService.task.completeStartDetail}">
+                   	发起任务
+               </div>
+               <div class="detail-div-title3">
+                   {{completeStartDetail.createTime}}
+               </div>
+               <div class="detail-div-title4">
+                   <img src="/webResources/img/icon/dialogtitle.png" style="margin-top: 5%"/>
+               </div>
+               <div class="detail-div-title5">
+                   <div style="width: 100%;height: 50%;font-size: 16px;color: #637B93;padding-top: 8%">
+                       {{detailData['applicant.name']}}
+                   </div>
+                   <div style="width: 100%;height: 50%;color: #C7CFDA;" th:text="#{applyer}">
+                   </div>
+               </div>
+           </div>
+           <div class="detail-div-bottom">
+               <div style="width: 100%;height: 100%;">
+                   <div class="detail-div-left">
+                       <div style="width: 100%;height: 60%;">
+                           <div class="project-div-title" th:text="#{project.message}">
+                             	 项目信息
+                           </div>
+                           <div class="project-div-detailinfo">
+                               <table class="table" style="margin-top: 10px">
+                                   <tbody>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.belong}">归属：</td>
+                                       <td class="bbb">{{detailData.startDetail.belong}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.projectName}">项目名称：</td>
+                                       <td class="bbb">{{detailData.project.name}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.projectNo}">项目编号：</td>
+                                       <td class="bbb">{{detailData.project.number}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.projectLocation}">项目地点：</td>
+                                       <td class="bbb">{{detailData.project.location}} </td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.productName}">产品名称：</td>
+                                       <td class="bbb">{{detailData.startDetail.productName}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.productNo}">产品规则：</td>
+                                       <td class="bbb">{{detailData.startDetail.productNo}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.productSpecifications}">产品编号：</td>
+                                       <td class="bbb">{{detailData.startDetail.productSpecifications}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.productType}">产品类型：</td>
+                                       <td class="bbb">{{detailData.startDetail.productType}}</td>
+
+                                   </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                       </div>
+                       <div style="width: 100%;height: 40%;">
+                           <div class="project-div-title" th:text="#{customerService.contactWay}">
+                               	联系方式
+                           </div>
+                           <div class="project-div-detailinfo">
+                               <table class="table" style="margin-top: 10px">
+                                   <tbody>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.customerMan}">客户联系人：</td>
+                                       <td class="bbb">{{detailData.startDetail.customerMan}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.customerNumber}">联系电话：</td>
+                                       <td class="bbb">{{detailData.startDetail.customerNumber}} </td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.projectMan}">项目联系人：</td>
+                                       <td class="bbb">{{detailData.startDetail.projectMan}}</td>
+
+                                   </tr>
+                                   <tr>
+                                       <td class="aaa" th:text="#{customerService.projectNumber}">联系电话：</td>
+                                       <td class="bbb">{{detailData.startDetail.projectNumber}} </td>
+
+                                   </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="detail-div-right" >
+                       <div class="project-div-title" th:text="#{customerService.otherDemands}">
+                          	 其他要求
+                       </div>
+                       <div class="project-div-detailinfo" style="padding-left: 7%">
+                           <table class="table" style="margin-bottom: 10px;margin-top: 10px">
+                               <tbody>
+                               <tr>
+                                   <td class="aaa" style="width: 30%" th:text="#{customerService.estimatedTime}">预估维修时间：</td>
+                                   <td class="bbb">{{detailData.startDetail.estimatedTime}}</td>
+                               </tr>
+                               </tbody>
+                           </table>
+                           <div class="other-require" th:text="#{customerService.baseDemands}">
+                               	基本要求：
+                           </div>
+                           <div class="other-require1">
+                           	{{detailData.startDetail.baseDemands}}
+                           </div>
+                           <div class="other-require" th:text="#{customerService.specialDemands}">
+                               	特殊要求：
+                           </div>
+                           <div class="other-require1">
+                           	{{detailData.startDetail.specialDemands}}
+                           </div>
+                           <div class="other-require" th:text="#{customerService.uploadFile.exist}">
+                               	附件：
+                           </div>
+                           <div id="existFiles" class="other-img">
+                           	<table>
+                  		<tr>
+                  			<td v-for="fileData in fileDatas"> 
+                  				<a v-bind:href="'/fileDownload/'+fileData.stringObjectId" data-lighter="data-lighter">
+								  <img v-bind:src="'/fileDownload/'+fileData.stringObjectId" v-bind:id="fileData.stringObjectId" style="width: 80px;height: 80px;"/>
+								</a>
+                  			</td>
+                  		</tr>
+                  	</table>
+                  	</div>
+                   </div>
+                 </div>
+               </div>
+           </div>
+       </div>
+	</div>
+</body>
+
+</html>

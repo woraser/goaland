@@ -4,8 +4,8 @@
 <body>
 	<!-- HEADER -->
 	<header th:fragment="top">
-		<input type="hidden" id="sessionId" name="sessionId" th:value="${session.id}"/> 
-		<div class="container">
+		<input type="hidden" id="loginId" name="loginId" th:value="${session.loginId}"/> 
+		<div id="top" class="container">
 				<div class="navbar-brand" style="padding: 0%">
 					<!-- COMPANY LOGO -->
 					<div class="logo-top" >
@@ -37,24 +37,24 @@
 					<li class="dropdown" id="header-message">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-envelope"></i>
-						<span class="badge" th:text="${messages.totalElements}">3</span>
+						<span class="badge">{{messages.records}}</span>
 						</a>
 						<ul class="dropdown-menu inbox">
 							<li class="dropdown-title">
 								<span><i class="fa fa-envelope-o"></i></span>
 							</li>
-							<li th:each="message : ${messages.content}">
+							<li v-for="message in messages.content">
 								<a href="#">
 									<img src="" alt="" />
 									<span class="body">
-										<span class="from" th:text="${message.from.name}">Jane Doe</span>
-										<span class="from" th:text="${message.title}">Jane Doe</span>
-										<span class="message" th:text="${message.content}">
-										Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse mole ...
+										<span class="from">{{message['from.name']}}</span>
+										<span class="from">{{message.title}}</span>
+										<span class="message">
+											{{message.content}}
 										</span> 
 										<span class="time">
 											<i class="fa fa-clock-o"></i>
-											<span th:text="${message.sendTime}">Just Now</span>
+											<span>{{message.sendTime}}</span>
 										</span>
 									</span>
 									 

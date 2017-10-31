@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -19,6 +20,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.anosi.asset.bean.FileMetaDataBean;
 import com.anosi.asset.dao.mongo.BaseMongoDao;
 import com.anosi.asset.dao.mongo.FileMetaDataDao;
 import com.anosi.asset.dao.mongo.GridFsDao;
@@ -46,6 +48,20 @@ public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> 
 	@Override
 	public FileMetaData saveFile(String identification, String fileName, InputStream is, Long fileSize)
 			throws Exception {
+		return fileMetaDataDao.save(createFileMetaData(identification, fileName, is, fileSize));
+	}
+
+	public List<FileMetaData> saveFile(List<FileMetaDataBean> fileMetaDataBeans) throws Exception {
+		List<FileMetaData> fileMetaDatas = new ArrayList<>();
+		for (FileMetaDataBean fileMetaDataBean : fileMetaDataBeans) {
+			fileMetaDatas.add(createFileMetaData(fileMetaDataBean.getIdentification(), fileMetaDataBean.getFileName(),
+					fileMetaDataBean.getIs(), fileMetaDataBean.getFileSize()));
+		}
+		return fileMetaDataDao.save(fileMetaDatas);
+	}
+
+	private FileMetaData createFileMetaData(String identification, String fileName, InputStream is, Long fileSize)
+			throws Exception {
 		FileMetaData fileMetaData = new FileMetaData();
 		fileMetaData.setIdentification(identification);
 		fileMetaData.setUploader(sessionComponent.getCurrentUser() == null ? identification
@@ -53,8 +69,8 @@ public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> 
 		fileMetaData.setUploadTime(new Date());
 		fileMetaData.setFileName(fileName);
 		fileMetaData.setFileSize(fileSize);
-
-		return this.saveFileAndAttributes(fileMetaData, is);
+		this.saveFileAndAttributes(fileMetaData, is);
+		return fileMetaData;
 	}
 
 	private FileMetaData saveFileAndAttributes(FileMetaData fileMetaData, InputStream in) throws Exception {
@@ -62,7 +78,6 @@ public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> 
 		logger.info("upload file to gridfs");
 		Object id = gridFsDao.uploadFileToGridFS(in, fileMetaData.getFileName());
 		fileMetaData.setObjectId(FileMetaData.ObjectIdToBigIntegerConverter((ObjectId) id));
-		fileMetaDataDao.save(fileMetaData);
 		return fileMetaData;
 	}
 
@@ -107,8 +122,27 @@ public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> 
 
 	@Override
 	@Async
-	public Future<FileMetaData> createPreview(String suffix, String type, String fileName, Long fileSize,
-			FileMetaData fileMetaData) {
+	public Future<FileMetaData> createPreview(FileMetaData fileMetaData) throws Exception {
+		FileMetaData preview = createFileMetaDataPreview(fileMetaData);
+		fileMetaDataDao.save(preview);
+		return new AsyncResult<FileMetaData>(preview);
+	}
+
+	@Override
+	@Async
+	public Future<List<FileMetaData>> createPreview(List<FileMetaData> fileMetaDatas) throws Exception {
+		List<FileMetaData> previews = new ArrayList<>();
+		for (FileMetaData fileMetaData : fileMetaDatas) {
+			FileMetaData preview = createFileMetaDataPreview(fileMetaData);
+			previews.add(preview);
+		}
+		previews = fileMetaDataDao.save(previews);
+		return new AsyncResult<List<FileMetaData>>(previews);
+	}
+
+	private FileMetaData createFileMetaDataPreview(FileMetaData fileMetaData) throws Exception {
+		String fileName = fileMetaData.getFileName();
+		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
 		if (FileConvertUtil.checkSuffix(suffix)) {
 			// 为filemetadata存储预览pdf文件
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -117,16 +151,11 @@ public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> 
 
 			// 预览文件的元数据
 			FileMetaData preview;
-			try {
-				preview = saveFile(type, fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf",
-						new ByteArrayInputStream(os.toByteArray()), fileSize);
-				fileMetaData.setPreview(preview.getObjectId());
-				save(fileMetaData);
-				return new AsyncResult<FileMetaData>(preview);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			preview = saveFile(fileMetaData.getIdentification(),
+					fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf",
+					new ByteArrayInputStream(os.toByteArray()), fileMetaData.getFileSize());
+			fileMetaData.setPreview(preview.getObjectId());
+			return fileMetaData;
 		}
 		return null;
 	}

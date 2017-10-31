@@ -20,8 +20,9 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 
 	 * @param taskId
 	 * @param process
+	 * @throws Exception 
 	 */
-	void completeStartDetail(String taskId, CustomerServiceProcess process);
+	void completeStartDetail(String taskId, CustomerServiceProcess process) throws Exception;
 
 	/****
 	 * 领导审批
@@ -36,23 +37,26 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 工程部问题评估
 	 * 
 	 * @param taskId
+	 * @throws Exception 
 	 */
-	void evaluating(String taskId, CustomerServiceProcess process);
+	void evaluating(String taskId, CustomerServiceProcess process) throws Exception;
 
 	/***
 	 * 售后服务组派单
 	 * 
 	 * @param taskId
 	 * @param process
+	 * @throws Exception 
 	 */
-	void distribute(String taskId, CustomerServiceProcess process);
+	void distribute(String taskId, CustomerServiceProcess process) throws Exception;
 
 	/***
 	 * 工程师上门维修
 	 * 
 	 * @param taskId
+	 * @throws Exception 
 	 */
-	void repair(String taskId, CustomerServiceProcess process);
+	void repair(String taskId, CustomerServiceProcess process) throws Exception;
 
 	/***
 	 * 委托

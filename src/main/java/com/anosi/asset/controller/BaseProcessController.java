@@ -1,9 +1,11 @@
 package com.anosi.asset.controller;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.service.BaseProcessService;
+import com.anosi.asset.util.JsonUtil;
+import com.anosi.asset.util.StringUtil;
 
 @RestController
 public abstract class BaseProcessController<T extends BaseProcess> extends BaseController<T> {
@@ -34,7 +39,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 
 	protected String definitionKey;
 
-	public abstract BaseProcessService<T> getPorcessService();
+	public abstract BaseProcessService<T> getProcessService();
 
 	/***
 	 * 进入查看当前account<b>发起的流程</b>的页面
@@ -72,7 +77,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
 		return parseToJson(
-				getPorcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime), rowId,
+				getProcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime), rowId,
 				showAttributes, showType);
 	}
 
@@ -86,7 +91,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	@ModelAttribute
 	public void getAccount(@RequestParam(value = "processId", required = false) Long id, Model model) {
 		if (id != null) {
-			model.addAttribute("process", getPorcessService().getOne(id));
+			model.addAttribute("process", getProcessService().getOne(id));
 		}
 	}
 
@@ -144,7 +149,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getPorcessService().findTasksToDo(pageable, searchContent, beginTime, endTime), rowId,
+		return parseToJson(getProcessService().findTasksToDo(pageable, searchContent, beginTime, endTime), rowId,
 				showAttributes, showType);
 	}
 
@@ -206,7 +211,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getPorcessService().findHistoricTasks(pageable, searchContent, timeType, beginTime, endTime),
+		return parseToJson(getProcessService().findHistoricTasks(pageable, searchContent, timeType, beginTime, endTime),
 				rowId, showAttributes, showType);
 	}
 
@@ -248,8 +253,56 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getPorcessService().findAllProcesses(pageable, searchContent, timeType, beginTime, endTime),
+		return parseToJson(getProcessService().findAllProcesses(pageable, searchContent, timeType, beginTime, endTime),
 				rowId, showAttributes, showType);
 	}
-	
+
+	/***
+	 * 进入查看<b>详情</b>的页面
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/process/detail/view", method = RequestMethod.GET)
+	public ModelAndView toViewDetail(@RequestParam(value = "id") Long id) {
+		logger.debug("view detail");
+		return new ModelAndView("process/" + definitionKey + "/detail", "id", id);
+	}
+
+	/****
+	 * 根据id查找
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/process/detail/{id}", method = RequestMethod.GET)
+	public JSONObject findById(@PathVariable Long id, @RequestParam(value = "showAttributes") String showAttributes)
+			throws Exception {
+		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
+				getProcessService().getDetail(getProcessService().findOne(id)));
+	}
+
+	/***
+	 * 获取这个流程所有按照key区分的最近一次任务的相关信息
+	 * 
+	 * @param id
+	 * @param showAttributes
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/process/detail/taskDatas/{id}", method = RequestMethod.GET)
+	public JSONArray getTaskDatas(@PathVariable Long id, @RequestParam(value = "showAttributes") String showAttributes)
+			throws Exception {
+		JSONArray jsonArray = new JSONArray();
+		List<HistoricTaskInstance> taskDatas = getProcessService().getTaskDatas(getProcessService().getOne(id));
+		JsonUtil<HistoricTaskInstance> historicJsonUtil = new JsonUtil<>();
+		for (HistoricTaskInstance historicTaskInstance : taskDatas) {
+			JSONObject jsonObject = historicJsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
+					historicTaskInstance);
+			jsonArray.add(jsonObject);
+		}
+		return jsonArray;
+	}
+
 }

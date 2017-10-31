@@ -176,7 +176,15 @@ $(document).ready(function() {
 				}
 			};
 			
-			$.blockUI({message: '<img src="/webResources/img/loading/loading.gif" /> '});
+			$.blockUI({
+				message: '<div class="lds-css ng-scope"><div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>',
+				// 指的是提示框的css
+				css: {
+                    width: "0px",
+                    top: "40%",
+                    left: "50%"
+                },
+			});
 			$(form).ajaxSubmit(options);     
 		}  
 	});

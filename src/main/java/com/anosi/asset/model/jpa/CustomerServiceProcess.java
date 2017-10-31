@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
@@ -153,7 +154,8 @@ public class CustomerServiceProcess extends BaseProcess {
 		private String projectMan;// 项目联系人
 
 		private String projectNumber;// 项目联系人电话
-
+		
+		@JSONField(format="yyyy-MM-dd HH:mm:ss")
 		private Date estimatedTime;// 预估维修时间
 
 		private String baseDemands;// 基本要求
@@ -267,43 +269,11 @@ public class CustomerServiceProcess extends BaseProcess {
 		}
 
 		public static enum ProductType {
-
-			DC("直流类"), FACTS("FACTS(含SVC,TCSC,STATCOM)"), NEWENERGY("新能源类(含风电,光伏,高压变频)"), LABPROJECT("实验室项目"), OTHER(
-					"其他");
-
-			private String name;
-
-			private ProductType(String name) {
-				this.name = name;
-			}
-
-			public String getName() {
-				return name;
-			}
-
-			public void setName(String name) {
-				this.name = name;
-			}
-
+			DC, FACTS, NEWENERGY, LABPROJECT, OTHER;
 		}
 
 		public static enum Belong {
-
-			SOUTHERNPART("南部销售区"), NORTHPART("北部销售区");
-
-			private String name;
-
-			private Belong(String name) {
-				this.name = name;
-			}
-
-			public String getName() {
-				return name;
-			}
-
-			public void setName(String name) {
-				this.name = name;
-			}
+			SOUTHERNPART, NORTHPART;
 		}
 
 	}
@@ -363,22 +333,7 @@ public class CustomerServiceProcess extends BaseProcess {
 		private Date endTime;
 
 		public static enum Agreement {
-			UNDERGUARANTEE("保修期"), BEYONDGUARANTEE("不在保修期");
-
-			private String name;
-
-			private Agreement(String name) {
-				this.name = name;
-			}
-
-			public String getName() {
-				return name;
-			}
-
-			public void setName(String name) {
-				this.name = name;
-			}
-
+			UNDERGUARANTEE, BEYONDGUARANTEE;
 		}
 
 		public Date getBeginTime() {

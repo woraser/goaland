@@ -49,7 +49,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	}
 
 	@Override
-	public BaseProcessService<CustomerServiceProcess> getPorcessService() {
+	public BaseProcessService<CustomerServiceProcess> getProcessService() {
 		return customerServcieProcessService;
 	}
 
@@ -128,11 +128,12 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param engineeDep
 	 * @param startDetail
 	 * @return
+	 * @throws Exception 
 	 * @deprecated 已经与startProcess合并为一步
 	 */
 	@RequestMapping(value = "/completeStartDetail", method = RequestMethod.POST)
 	public JSONObject completeStartDetail(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process) throws Exception {
 		logger.debug("customerServiceProcess -> completeStartDetail");
 		customerServcieProcessService.completeStartDetail(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
@@ -163,10 +164,11 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param servicer
 	 * @param evaluatingDetail
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/evaluating", method = RequestMethod.POST)
 	public JSONObject evaluating(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process) throws Exception {
 		logger.debug("customerServiceProcess -> evaluating");
 		customerServcieProcessService.evaluating(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
@@ -178,10 +180,11 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param engineer
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/distribute", method = RequestMethod.POST)
 	public JSONObject distribute(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process) throws Exception {
 		logger.debug("customerServiceProcess -> distribute");
 		customerServcieProcessService.distribute(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
@@ -193,10 +196,11 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param repairDetail
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/repair", method = RequestMethod.POST)
 	public JSONObject repair(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process) throws Exception {
 		logger.debug("customerServiceProcess -> repair");
 		customerServcieProcessService.repair(taskId, process);
 		return new JSONObject(ImmutableMap.of("result", "success"));

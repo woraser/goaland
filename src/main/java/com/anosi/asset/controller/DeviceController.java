@@ -134,4 +134,16 @@ public class DeviceController extends BaseController<Device> {
 		return jsonUtil.parseAttributesToAutocomplete(label, value, deviceService.findAll(predicate));
 	}
 	
+	/**
+	 * 按照device某些属性判断是否存在
+	 * 
+	 * @param predicate
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/checkExist", method = RequestMethod.GET)
+	public JSONObject checkExist(@QuerydslPredicate(root = Device.class) Predicate predicate) throws Exception {
+		return new JSONObject(ImmutableMap.of("result", deviceService.exists(predicate)));
+	}
+	
 }
