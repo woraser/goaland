@@ -5,15 +5,40 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title>技术文档管理</title>
+	<title th:text="#{documentMgr}">技术文档管理</title>
 	
 	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
 	<link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie.css"/>
-    <link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie_theme_02.css"/>
-	<link rel="stylesheet" type="text/css" href="/webResources/css/custom/document.css"/>
+    <link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie_theme_01.css"/>
 	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
 	<link href="/webResources/plugins/jquery-lighter/stylesheets/jquery.lighter.css" rel="stylesheet"/>
+	
+	<style>
+        .sod_select .sod_list {
+            width: 300px;
+        }
+        .select { width: 300px; margin-left: -11%;height: 60%;margin-top: 2%}
+        .sod_select { font-size: 12px;}
+        .doButton{
+            margin-left:90%;
+            background:transparent linear-gradient(to bottom, #1ec6ff, #0b74d5) repeat scroll 0% 0%;
+            width:85px;
+            height:35px;
+            border-radius:2px;
+            border:none;
+            color: #fff;
+            margin-top: 2%;
+        }
+        .doButton:hover{
+            background: #0b74d5;
+        }
+        .knowledgeInfo{float:left;width: 23%;height: 100%;}
+        .knowledgeDev{float:left;width: 16%;height: 100%;padding-left:1%;padding-top:3%;font-size: 15px}
+        .upLoader{float:left;width: 16%;height: 100%;;padding-top: 3%;font-size: 15px;padding-left: 1.2%}
+        .upTime{float: left;width: 20%;height: 100%;font-size: 15px;padding-top: 3%;padding-left: 1%}
+        .handle{float:left;width: 16%;height: 100%;padding-top: 3%;font-size: 15px;padding-left: 1.5%}
+    </style>
 	
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
@@ -28,84 +53,106 @@
 
 <body>
 	<div layout:fragment="content">
-		<div class="col-md-12" style="margin-left:-0.5%;width:102%;background:#242735;height:1200px;">
-         <div style="float:left;margin-left:-1%;width: 20%;height: 8%;background: #2A2E3D">
-             <div style="float:left;width:80%;margin-left: 10%;margin-top: 10%">
-                 <input id="searchContent" name="searchContent" style="float:left;width:85%;height: 40px" aria-controls="datatable1" placeholder="search" class="form-control input-sm" type="text"/>
-                 <span class="input-group-btn" style="float: left">
-                     <button id="search" class="btn btn-success" style="width:45px;height:41px;background-color: #363C4C;border-color: #3B4253;"><i class="fa fa-search"></i></button>
-                 </span>
-             </div>
-         </div>
-        <div style="float:right;width: 80%;height: 100%;margin-right: 1%;background: #242735">
-            <div style="width: 100%;height: 8%;margin-left: 1%">
-                <button class="doButton" id="upload" th:text="#{document.upload}">上传</button>
-            </div>
-            <div style="width: 95%;height: 90%;margin-left: 3%">
-                <div style="width: 100%;height: 4%;border-bottom: 1px solid #333848">
-                    <div style="float:left;width: 31%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.fileName}">文档名称</div>
-                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.fileType}">文档类型</div>
-                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.uploader}">上传人</div>
-                    <div style="float:left;width: 21%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.uploadTime}">上传时间</div>
-                    <div style="float:left;width: 16%;height: 100%;font-size: 15px;color: #8898AD;font-weight: 900;padding-left: 2%;padding-top: 1%" th:text="#{document.operate}">操作</div>
+		<div style="width:100%;background:#F4F6F9;height:898px;">
+    		<div class="table-top">
+        		<div class="title-big" th:text="#{documentMgr}">
+            	文档管理
+        		</div>
+        		<div class="title-small">
+		            &gt;
+		        </div>
+    		</div>
+        	<div style="margin-top:1.5%;float:right;width: 77%;height: 87%;margin-right: 1%;background: #FFFFFF;border: solid #E6E8EA 2px">
+	            <div style="width: 100%;height: 8%;margin-left: 1%">
+	                <button class="doButton" id="upload" th:text="#{document.upload}">上传</button>
+	            </div>
+            	<div id="files" style="width: 95%;height: 90%;margin-left: 3%">
+                	<div style="width: 100%;height: 6%;border-bottom: 2px solid #DADADA">
+	                    <div th:text="#{document.fileName}" style="float:left;width: 31%;height: 100%;font-size: 16px;color: #697E99;font-weight: 900;padding-left: 2%;padding-top: 1%">
+	                       	 文档信息
+	                    </div>
+	                    <div th:text="#{document.fileType}" style="float:left;width: 16%;height: 100%;font-size: 16px;color: #697E99;font-weight: 900;padding-left: 2%;padding-top: 1%">
+	                        	文档类型
+	                    </div>
+	                    <div th:text="#{document.uploader}" style="float:left;width: 16%;height: 100%;font-size: 16px;color: #697E99;font-weight: 900;padding-left: 2%;padding-top: 1%">
+	                        	上传人
+	                    </div>
+	                    <div th:text="#{document.uploadTime}" style="float:left;width: 21%;height: 100%;font-size: 16px;color: #697E99;font-weight: 900;padding-left: 2%;padding-top: 1%">
+	                        	上传时间
+	                    </div>
+	                    <div th:text="#{document.operate}" style="float:left;width: 16%;height: 100%;font-size: 16px;color: #697E99;font-weight: 900;padding-left: 2%;padding-top: 1%">
+	                        	操作
+	                    </div>
+	                </div>
+              <div style="width: 100%;height: 45%">
+                  <div v-for="fileData in fileDatas" style="width:100%;height: 35%;border-bottom: 1px solid #DADADA"> <!--文档列表 -->
+                    <div style="float:left;width: 9%;height: 100%;">
+                        <img v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
+                    	<img v-if="picture.indexOf(fileData.suffix) > 0" v-bind:src="'/fileDownload/'+fileData.fileId" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
+                    </div>
+                    <div class="knowledgeInfo" >
+                        <div style="float: left;width: 100%;height: 50%;">
+                            <div v-html="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;padding-left: 5%;padding-top: 13%">
+                            </div>
+                        </div>
+                    </div> <!--文档信息 -->
+                    <div class="knowledgeDev" >
+                        	{{fileData.type}}
+                    </div><!-- 文档类型-->
+                    <div class="upLoader" >
+                        	{{fileData.uploader}}
+                    </div><!--上传人-->
+                    <div class="upTime" >
+                        {{fileData.uploadTime}}
+                    </div><!--上传时间 -->
+                    <div class="handle" >
+                        <a v-bind:href="'/fileDownload/'+fileData.fileId"><img src="/webResources/img/file/download.png"/></a>
+                        <a v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
+                    	<a v-if="picture.indexOf(fileData.suffix) > 0" v-bind:href="'/fileDownload/'+fileData.fileId" data-lighter="data-lighter"><img src="/webResources/img/file/preview.png"/></a>
+                    </div>
+                    <div v-if="seenDetail" v-html="fileData.highLightContent"></div>
                 </div>
-                <div id="files" style="width:100%;height:45%">
-                	<!--文档列表 -->
-         			<div v-for="fileData in fileDatas" style="width:100%;height: 22%;border-bottom: 1px solid #333848">
-                    	<div style="float:left;width: 9%;height: 100%;">
-                        	<img v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
-                    		<img v-if="picture.indexOf(fileData.suffix) > 0" v-bind:src="'/fileDownload/'+fileData.fileId" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
-                    	</div>
-	                    <div class="knowledgeInfo" >
-	                        <div v-html="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;color: #C1C1C1;padding-left: 5%;padding-top: 13%">
-	                    	</div>
-	                    </div>
-	                    <div class="knowledgeDev">
-	                    	{{fileData.type}}
-	                    </div>
-	                    <div class="upLoader">
-	                    	{{fileData.uploader}}
-	                    </div>
-	                    <div class="upTime">
-	                    	{{fileData.uploadTime}}
-	                    </div>
-	                    <div class="handle">
-	                        <a v-bind:href="'/fileDownload/'+fileData.fileId"><img src="/webResources/img/file/download.png"/></a>
-	                        <a v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
-	                    	<a v-if="picture.indexOf(fileData.suffix) > 0" v-bind:href="'/fileDownload/'+fileData.fileId" data-lighter="data-lighter"><img src="/webResources/img/file/preview.png"/></a>
-	                    </div>
-	                    <div v-if="seenDetail" style="color: #C1C1C1;" v-html="fileData.highLightContent"></div>
-                	</div>
-                	<div class="zxf_pagediv" id="dataPager"></div>
-                </div>
+               <div class="zxf_pagediv" id="dataPager"></div>
+              </div>
             </div>
         </div>
-        <div style="float:left;margin-left:-1%;width: 20%;height: 90%;background: #2A2E3D">
-             <div style="height: 3%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px" th:text="#{document.search.message}">按文档信息查询 </div>
-             <div style="height: 35%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px">
-                 <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ul>
-                         <li style="margin-left: -20%" th:text="#{document.fileType}">文档类型:</li>
-                     </ul>
-                     <div class="select">
-                       	<select name="type" id="type" class="myselect"> 
+        <div style="float:left;width: 20%;height: 94%;background: #F4F4F4;box-shadow:2px 0px  10px 0px #aaa;">
+            <div class="form-inline hidden-xs" style="width: 83%;margin-left: 10%;margin-top: 5%;margin-bottom: 5%">
+                <div class="input-group input-medium">
+                    <input id="searchContent" name="searchContent" class="form-control" placeholder="search" type="text"/>
+                    <span class="input-group-btn">
+                        <button id="search" class="btn btn-success" style="background: #D3D5DD;border: 0px"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div style="height: 3%;width: 80%;margin-left: 10%;font-size: 16px" th:text="#{document.search.message}">
+                 	按文档信息查询
+             </div>
+             <div style="height: 15%;width: 80%;margin-left: 10%;color: #B2B3B7;font-size: 16px">
+                 <div style="width: 80%;height: 20%;margin-top:5%;margin-left: 10%;font-size: 16px;color: #6F717A">
+                     <ui>
+                         <li style="margin-left: -5%"  th:text="#{document.fileType}">产品系列:</li>
+                     </ui>
+                     <div class="select" style="padding-top: 3%">
+                         <select name="type" id="type" class="myselect"> 
                        		<option value="" th:text="#{document.fileType.all}">所有类型</option>
 		            		<option th:each="type : ${types}" th:value="${type.name}" th:text="${type.name}"></option>
 		            	</select>
                      </div>
                  </div>
-                 <div style="width: 80%;height: 20%;margin-top:10%;margin-left: 10%;font-size: 16px;color: #6F717A">
-                     <ul>
-                         <li style="margin-left: -20%" th:text="#{document.search.uploadTime}">按上传日期查询:</li>
-                     </ul>
-                     <div class="select">
-                     	 <input class="form-control input-sm" style="float:left;width:85%;height: 35px" id="lowerLimit" name="lowerLimit" type="text" th:placeholder="#{document.search.uploadTime.from}"/>
-                     	 <input class="form-control input-sm" style="float:left;width:85%;height: 35px" id="upperLimit" name="upperLimit" type="text" th:placeholder="#{document.search.uploadTime.to}"/>
-                     </div>
-                 </div>
              </div>
+             <div style="height: 3%;width: 80%;margin-left: 10%;font-size: 16px" th:text="#{document.search.uploadTime}">
+                 	按上传日期查询:
+             </div>
+            <!-- <div class="select" style="margin-left: 10%;height: 10%">
+                <input class="form-control " id="indate" size="10" placeholder="开始时间" value=""/>
+            </div> -->
+            <div class="select" style="margin-left: 10%;height: 10%">
+            	 <input class="form-control input-sm" style="float:left;width:85%;height: 35px" id="lowerLimit" name="lowerLimit" type="text" th:placeholder="#{document.search.uploadTime.from}"/>
+            	 <input class="form-control input-sm" style="margin-top:3%;float:left;width:85%;height: 35px" id="upperLimit" name="upperLimit" type="text" th:placeholder="#{document.search.uploadTime.to}"/>
+            </div>
          </div><!--文档信息  -->
-	</div>
+		</div>
 	</div>
 </body>
 

@@ -8,7 +8,9 @@ $(document).ready(function() {
 		   messages : {},
 	   },
 	   methods: {
-		   
+		   viewMessageInfo : function(id){
+			   createModalPageToView("消息","/messageInfo/"+id+"/view")
+		   }
 	   },
 	   filters: {
 		   
@@ -32,7 +34,7 @@ $(document).ready(function() {
 	var getMessage = function(){
 		$.ajax({
 			url : "/messageInfo/management/data/REMOTE",
-			data : {'showAttributes':'from.name,title,content,sendTime','to.loginId':$("#loginId").val(),'messageStatus':'UNREAD'},
+			data : {'showAttributes':'id,from.name,title,content,sendTime','to.loginId':$("#loginId").val(),'messageStatus':'UNREAD'},
 			type : 'get',
 			dataType : 'json',
 			success : function( data ) {

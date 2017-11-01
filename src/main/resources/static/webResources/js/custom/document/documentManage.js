@@ -12,7 +12,7 @@ $(document).ready(function() {
 	  }
 	})
 	 //每页显示多少行
-	 var rowNum=6;
+	 var rowNum=5;
 	 var page=0;//初始页
 	 var pageNum=0;//总页数
 	 var url='/technologyDocument/search/REMOTE';
@@ -30,17 +30,17 @@ $(document).ready(function() {
 	 var reloadContent = function(page){
 		 params['page']=page;
 		 $.ajax({
-				url : url,
-				data : params,
-				type : 'get',
-				dataType : 'json',
-				success : function( data ) {
-					pageNum=data.total;
-					page=data.page;
-					files.fileDatas = data.content;
-					//刷新分页插件
-					createPage($("#dataPager"),pageNum,page,11,reloadContent);
-				}
+			url : url,
+			data : params,
+			type : 'get',
+			dataType : 'json',
+			success : function( data ) {
+				pageNum=data.total;
+				page=data.page;
+				files.fileDatas = data.content;
+				//刷新分页插件
+				createPage($("#dataPager"),pageNum,page,11,reloadContent);
+			}
 		 });
 	 }
 	 
@@ -59,6 +59,8 @@ $(document).ready(function() {
 	 
 	 $("#lowerLimit").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
 	 $("#upperLimit").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
+	 
+     $('select').selectOrDie({});
 	 
 	 //搜索
 	 $("#search").click(function(){

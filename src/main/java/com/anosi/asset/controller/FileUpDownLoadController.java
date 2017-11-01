@@ -35,6 +35,7 @@ import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.util.FileConvertUtil;
+import com.anosi.asset.util.StringUtil;
 import com.anosi.asset.util.FileConvertUtil.Suffix;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -56,16 +57,32 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	private I18nComponent i18nComponent;
 
 	/***
-	 * 查看某个文件的元数据
+	 * 查看某个文件的元数据页面
 	 * 
 	 * @param objectId
 	 * @return
 	 */
 	@RequestMapping(value = "/fileMetaData/{objectId}/view", method = RequestMethod.GET)
-	public ModelAndView toViewFileMetaData(@PathVariable BigInteger objectId) {
+	public ModelAndView toViewFileMetaData(@PathVariable String objectId) {
 		logger.debug("view FileMetaData");
-		FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
-		return new ModelAndView("fileMetaData/viewFileMetaData", "fileMetaData", fileMetaData);
+		return new ModelAndView("fileMetaData/viewFileMetaData", "objectId", objectId);
+	}
+
+	/***
+	 * 查询某条具体的元数据
+	 * 
+	 * @param showType
+	 * @param predicate
+	 * @param showAttributes
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/fileMetaData/management/data/one", method = RequestMethod.GET)
+	public JSONObject findFileMetaDataManageDataOne(@QuerydslPredicate(root = FileMetaData.class) Predicate predicate,
+			@RequestParam(value = "showAttributes") String showAttributes) throws Exception {
+		logger.info("find messageInfo one");
+		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
+				fileMetaDataService.findOne(predicate));
 	}
 
 	/***

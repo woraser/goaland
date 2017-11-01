@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.service.MessageInfoService;
+import com.anosi.asset.util.StringUtil;
 import com.querydsl.core.types.Predicate;
 
 @RestController
@@ -27,7 +29,36 @@ public class MessageInfoController extends BaseController<MessageInfo> {
 	private MessageInfoService messageInfoService;
 
 	/***
-	 * 获取account数据
+	 * 查看某条信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/messageInfo/{id}/view", method = RequestMethod.GET)
+	public ModelAndView toViewFileMetaData(@PathVariable Long id) {
+		logger.debug("view messageInfo");
+		return new ModelAndView("messageInfo/viewMessageInfo", "id", id);
+	}
+
+	/***
+	 * 查询某条具体的messageInfo
+	 * 
+	 * @param showType
+	 * @param predicate
+	 * @param showAttributes
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/messageInfo/management/data/one", method = RequestMethod.GET)
+	public JSONObject findMessageInfoManageDataOne(@QuerydslPredicate(root = MessageInfo.class) Predicate predicate,
+			@RequestParam(value = "showAttributes") String showAttributes) throws Exception {
+		logger.info("find messageInfo one");
+		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
+				messageInfoService.findOne(predicate));
+	}
+
+	/***
+	 * 获取messageInfo数据
 	 * 
 	 * @param pageable
 	 * @param predicate
@@ -38,12 +69,12 @@ public class MessageInfoController extends BaseController<MessageInfo> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/messageInfo/management/data/{showType}", method = RequestMethod.GET)
-	public JSONObject findAccountManageData(@PathVariable ShowType showType,
+	public JSONObject findMessageInfoManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 5) Pageable pageable,
 			@QuerydslPredicate(root = MessageInfo.class) Predicate predicate,
 			@RequestParam(value = "showAttributes") String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
-		logger.info("find account");
+		logger.info("find messageInfo");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 

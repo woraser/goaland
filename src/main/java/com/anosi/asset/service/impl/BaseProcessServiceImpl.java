@@ -90,6 +90,8 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 
 	protected String quene = "/queue/private/message/";
 
+	protected String detailUrl;
+
 	protected String definitionKey;// 由于每个子类的definitionKey都是一样的，所以不会有线程安全问题
 
 	@Override
@@ -432,7 +434,8 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				processInstance.getProcessDefinitionName(), task.getName()));// {0}等待办理,任务:{1}
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskToDo"), t.getName(),
 				task.getName()));// 流程编号为{0},任务名称为{1},等待办理
-
+		messageInfo.setUrl(detailUrl + t.getId());
+		
 		messageInfos.add(messageInfo);
 	}
 
@@ -454,7 +457,8 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				processInstance.getProcessDefinitionName()));// {0}被办理
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskComplete"),
 				t.getName(), task.getName(), messageInfo.getFrom().getName(), reason));// 你发起的流程{0},{1}已经被办理,办理人为{2},办理说明:{3}
-
+		messageInfo.setUrl(detailUrl + t.getId());
+		
 		messageInfos.add(messageInfo);
 	}
 

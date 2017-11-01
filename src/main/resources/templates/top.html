@@ -44,7 +44,7 @@
 								<span><i class="fa fa-envelope-o"></i></span>
 							</li>
 							<li v-for="message in messages.content">
-								<a href="#">
+								<a href="#" v-on:click="viewMessageInfo(message.id)">
 									<img src="" alt="" />
 									<span class="body">
 										<span class="from">{{message['from.name']}}</span>

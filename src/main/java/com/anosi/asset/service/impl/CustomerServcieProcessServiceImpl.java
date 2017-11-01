@@ -49,6 +49,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		super();
 		// 在构造方法中对流程定义赋值
 		definitionKey = "customerService";
+		detailUrl = "/customerServiceProcess/process/detail/view?id=";
 	}
 
 	@Override
