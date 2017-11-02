@@ -35,11 +35,11 @@ public class QRCodeRealm extends CustomRealm {
 		logger.info(
 				"验证当前Subject时获取到token为：" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));
 
-		String sessionId = token.getUsername();// sessionId
-		Session session = sessionRedisDao.doReadSession(sessionId);
+		String loginId = token.getUsername();// sessionId
+		Session session = sessionRedisDao.doReadSession(new String(token.getPassword()));
 		if (session != null) {
 			// 交给AuthenticatingRealm进行匹配
-			return new SimpleAuthenticationInfo(token.getUsername(), session.getAttribute("loginId"), getName());
+			return new SimpleAuthenticationInfo(loginId, session.getId(), getName());
 		}
 		return null;
 	}

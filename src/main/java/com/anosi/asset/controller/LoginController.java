@@ -162,7 +162,7 @@ public class LoginController extends BaseController<Account> {
 	public ModelAndView loginWithQRCode(@RequestParam(value = "loginId") String loginId,
 			@RequestParam(value = "sessionId") String sessionId) throws Exception {
 		Subject currentUser = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken(sessionId, loginId, false);
+		UsernamePasswordToken token = new UsernamePasswordToken(loginId, sessionId, false);
 		// 登录验证
 		currentUser.login(token);
 		loginComponent.setSession(loginId);

@@ -1,6 +1,7 @@
 package com.anosi.asset.model.jpa;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,9 +28,15 @@ public class Device extends BaseEntity {
 
 	private String productNo;// 产品编号
 
+	private String productSpecifications;// 产品规格
+
 	private String serialNo;
 
+	private String rfid;// rfid的值等于二维码的值
+
 	private DevCategory devCategory;
+
+	private Date commissioningTime;// 投运时间
 
 	private List<Materiel> materielList = new ArrayList<>();// 物料
 
@@ -45,7 +52,7 @@ public class Device extends BaseEntity {
 	private Double baiduLatitude;// 纬度
 
 	private District district;// 所属区县
-	
+
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 
 	public String getProductName() {
@@ -71,6 +78,15 @@ public class Device extends BaseEntity {
 
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
+	}
+	
+	@Column(unique = true, nullable = false)
+	public String getRfid() {
+		return rfid;
+	}
+
+	public void setRfid(String rfid) {
+		this.rfid = rfid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = DevCategory.class)
@@ -150,7 +166,7 @@ public class Device extends BaseEntity {
 	public void setDistrict(District district) {
 		this.district = district;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = CustomerServiceProcess.class)
 	public List<CustomerServiceProcess> getCustomerServiceProcesseList() {
 		return customerServiceProcesseList;
@@ -158,6 +174,22 @@ public class Device extends BaseEntity {
 
 	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
 		this.customerServiceProcesseList = customerServiceProcesseList;
+	}
+
+	public String getProductSpecifications() {
+		return productSpecifications;
+	}
+
+	public void setProductSpecifications(String productSpecifications) {
+		this.productSpecifications = productSpecifications;
+	}
+
+	public Date getCommissioningTime() {
+		return commissioningTime;
+	}
+
+	public void setCommissioningTime(Date commissioningTime) {
+		this.commissioningTime = commissioningTime;
 	}
 
 	@Override
