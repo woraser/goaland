@@ -2,18 +2,10 @@ package com.anosi.asset.shiro;
 
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +23,7 @@ import com.anosi.asset.service.AccountService;
  * @author jinyao
  *
  */
-public class CustomRealm extends AuthorizingRealm {
+public abstract class CustomRealm extends AuthorizingRealm {
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomRealm.class);
 
@@ -39,7 +31,7 @@ public class CustomRealm extends AuthorizingRealm {
 	@Lazy
 	// lazy是为了开启spring cache的时候，不让redis和shiro的encache冲突，因为shiro初始化得早
 	// 特么被坑了一天。。。
-	private AccountService accountService;
+	protected AccountService accountService;
 
 	/**
 	 * 此方法调用 hasRole,hasPermission的时候才会进行回调.
@@ -77,31 +69,6 @@ public class CustomRealm extends AuthorizingRealm {
 				}
 			}
 			return info;
-		}
-		return null;
-	}
-
-	/**
-	 * 认证信息.(身份验证) Authentication 是用来验证用户身份
-	 * 
-	 * @param token
-	 * @return
-	 * @throws AuthenticationException
-	 */
-	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
-			throws AuthenticationException {
-		// UsernamePasswordToken对象用来存放提交的登录信息
-		UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-
-		logger.info(
-				"验证当前Subject时获取到token为：" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));
-
-		Account account = accountService.findByLoginId(token.getUsername());
-		if (account != null) {
-			// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
-			return new SimpleAuthenticationInfo(account.getLoginId(), account.getPassword(),
-					ByteSource.Util.bytes(account.getCredentialsSalt()), getName());
 		}
 		return null;
 	}

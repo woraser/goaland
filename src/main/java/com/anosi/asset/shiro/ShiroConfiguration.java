@@ -10,6 +10,8 @@ import java.util.Properties;
 import javax.servlet.Filter;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -25,6 +27,8 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+
+import com.google.common.collect.Lists;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
@@ -56,11 +60,19 @@ public class ShiroConfiguration {
 		return credentialsMatcher;
 	}
 
-	@Bean(name = "customRealm")
-	public CustomRealm getShiroRealm() {
-		// 自定义的realm
-		CustomRealm realm = new CustomRealm();
+	@Bean(name = "tokenRealm")
+	public TokenRealm getTokenRealm() {
+		// 帐户名密码的realm
+		TokenRealm realm = new TokenRealm();
 		realm.setCredentialsMatcher(hashedCredentialsMatcher());
+		realm.setCacheManager(getEhCacheManager());
+		return realm;
+	}
+
+	@Bean(name = "qRCodeRealm")
+	public QRCodeRealm getQRCodeRealm() {
+		// 二维码验证的realm
+		QRCodeRealm realm = new QRCodeRealm();
 		realm.setCacheManager(getEhCacheManager());
 		return realm;
 	}
@@ -103,10 +115,19 @@ public class ShiroConfiguration {
 		return sessionRedisDao;
 	}
 
+	@Bean("authenticator")
+	public ModularRealmAuthenticator getModularRealmAuthenticator() {
+		ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
+		modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+		modularRealmAuthenticator.setRealms(Lists.newArrayList(getTokenRealm(), getQRCodeRealm()));
+		return modularRealmAuthenticator;
+	}
+
 	@Bean(name = "securityManager")
 	public DefaultWebSecurityManager getDefaultWebSecurityManager() {
 		DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
-		dwsm.setRealm(getShiroRealm());
+		dwsm.setRealms(Lists.newArrayList(getTokenRealm(), getQRCodeRealm()));
+		dwsm.setAuthenticator(getModularRealmAuthenticator());
 		// 用户授权/认证信息Cache, 采用EhCache 缓存
 		// dwsm.setCacheManager(getEhCacheManager());
 		// 注入记住我管理器

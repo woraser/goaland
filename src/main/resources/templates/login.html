@@ -9,9 +9,23 @@
 	<link href="/webResources/plugins/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
 	<link href="/webResources/plugins/uniform/css/uniform.default.min.css" type="text/css" rel="stylesheet" />
 	
+		
+	<script type="text/javascript" src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<!-- JQUERY UI-->
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/uniform/jquery.uniform.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/SockJS/sockjs.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/stompJs/stomp.js"></script>
+	<!-- CUSTOM SCRIPT -->
+	<script type="text/javascript" src="/webResources/js/script.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/common.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/vue/vue.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/login.js"></script>
+	
 </head>
 
 <body class="login" style="background-image: url('/webResources/img/logo/iotx-login.png'); ">
+	<input type="hidden" id="uuid" th:value="${uuid}"/>
 	<!-- PAGE -->
 	<section id="page">
 		<header>
@@ -37,7 +51,7 @@
 								<img src="/webResources/img/logo/logo-iotx.png" height="140" alt="logo name" />
 							</div>
 							<div class="divide-40"></div>
-							<form role="form" action="" method="post">
+							<form v-show="!isQR" role="form" action="" method="post">
 							  <div class="form-group">
 								<label for="loginId" style="color:white;margin-left:10px"></label>
 								<i class="fa fa-envelope"></i>
@@ -56,9 +70,13 @@
 							  </div>
 							  <font color="#DEDEDE" size="5px" th:text="${message}"></font>
 							</form>
+							<div v-show="isQR" class="form-group" align="center">
+								<img th:src="'/login/QRCode/'+${uuid}"/>
+							</div>
 							<!-- SOCIAL LOGIN -->
 							<div class="center">
-								<input type="button" th:value="#{loginWithQRCode}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
+								<input v-if="!isQR" v-on:click="isQR=!isQR" type="button" th:value="#{loginWithQRCode}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
+								<input v-if="isQR" v-on:click="isQR=!isQR" type="button" th:value="#{loginWithToken}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
 							</div>
 							
 						</div>
@@ -67,21 +85,7 @@
 			</div>
 		</section>
 	</section>
-	
-	<script type="text/javascript" src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-	<!-- JQUERY UI-->
-	<script type="text/javascript" src="/webResources/plugins/jQueryUI/jquery-ui.min.js"></script>
 
-	<script type="text/javascript" src="/webResources/plugins/uniform/jquery.uniform.min.js"></script>
-	<!-- CUSTOM SCRIPT -->
-	<script type="text/javascript" src="/webResources/js/script.js"></script>
-	<script>
-		jQuery(document).ready(function() {		
-			App.setPage("login");  //Set current page
-			App.init(); //Initialise plugins and elements
-		});
-	</script>
-	
 </body>
 
 </html>

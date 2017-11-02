@@ -11,6 +11,42 @@
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
 	
+	<style>
+        .ui-jqgrid-htable{
+        height: 62px;font-size: 14px;color: #A7B7C3;font-weight: 500;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th div {
+            overflow: hidden;
+            position: relative;
+            height: 62px;
+            padding-top: 20px;color: #A7B7C3;font-weight: 500;
+        }
+        .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
+		    height: 62px;
+		    margin-top: 5px;
+		    display: inine-block;
+		}
+        .ui-jqgrid .ui-jqgrid-resize {
+            height: 62px !important;
+            position: relative;
+            cursor: e-resize;
+            display: inline;
+            overflow: hidden;
+        }
+        .ui-jqgrid tr.jqgrow {
+            outline-style: none;
+            height: 50px;
+        }
+        .ui-jqgrid tr.ui-row-ltr td {
+            text-align: left;
+            border-right-width: 1px;
+            border-right-color: inherit;
+            border-right-style: solid;
+            color: #4F6A7F;
+            font-size: 14px;
+        }
+    </style>
+	
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/js/jquery.jqGrid.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
@@ -33,7 +69,7 @@
 		    </div>
 		  	<div class="company-tab" style="border:0px">
 		  		<div shiro:hasPermission="roleFunctionGroupMgr:delete" class="company-button" style="margin-right: 1%">
-		            <button id="delete" class="company-button-import" th:text="#{edit}">
+		            <button id="delete" class="company-button-import" th:text="#{delete}">
 		           		删除
 		            </button>
 		        </div>

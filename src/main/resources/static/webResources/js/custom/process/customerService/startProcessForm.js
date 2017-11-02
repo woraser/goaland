@@ -202,7 +202,7 @@ $(document).ready(function() {
 		language: 'zh', //设置语言
 		maxFileCount: 10,
 		showUpload: false, //是否显示上传按钮
-		maxFileSize : 2000,
+		maxFileSize : 50000,
 		allowedFileExtensions: ["jpg","jpeg","png"]
 	});
 	
