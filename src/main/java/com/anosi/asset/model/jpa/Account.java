@@ -12,18 +12,34 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
 @Table(name = "account")
-/*@NamedEntityGraphs({
-		@NamedEntityGraph(name = "account.department", attributeNodes = @NamedAttributeNode(value = "roleList", subgraph = "depGroup"), // 延伸roles中的depGroup
-			subgraphs = {
-					@NamedSubgraph(name = "depGroup", attributeNodes = @NamedAttributeNode(value = "depGroup", subgraph = "department")), // 再延伸depGroup的department
-					@NamedSubgraph(name = "department", attributeNodes = @NamedAttributeNode(value = "department")) 
-			}), 
-})*/
+@Indexed
+@Analyzer(impl = IKAnalyzer.class)
+/*
+ * @NamedEntityGraphs({
+ * 
+ * @NamedEntityGraph(name = "account.department", attributeNodes
+ * = @NamedAttributeNode(value = "roleList", subgraph = "depGroup"), //
+ * 延伸roles中的depGroup subgraphs = {
+ * 
+ * @NamedSubgraph(name = "depGroup", attributeNodes = @NamedAttributeNode(value
+ * = "depGroup", subgraph = "department")), // 再延伸depGroup的department
+ * 
+ * @NamedSubgraph(name = "department", attributeNodes
+ * = @NamedAttributeNode(value = "department")) }), })
+ */
 public class Account extends BaseEntity {
 
 	/**
@@ -32,14 +48,17 @@ public class Account extends BaseEntity {
 	private static final long serialVersionUID = 1503690620448714787L;
 
 	@Content
+	@Field
 	private String name;
 
 	@Content
+	@Field(analyze = Analyze.NO)
 	private String loginId;
 
 	private String password;
 
 	@Content(extractFields = { "roleList*.name", "roleList*.depGroup.name", "roleList*.depGroup.department.name" })
+	@IndexedEmbedded
 	private List<Role> roleList = new ArrayList<>();
 
 	private boolean uploadDocument = false;// 是否上传过技术文档
@@ -55,6 +74,7 @@ public class Account extends BaseEntity {
 
 	private List<ProcessRecord> processRecordList = new ArrayList<>();
 
+	@ContainedIn
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 
 	// 密码加盐

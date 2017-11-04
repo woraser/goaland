@@ -6,12 +6,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.exception.CustomRunTimeException;
-import com.anosi.asset.model.elasticsearch.CustomerServiceProcessContent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
@@ -27,7 +29,6 @@ import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.CustomerServcieProcessService;
-import com.anosi.asset.service.CustomerServiceProcessContentService;
 import com.anosi.asset.service.FileMetaDataService;
 import com.google.common.collect.ImmutableMap;
 
@@ -43,7 +44,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Autowired
 	private FileMetaDataService fileMetaDataService;
 	@Autowired
-	private CustomerServiceProcessContentService customerServiceProcessContentService;
+	private EntityManager entityManager;
 
 	public CustomerServcieProcessServiceImpl() {
 		super();
@@ -79,8 +80,6 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			processInstance = runtimeService.createProcessInstanceQuery()
 					.processInstanceId(process.getProcessInstanceId()).singleResult();
 		}
-
-		customerServiceProcessContentService.saveContent(process);
 
 		// 创建记录
 		createNewProcessRecord(processInstance.getId(), null);
@@ -220,10 +219,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public List<String> getProcessInstanceIdsBySearchContent(String searchContent) {
-		List<CustomerServiceProcessContent> contents = customerServiceProcessContentService
-				.findByContent(searchContent);
+		Page<CustomerServiceProcess> contents = customerServiceProcessDao.findBySearchContent(entityManager,
+				searchContent, null);
 		// 所有CustomerServiceProcess的id
-		List<Long> ids = contents.parallelStream().map(c -> Long.parseLong(c.getId())).collect(Collectors.toList());
+		List<Long> ids = contents.getContent().parallelStream().map(c -> c.getId()).collect(Collectors.toList());
 		List<CustomerServiceProcess> allCustomerServiceProcesses = customerServiceProcessDao.findAll(ids);
 		// 所有processInstanceIds
 		List<String> processInstanceIds = allCustomerServiceProcesses.parallelStream()

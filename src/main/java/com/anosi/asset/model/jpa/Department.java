@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+
 @Entity
 @Table(name="department")
 public class Department extends BaseEntity{
@@ -20,10 +23,12 @@ public class Department extends BaseEntity{
 	 */
 	private static final long serialVersionUID = 7980380972329240770L;
 
+	@Field
 	private String name;
 	
 	private String code;
 	
+	@ContainedIn
 	private List<DepGroup> depGroupList = new ArrayList<>();
 	
 	private Company company;

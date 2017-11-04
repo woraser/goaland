@@ -36,6 +36,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: g:/hibernateSearch/
     open-in-view: true
 
   #i18n

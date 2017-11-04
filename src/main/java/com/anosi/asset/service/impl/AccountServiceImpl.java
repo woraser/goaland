@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +25,10 @@ import com.anosi.asset.component.RemoteComponent;
 import com.anosi.asset.dao.jpa.AccountDao;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.exception.CustomRunTimeException;
-import com.anosi.asset.model.elasticsearch.AccountContent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Privilege;
-import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.RoleFunction;
 import com.anosi.asset.model.jpa.RoleFunctionBtn;
-import com.anosi.asset.service.AccountContentService;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.PrivilegeService;
 import com.anosi.asset.service.RoleFunctionBtnService;
@@ -57,9 +56,9 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 	@Autowired
 	private RoleFunctionGroupService roleFunctionGroupService;
 	@Autowired
-	private AccountContentService accountContentService;
-	@Autowired
 	private RemoteComponent remoteComponent;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	public BaseJPADao<Account> getRepository() {
@@ -110,36 +109,6 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 			resolveRoleFunction(account, selRolesFunctionNode);
 		}
 		return save(account);
-	}
-
-	/***
-	 * 重写save,保存account的同时，将@Content标记的字段内容提取，存储到accountContent中
-	 * 
-	 */
-	@Override
-	public <S extends Account> S save(S account) {
-		account = accountDao.save(account);
-		logger.debug("roleList:{}", account.getRoleList().get(0).getName());
-		try {
-			accountContentService.saveContent(account);
-		} catch (Exception e) {
-			throw new CustomRunTimeException(e.getMessage());
-		}
-		return account;
-	}
-
-	/***
-	 * 重写批量添加
-	 */
-	@Override
-	public <S extends Account> Iterable<S> save(Iterable<S> accounts) {
-		accounts = accountDao.save(accounts);
-		try {
-			accountContentService.saveContent(accounts);
-		} catch (Exception e) {
-			throw new CustomRunTimeException(e.getMessage());
-		}
-		return accounts;
 	}
 
 	@Override
@@ -200,13 +169,8 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 
 	@Override
 	public Page<Account> findByContentSearch(String content, Pageable pageable) {
-		// 防止sort报错，只获取pageable的页数和size
 		logger.debug("page:{},size:{}", pageable.getPageNumber(), pageable.getPageSize());
-		Pageable contentPage = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
-		Page<AccountContent> accountContents = accountContentService.findByContent(content, contentPage);
-		List<Long> ids = accountContents.getContent().stream().map(c -> Long.parseLong(c.getId()))
-				.collect(Collectors.toList());
-		return findAll(QAccount.account.id.in(ids), contentPage);
+		return accountDao.findBySearchContent(entityManager, content, pageable);
 	}
 
 }

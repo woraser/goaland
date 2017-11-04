@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.anosi.asset.model.elasticsearch.Content;
 
@@ -23,9 +25,11 @@ public class CustomerServiceProcess extends BaseProcess {
 	private static final long serialVersionUID = 2663257381437985964L;
 
 	@Content(extractFields = { "applicant.name" })
+	@IndexedEmbedded(depth = 1)
 	private Account applicant;// 发起人
 
 	@Content(extractFields = { "project.name", "project.number", "project.location" })
+	@IndexedEmbedded(depth = 1)
 	private Project project;// 涉及的项目
 
 	private StartDetail startDetail;// 发起字段
@@ -154,8 +158,8 @@ public class CustomerServiceProcess extends BaseProcess {
 		private String projectMan;// 项目联系人
 
 		private String projectNumber;// 项目联系人电话
-		
-		@JSONField(format="yyyy-MM-dd HH:mm:ss")
+
+		@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 		private Date estimatedTime;// 预估维修时间
 
 		private String baseDemands;// 基本要求

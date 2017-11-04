@@ -14,10 +14,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+
 import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
 @Table(name = "device", indexes = { @Index(columnList = "rfid", name = "device_rfid") })
+@Indexed
+@Analyzer(impl = IKAnalyzer.class)
 public class Device extends BaseEntity {
 
 	/**
@@ -26,16 +34,27 @@ public class Device extends BaseEntity {
 	private static final long serialVersionUID = 587030319812196854L;
 
 	@Content(extractFields = { "project.name", "project.number", "project.location" })
+	@IndexedEmbedded(depth = 1)
 	private Project project;
+
 	@Content
+	@Field
 	private String productName;// 产品名称
+
 	@Content
+	@Field
 	private String productNo;// 产品编号
+
 	@Content
+	@Field
 	private String productSpecifications;// 产品规格
+
 	@Content
+	@Field
 	private String serialNo;
+
 	@Content
+	@Field
 	private String rfid;// rfid的值等于二维码的值
 
 	private DevCategory devCategory;

@@ -11,6 +11,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 @Entity
 @Table(name="depGroup")
 public class DepGroup extends BaseEntity{
@@ -20,12 +24,15 @@ public class DepGroup extends BaseEntity{
 	 */
 	private static final long serialVersionUID = 5843865967569372213L;
 
+	@Field
 	private String name;
 	
 	private String code;
 	
+	@IndexedEmbedded
 	private Department department;
 	
+	@ContainedIn
 	private List<Role> roleList = new ArrayList<>();
 
 	public String getName() {

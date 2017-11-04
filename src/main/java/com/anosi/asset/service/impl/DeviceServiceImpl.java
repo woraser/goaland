@@ -4,7 +4,6 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +20,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.component.MapComponent;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.DeviceDao;
-import com.anosi.asset.exception.CustomRunTimeException;
-import com.anosi.asset.model.elasticsearch.DeviceContent;
 import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.District;
 import com.anosi.asset.model.jpa.QDevice;
-import com.anosi.asset.service.DeviceContentService;
 import com.anosi.asset.service.DeviceService;
 import com.anosi.asset.util.MapUtil;
 import com.querydsl.core.Tuple;
@@ -47,8 +42,6 @@ public class DeviceServiceImpl extends BaseJPAServiceImpl<Device> implements Dev
 	private MapComponent mapComponent;
 	@Autowired
 	private EntityManager entityManager;
-	@Autowired
-	private DeviceContentService deviceContentService;
 
 	@Override
 	public BaseJPADao<Device> getRepository() {
@@ -58,55 +51,6 @@ public class DeviceServiceImpl extends BaseJPAServiceImpl<Device> implements Dev
 	@Override
 	public Device findBySerialNo(String serialNo) {
 		return deviceDao.findBySerialNo(serialNo);
-	}
-
-	/***
-	 * 重写save,保存device的同时，将@Content标记的字段内容提取，存储到deviceContent中
-	 * 
-	 */
-	@Override
-	public <S extends Device> S save(S device) {
-		device = deviceDao.save(device);
-
-		try {
-			deviceContentService.saveContent(device);
-		} catch (Exception e) {
-			throw new CustomRunTimeException(e.getMessage());
-		}
-		return device;
-	}
-
-	/***
-	 * 重写批量添加
-	 */
-	@Override
-	public <S extends Device> Iterable<S> save(Iterable<S> devices) {
-		devices = deviceDao.save(devices);
-		try {
-			deviceContentService.saveContent(devices);
-		} catch (Exception e) {
-			throw new CustomRunTimeException(e.getMessage());
-		}
-
-		return devices;
-	}
-
-	/***
-	 * 重写删除
-	 */
-	@Override
-	public void delete(Long id) {
-		super.delete(id);
-		deviceContentService.delete(id.toString());// 删除模糊搜索的索引
-	};
-
-	/***
-	 * 重写删除
-	 */
-	@Override
-	public void delete(Device entity) {
-		super.delete(entity);
-		deviceContentService.delete(entity.getId().toString());// 删除模糊搜索的索引
 	}
 
 	@Override
@@ -193,13 +137,8 @@ public class DeviceServiceImpl extends BaseJPAServiceImpl<Device> implements Dev
 
 	@Override
 	public Page<Device> findByContentSearch(String searchContent, Pageable pageable) {
-		// 防止sort报错，只获取pageable的页数和size
 		logger.debug("page:{},size:{}", pageable.getPageNumber(), pageable.getPageSize());
-		Pageable contentPage = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
-		Page<DeviceContent> deviceContents = deviceContentService.findByContent(searchContent, contentPage);
-		List<Long> ids = deviceContents.getContent().stream().map(c -> Long.parseLong(c.getId()))
-				.collect(Collectors.toList());
-		return findAll(QDevice.device.id.in(ids), contentPage);
+		return deviceDao.findBySearchContent(entityManager, searchContent, pageable);
 	}
 
 }

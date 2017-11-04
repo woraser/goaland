@@ -10,6 +10,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 @Entity
 @Table(name = "role")
 public class Role extends BaseEntity {
@@ -19,12 +23,15 @@ public class Role extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 7714418401452387106L;
 
+	@Field
 	private String name;
 
 	private String code;
 
+	@IndexedEmbedded
 	private DepGroup depGroup;
 
+	@ContainedIn
 	private List<Account> accountList = new ArrayList<Account>();
 
 	@Column(unique = true, nullable = false)

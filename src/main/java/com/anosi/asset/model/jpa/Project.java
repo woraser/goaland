@@ -10,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 /***
@@ -27,16 +30,21 @@ public class Project extends BaseEntity {
 	 */
 	private static final long serialVersionUID = -8182240180903969356L;
 
+	@Field
 	private String name;// 项目名称
 
+	@Field
 	private String number;// 项目编号
 
+	@Field
 	private String location;// 项目地址
 
 	@JSONField(serialize=false)  
+	@ContainedIn
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 
 	@JSONField(serialize=false)  
+	@ContainedIn
 	private List<Device> deviceList = new ArrayList<>();
 
 	public String getName() {
