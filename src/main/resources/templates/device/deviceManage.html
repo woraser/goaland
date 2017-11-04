@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:text="#{deviceManagement}">设备管理</title>
+	
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
+	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
+	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+	
+	<style>
+        .ui-jqgrid-htable{
+        	height: 62px;font-size: 14px;color: #80909c;font-weight: 500;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th div {
+            overflow: hidden;
+            position: relative;
+            height: 62px;
+            padding-top: 20px;color: #798692;font-weight: 500;
+        }
+        .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
+		    height: 62px;
+		    margin-top: 5px;
+		    display: inine-block;
+		}
+        .ui-jqgrid .ui-jqgrid-resize {
+            height: 62px !important;
+            position: relative;
+            cursor: e-resize;
+            display: inline;
+            overflow: hidden;
+        }
+        .ui-jqgrid tr:nth-child(even) {
+            background: #F4F8F9;
+        }
+        .ui-jqgrid tr:nth-child(odd) {
+            background: #FFFFFF;
+        }
+        .ui-jqgrid tr.jqgrow {
+            outline-style: none;
+            height: 50px;
+        }
+        .ui-jqgrid tr.ui-row-ltr td {
+            text-align: left;
+            border-right-width: 0px;
+            border-right-color: inherit;
+            border-right-style: solid;
+            color: #4F6A7F;
+            font-size: 14px;
+        }
+        .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+            border: 0px solid #fcd3a1;
+            background: #fbf8ee;
+            color: #444;
+        }
+        .ui-widget-content {
+            border: 1px solid #eee;
+            background: #fff;
+        }
+    </style>
+	
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jqgrid/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/page/createPage.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/device/deviceManage.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+
+</head>
+
+<body>
+	<div layout:fragment="content" >
+		<div class="table-top">
+        <div class="title-big" th:text="#{deviceManagement}">
+            	设备管理
+        </div>
+        <div class="title-small">
+            >
+        </div>
+    </div>
+    <div class="companyMgr-page">
+        <div class="device-div">
+            <div class="device-div-in">
+                <div id="deviceSearch" class="company-select">
+                    <div class="company-select-title" style="width: 5%;color: #0a0a0a" th:text="#{select}">
+                        	筛选：
+                    </div>
+                    <div class="time-select1" th:text="#{device.commissioningTime}">
+                        	投运时间
+                    </div>
+                    <div class="time-select">
+                        <input id="beginTime" class="form-control " size="10" th:placeholder="#{device.commissioningTime.from}" value=""/>
+                    </div>
+                    <div class="time-select2" th:text="#{to}">
+                        	至
+                    </div>
+                    <div class="time-select">
+                        <input id="endTime" class="form-control " size="10" th:placeholder="#{device.commissioningTime.to}" value=""/>
+                    </div>
+                    <div class="time-select1" style="height:90%;padding-top: 0px;width: 3.5%;margin-left: 1.5%">
+                        <button v-on:click="empty" class="company-button-new" style="background:#B6B6BA;font-size:14px;height: 100%;margin-top: 0%" th:text="#{empty}">
+                            	清除
+                        </button>
+                    </div>
+                    <div class="time-select1" style="height:90%;padding-top: 0px;width: 3.5%;margin-left: 1.5%">
+                        <button id="confirm" class="company-button-new" style="font-size:14px;height: 100%;margin-top: 0%" th:text="#{confirm}">
+                            	确认
+                        </button>
+                    </div>
+
+                    <div class="company-button" style="margin-right: 2%;">
+                        <button class="company-button-new" style="height: 100%;margin-top: 0%" th:text="#{template.download}">
+                            	模板下载
+                        </button>
+                    </div>
+                    <div class="company-button" style="margin-right: 1%;">
+                        <button class="company-button-new" style="background:#00ABF7;height: 100%;margin-top: 0%" th:text="#{batadd}">
+                            	批量导入
+                        </button>
+                    </div>
+                    <div class="company-button" style="margin-right: 1%;">
+                        <button id="add" class="company-button-new" style="background:#00ABF7;height: 100%;margin-top: 0%" th:text="#{add}">
+                           	 新增
+                        </button>
+                    </div>
+                    <div class="company-search" style="float: right;margin-left:1%;margin-top: -1%;margin-right: 2%">
+                        <div class="form-inline hidden-xs">
+                            <div class="input-group input-medium">
+                                <input class="form-control" v-model="searchContent" th:placeholder="#{searchContent}" type="text"/>
+                                <span class="input-group-btn">
+			                        <button id="search" class="btn btn-success" style="background: #D3D5DD;border: 0px"><i class="fa fa-search"></i></button>
+			                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data-table">
+                    <table id="deviceTable"></table>
+                    <div class="zxf_pagediv" id="devicePager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+	</div>
+</body>
+
+
+</html>
+

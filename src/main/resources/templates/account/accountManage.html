@@ -37,6 +37,12 @@
             outline-style: none;
             height: 50px;
         }
+        .ui-jqgrid tr:nth-child(even) {
+            background: #F4F8F9;
+        }
+        .ui-jqgrid tr:nth-child(odd) {
+            background: #FFFFFF;
+        }
         .ui-jqgrid tr.ui-row-ltr td {
             text-align: left;
             border-right-width: 1px;
@@ -76,11 +82,11 @@
 	                    </span>
 	                </div>
 		        </div>
-		        <div shiro:hasPermission="employeeMgr:batadd" class="company-button">
+		        <!-- <div shiro:hasPermission="employeeMgr:batadd" class="company-button">
 		            <button class="company-button-import" th:text="#{batadd}">
 		            	导入
 		            </button>
-		        </div>
+		        </div> -->
 		        <div shiro:hasPermission="employeeMgr:edit" class="company-button" style="margin-right: 1%">
 		            <button id="edit" class="company-button-new" th:text="#{edit}">
 		           		编辑
@@ -100,7 +106,6 @@
 		</div>
 	</div>
 </body>
-
 
 </html>
 

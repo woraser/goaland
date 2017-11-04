@@ -12,37 +12,37 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-		               	{label:$.i18n.prop('account.loginId'),name:'loginId',index:'loginId', width: '120', sortable:false, align: 'center'},
-						{label:$.i18n.prop('account.name'),name:'name',index:'name', width: '120', sortable:false, align: 'center'},
-						{label:$.i18n.prop('account.role.group.department'),name:'role.depGroup.department.name', index:'role.depGroup.department.name', width:'120', sortable: false,align: 'center'},
-						{label:$.i18n.prop('account.role.group'),name:'role.depGroup.name', index:'role.depGroup.name',sortable: true, width:'120', align: 'center',
-							formatter: function (cellvalue, options, rowObject) {
-			                    var detail="";
-			                    $.each(cellvalue,function(){
-			                    	detail += this["depGroup.name"]+"  ";
-			                    })
-			                    return detail;
-			                }
-						},
-						{label:$.i18n.prop('account.role'),name:'role.name', index:'role.name',sortable: true, width:'120', align: 'center',
-							formatter: function (cellvalue, options, rowObject) {
-			                    var detail="";
-			                    $.each(cellvalue,function(){
-			                    	detail += this.name+"  ";
-			                    })
-			                    return detail;
-			                }
-						},
-						{label:$.i18n.prop('account.roleFunctionGroup'),name:'roleFunctionGroup.name', index:'roleFunctionGroup.name',sortable: true, width:'120', align: 'center',
-							formatter: function (cellvalue, options, rowObject) {
-			                    var detail="";
-			                    $.each(cellvalue,function(){
-			                    	detail += this.name+"  ";
-			                    })
-			                    return detail;
-			                }
-						}
-				   	  ];
+           	{label:$.i18n.prop('account.loginId'),name:'loginId',index:'loginId', width: '120', align: 'center'},
+			{label:$.i18n.prop('account.name'),name:'name',index:'name', width: '120', align: 'center'},
+			{label:$.i18n.prop('account.role.group.department'),name:'role.depGroup.department.name', index:'role.depGroup.department.name', width:'120', sortable: false,align: 'center'},
+			{label:$.i18n.prop('account.role.group'),name:'role.depGroup.name', index:'role.depGroup.name',sortable: true, width:'120', align: 'center',
+				formatter: function (cellvalue, options, rowObject) {
+                    var detail="";
+                    $.each(cellvalue,function(){
+                    	detail += this["depGroup.name"]+"  ";
+                    })
+                    return detail;
+                }
+			},
+			{label:$.i18n.prop('account.role'),name:'role.name', index:'role.name',sortable: true, width:'120', align: 'center',
+				formatter: function (cellvalue, options, rowObject) {
+                    var detail="";
+                    $.each(cellvalue,function(){
+                    	detail += this.name+"  ";
+                    })
+                    return detail;
+                }
+			},
+			{label:$.i18n.prop('account.roleFunctionGroup'),name:'roleFunctionGroup.name', index:'roleFunctionGroup.name',sortable: true, width:'120', align: 'center',
+				formatter: function (cellvalue, options, rowObject) {
+                    var detail="";
+                    $.each(cellvalue,function(){
+                    	detail += this.name+"  ";
+                    })
+                    return detail;
+                }
+			}
+	   	  ];
 		 
 		 //每页显示多少行
 		 var rowNum=20;
@@ -70,33 +70,33 @@ $(document).ready(function() {
 		 var myPager = jQuery("#accountPager");
 		 
 		 myGrid.jqGrid({
-	    		datatype: "json",
-	    		url:url,
-	    		postData:params,
-	    		height: '100%',
-	    	   	colModel:colModel,
-	    	   	multiselect: true,
-	    	   	multiboxonly: true,
-	    	   	multiselectWidth: 30,
-	    	   	rowNum: rowNum,
-	    	   	autowidth: true,
-	    	   	forceFit: false,
-	    	   	altRows: false,
-	    	   	viewrecords: true,
-	    	   	
-	    	   	gridComplete:function(){
-	    	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
-	    	   		createPage(myGrid,myPager,lastPage,page,11,url,params);//调用自定义的方法来生成pager
-		    	},
-		    	
-		    	//当触发排序时
-		    	onSortCol:function(index,iCol,sortorder){
-		    		params['sort']=index+","+sortorder;
-		    		myGrid.jqGrid().setGridParam({
-						url:url,
-						postData:params,
-					}).trigger("reloadGrid");
-		    	}
+    		datatype: "json",
+    		url:url,
+    		postData:params,
+    		height: '100%',
+    	   	colModel:colModel,
+    	   	multiselect: true,
+    	   	multiboxonly: true,
+    	   	multiselectWidth: 30,
+    	   	rowNum: rowNum,
+    	   	autowidth: true,
+    	   	forceFit: false,
+    	   	altRows: false,
+    	   	viewrecords: true,
+    	   	
+    	   	gridComplete:function(){
+    	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
+    	   		createPage(myGrid,myPager,lastPage,page,11,url,params);//调用自定义的方法来生成pager
+	    	},
+	    	
+	    	//当触发排序时
+	    	onSortCol:function(index,iCol,sortorder){
+	    		params['sort']=index+","+sortorder;
+	    		myGrid.jqGrid().setGridParam({
+					url:url,
+					postData:params,
+				}).trigger("reloadGrid");
+	    	}
 		    	
 	     });
 		 

@@ -39,6 +39,11 @@
 						<span class="menu-text" th:text="#{documentMgr}" >资料管理</span>
 					</a>
 				</li>
+				<li shiro:hasPermission="deviceManagement:view">
+					<a href="/device/management/view"><i class="fa fa-calendar fa-fw"></i>
+						<span class="menu-text" th:text="#{deviceManagement}" >设备管理</span>
+					</a>
+				</li>
 			</ul>
 			<!-- /SIDEBAR MENU -->
 		</div>

@@ -47,16 +47,8 @@ $(document).ready(function() {
 	  */
 	 var reloadContent = function(page){
 		 params['page']=page;
-		 if($("#beginTime").val()!=null&&$("#beginTime").val()!=""){
-			 params['beginTime']=$("#beginTime").val();
-		 }else{
-			 delete params['beginTime']
-		 }
-		 if($("#endTime").val()!=null&&$("#endTime").val()!=""){
-			 params['endTime']=$("#endTime").val();
-		 }else{
-			 delete params['endTime']
-		 }
+		 params['beginTime']=$("#beginTime").val();
+		 params['endTime']=$("#endTime").val();
 		 $.ajax({
 			url : url,
 			data : params,

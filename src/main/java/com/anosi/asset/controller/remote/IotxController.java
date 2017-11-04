@@ -52,8 +52,8 @@ public class IotxController extends BaseRemoteController {
 	@RequiresPermissions({ "iotxManagement:view" })
 	@RequestMapping(value = "/iotx/management/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findIotxManageData(HttpServletRequest request) {
-		String result = URLConncetUtil.sendGetString(getFullPath(request.getServletPath()), request.getParameterMap(),
-				getHearders());
+		String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath(request.getServletPath()),
+				request.getParameterMap(), remoteComponent.getHearders());
 		return JSON.parseObject(result);
 	}
 

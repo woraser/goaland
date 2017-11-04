@@ -121,13 +121,20 @@ public class RoleFunctionGroupController extends BaseController<RoleFunctionGrou
 	 */
 	@RequestMapping(value = "/roleFunctionGroup/save", method = RequestMethod.POST)
 	@Transactional
-	public JSONObject saveIotx(@ModelAttribute("roleFunctionGroup") RoleFunctionGroup roleFunctionGroup,
+	public JSONObject saveRoleFunctionGroup(@ModelAttribute("roleFunctionGroup") RoleFunctionGroup roleFunctionGroup,
 			String[] selRolesFunctionNode) throws Exception {
 		logger.debug("saveOrUpdate roleFunctionGroup");
 		roleFunctionGroupService.save(roleFunctionGroup, selRolesFunctionNode);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
+	/****
+	 * 删除权限组
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/roleFunctionGroup/delete", method = RequestMethod.POST)
 	public JSONObject deleteRoleFunctionGroup(@RequestParam(value = "id") Long id) throws Exception {
 		logger.debug("delete roleFunctionGroup");

@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
 	$("#accountForm").validate({
-		debug:true,
+		//debug:true,
 		rules : {
 			loginId : {
 				required : true,

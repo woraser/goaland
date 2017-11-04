@@ -64,17 +64,14 @@ $(document).ready(function() {
 	 
 	 //搜索
 	 $("#search").click(function(){
-		 params['searchContent']=$("#searchContent").val();
 		 params['type']=$("#type").val();
-		 if($("#lowerLimit").val()!=null&&$("#lowerLimit").val()!=""){
-			 params['lowerLimit']=$("#lowerLimit").val();
+		 params['lowerLimit']=$("#lowerLimit").val();
+		 params['upperLimit']=$("#upperLimit").val();
+		 if($("#searchContent").val()!=null&&$("#searchContent").val()!=""){
+			 params['searchContent']=$("#searchContent").val();
+			 params['size']=5;
 		 }else{
-			 delete params['lowerLimit'];
-		 }
-		 if($("#upperLimit").val()!=null&&$("#upperLimit").val()!=""){
-			 params['upperLimit']=$("#upperLimit").val();
-		 }else{
-			 delete params['upperLimit'];
+			 params['size']=3;
 		 }
 		 search(0);
 	 })

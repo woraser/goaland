@@ -1,5 +1,8 @@
 package com.anosi.asset.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Device;
 import com.querydsl.core.types.Predicate;
@@ -23,5 +26,14 @@ public interface DeviceService extends BaseJPAService<Device>{
 	 * @return
 	 */
 	public JSONArray ascertainArea(Predicate predicate);
+
+	/****
+	 * 模糊搜索
+	 * 
+	 * @param searchContent
+	 * @param pageable
+	 * @return
+	 */
+	public Page<Device> findByContentSearch(String searchContent, Pageable pageable);
 
 }

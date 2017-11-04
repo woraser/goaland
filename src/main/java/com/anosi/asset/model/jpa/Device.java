@@ -8,13 +8,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.anosi.asset.model.elasticsearch.Content;
+
 @Entity
-@Table(name = "device")
+@Table(name = "device", indexes = { @Index(columnList = "rfid", name = "device_rfid") })
 public class Device extends BaseEntity {
 
 	/**
@@ -22,16 +25,17 @@ public class Device extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 587030319812196854L;
 
+	@Content(extractFields = { "project.name", "project.number", "project.location" })
 	private Project project;
-
+	@Content
 	private String productName;// 产品名称
-
+	@Content
 	private String productNo;// 产品编号
-
+	@Content
 	private String productSpecifications;// 产品规格
-
+	@Content
 	private String serialNo;
-
+	@Content
 	private String rfid;// rfid的值等于二维码的值
 
 	private DevCategory devCategory;
@@ -79,8 +83,7 @@ public class Device extends BaseEntity {
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
 	}
-	
-	@Column(unique = true, nullable = false)
+
 	public String getRfid() {
 		return rfid;
 	}
@@ -99,7 +102,8 @@ public class Device extends BaseEntity {
 		this.devCategory = devCategory;
 	}
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = Materiel.class)
+	@OneToMany(cascade = { CascadeType.MERGE,
+			CascadeType.REMOVE }, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = Materiel.class)
 	public List<Materiel> getMaterielList() {
 		return materielList;
 	}
@@ -108,7 +112,8 @@ public class Device extends BaseEntity {
 		this.materielList = materielList;
 	}
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = TechnicalParameter.class)
+	@OneToMany(cascade = { CascadeType.MERGE,
+			CascadeType.REMOVE }, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = TechnicalParameter.class)
 	public List<TechnicalParameter> getTechnicalParameterList() {
 		return technicalParameterList;
 	}
