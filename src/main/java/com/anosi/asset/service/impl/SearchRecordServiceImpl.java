@@ -21,7 +21,8 @@ import com.anosi.asset.util.PinyinUtil;
 
 @Service("searchRecordService")
 @Transactional
-public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<SearchRecord, String> implements SearchRecordService {
+public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<SearchRecord, String>
+		implements SearchRecordService {
 
 	@Autowired
 	private SearchRecordDao searchRecordDao;
@@ -29,7 +30,7 @@ public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<Search
 	private RedisTemplate<String, String> redisTemplate;
 
 	private int centerLimit = 5;
-	
+
 	@Override
 	public BaseElasticSearchDao<SearchRecord, String> getRepository() {
 		return searchRecordDao;
@@ -38,7 +39,8 @@ public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<Search
 	@Override
 	public List<SearchRecord> findBySearchContent(String searchContent, Pageable pageable) {
 		// 先查询个人词库，再查询中央词库
-		List<SearchRecord> locals = findLocal(searchContent, "search_"+sessionComponent.getCurrentUser().getLoginId(), pageable);
+		List<SearchRecord> locals = findLocal(searchContent, "search_" + sessionComponent.getCurrentUser().getLoginId(),
+				pageable);
 		if (locals.size() < pageable.getPageSize()) {
 			List<SearchRecord> centers = findCenter(searchContent, new PageRequest(pageable.getPageNumber(),
 					pageable.getPageSize() - locals.size(), pageable.getSort()));
@@ -73,7 +75,7 @@ public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<Search
 	}
 
 	@Override
-	@Async  
+	@Async
 	public void insertInto(String searchContent, String account) {
 		if (insetIntoLocal(searchContent, account)) {
 			insertIntoCenter(searchContent);
@@ -96,6 +98,11 @@ public class SearchRecordServiceImpl extends BaseElasticSearchServiceImpl<Search
 		SearchRecord searchRecord = new SearchRecord();
 		searchRecord.setSearchContent(searchContent);
 		searchRecordDao.save(searchRecord);
+	}
+
+	@Override
+	public void clearLocal(String account) {
+		redisTemplate.delete(account);
 	}
 
 }

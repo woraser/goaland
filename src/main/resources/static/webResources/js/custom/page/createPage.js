@@ -12,6 +12,7 @@ function createPage(gridDom,pageDom,pageNum,page,showNum,url,params){
 			//回调方法
 			backfun: function(e) {
 				page=e.current-1;//点中的页码
+				params.page=page
 				//刷新表格
 				gridDom.jqGrid('setGridParam', {
 			        url : url,

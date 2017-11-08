@@ -79,7 +79,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 */
 	@RequestMapping(value = "/fileMetaData/management/data/one", method = RequestMethod.GET)
 	public JSONObject findFileMetaDataManageDataOne(@QuerydslPredicate(root = FileMetaData.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes) throws Exception {
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
 		logger.info("find messageInfo one");
 		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
 				fileMetaDataService.findOne(predicate));
@@ -149,7 +149,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 			@PathVariable ShowType showType,
 			@PageableDefault(sort = {
 					"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
 		logger.info("to view file list");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());

@@ -58,7 +58,7 @@ public class RoleFunctionGroupController extends BaseController<RoleFunctionGrou
 	public JSONObject findRoleFunctionGroupManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = RoleFunctionGroup.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
 		logger.info("find roleFunctionGroup");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());

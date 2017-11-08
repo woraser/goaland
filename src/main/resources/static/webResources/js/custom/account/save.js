@@ -76,7 +76,7 @@ $(document).ready(function() {
 		$.ajax({
 			url : '/account/checkExist',
 			data : {
-				'loginId' : $("#loginId").val(),
+				'loginId' : value,
 			},
 			type : 'get',
 			dataType : 'json',

@@ -38,7 +38,7 @@ public class TechnicalParameterController extends BaseController<TechnicalParame
 	public JSONObject findTechnicalParameterData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = TechnicalParameter.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception{
 		
 		return parseToJson(technicalParameterService.findAll(predicate, pageable), rowId, showAttributes, showType);

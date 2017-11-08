@@ -90,7 +90,7 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	 */
 	@RequestMapping(value = "/technologyDocument/search/{showType}", method = RequestMethod.GET)
 	public JSONObject fileDownloadList(@PathVariable ShowType showType, TechnologyDocument technologyDocument,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@PageableDefault(sort = { "uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
 			throws Exception {

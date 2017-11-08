@@ -85,7 +85,44 @@
 	                    </div>
 	                </div>
               <div style="width: 100%;height: 45%">
-                  <div v-for="fileData in fileDatas" style="width:100%;height: 35%;border-bottom: 1px solid #DADADA"> <!--文档列表 -->
+              	 <!-- 查询 -->
+                 <div v-if="seenDetail" v-for="fileData in fileDatas" style="width:100%;height: 53%;border-bottom: 1px solid #DADADA"> <!--文档列表 -->
+                    <div class="half-div">
+                    <div style="float:left;width: 9%;height: 100%;">
+                        <img v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 65%;height: 80%;margin-top: 10%;margin-left: 10%"/>
+                    	<img v-if="picture.indexOf(fileData.suffix) > 0" v-bind:src="'/fileDownload/'+fileData.fileId" style="width: 65%;height: 80%;margin-top: 10%;margin-left: 10%"/>
+                    </div>
+                    <div class="knowledgeInfo" >
+                        <div style="float: left;width: 100%;height: 50%;">
+                            <div v-html="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;padding-left: 5%;padding-top: 13%">
+                            </div>
+                        </div>
+                    </div> <!--文档信息 -->
+                    <div class="knowledgeDev" >
+                         {{fileData.type}}
+                    </div><!-- 文档类型-->
+                    <div class="upLoader" >
+                       	 {{fileData.uploader}}
+                    </div><!--上传人-->
+                    <div class="upTime" >
+                         {{fileData.uploadTime}}
+                    </div><!--上传时间 -->
+                    <div class="handle" >
+                        <a v-bind:href="'/fileDownload/'+fileData.fileId"><img src="/webResources/img/file/download.png"/></a>
+                        <a v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
+                    	<a v-if="picture.indexOf(fileData.suffix) > 0" v-bind:href="'/fileDownload/'+fileData.fileId" data-lighter="data-lighter"><img src="/webResources/img/file/preview.png"/></a>
+                    </div>
+                    </div>
+                    <div class="half-div">
+                        <div style="width: 10%;height: 100%;float: left">
+                        </div>
+                        <div v-html="fileData.highLightContent" style="overflow:hidden;text-overflow:ellipsis;width: 82%;height: 100%;float: left">
+                        </div>
+                    </div>
+                </div>
+                
+              	  <!-- 不查询 -->
+                  <div v-if="!seenDetail" v-for="fileData in fileDatas" style="width:100%;height: 35%;border-bottom: 1px solid #DADADA"> <!--文档列表 -->
                     <div style="float:left;width: 9%;height: 100%;">
                         <img v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
                     	<img v-if="picture.indexOf(fileData.suffix) > 0" v-bind:src="'/fileDownload/'+fileData.fileId" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
@@ -110,7 +147,6 @@
                         <a v-if="pdf.indexOf(fileData.suffix) > 0" v-bind:href="'/webResources/plugins/pdfJS/web/viewer.html?file=/filePreview/'+fileData.fileId" target="_blank"><img src="/webResources/img/file/preview.png"/></a>
                     	<a v-if="picture.indexOf(fileData.suffix) > 0" v-bind:href="'/fileDownload/'+fileData.fileId" data-lighter="data-lighter"><img src="/webResources/img/file/preview.png"/></a>
                     </div>
-                    <div v-if="seenDetail" v-html="fileData.highLightContent"></div>
                 </div>
                <div class="zxf_pagediv" id="dataPager"></div>
               </div>

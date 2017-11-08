@@ -86,7 +86,7 @@ $(document).ready(function() {
     	   	
     	   	gridComplete:function(){
     	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
-    	   		createPage(myGrid,myPager,lastPage,page,11,url,params);//调用自定义的方法来生成pager
+    	   		createPage(myGrid,myPager,lastPage,params.page,11,url,params);//调用自定义的方法来生成pager
 	    	},
 	    	
 	    	//当触发排序时

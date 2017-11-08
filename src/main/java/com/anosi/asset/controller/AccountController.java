@@ -70,7 +70,7 @@ public class AccountController extends BaseController<Account> {
 	public JSONObject findAccountManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = Account.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent) throws Exception {
 		logger.info("find account");

@@ -44,6 +44,16 @@
 						<span class="menu-text" th:text="#{deviceManagement}" >设备管理</span>
 					</a>
 				</li>
+				<li shiro:hasPermission="iotxManagement:view">
+					<a href="/iotx/management/view"><i class="fa fa-calendar fa-fw"></i>
+						<span class="menu-text" th:text="#{iotxMgr}" >iotx管理</span>
+					</a>
+				</li>
+				<li shiro:hasPermission="sensorManagement:view">
+					<a href="/sensor/management/view"><i class="fa fa-calendar fa-fw"></i>
+						<span class="menu-text" th:text="#{sensorMgr}" >传感器管理</span>
+					</a>
+				</li>
 			</ul>
 			<!-- /SIDEBAR MENU -->
 		</div>

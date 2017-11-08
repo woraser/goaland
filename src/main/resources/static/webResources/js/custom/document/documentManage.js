@@ -71,6 +71,7 @@ $(document).ready(function() {
 			 params['searchContent']=$("#searchContent").val();
 			 params['size']=5;
 		 }else{
+			 delete params['searchContent']
 			 params['size']=3;
 		 }
 		 search(0);

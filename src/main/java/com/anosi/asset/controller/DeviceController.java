@@ -27,6 +27,7 @@ import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.QDevice;
 import com.anosi.asset.service.DevCategoryService;
 import com.anosi.asset.service.DeviceService;
+import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
 
@@ -52,6 +53,23 @@ public class DeviceController extends BaseController<Device> {
 	}
 
 	/***
+	 * 根据条件查询某个device
+	 * 
+	 * @param showType
+	 * @param predicate
+	 * @param showAttributes
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/management/data/one", method = RequestMethod.GET)
+	public JSONObject findDeviceManageDataOne(@QuerydslPredicate(root = Device.class) Predicate predicate,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
+		logger.info("find device one");
+		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
+				deviceService.findOne(predicate));
+	}
+
+	/***
 	 * 获取设备数据
 	 * 
 	 * @param showType
@@ -66,7 +84,7 @@ public class DeviceController extends BaseController<Device> {
 	public JSONObject findDeviceManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = Device.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,

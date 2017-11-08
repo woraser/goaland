@@ -12,22 +12,22 @@
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
 	
 	<style>
-        .ui-jqgrid-htable{
-        height: 62px;font-size: 14px;color: #A7B7C3;font-weight: 500;
+		.ui-jqgrid-htable{
+            height: 40px;font-size: 14px;color: #80909c;font-weight: 500;
         }
         .ui-jqgrid .ui-jqgrid-htable th div {
             overflow: hidden;
             position: relative;
-            height: 62px;
-            padding-top: 20px;color: #A7B7C3;font-weight: 500;
+            height: 40px;
+            padding-top: 10px;color: #798692;font-weight: 500;
         }
         .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
-		    height: 62px;
+		    height: 40px;
 		    margin-top: 5px;
 		    display: inine-block;
 		}
         .ui-jqgrid .ui-jqgrid-resize {
-            height: 62px !important;
+            height: 40px !important;
             position: relative;
             cursor: e-resize;
             display: inline;
@@ -35,7 +35,24 @@
         }
         .ui-jqgrid tr.jqgrow {
             outline-style: none;
-            height: 50px;
+            height: 40px;
+        }
+        .ui-jqgrid tr.ui-row-ltr td {
+            text-align: left;
+            border-right-width: 0px;
+            border-right-color: inherit;
+            border-right-style: solid;
+            color: #4F6A7F;
+            font-size: 14px;
+        }
+        .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+            border: 0px solid #fcd3a1;
+            background: #fbf8ee;
+            color: #444;
+        }
+        .ui-widget-content {
+            border: 1px solid #eee;
+            background: #fff;
         }
         .ui-jqgrid tr:nth-child(even) {
             background: #F4F8F9;
@@ -43,13 +60,8 @@
         .ui-jqgrid tr:nth-child(odd) {
             background: #FFFFFF;
         }
-        .ui-jqgrid tr.ui-row-ltr td {
-            text-align: left;
-            border-right-width: 1px;
-            border-right-color: inherit;
-            border-right-style: solid;
-            color: #4F6A7F;
-            font-size: 14px;
+        .table-tr{
+            height: 5px;
         }
     </style>
 	

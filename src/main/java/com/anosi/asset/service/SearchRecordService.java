@@ -53,5 +53,12 @@ public interface SearchRecordService extends BaseElasticSearchService<SearchReco
 	 * @param searchContent
 	 */
 	public void insertIntoCenter(String searchContent);
+
+	/***
+	 * 清空个人搜索记录
+	 * 
+	 * @param account
+	 */
+	void clearLocal(String account);
 	
 }

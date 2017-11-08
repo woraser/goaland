@@ -51,7 +51,7 @@ public class MessageInfoController extends BaseController<MessageInfo> {
 	 */
 	@RequestMapping(value = "/messageInfo/management/data/one", method = RequestMethod.GET)
 	public JSONObject findMessageInfoManageDataOne(@QuerydslPredicate(root = MessageInfo.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes) throws Exception {
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
 		logger.info("find messageInfo one");
 		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
 				messageInfoService.findOne(predicate));
@@ -72,7 +72,7 @@ public class MessageInfoController extends BaseController<MessageInfo> {
 	public JSONObject findMessageInfoManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 5) Pageable pageable,
 			@QuerydslPredicate(root = MessageInfo.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
 		logger.info("find messageInfo");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());

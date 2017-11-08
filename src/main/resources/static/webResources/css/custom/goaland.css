@@ -2,11 +2,14 @@
 
     background: #F4F6F9;
 }
+.half-div{
+    width: 100% ;height: 50%;
+}
 .logo-top{
     width: 60%;height: 100%;margin-left: 14%;background: #FFFFFF;
 }
 .dashboard{
-    width:100%;height: 895px;background: #E2E2E2;padding: 0.8%;
+    width:100%;height: 897px;background: #E2E2E2;padding: 0.8%;
 }
 .dashboardin{
     width: 100%;height: 100%;background: #F1F1F1;padding: 1.5%;
@@ -57,7 +60,7 @@
     width: 100%;height: 90%;
 }
 .companyMgr-page{
-    width:100%;height:846px;background: #F4F6F9;
+    width:100%;height:847px;background: #F4F6F9;
 }
 .companyMgr-edge{
     width:100%;height:897px;padding: 2%;
@@ -387,7 +390,7 @@
     height: 6%;width: 100%;padding-left: 15px;color: #A1ACB2;
 }
 .other-require1{
-    height: 20%;width: 90%;margin-left: 10%;background: #FFFFFF;border: solid #CDCDCD 1px;margin-bottom: 10px;
+    height: 20%;width: 100%;margin-left: 10%;background: #FFFFFF;border: solid #CDCDCD 1px;margin-bottom: 10px;
 }
 .other-img{
     width: 100%;height: 30%;
@@ -401,6 +404,148 @@
 .device-select{
     width: 100%;height: 5%;
 }
+.iotx-top{
+    width: 100%;height: 45%;border: solid #E1E2E3 1px;
+}
+.iotx-top-left{
+    width: 66.5%;height: 100%;float: left;
+}
+.iotx-top-right{
+    width: 33.5%;height: 100%;float: left;padding: 0% 2.5%;background: #FFFFFF;
+}
+.iotx-top-right-charts{
+    width: 100%;height: 30%;
+}
+.iotx-top-right-warnings{
+    width: 100%;height: 50%;
+}
+.iotx-top-right-title{
+    width: 100%;height: 10%;font-weight: 800;font-size: 16px;color: #737782;padding-top: 4%;
+}
+.warnings{
+    width: 100%;height: 22.5%;border-bottom: solid #EDEFF1 1px;padding: 2% ;
+}
+.warnings-img{
+    width: 17%;height: 100%;float: left;text-align: center;padding-top: 2%;
+}
+.iotx-name{
+    width: 50%;height: 100%;float: left;
+}
+.iotx-name-detail{
+    width: 100%;height: 50%;
+}
+.iotx-time{
+    width: 26%;height: 80%;float: right;
+}
+.time-img{
+    width: 5%;height: 100%;float: left;
+}
+.iotx-time-top{
+    width: 100%;height: 50%;font-size: 12px;
+}
+.iotx-time-down{
+    width: 100%;height: 50%;color: #BDBDBD;font-size: 12px;
+}
+.iotx-bottom{
+    width: 100%;height: 53%;margin-top: 1.5%;background: #FFFFFF;border: solid #E1E2E3 1px;
+}
+.iotx-list{
+    width: 100%;height: 76%;
+}
+.iotx-detail-top{
+    width: 100%;height: 40%;
+}
+.iotx-detail-bottom{
+    width: 100%;height: 60%;border: solid #CCCCCC 1px;margin-top: 2%;background: #FFFFFF;
+}
+.detail-top-one{
+    width: 17%;height: 100%;border: solid #CCCCCC 1px;float: left;
+}
+.detail-top-two{
+    background:#FFFFFF;width: 25%;height: 100%;border: solid #CCCCCC 1px;float: left;margin-left: 1%;padding-top: 1%;padding-left: 2%;
+}
+.detail-top-three{
+    width: 37%;height: 100%;border: solid #CCCCCC 1px;float: left;margin-left: 1%;background: #FFFFFF;
+}
+.detail-top-four{
+    width: 18%;height: 100%;float: left;margin-left: 1%;
+}
+.time-line-circle{
+    width: 33.3%;height:44%;float: left;text-align: center;padding-top: 6%;
+}
+.time-line-detail{
+    width: 33.3%;height:56%;float: left;text-align: center;padding: 0% 3.5% 4% 3.5%;
+}
+.iotx-detail-in{
+    width: 100%;height: 100%;border: solid #91C5DB 1px;
+}
+.iotx-detail-in-title{
+    width: 30%;
+    height: 12%;
+    margin-left: 37%;
+    margin-top: -7%;
+    background: #FFFFFF;
+    font-size: 16px;
+}
+.detail-top-four-right{
+    width: 100%;height: 30.9%;margin-top: 4%;
+}
+.iotx-detail-table{
+    width: 100%;height: 87%;padding: 1% 2%;
+}
+.sensor-div-top{
+    width: 74.5%; height: 31.5%;float: left;
+}
+.sensor-div-right{
+    width: 24.5%;height: 100.5%;float: right;border: solid #CCCCCC 1px;
+}
+.sensor-div-bottom{
+    width:74.5%;height: 67%;float: left;margin-top: 1%;border: solid #CCCCCC 1px;padding: 1%;background: #FFFFFF;
+}
+.sensor-top-left{
+    width: 72.5%;height: 100%;float: left;border: solid #CCCCCC 1px;background: #FFFFFF;
+}
+.sensor-top-right{
+    width: 26.5%;height: 100%;float: right;
+}
+.sensor-data{
+    width: 48.5%;height: 54%;color: #FFFFFF;
+}
+.sensor-data-on{
+    width: 100%;height: 18%;margin-top: 4%;float: left;border: solid #CCCCCC 1px;padding: 3% 6%;background: #FFFFFF;
+}
+.sensor-data-on-left{
+     width: 40%;height: 100%;color: #7B8F9F;
+ }
+.sensor-data-on-left{
+    width: 40%;height: 100%;color: #7B8F9F;text-align: left;float: left;font-size: 16px;
+}
+.sensor-data-on-right{
+    width: 60%;height: 100%;color: #7B8F9F;text-align: right;float: left;font-size: 16px;
+}
+.sensor-div-right-top{
+    width: 100%;height: 11.5%;padding: 3%;background: #FFFFFF;
+}
+.sensor-warnings-title{
+    color: #FC8060;font-size: 20px;font-weight: 500;text-align: center;width: 30%;padding-top: 5%;float: left;
+}
+.sensor-warnings-data{
+    width: 30%;height: 100%;background: #6DB2CF;float: right;
+}
+.sensor-div-bottom-title{
+    width: 50%;height: 8%;background: red;float: left;
+}
+.sensor-top-left-div{
+    width: 18%;height:80%;margin-left: 1%;float: left;text-align: center;
+}
+.sensor-top-left-overdiv{
+    width: 18%;height:80%;margin-left: 1%;float: left;text-align: center;
+    border-radius: 3px;box-shadow: #666 0px 0px 10px;
+}
+.connect-img{
+    width: 18%;height:80%;margin-left: 1%;float: left;
+}
+
 
 
 

@@ -44,11 +44,11 @@ public class InitData {
 	@Test
 	@Rollback(false)
 	public void initData() throws Exception{
-		initEngineerManager();
+		/*initEngineerManager();
 		initCustomerServicer();
-		initEngineer();
+		initEngineer();*/
 		initType();
-		initDevice();
+		//initDevice();
 		initProject();
 	}
 	

@@ -76,7 +76,7 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 			String[] selRolesFunctionNode) throws Exception {
 		// 如果是新添加用户，在iotx系统中远程添加
 		if (account.getId() == null) {
-			String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath("/account/save/remote"),
+			String result = URLConncetUtil.sendPostString(remoteComponent.getFullPath("/account/save/remote"),
 					"loginId=" + account.getLoginId() + "&password=" + password, remoteComponent.getHearders());
 			JSONObject jsonObject = JSON.parseObject(result);
 			if (!Objects.equals(jsonObject.getString("result"), "success")) {

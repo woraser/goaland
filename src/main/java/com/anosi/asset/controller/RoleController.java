@@ -19,13 +19,13 @@ import com.anosi.asset.service.RoleService;
 import com.querydsl.core.types.Predicate;
 
 @RestController
-public class RoleController extends BaseController<Role>{
+public class RoleController extends BaseController<Role> {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
-	
+
 	@Autowired
 	private RoleService roleService;
-	
+
 	/***
 	 * 获取条件获得角色数据
 	 * 
@@ -41,7 +41,7 @@ public class RoleController extends BaseController<Role>{
 	public JSONObject findRoleManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = Role.class) Predicate predicate,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
 		logger.info("find roleFunctionGroup");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
@@ -49,5 +49,5 @@ public class RoleController extends BaseController<Role>{
 
 		return parseToJson(roleService.findAll(predicate, pageable), rowId, showAttributes, showType);
 	}
-	
+
 }

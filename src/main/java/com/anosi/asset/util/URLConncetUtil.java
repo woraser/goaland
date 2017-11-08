@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -131,9 +133,11 @@ public class URLConncetUtil {
 	 * @param headers
 	 *            自定义的请求头
 	 * @return
+	 * @throws UnsupportedEncodingException
 	 */
-	public static String sendGetString(String url, Map<String, String[]> parameterMap, Map<String, String> headers) {
-		URLConnection connection = sendGet(url, convertParams(parameterMap), headers);
+	public static String sendGetString(String url, Map<String, String[]> parameterMap, Map<String, String> headers)
+			throws UnsupportedEncodingException {
+		URLConnection connection = sendGet(url, convertParams(parameterMap, true), headers);
 		return readAndAppendLines(connection);
 	}
 
@@ -146,9 +150,11 @@ public class URLConncetUtil {
 	 * @param headers
 	 *            自定义的请求头
 	 * @return
+	 * @throws UnsupportedEncodingException
 	 */
-	public static String sendPostString(String url, Map<String, String[]> parameterMap, Map<String, String> headers) {
-		URLConnection connection = sendPost(url, convertParams(parameterMap), headers);
+	public static String sendPostString(String url, Map<String, String[]> parameterMap, Map<String, String> headers)
+			throws UnsupportedEncodingException {
+		URLConnection connection = sendPost(url, convertParams(parameterMap, false), headers);
 		return readAndAppendLines(connection);
 	}
 
@@ -204,18 +210,27 @@ public class URLConncetUtil {
 	 * 将parameterMap处理成 name1=value1&name2=value2 的形式
 	 * 
 	 * @param parameterMap
+	 * @param encoding
 	 * @return
+	 * @throws UnsupportedEncodingException
 	 */
-	public static String convertParams(Map<String, String[]> parameterMap) {
-		StringBuilder params = new StringBuilder();
-		for (Entry<String, String[]> entry : parameterMap.entrySet()) {
-			String[] values = entry.getValue();
-			for (String value : values) {
-				params.append(entry.getKey() + "=" + value + "&");
+	public static String convertParams(Map<String, String[]> parameterMap, boolean encoding)
+			throws UnsupportedEncodingException {
+		if (parameterMap != null && parameterMap.size() != 0) {
+			StringBuilder params = new StringBuilder();
+			for (Entry<String, String[]> entry : parameterMap.entrySet()) {
+				String[] values = entry.getValue();
+				for (String value : values) {
+					if (encoding) {
+						value = URLEncoder.encode(value, "utf-8");
+					}
+					params.append(entry.getKey() + "=" + value + "&");
+				}
 			}
+			params.deleteCharAt(params.length() - 1);// 删除最后一个"&"
+			return params.toString();
 		}
-		params.deleteCharAt(params.length() - 1);// 删除最后一个"&"
-		return params.toString();
+		return null;
 	}
 
 	/***

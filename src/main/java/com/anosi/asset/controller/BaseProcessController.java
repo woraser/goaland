@@ -66,7 +66,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	@RequestMapping(value = "/startedProcess/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findStartedProcess(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
 			@RequestParam(value = "timeType", required = false) String timeType,
@@ -140,7 +140,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	@RequestMapping(value = "/runtimeTask/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findRuntimeTaskDatas(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
@@ -201,7 +201,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	@RequestMapping(value = "/historicTasks/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findHistoricTasks(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
 			@RequestParam(value = "timeType", required = false) String timeType,
@@ -243,7 +243,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	@RequestMapping(value = "/allProcesses/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findAllProcesses(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
-			@RequestParam(value = "showAttributes") String showAttributes,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
 			@RequestParam(value = "timeType", required = false) String timeType,
@@ -277,8 +277,8 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/process/detail/{id}", method = RequestMethod.GET)
-	public JSONObject findById(@PathVariable Long id, @RequestParam(value = "showAttributes") String showAttributes)
-			throws Exception {
+	public JSONObject findById(@PathVariable Long id,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
 		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
 				getProcessService().getDetail(getProcessService().findOne(id)));
 	}
@@ -292,8 +292,8 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/process/detail/taskDatas/{id}", method = RequestMethod.GET)
-	public JSONArray getTaskDatas(@PathVariable Long id, @RequestParam(value = "showAttributes") String showAttributes)
-			throws Exception {
+	public JSONArray getTaskDatas(@PathVariable Long id,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
 		JSONArray jsonArray = new JSONArray();
 		List<HistoricTaskInstance> taskDatas = getProcessService().getTaskDatas(getProcessService().getOne(id));
 		JsonUtil<HistoricTaskInstance> historicJsonUtil = new JsonUtil<>();

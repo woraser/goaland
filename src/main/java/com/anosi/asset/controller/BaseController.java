@@ -103,19 +103,22 @@ public class BaseController<T> extends GlobalController<T> {
 	protected JSONObject parseToJson(Page<T> pages, String rowId, String showAttributes, ShowType showType)
 			throws Exception {
 		JSONObject jsonObject = null;
+		String[] attributes = null;
+		if (StringUtils.isNoneBlank(attributes)) {
+			attributes = StringUtil.splitAttributes(showAttributes);
+		}
 		switch (showType) {
 		case GRID:
-			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, StringUtil.splitAttributes(showAttributes));
+			jsonObject = jqgridUtil.parsePageToJqgridJson(pages, rowId, attributes);
 			break;
 		case REMOTE:
-			jsonObject = jsonUtil.parseAttributesToJson(pages, StringUtil.splitAttributes(showAttributes));
+			jsonObject = jsonUtil.parseAttributesToJson(pages, attributes);
 			break;
 		case DATATABLES:
-			jsonObject = dataTablesUtil.parsePageToDataTablesJson(pages, rowId,
-					StringUtil.splitAttributes(showAttributes));
+			jsonObject = dataTablesUtil.parsePageToDataTablesJson(pages, rowId, attributes);
 			break;
 		default:
-			jsonObject = jsonUtil.parseAttributesToJson(pages, StringUtil.splitAttributes(showAttributes));
+			jsonObject = jsonUtil.parseAttributesToJson(pages, attributes);
 		}
 		return jsonObject;
 	}

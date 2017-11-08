@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.exception.CustomRunTimeException;
@@ -48,6 +49,12 @@ public class JsonUtil<T> {
 	 */
 	public JSONObject parseAttributesToJson(String[] attributes, T t) throws Exception {
 		JSONObject jsonObject = new JSONObject();
+		if (t == null) {
+			return jsonObject;
+		}
+		if (attributes == null) {
+			return JSON.parseObject(JSON.toJSONString(t));
+		}
 		for (String attribute : attributes) {
 			if (attribute.contains("*.")) {
 				// 2代表只对*.分割一次

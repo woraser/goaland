@@ -28,12 +28,13 @@ $(document).ready(function() {
 		{label:$.i18n.prop('device.serialNo'),name:'serialNo',index:'serialNo', width: '120', align: 'center'},
 		{label:$.i18n.prop('device.rfid'),name:'rfid',index:'rfid', width: '120', align: 'center'},
 		{
-            label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 90, align:'center',
+            label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150, align:'center',
             formatter: function (cellvalue, options, rowObject) {
-            	//var hrefUrl='/iotx/management/detail/'+options.rowId+"/view";
-                //var detail="<input value='详情' type='button' onclick='window.location.href=\""+hrefUrl+"\"' class='btn btn-small btn-primary btn-xs' style='background:#434A5D;border-color:#0192D7;color:white;border-radius:15px 15px;width:80px'/>";
-            	//var detail="<input value='编辑' type='button' edit='"+options.rowId+"' class='btn btn-small btn-primary btn-xs' style='background:#434A5D;border-color:#0192D7;color:white;border-radius:15px 15px;width:80px'/>";
-            	var detail="<input value='删除' type='button' delete='"+options.rowId+"' class='btn btn-small btn-primary btn-xs' style='background:#434A5D;border-color:#0192D7;color:white;border-radius:15px 15px;width:80px'/>";
+            	var detail;
+            	var editImg = "<a href='#' edit='"+options.rowId+"'><img src='/webResources/img/operate/edit.png'/></a>"
+            	var deleteImg = "<a href='#'delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
+            	var detailImg = "<a href='#'><img src='/webResources/img/operate/detail.png'/></a>"
+            	detail = editImg + deleteImg + detailImg
             	return detail;
             },
         },
@@ -90,7 +91,7 @@ $(document).ready(function() {
  	   	
  	   	gridComplete:function(){
  	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
- 	   		createPage(myGrid,myPager,lastPage,page,11,url,params);//调用自定义的方法来生成pager
+ 	   		createPage(myGrid,myPager,lastPage,params.page,11,url,params);//调用自定义的方法来生成pager
 	    },
 	    	
     	//当触发排序时
@@ -134,7 +135,7 @@ $(document).ready(function() {
 	 })
 	 
 	 // 编辑按钮绑定事件
-	 $(document).on("click","input[edit]",function(){
+	 $(document).on("click","a[edit]",function(){
 		 var func=function(){
 			 if($("#deviceForm").valid()){
 				 $("#deviceForm").submit();
@@ -147,7 +148,7 @@ $(document).ready(function() {
 	 });
 	 
 	 // 删除按钮绑定事件
-	 $(document).on("click","input[delete]",function(){
+	 $(document).on("click","a[delete]",function(){
 		 var id = $(this).attr("delete");
 		 var func = function(){
 			 $.blockUI({
