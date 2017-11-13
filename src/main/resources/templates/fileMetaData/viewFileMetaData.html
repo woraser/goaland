@@ -10,7 +10,7 @@
 </head>
 
 <body>
-	<div class="form-horizontal" id="fileMetaData">
+	<div class="form-horizontal" id="fileMetaData" v-cloak="v-cloak">
 		<input type="hidden" id="fileMetaDataId" th:value="${objectId}"/>
     	<div class="form-group">
 	    	<label class="col-sm-3 control-label" th:text="#{fileMetaData.fileName}" for="loginId"></label>  

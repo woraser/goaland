@@ -111,7 +111,7 @@
 		        <div class="iotx-top-right-title" th:text="#{iotx.alarmData}">
 		            	告警数据
 		        </div>
-		        <div id="alarmDatas" class="iotx-top-right-warnings">
+		        <div id="alarmDatas" class="iotx-top-right-warnings" v-cloak="v-cloak">
 		            <div v-for="alarm in alarms" class="warnings">
 		                <div class="warnings-img">
 		                    <img src="/webResources/img/iotx/warning.png"/>
@@ -140,7 +140,7 @@
 		    </div>
 		</div>
 		    <div class="iotx-bottom" >
-		        <div id="iotxSearch" class="company-select">
+		        <div id="iotxSearch" class="company-select" v-cloak="v-cloak">
 		            <div class="company-select-title" style="width: 5%;color: #0a0a0a" th:text="#{select}">
 		                	筛选：
 		            </div>

@@ -10,7 +10,7 @@
 </head>
 
 <body>
-	<div class="form-horizontal" id="messageInfo">
+	<div class="form-horizontal" id="messageInfo" v-cloak="v-cloak">
 		<input type="hidden" id="messageInfoId" th:value="${id}"/>
     	<div class="form-group">
 	    	<label class="col-sm-3 control-label" th:text="#{message.title}"></label>  

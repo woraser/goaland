@@ -26,7 +26,7 @@
 </head>
 
 <body>
-	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+	<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm" v-cloak="v-cloak">
 		<input type="hidden" id="processId" name="processId" th:value="${process.id}"/> 
 		<input type="hidden" id="taskId" name="taskId" th:value="${task.id}"/>  
 	    <fieldset>

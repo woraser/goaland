@@ -111,7 +111,7 @@
 		            <div class="iotx-top-right-title" th:text="#{sensor.alarm.top}">
 		                	传感器告警TOP7
 		            </div>
-		            <div id="alarmDataTop" class="iotx-top-right-warnings" style="height: 54%">
+		            <div id="alarmDataTop" class="iotx-top-right-warnings" style="height: 54%" v-cloak="v-cloak">
 		                <div class="box-body">
 		                    <table class="table">
 		                        <thead>
@@ -134,7 +134,7 @@
 		        </div>
 		    </div>
 		    <div class="iotx-bottom" style="height: 45%">
-		        <div id="sensorSearch" class="company-select">
+		        <div id="sensorSearch" class="company-select" v-cloak="v-cloak">
 		            <div class="company-search" style="float: right;margin-left:1%;margin-top: -1%;margin-right: 2%">
                         <div class="form-inline hidden-xs">
                             <div class="input-group input-medium">

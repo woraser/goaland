@@ -5,7 +5,7 @@
 	<!-- HEADER -->
 	<header th:fragment="top">
 		<input type="hidden" id="loginId" name="loginId" th:value="${session.loginId}"/> 
-		<div id="top" class="container">
+		<div id="top" class="container" v-cloak="v-cloak">
 				<div class="navbar-brand" style="padding: 0%">
 					<!-- COMPANY LOGO -->
 					<div class="logo-top" >

@@ -44,7 +44,7 @@
 
 <body>
 	<div layout:fragment="content">
-		<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm">
+		<form class="form-horizontal" role="form" th:object="${process}" id="customerServiceForm" v-cloak="v-cloak">
 			<input type="hidden" id="processId" name="processId" th:value="${process.id}"/> 
 			<input type="hidden" id="processName" name="processName" th:value="${process.name}"/> 
 			<input type="hidden" id="reject" name="reject" th:value="${process.examineDetail.reject}"/> 
