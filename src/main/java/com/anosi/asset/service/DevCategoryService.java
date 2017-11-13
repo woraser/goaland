@@ -12,4 +12,11 @@ public interface DevCategoryService extends BaseJPAService<DevCategory>{
 	 */
 	JSONArray countByDevCategory();
 
+	/***
+	 * 获取各种类设备数量的统计结果，设备种类名称可在前台转为i18n
+	 * 
+	 * @return
+	 */
+	JSONArray countByDevCategoryI18n();
+
 }

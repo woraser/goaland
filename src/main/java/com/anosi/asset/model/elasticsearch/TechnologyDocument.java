@@ -43,6 +43,9 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 
 	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String suffix;
+	
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
+	private String identification;
 
 	private String highLightContent;
 
@@ -156,4 +159,12 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 		this.searchContent = searchContent;
 	}
 
+	public String getIdentification() {
+		return identification;
+	}
+
+	public void setIdentification(String identification) {
+		this.identification = identification;
+	}
+	
 }

@@ -12,7 +12,7 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-           	{label:$.i18n.prop('roleFunctionGroup.name'),name:'name',index:'name', width: '120', sortable:false, align: 'center'},
+           	{label:$.i18n.prop('roleFunctionGroup.name'),name:'name',index:'name', width: '120', sortable:true, align: 'center'},
 			{label:$.i18n.prop('roleFunctionGroup.roleFunction'),name:'roleFunction',index:'roleFunction', width: '120', sortable:false, align: 'center',
 				formatter: function (cellvalue, options, rowObject) {
                     var detail="";

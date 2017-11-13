@@ -13,14 +13,14 @@ $(document).ready(function() {
 	var colModel=[
          	{label:$.i18n.prop('iotxData.collectTime'),name:'collectTime',index:'collectTime', width: '150',  align: 'center'},
          	{
-         		label:$.i18n.prop('iotxData.level'),name:'val',index:'val', width: '120',  align: 'center',
+         		label:$.i18n.prop('iotxData.level'),name:'val',index:'val', width: '120',sortable: false,  align: 'center',
     			formatter: function (cellvalue, options, rowObject) {
     				var detail = $.i18n.prop('iotxData.' + cellvalue)
                     return detail;
                 },
     		},
     		{
-    			label:$.i18n.prop('operate'),name:'val',index:'val', width: '150',  align: 'center',
+    			label:$.i18n.prop('operate'),name:'val',index:'val', width: '150',sortable: false,  align: 'center',
     			formatter: function (cellvalue, options, rowObject) {
     				var detail;
                 	if(cellvalue==null){

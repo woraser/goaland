@@ -10,6 +10,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 
 import com.alibaba.fastjson.annotation.JSONField;
@@ -33,28 +34,32 @@ public class BaseProcess extends BaseEntity {
 	protected String processInstanceId;
 
 	@Content
-	@Field
+	@Field(analyze = Analyze.NO)
 	protected String name = DateFormatUtil.getFormateDate(new Date(), "yyyyMMddHHmmssSSS");
 
-	@JSONField(serialize=false)  
+	@JSONField(serialize = false)
 	protected Task task;
 
-	@JSONField(serialize=false)  
+	@JSONField(serialize = false)
 	protected HistoricTaskInstance historicTaskInstance;
 
-	@JSONField(serialize=false)  
+	@JSONField(serialize = false)
 	protected ProcessInstance processInstance;
 
-	@JSONField(serialize=false)  
+	@JSONField(serialize = false)
 	protected HistoricProcessInstance historicProcessInstance;
-	
+
+	protected Date createDate = new Date();
+
+	protected Date finishDate;
+
 	protected FinishType finishType;
-	
-	public static enum FinishType{
-		REAMIN("待办"),FINISHED("已完成"),DELETED("已删除"),REFUSED("被驳回"),FORCED("强制结束");
-		
+
+	public static enum FinishType {
+		REAMIN("待办"), FINISHED("已完成"), DELETED("已删除"), REFUSED("被驳回"), FORCED("强制结束");
+
 		private String name;
-		
+
 		private FinishType(String name) {
 			this.name = name;
 		}
@@ -66,7 +71,7 @@ public class BaseProcess extends BaseEntity {
 		public void setName(String name) {
 			this.name = name;
 		}
-		
+
 	}
 
 	@Column(unique = true, nullable = false)
@@ -85,7 +90,7 @@ public class BaseProcess extends BaseEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public FinishType getFinishType() {
 		return finishType;
 	}
@@ -128,6 +133,22 @@ public class BaseProcess extends BaseEntity {
 
 	public void setHistoricTaskInstance(HistoricTaskInstance historicTaskInstance) {
 		this.historicTaskInstance = historicTaskInstance;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getFinishDate() {
+		return finishDate;
+	}
+
+	public void setFinishDate(Date finishDate) {
+		this.finishDate = finishDate;
 	}
 
 }

@@ -13,6 +13,7 @@ $(document).ready(function() {
 			name : {
 				minlength: 2,
 				required : true,
+				checkUniqueName : true,
 			},
 			newPassword : {
 				minlength: 2,
@@ -92,6 +93,49 @@ $(document).ready(function() {
 		});
 		return flag;
 	}, "您输入的账户已存在");
+	
+	jQuery.validator.addMethod("checkUniqueName", function(value, element) {
+		var flag;
+		$.ajax({
+			url : '/account/checkExist',
+			data : {
+				'name' : value,
+			},
+			type : 'get',
+			dataType : 'json',
+			async:false,
+			success : function(msg) {
+				// true表示已经存在
+				if (msg.result == true) {
+					if($("#accountId").val()!=null&&$("#accountId").val()!=""){
+						// 判断是否存在当前用户
+						$.ajax({
+							url : '/account/checkExist',
+							data : {
+								'id' : $("#accountId").val(),
+								'name' : $("#name").val(),
+							},
+							type : 'get',
+							dataType : 'json',
+							async:false,
+							success : function(msg) {
+								if (msg.result == true) {
+									flag = true;
+								} else{
+									flag = false;
+								}
+							}
+						});
+					}else{
+						flag = false;
+					}
+				} else{
+					flag = true;
+				}
+			}
+		});
+		return flag;
+	}, "您输入的用户名已存在");
 	
 	if($("#accountId").val()!=null&&$("#accountId").val()!=""){
 		$("#showPassword").hide();

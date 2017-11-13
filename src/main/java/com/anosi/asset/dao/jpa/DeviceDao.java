@@ -15,9 +15,15 @@ public interface DeviceDao extends BaseJPADao<Device>, QuerydslBinderCustomizer<
 	@Override
 	default public void customize(QuerydslBindings bindings, QDevice qDevice) {
 		bindings.bind(qDevice.serialNo).first((path, value) -> {
-			if (value.startsWith("like$")) {
-				value = value.replace("like$", "");
+			if (value.startsWith("contain$")) {
+				value = value.replace("contain$", "");
+				return path.contains(value);
+			} else if (value.startsWith("start$")) {
+				value = value.replace("start$", "");
 				return path.startsWithIgnoreCase(value);
+			} else if (value.startsWith("end$")) {
+				value = value.replace("end$", "");
+				return path.endsWithIgnoreCase(value);
 			} else {
 				return path.eq(value);
 			}

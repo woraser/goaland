@@ -6,7 +6,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
@@ -27,6 +33,7 @@ import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.RoleService;
 import com.google.common.collect.ImmutableMap;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @RestController
@@ -128,7 +135,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param engineeDep
 	 * @param startDetail
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 * @deprecated 已经与startProcess合并为一步
 	 */
 	@RequestMapping(value = "/completeStartDetail", method = RequestMethod.POST)
@@ -164,7 +171,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param servicer
 	 * @param evaluatingDetail
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/evaluating", method = RequestMethod.POST)
 	public JSONObject evaluating(@RequestParam(value = "taskId") String taskId,
@@ -180,7 +187,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param engineer
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/distribute", method = RequestMethod.POST)
 	public JSONObject distribute(@RequestParam(value = "taskId") String taskId,
@@ -196,7 +203,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param repairDetail
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/repair", method = RequestMethod.POST)
 	public JSONObject repair(@RequestParam(value = "taskId") String taskId,
@@ -229,11 +236,11 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/fillInAgreement/view", method = RequestMethod.GET)
 	public ModelAndView toViewFillInAgreement() {
-		return new ModelAndView("/process/customerService/fillInAgreement");
+		return new ModelAndView("process/customerService/fillInAgreement");
 	}
 
 	/***
-	 * 进入填写合同状态的页面
+	 * 填写合同状态
 	 * 
 	 * @return
 	 */
@@ -241,6 +248,27 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	public JSONObject toFillInAgreement(@ModelAttribute("process") CustomerServiceProcess process) {
 		customerServcieProcessService.save(process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
+	 * 获取运行中任务的节点分布
+	 */
+	@RequestMapping(value = "/task/distribute", method = RequestMethod.GET)
+	public JSONArray getTaskDistribute() throws Exception {
+		return customerServcieProcessService.getTaskDistribute();
+	}
+
+	@RequestMapping(value = "/management/data/{showType}", method = RequestMethod.GET)
+	public JSONObject findProcessManageData(@PathVariable ShowType showType,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
+			@QuerydslPredicate(root = CustomerServiceProcess.class) Predicate predicate,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+		logger.info("find process");
+		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
+
+		return parseToJson(customerServcieProcessService.findAll(predicate, pageable), rowId, showAttributes, showType);
 	}
 
 }

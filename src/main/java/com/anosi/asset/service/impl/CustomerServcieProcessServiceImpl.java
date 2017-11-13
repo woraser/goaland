@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.exception.CustomRunTimeException;
@@ -153,6 +155,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Override
 	public void repair(String taskId, CustomerServiceProcess process) throws Exception {
 		process.setFinishType(FinishType.FINISHED);
+		process.setFinishDate(new Date());
+		customerServiceProcessDao.save(process);
+		process.getRepairDetail().setRepairer(sessionComponent.getCurrentUser().getName());
+		process.getRepairDetail().setRepairTime(new Date());
 		completeTask(taskId, () -> taskService.complete(taskId), new ArrayList<>());
 	}
 
@@ -228,6 +234,33 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		List<String> processInstanceIds = allCustomerServiceProcesses.parallelStream()
 				.map(c -> c.getProcessInstanceId()).collect(Collectors.toList());
 		return processInstanceIds;
+	}
+
+	@Override
+	public JSONArray getTaskDistribute() {
+		List<Object[]> countTaskDistribute = customerServiceProcessDao.countTaskDistribute(definitionKey);
+
+		JSONArray jsonArray = new JSONArray();
+		for (Object[] counts : countTaskDistribute) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("name", counts[0]);
+			jsonObject.put("count", counts[1]);
+			jsonArray.add(jsonObject);
+		}
+
+		return jsonArray;
+	}
+
+	@Override
+	public Long countByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds) {
+		return customerServiceProcessDao.countByDevice_devCategory_idEqualsAndProcessInstanceIdIn(id,
+				processInstanceIds);
+	}
+
+	@Override
+	public List<CustomerServiceProcess> findByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds) {
+		return customerServiceProcessDao.findByDevice_devCategory_idEqualsAndProcessInstanceIdIn(id,
+				processInstanceIds);
 	}
 
 }

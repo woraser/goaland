@@ -35,7 +35,9 @@ import com.anosi.asset.component.LoginComponent;
 import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.component.WebSocketComponent;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.service.AccountService;
 import com.anosi.asset.util.CodeUtil;
+import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 
 @RestController
@@ -47,6 +49,8 @@ public class LoginController extends BaseController<Account> {
 	private LoginComponent loginComponent;
 	@Autowired
 	private WebSocketComponent webSocketComponent;
+	@Autowired
+	private AccountService accountService;
 	@Value("${local.domainName}")
 	private String domainName;
 
@@ -88,13 +92,16 @@ public class LoginController extends BaseController<Account> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/login/remote", method = RequestMethod.POST)
-	public JSONObject loginRemote(HttpServletRequest request, Account account) throws Exception {
+	public JSONObject loginRemote(HttpServletRequest request, Account account,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
 		logger.debug("...remote login...");
 
 		JSONObject jsonObject = new JSONObject();
 		String result = loginComponent.login(account, false);
 		if (result == "success") {
-			jsonObject.put("result", "success");
+			jsonObject = jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
+					accountService.findByLoginId(account.getLoginId()));
+			jsonObject.put("JSESSIONID", SessionComponent.getSession().getId());
 		} else {
 			jsonObject.put("result", "error");
 			jsonObject.put("message", result);

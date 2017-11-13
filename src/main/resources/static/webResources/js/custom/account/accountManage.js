@@ -12,10 +12,10 @@ $(document).ready(function() {
 		
 		
 		 var colModel=[
-           	{label:$.i18n.prop('account.loginId'),name:'loginId',index:'loginId', width: '120', align: 'center'},
-			{label:$.i18n.prop('account.name'),name:'name',index:'name', width: '120', align: 'center'},
-			{label:$.i18n.prop('account.role.group.department'),name:'role.depGroup.department.name', index:'role.depGroup.department.name', width:'120', sortable: false,align: 'center'},
-			{label:$.i18n.prop('account.role.group'),name:'role.depGroup.name', index:'role.depGroup.name',sortable: true, width:'120', align: 'center',
+           	{label:$.i18n.prop('account.loginId'),name:'loginId',index:'loginId', sortable: true, width: '120', align: 'center'},
+			{label:$.i18n.prop('account.name'),name:'name',index:'name', sortable: true, width: '120', align: 'center'},
+			{label:$.i18n.prop('account.role.group.department'),name:'role.depGroup.department.name', index:'role.depGroup.department.name', sortable: false, width:'120', align: 'center'},
+			{label:$.i18n.prop('account.role.group'),name:'role.depGroup.name', index:'role.depGroup.name',sortable: false, width:'120', align: 'center',
 				formatter: function (cellvalue, options, rowObject) {
                     var detail="";
                     $.each(cellvalue,function(){
@@ -24,7 +24,7 @@ $(document).ready(function() {
                     return detail;
                 }
 			},
-			{label:$.i18n.prop('account.role'),name:'role.name', index:'role.name',sortable: true, width:'120', align: 'center',
+			{label:$.i18n.prop('account.role'),name:'role.name', index:'role.name', width:'120',sortable: false, align: 'center',
 				formatter: function (cellvalue, options, rowObject) {
                     var detail="";
                     $.each(cellvalue,function(){
@@ -33,7 +33,7 @@ $(document).ready(function() {
                     return detail;
                 }
 			},
-			{label:$.i18n.prop('account.roleFunctionGroup'),name:'roleFunctionGroup.name', index:'roleFunctionGroup.name',sortable: true, width:'120', align: 'center',
+			{label:$.i18n.prop('account.roleFunctionGroup'),name:'roleFunctionGroup.name', index:'roleFunctionGroup.name',sortable: false, width:'120', align: 'center',
 				formatter: function (cellvalue, options, rowObject) {
                     var detail="";
                     $.each(cellvalue,function(){

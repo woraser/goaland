@@ -26,6 +26,8 @@ public class DevCategory extends BaseEntity {
 
 	private List<DevCategoryStructures> subDevCategoryStructures = new ArrayList<>();
 
+	private List<RepairedDeviceDailyPer> repairedDeviceDailyPers = new ArrayList<>();
+
 	@OneToMany(targetEntity = Device.class, cascade = {
 			CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "devCategory")
 	public List<Device> getDeviceList() {
@@ -60,6 +62,15 @@ public class DevCategory extends BaseEntity {
 
 	public void setCategoryType(CategoryType categoryType) {
 		this.categoryType = categoryType;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "devCategory", targetEntity = RepairedDeviceDailyPer.class)
+	public List<RepairedDeviceDailyPer> getRepairedDeviceDailyPers() {
+		return repairedDeviceDailyPers;
+	}
+
+	public void setRepairedDeviceDailyPers(List<RepairedDeviceDailyPer> repairedDeviceDailyPers) {
+		this.repairedDeviceDailyPers = repairedDeviceDailyPers;
 	}
 
 	public static enum CategoryType {

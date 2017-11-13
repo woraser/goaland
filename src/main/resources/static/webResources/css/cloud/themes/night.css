@@ -247,7 +247,7 @@
 /* Tasks */
 .dropdown-menu.tasks {
   border-top: 1px solid #273a4e;
-  width: 250px;
+  width: 230px;
 }
 .dropdown-menu.tasks .progress {
   margin-top: 0 !important;
@@ -278,7 +278,7 @@
 #sidebar {
   background: none repeat scroll 0 0 #4D4948;
   /*padding: 0 !important;*/
-  width: 250px;
+  width: 230px;
   position: absolute;
   border-bottom: 1px solid #22262e;padding-top: 10px;
 }
@@ -574,7 +574,7 @@
 .switcher {
   padding: 10px 10px 0 0;
   position: absolute;
-  top: 20px;
+  top: 10px;
   left: 20px;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);

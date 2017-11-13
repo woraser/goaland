@@ -1,3 +1,4 @@
+
 #main-content{
 
     background: #F4F6F9;
@@ -5,8 +6,14 @@
 .half-div{
     width: 100% ;height: 50%;
 }
+.half-width-div{
+    width: 50% ;height: 100%;float: left;
+}
+.five-div{
+    width: 100%;height: 20%;
+}
 .logo-top{
-    width: 60%;height: 100%;margin-left: 14%;background: #FFFFFF;
+    width: 60%;height: 100%;margin-left: 14%;
 }
 .dashboard{
     width:100%;height: 897px;background: #E2E2E2;padding: 0.8%;
@@ -335,16 +342,15 @@
     width: 80%;height: 100%;color: #FC8060;float: right;padding-top: 2.5%;
 }
 .task-tab{
-    width: 40px;height: 40px;background: red;margin-top: 2%;color: #6C8399;border-left: solid #E8E8E8 1px;
-    border-top: solid #E8E8E8 1px;
-    border-bottom: solid #E8E8E8 1px;
+    width: 40px;height: 40px;margin-top: 2%;color: #6C8399
+
 }
 .task-tab-right{
     width:0;
     height:0;
     border-top:21px solid transparent;
     border-bottom: 21px solid transparent;
-    border-left: 21px solid red;float: left
+    float: left
 }
 .detail-div{
     width: 80%;height: 86%;float: left;margin-left: 4%;border: solid #D4DDE3 1px;padding: 1.5% 1.5%;
@@ -459,7 +465,7 @@
     width: 100%;height: 60%;border: solid #CCCCCC 1px;margin-top: 2%;background: #FFFFFF;
 }
 .detail-top-one{
-    width: 17%;height: 100%;border: solid #CCCCCC 1px;float: left;
+    width: 17%;height: 100%;border: solid #CCCCCC 1px;float: left;background: #FFFFFF;
 }
 .detail-top-two{
     background:#FFFFFF;width: 25%;height: 100%;border: solid #CCCCCC 1px;float: left;margin-left: 1%;padding-top: 1%;padding-left: 2%;
@@ -533,19 +539,64 @@
     width: 30%;height: 100%;background: #6DB2CF;float: right;
 }
 .sensor-div-bottom-title{
-    width: 50%;height: 8%;background: red;float: left;
+    width: 50%;height: 8%;float: left;
 }
 .sensor-top-left-div{
     width: 18%;height:80%;margin-left: 1%;float: left;text-align: center;
 }
 .sensor-top-left-overdiv{
     width: 18%;height:80%;margin-left: 1%;float: left;text-align: center;
-    border-radius: 3px;box-shadow: #666 0px 0px 10px;
+    border-radius: 3px;box-shadow:#666 0px 7px 5px;
+}
+.sensor-top-left-overdiv1{
+    width: 18%;height:80%;margin-left: 1%;float: left;text-align: center;
+    border-radius: 3px;box-shadow:#666 0px 7px 5px;
 }
 .connect-img{
     width: 18%;height:80%;margin-left: 1%;float: left;
 }
-
+.small-charts-left{
+    width: 49.3%;height: 95%;float: left;border: solid #DDE4E9 1px;background: #FFFFFF;
+}
+.small-charts-left-shadow{
+    width: 49.3%;height: 95%;float: left;box-shadow: #979797 0px 6px 10px;background: #FFFFFF;
+}
+.small-charts-right{
+    width: 49.3%;height: 95%;float: right;border: solid #DDE4E9 1px;background: #FFFFFF;
+}
+.small-charts-right-shadow{
+    width: 49.3%;height: 95%;float: right;box-shadow: #979797 0px 6px 10px;background: #FFFFFF;
+}
+.back{
+    float: right;width: 5%;
+    height: 70%;
+    background: #FFFFFF;
+    border: 0px;
+    border-radius: 10px;
+    color: #FC8060;
+    font-size: 16px;
+    font-weight: 800;
+    margin-top: 0.5%;
+    margin-right: 2%;
+}
+.device-detail-info{
+    width: 48%;float: left
+}
+.device-technology-info{
+    width: 50%;float: left;margin-left: 2%
+}
+.title-div{
+    height: 45px;width: 100%;background: #E7ECF2;font-size: 16px;font-weight: 700;color: #526A80;padding-top: 0.5%;padding-left: 3.5%;
+}
+.title-div-deviceInfo{
+    height: 390px;margin-top: 10px;width: 100%;border:solid #E1E3E8 1px;background: #FFF;
+}
+.title-div-technologyInfo{
+    height: 390px;margin-top: 10px;width: 100%;background: #FFF;
+}
+.document-button{
+    width: 90%;height: 50%;background: #078AE4;color: #FFF;border: 0px;font-size: 16px;border-radius: 5px;
+}
 
 
 

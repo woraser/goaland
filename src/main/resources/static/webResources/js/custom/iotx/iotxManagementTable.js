@@ -13,14 +13,14 @@ $(document).ready(function() {
 		
 		 var colModel=[
 		               	{label:$.i18n.prop('iotx.serialNo'),name:'serialNo', index:'serialNo', width:'120', align: 'center'},
-		               	{label:$.i18n.prop('iotx.company'),name:'company.name',index:'company.name', width: '120', sortable:false, align: 'center'},
+		               	{label:$.i18n.prop('iotx.company'),name:'company.name',index:'company.name', width: '120',  align: 'center'},
 						{label:$.i18n.prop('iotx.installLocation'),name:'installLocation',index:'installLocation', width: '120', sortable:false, align: 'center'},
 						{label:$.i18n.prop('iotx.sensorQuantity'),name:'sensorQuantity', index:'sensorQuantity',sortable: true, width:'120', align: 'center'},
 						{label:$.i18n.prop('iotx.alarmQuantity'),name:'alarmQuantity', index:'alarmQuantity',sortable: true, width:'120', align: 'center'},
 						{label:$.i18n.prop('iotx.openTime'),name:'openTime', index:'openTime',sortable: true, width:'120', align: 'center'},
 						{label:$.i18n.prop('iotx.status'),name:'status', index:'status',sortable: true, width:'120', align: 'center'},
 						{
-			                label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 90, align:'center',
+			                label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 90,sortable: false, align:'center',
 			                formatter: function (cellvalue, options, rowObject) {
 			                	var hrefUrl='/iotx/management/detail/'+options.rowId+"/view";
 		                        var detail;

@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 /***
@@ -31,6 +32,10 @@ public class TechnicalParameter extends BaseEntity {
 	private Double minVal;
 
 	private Device device;
+	
+	private String unit;
+	
+	private String actualValue;
 
 	public String getName() {
 		return name;
@@ -74,4 +79,21 @@ public class TechnicalParameter extends BaseEntity {
 		this.device = device;
 	}
 
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Transient
+	public String getActualValue() {
+		return actualValue;
+	}
+
+	public void setActualValue(String actualValue) {
+		this.actualValue = actualValue;
+	}
+	
 }

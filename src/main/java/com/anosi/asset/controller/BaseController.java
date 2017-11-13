@@ -104,7 +104,7 @@ public class BaseController<T> extends GlobalController<T> {
 			throws Exception {
 		JSONObject jsonObject = null;
 		String[] attributes = null;
-		if (StringUtils.isNoneBlank(attributes)) {
+		if (StringUtils.isNotBlank(showAttributes)) {
 			attributes = StringUtil.splitAttributes(showAttributes);
 		}
 		switch (showType) {

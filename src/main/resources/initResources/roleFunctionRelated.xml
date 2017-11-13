@@ -16,17 +16,20 @@
 	</roleFunction>
 	<roleFunction roleFunctionPageId="customServiceProcess"
 		name="售后流程">
-		<roleFunction roleFunctionPageId="customServiceProcessTaskStarted" name="我发起的任务">
+		<roleFunction roleFunctionPageId="customServiceProcessTaskStarted"
+			name="我发起的任务">
 		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessTaskToDo" name="我待办的任务">
+		<roleFunction roleFunctionPageId="customServiceProcessTaskToDo"
+			name="我待办的任务">
 		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessHistoricTasks" name="我办过的任务">
+		<roleFunction roleFunctionPageId="customServiceProcessHistoricTasks"
+			name="我办过的任务">
 		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessAllProcesses" name="任务总览">
+		<roleFunction roleFunctionPageId="customServiceProcessAllProcesses"
+			name="任务总览">
 		</roleFunction>
 	</roleFunction>
-	<roleFunction roleFunctionPageId="documentMgr" name="文档管理">
-	</roleFunction>
+	<roleFunction roleFunctionPageId="documentMgr" name="文档管理"></roleFunction>
 	<roleFunction roleFunctionPageId="deviceManagement" name="设备管理">
 		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
 		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
@@ -39,6 +42,5 @@
 	<roleFunction roleFunctionPageId="sensorManagement" name="传感器管理">
 		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
 	</roleFunction>
-	<roleFunction roleFunctionPageId="iotxAlarmData" name="告警管理">
-	</roleFunction>
+	<roleFunction roleFunctionPageId="report" name="统计报表"></roleFunction>
 </roleFunctions>

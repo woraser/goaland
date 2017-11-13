@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -77,6 +78,8 @@ public class Device extends BaseEntity {
 	private District district;// 所属区县
 
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
+	
+	private List<RepairedDeviceDailyPer> repairedDeviceDailyPerList = new ArrayList<>();
 
 	public String getProductName() {
 		return productName;
@@ -214,6 +217,15 @@ public class Device extends BaseEntity {
 
 	public void setCommissioningTime(Date commissioningTime) {
 		this.commissioningTime = commissioningTime;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "deviceList", targetEntity = RepairedDeviceDailyPer.class)
+	public List<RepairedDeviceDailyPer> getRepairedDeviceDailyPerList() {
+		return repairedDeviceDailyPerList;
+	}
+
+	public void setRepairedDeviceDailyPerList(List<RepairedDeviceDailyPer> repairedDeviceDailyPerList) {
+		this.repairedDeviceDailyPerList = repairedDeviceDailyPerList;
 	}
 
 	@Override

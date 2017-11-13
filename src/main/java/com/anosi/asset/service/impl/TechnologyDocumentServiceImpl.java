@@ -91,6 +91,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		td.setFileName(fileName);
 		td.setUploader(fileMetaData.getUploader());
 		td.setUploadTime(fileMetaData.getUploadTime());
+		td.setIdentification(fileMetaData.getIdentification());
 		accountService.getOne(sessionComponent.getCurrentUser().getId()).setUploadDocument(true);
 		return td;
 	}
@@ -161,6 +162,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		Date upperLimit = technologyDocument.getUpperLimit();
 		String uploader = technologyDocument.getUploader();
 		String type = technologyDocument.getType();
+		String identification = technologyDocument.getIdentification();
 
 		// 如果查询内容不为空，那么默认查询内容或者标题
 		if (StringUtils.isNoneBlank(searchContent)) {
@@ -174,8 +176,11 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		// 查询文档类型
 		if (StringUtils.isNoneBlank(type)) {
 			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("type", type));
-		} else {
-			// TODO 根据所有可选type进行查询
+		}
+		
+		// 查询组标识
+		if(StringUtils.isNoneBlank(identification)){
+			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("identification", identification));
 		}
 
 		// 查询文档上传人

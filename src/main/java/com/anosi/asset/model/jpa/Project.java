@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
@@ -33,7 +34,7 @@ public class Project extends BaseEntity {
 	@Field
 	private String name;// 项目名称
 
-	@Field
+	@Field(analyze = Analyze.NO)
 	private String number;// 项目编号
 
 	@Field

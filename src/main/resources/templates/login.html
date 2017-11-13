@@ -9,6 +9,45 @@
 	<link href="/webResources/plugins/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
 	<link href="/webResources/plugins/uniform/css/uniform.default.min.css" type="text/css" rel="stylesheet" />
 	
+	<style>
+		.col-md-4{
+			width: 24%;height: 100%;
+		}
+		.col-md-offset-4 {
+			margin-left: 37.5%;
+		}
+		.login-box-plain {
+			background: #EEEEEE;
+			border: 0px solid #D8D8D8;
+			border-radius: 7px 7px 7px 7px;
+			box-shadow: 0 1px 4px #D3D3D3;
+			padding: 55px 60px 60px;
+			position: relative;
+			min-height: 100px;
+			height: 51%;
+		}
+		.login-box-plain{
+			padding-top: 0%;
+		}
+		.login-box-plain{
+			padding: 0px;
+		}
+		.login-box-plain input, .login-box-plain textarea {
+
+			padding-left: 10px !important;
+		}
+		.form-group {
+			margin-bottom: 22px;
+		}
+		.radio, .checkbox {
+			display: block;
+			min-height: 20px;
+			margin-top: 10px;
+			margin-bottom: 22px;
+			padding-left: 20px;
+			vertical-align: middle;
+		}
+	</style>
 		
 	<script type="text/javascript" src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 	<!-- JQUERY UI-->
@@ -24,68 +63,38 @@
 	
 </head>
 
-<body class="login" style="background-image: url('/webResources/img/logo/iotx-login.png'); ">
-	<input type="hidden" id="uuid" th:value="${uuid}"/>
-	<!-- PAGE -->
-	<section id="page">
-		<header>
-			<!-- NAV-BAR -->
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4 col-md-offset-4">
-						<div id="logo">
-						
-						</div>
-					</div>
+<body class="login">
+	<div class="container" style="width: 100%;height: 100%;padding: 0px;background-image:url('/webResources/img/logo/login-background.png')">
+		<div class="col-md-4 col-md-offset-4" style="color:#FFF;font-size:30px;text-align:center;margin-top:5%;width: 24%;height: 5%;">
+			水源产品生命周期跟踪系统
+		</div>
+		<div class="col-md-4 col-md-offset-4" style="height:84%">
+			<div class="login-box-plain" style="height:65%">
+				<div style="padding-top:3%;width: 100%;height: 10%;background:#F2F2F2;margin-top: -20px;font-size:18px;text-align: center;font-weight:500;color: #FBA07C">
+				账户登录
 				</div>
-			</div>
-			<!--/NAV-BAR -->
-		</header>
-		<!-- LOGIN -->
-		<section id="login" class="visible">
-			<div class="container">
-				<div class="row" >
-					<div class="col-md-4 col-md-offset-4" style="width:29%;margin-left:36%;margin-top:1%;background:#232634">
-						<div class="login-box-plain" style="padding: 38px 60px 60px;background:#232634;border:0px;box-shadow: 0 0px 0px #D3D3D3;">
-							<div id="logo">
-								<img src="/webResources/img/logo/logo-iotx.png" height="140" alt="logo name" />
-							</div>
-							<div class="divide-40"></div>
-							<form v-show="!isQR" role="form" action="" method="post">
-							  <div class="form-group">
-								<label for="loginId" style="color:white;margin-left:10px"></label>
-								<i class="fa fa-envelope"></i>
-								<input type="text" class="form-control" id="loginId" name="loginId" th:placeholder="#{scanLoginId}"/>
-							  </div>
-							  <div class="form-group"> 
-								<label for="password" style="color:white;margin-left:10px"></label>
-								<i class="fa fa-lock"></i>
-								<input type="password" class="form-control" id="password" name="password" th:placeholder="#{scanPassword}"/>
-							  </div>
-							  <div class="form-actions" style="padding:0px;margin-top:10%;background-color:#222737;color:white;border-top:0px;">
-								<label class="checkbox" style="color:white;margin-left:10px">
-									<input type="checkbox" name="rememberMe" class="uniform" th:text="#{rememberMe}"/>
-								</label>
-								<input type="submit" th:value="#{login}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
-							  </div>
-							  <font color="#DEDEDE" size="5px" th:text="${message}"></font>
-							</form>
-							<div v-show="isQR" class="form-group" align="center">
-								<img th:src="'/login/QRCode/'+${uuid}"/>
-							</div>
-							<!-- SOCIAL LOGIN -->
-							<div class="center">
-								<input v-if="!isQR" v-on:click="isQR=!isQR" type="button" th:value="#{loginWithQRCode}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
-								<input v-if="isQR" v-on:click="isQR=!isQR" type="button" th:value="#{loginWithToken}" class="btn btn-danger" style="background:#06B9FF;color:white;border:0px;border-radius:2px"/>
-							</div>
-							
-						</div>
-					</div>
+				<div style="width: 100%;height: 10%;background:#F2F2F2;margin-top: 10%;font-size:18px;text-align: center;font-weight:500;color: #FBA07C">
+					<img src="/webResources/img/login/Goaland-logo.png"/>
 				</div>
-			</div>
-		</section>
-	</section>
 
+				<form v-show="!isQR" role="form" action="" method="post" style="padding-left: 10%;padding-right: 10%">
+				  <div class="form-group">
+					<label for="exampleInputEmail1">账号</label>
+					<input type="text" class="form-control" id="loginId" name="loginId" th:placeholder="#{scanLoginId}"/>
+				  </div>
+				  <div class="form-group"> 
+					<label for="exampleInputPassword1">密码</label>
+					<input type="password" class="form-control" id="password" name="password" th:placeholder="#{scanPassword}"/>
+				  </div>
+				  <div class="form-group">
+					<label class="checkbox" style="float: left"><input type="checkbox" name="rememberMe" class="uniform" th:text="#{rememberMe}"/></label>
+					 <a href="#" style=" text-decoration:none;float: right;margin-top: 3%">忘记密码？</a>
+					<button type="submit" class="btn btn-danger" th:text="#{login}">登录</button>
+				  </div>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

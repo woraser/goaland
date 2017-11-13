@@ -41,4 +41,18 @@ public class DevCategoryServiceImpl extends BaseJPAServiceImpl<DevCategory> impl
 		return jsonArray;
 	}
 
+	@Override
+	public JSONArray countByDevCategoryI18n() {
+		List<Object[]> countByDevCategory = devCategoryDao.countByDevCategory();
+
+		JSONArray jsonArray = new JSONArray();
+		for (Object[] counts : countByDevCategory) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("name", CategoryType.values()[((Integer) counts[0])]);
+			jsonObject.put("count", counts[1]);
+			jsonArray.add(jsonObject);
+		}
+		return jsonArray;
+	}
+
 }

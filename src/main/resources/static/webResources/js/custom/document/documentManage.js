@@ -69,10 +69,10 @@ $(document).ready(function() {
 		 params['upperLimit']=$("#upperLimit").val();
 		 if($("#searchContent").val()!=null&&$("#searchContent").val()!=""){
 			 params['searchContent']=$("#searchContent").val();
-			 params['size']=5;
+			 params['size']=3;
 		 }else{
 			 delete params['searchContent']
-			 params['size']=3;
+			 params['size']=5;
 		 }
 		 search(0);
 	 })

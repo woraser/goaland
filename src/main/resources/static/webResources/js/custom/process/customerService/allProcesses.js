@@ -10,7 +10,7 @@ $(document).ready(function() {
 	   },
 	   methods: {
 		   detail: function(id){
-		   		  
+			   window.location.href="/customerServiceProcess/process/detail/view?id="+id 
 		   },
 		   fillIn: function(id){
 		     var func=function(){

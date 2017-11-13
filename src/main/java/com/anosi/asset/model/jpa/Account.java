@@ -117,6 +117,7 @@ public class Account extends BaseEntity {
 		this.privilegeList = privilegeList;
 	}
 
+	@Column(unique = true, nullable = false)
 	public String getName() {
 		return name;
 	}

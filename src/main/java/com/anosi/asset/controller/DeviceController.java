@@ -234,4 +234,46 @@ public class DeviceController extends BaseController<Device> {
 		return new JSONObject(ImmutableMap.of("result", deviceService.exists(predicate)));
 	}
 
+	/***
+	 * 为设备绑定rifd
+	 * 
+	 * @param serialNo
+	 * @param rfid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/rfid/binding", method = RequestMethod.POST)
+	public JSONObject bindingRfid(@RequestParam(value = "serialNo") String serialNo,
+			@RequestParam(value = "rfid") String rfid) throws Exception {
+		deviceService.findBySerialNo(serialNo).setRfid(rfid);
+		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
+	 * 为设备解绑rifd
+	 * 
+	 * @param serialNo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/device/rfid/unBinding", method = RequestMethod.POST)
+	public JSONObject unBindingRfid(@RequestParam(value = "serialNo") String serialNo) throws Exception {
+		deviceService.findBySerialNo(serialNo).setRfid(null);
+		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
+	 * 点击device详情进入的页面
+	 * 
+	 * @param iotxId
+	 * @return
+	 */
+	@RequestMapping(value = "/device/management/detail/{deviceId}/view", method = RequestMethod.GET)
+	public ModelAndView toViewDeviceManageTable(@PathVariable Long deviceId) throws Exception {
+		logger.info("view device management detail");
+		Device device = deviceService.getOne(deviceId);
+		return new ModelAndView("device/detail").addObject("deviceId", deviceId).addObject("serialNo",
+				device.getSerialNo());
+	}
+
 }

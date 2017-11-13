@@ -28,12 +28,12 @@ $(document).ready(function() {
 		{label:$.i18n.prop('device.serialNo'),name:'serialNo',index:'serialNo', width: '120', align: 'center'},
 		{label:$.i18n.prop('device.rfid'),name:'rfid',index:'rfid', width: '120', align: 'center'},
 		{
-            label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150, align:'center',
+            label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150,sortable: false, align:'center',
             formatter: function (cellvalue, options, rowObject) {
             	var detail;
             	var editImg = "<a href='#' edit='"+options.rowId+"'><img src='/webResources/img/operate/edit.png'/></a>"
-            	var deleteImg = "<a href='#'delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
-            	var detailImg = "<a href='#'><img src='/webResources/img/operate/detail.png'/></a>"
+            	var deleteImg = "<a href='#' delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
+            	var detailImg = "<a href='#' detail='"+options.rowId+"'><img src='/webResources/img/operate/detail.png'/></a>"
             	detail = editImg + deleteImg + detailImg
             	return detail;
             },
@@ -181,6 +181,11 @@ $(document).ready(function() {
 			});
 		 };
 		 confirm("是否删除",func);
+	 });
+	 
+	 // 查看详情按钮绑定事件
+	 $(document).on("click","a[detail]",function(){
+		 window.location.href="/device/management/detail/"+$(this).attr("detail")+"/view"
 	 });
 	 
 })

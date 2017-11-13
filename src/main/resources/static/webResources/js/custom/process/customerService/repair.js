@@ -83,6 +83,23 @@ $(document).ready(function() {
 			success : function(msg) {
 				// true表示已经存在
 				flag = msg.result;
+				// 如果不是通过autocomplete点击的,那么回后台获取id
+				console.info($("#device.\\id").val())
+				if($("#device.\\id").val()==""||$("#device.\\id").val()==null){
+					$.ajax({
+						url : '/device/management/data/one',
+						data : {
+							'serialNo' : $("#device\\.serialNo").val(),
+							'showAttributes' : 'id'
+						},
+						type : 'get',
+						dataType : 'json',
+						async:false,
+						success : function(data) {
+							$("#device\\.id").val(data.id)
+						}
+					});
+				}
 			}
 		});
 		return flag;
@@ -102,7 +119,7 @@ $(document).ready(function() {
               $.ajax({
       				url : '/device/autocomplete',
       				data : {
-      					'serialNo' :  "like$"+request.term,
+      					'serialNo' :  "start$"+request.term,
       					'label' : 'serialNo',
       					'value' : 'id',
       				},

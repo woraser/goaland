@@ -1,7 +1,10 @@
 package com.anosi.asset.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 
@@ -20,7 +23,7 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 
 	 * @param taskId
 	 * @param process
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	void completeStartDetail(String taskId, CustomerServiceProcess process) throws Exception;
 
@@ -37,7 +40,7 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 工程部问题评估
 	 * 
 	 * @param taskId
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	void evaluating(String taskId, CustomerServiceProcess process) throws Exception;
 
@@ -46,7 +49,7 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 
 	 * @param taskId
 	 * @param process
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	void distribute(String taskId, CustomerServiceProcess process) throws Exception;
 
@@ -54,7 +57,7 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 工程师上门维修
 	 * 
 	 * @param taskId
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	void repair(String taskId, CustomerServiceProcess process) throws Exception;
 
@@ -67,5 +70,30 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @param process
 	 */
 	void entrust(String taskId, Account mandatary, String reason, CustomerServiceProcess process);
+
+	/***
+	 * 获取任务的分布
+	 * 
+	 * @return
+	 */
+	JSONArray getTaskDistribute();
+
+	/***
+	 * 根据种类和流程实例id进行count
+	 * 
+	 * @param id
+	 * @param processInstanceIds
+	 * @return
+	 */
+	Long countByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds);
+
+	/***
+	 * 根据种类和流程实例id进行查询
+	 * 
+	 * @param id
+	 * @param processInstanceIds
+	 * @return
+	 */
+	List<CustomerServiceProcess> findByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds);
 
 }

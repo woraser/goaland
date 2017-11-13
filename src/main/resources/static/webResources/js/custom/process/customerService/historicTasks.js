@@ -9,7 +9,7 @@ $(document).ready(function() {
 	   },
 	   methods: {
 		   detail: function(id){
-		   		  
+			   window.location.href="/customerServiceProcess/process/detail/view?id="+id   
 		   },
 	   },
 	   filters: {

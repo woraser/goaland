@@ -1,22 +1,30 @@
 package com.anosi.asset.model.jpa;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
 @Table(name = "customerServiceProcess")
+@Indexed
+@Analyzer(impl = IKAnalyzer.class)
 public class CustomerServiceProcess extends BaseProcess {
 
 	/**
@@ -47,6 +55,28 @@ public class CustomerServiceProcess extends BaseProcess {
 	private boolean file = false;// 是否有上传文件
 
 	private Device device;
+	
+	private List<CustomerServiceProcessDailyPer> completedPerList = new ArrayList<>();
+	
+	private List<CustomerServiceProcessDailyPer> unCompletedPerList = new ArrayList<>();
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "completedProcessList", targetEntity = CustomerServiceProcessDailyPer.class)
+	public List<CustomerServiceProcessDailyPer> getCompletedPerList() {
+		return completedPerList;
+	}
+
+	public void setCompletedPerList(List<CustomerServiceProcessDailyPer> completedPerList) {
+		this.completedPerList = completedPerList;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "unCompletedProcessList", targetEntity = CustomerServiceProcessDailyPer.class)
+	public List<CustomerServiceProcessDailyPer> getUnCompletedPerList() {
+		return unCompletedPerList;
+	}
+
+	public void setUnCompletedPerList(List<CustomerServiceProcessDailyPer> unCompletedPerList) {
+		this.unCompletedPerList = unCompletedPerList;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
 	@JoinColumn(nullable = false)
@@ -427,6 +457,10 @@ public class CustomerServiceProcess extends BaseProcess {
 	 */
 	@Embeddable
 	public static class RepairDetail {
+		
+		private String repairer;
+		
+		private Date repairTime;
 
 		private String problemDescription;// 问题描述
 
@@ -458,6 +492,22 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.processMode = processMode;
 		}
 
+		public String getRepairer() {
+			return repairer;
+		}
+
+		public void setRepairer(String repairer) {
+			this.repairer = repairer;
+		}
+
+		public Date getRepairTime() {
+			return repairTime;
+		}
+
+		public void setRepairTime(Date repairTime) {
+			this.repairTime = repairTime;
+		}
+		
 	}
 
 }

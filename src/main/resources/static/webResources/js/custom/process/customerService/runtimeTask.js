@@ -20,7 +20,7 @@ $(document).ready(function() {
 			 createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId+"&processId="+processId,func)
 		  },
 	   	  detail: function(id){
-	   		  
+	   		window.location.href="/customerServiceProcess/process/detail/view?id="+id 
 	   	  },
 	   },
 	   filters: {
