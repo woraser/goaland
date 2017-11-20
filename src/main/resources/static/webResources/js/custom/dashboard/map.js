@@ -8,7 +8,7 @@ $(document).ready(function(){
     var myChart = echarts.init(dom);
     var planePath = 'arrow';
     myChart.showLoading();
-    option = {
+    var option = {
             bmap: {
                 center: [82.23 ,23.08],
                 zoom: 1,
@@ -68,15 +68,17 @@ $(document).ready(function(){
 				});
 				myChart.setOption(option);
 				// 在这里做一个点击事件的监听
-		        /*myChart.on('click', function(param){
+		        myChart.on('click', function(param){
 		        	window.location.href = '/device/management/detail/' + param.name+"/view";
-		        }); */       
+		        });       
 			},
 			error : function(data) {
 				warning('节点加载失败，请联系管理员或刷新页面重试');
 			}
 		});
 	}
+	
+	loadDevice();
     
     var style=[{
         'featureType': 'land', //调整土地颜色

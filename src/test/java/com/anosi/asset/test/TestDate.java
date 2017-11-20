@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.anosi.asset.util.DateFormatUtil;
+
 public class TestDate {
 	
 	@Test
@@ -20,4 +22,10 @@ public class TestDate {
 	    System.out.println(date);
 	}
 
+	@Test
+	public void testDate2(){
+		Date date = DateFormatUtil.getDateByParttern("2017-11-11 00:00:00");
+		System.out.println(date);
+	}
+	
 }

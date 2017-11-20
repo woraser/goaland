@@ -42,7 +42,7 @@ public class CustomerServiceProcess extends BaseProcess {
 
 	private StartDetail startDetail;// 发起字段
 
-	private ExamineDetail examineDetail = new ExamineDetail();// 领导审批字段
+	private ExamineDetail examineDetail;// 领导审批字段
 
 	private EvaluatingDetail evaluatingDetail;// 评估字段
 
@@ -55,11 +55,66 @@ public class CustomerServiceProcess extends BaseProcess {
 	private boolean file = false;// 是否有上传文件
 
 	private Device device;
-	
+
+	private Account nextAssignee;
+
+	private Account engineeDep;
+
+	private Account servicer;
+
+	private Account engineer;
+
+	private Account repairer;
+
 	private List<CustomerServiceProcessDailyPer> completedPerList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcessDailyPer> unCompletedPerList = new ArrayList<>();
-	
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+	public Account getNextAssignee() {
+		return nextAssignee;
+	}
+
+	public void setNextAssignee(Account nextAssignee) {
+		this.nextAssignee = nextAssignee;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+	public Account getEngineeDep() {
+		return engineeDep;
+	}
+
+	public void setEngineeDep(Account engineeDep) {
+		this.engineeDep = engineeDep;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+	public Account getServicer() {
+		return servicer;
+	}
+
+	public void setServicer(Account servicer) {
+		this.servicer = servicer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+	public Account getEngineer() {
+		return engineer;
+	}
+
+	public void setEngineer(Account engineer) {
+		this.engineer = engineer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+	public Account getRepairer() {
+		return repairer;
+	}
+
+	public void setRepairer(Account repairer) {
+		this.repairer = repairer;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "completedProcessList", targetEntity = CustomerServiceProcessDailyPer.class)
 	public List<CustomerServiceProcessDailyPer> getCompletedPerList() {
 		return completedPerList;
@@ -457,9 +512,9 @@ public class CustomerServiceProcess extends BaseProcess {
 	 */
 	@Embeddable
 	public static class RepairDetail {
-		
+
 		private String repairer;
-		
+
 		private Date repairTime;
 
 		private String problemDescription;// 问题描述
@@ -500,6 +555,7 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.repairer = repairer;
 		}
 
+		@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 		public Date getRepairTime() {
 			return repairTime;
 		}
@@ -507,7 +563,7 @@ public class CustomerServiceProcess extends BaseProcess {
 		public void setRepairTime(Date repairTime) {
 			this.repairTime = repairTime;
 		}
-		
+
 	}
 
 }

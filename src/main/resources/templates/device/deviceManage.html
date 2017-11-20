@@ -79,6 +79,9 @@
 
 <body>
 	<div layout:fragment="content" >
+		<input type="hidden" id="allowDelete" shiro:hasPermission="deviceManagement:delete"/>
+		<input type="hidden" id="allowEdit" shiro:hasPermission="deviceManagement:edit"/>
+		<input type="hidden" id="allowViewDetail" shiro:hasPermission="deviceManagement:viewDetail"/>
 		<div class="table-top">
         <div class="title-big" th:text="#{deviceManagement}">
             	设备管理

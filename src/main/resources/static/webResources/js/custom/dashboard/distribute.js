@@ -16,8 +16,8 @@ $(document).ready(function() {
 	});
 
 	function initPie(datas) {
-		var myChart = echarts.init(document.getElementById('right-pie'));
-		myChart.showLoading();
+		var myPie = echarts.init(document.getElementById('right-pie'));
+		myPie.showLoading();
 		option = {
 			color : [ '#E56A38', '#EB8B64', '#F0AC90', '#F6CDBC', '#FCEEE8' ],
 			tooltip : {
@@ -48,7 +48,7 @@ $(document).ready(function() {
 				}
 			} ]
 		};
-		myChart.hideLoading();
-		myChart.setOption(option, true);
+		myPie.hideLoading();
+		myPie.setOption(option, true);
 	}
 })

@@ -64,13 +64,21 @@ public class ProjectController extends BaseController<Project> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/project/autocomplete", method = RequestMethod.GET)
-	public JSONArray autocomplete(@RequestParam(value = "number") String number) throws Exception {
+	public JSONArray autocomplete(@RequestParam(value = "number") String number,
+			@RequestParam(value = "remote", required = false) boolean remote) throws Exception {
 		JSONArray jsonArray = new JSONArray();
 		List<Project> projects = projectService.findByNumberStartsWith(number);
 		for (Project project : projects) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("label", project.getNumber() + "-" + project.getName() + "-" + project.getLocation());
-			jsonObject.put("value", project.getId());
+			if (remote) {
+				jsonObject.put("id", project.getId());
+				jsonObject.put("number", project.getNumber());
+				jsonObject.put("name", project.getName());
+				jsonObject.put("location", project.getLocation());
+			} else {
+				jsonObject.put("label", project.getNumber() + "-" + project.getName() + "-" + project.getLocation());
+				jsonObject.put("value", project.getId());
+			}
 			jsonArray.add(jsonObject);
 		}
 		return jsonArray;

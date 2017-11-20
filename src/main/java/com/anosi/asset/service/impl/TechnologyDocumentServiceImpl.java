@@ -63,14 +63,14 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 	}
 
 	@Override
-	public TechnologyDocument createTechnologyDocument(File file, String type) throws Exception {
-		return createTechnologyDocument(file.getName(), new FileInputStream(file), file.length(), type);
+	public TechnologyDocument createTechnologyDocument(File file, String type, String identification) throws Exception {
+		return createTechnologyDocument(file.getName(), new FileInputStream(file), file.length(), type, identification);
 	}
 
 	@Override
-	public TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize, String type)
-			throws Exception {
-		FileMetaData fileMetaData = fileMetaDataService.saveFile(type, fileName, is, fileSize);
+	public TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize, String type,
+			String identification) throws Exception {
+		FileMetaData fileMetaData = fileMetaDataService.saveFile(identification, fileName, is, fileSize);
 		InputStream fileByObjectId = fileMetaDataService.getFileByObjectId(fileMetaData.getObjectId());
 		// 判断文件是否可以预览
 		fileMetaDataService.createPreview(fileMetaData);
@@ -90,6 +90,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		td.setType(type);
 		td.setFileName(fileName);
 		td.setUploader(fileMetaData.getUploader());
+		td.setUploaderName(fileMetaData.getUploaderName());
 		td.setUploadTime(fileMetaData.getUploadTime());
 		td.setIdentification(fileMetaData.getIdentification());
 		accountService.getOne(sessionComponent.getCurrentUser().getId()).setUploadDocument(true);
@@ -97,30 +98,31 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 	}
 
 	@Override
-	public List<TechnologyDocument> createTechnologyDocument(List<File> files, String type) throws Exception {
+	public List<TechnologyDocument> createTechnologyDocument(List<File> files, String type, String identification)
+			throws Exception {
 		List<FileMetaDataBean> fileMetaDataBeans = new ArrayList<>();
 		for (File file : files) {
-			FileMetaDataBean fileMetaDataBean = new FileMetaDataBean(type, file.getName(), new FileInputStream(file),
-					file.length());
+			FileMetaDataBean fileMetaDataBean = new FileMetaDataBean(identification, file.getName(),
+					new FileInputStream(file), file.length());
 			fileMetaDataBeans.add(fileMetaDataBean);
 		}
-		return createTechnologyDocumentBatch(fileMetaDataBeans);
+		return createTechnologyDocumentBatch(fileMetaDataBeans, type);
 	}
 
 	@Override
-	public List<TechnologyDocument> createTechnologyDocument(MultipartFile[] multipartFiles, String type)
-			throws Exception {
+	public List<TechnologyDocument> createTechnologyDocument(MultipartFile[] multipartFiles, String type,
+			String identification) throws Exception {
 		List<FileMetaDataBean> fileMetaDataBeans = new ArrayList<>();
 		for (MultipartFile multipartFile : multipartFiles) {
-			FileMetaDataBean fileMetaDataBean = new FileMetaDataBean(type, multipartFile.getOriginalFilename(),
-					multipartFile.getInputStream(), multipartFile.getSize());
+			FileMetaDataBean fileMetaDataBean = new FileMetaDataBean(identification,
+					multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
 			fileMetaDataBeans.add(fileMetaDataBean);
 		}
-		return createTechnologyDocumentBatch(fileMetaDataBeans);
+		return createTechnologyDocumentBatch(fileMetaDataBeans, type);
 	}
 
-	private List<TechnologyDocument> createTechnologyDocumentBatch(List<FileMetaDataBean> fileMetaDataBeans)
-			throws Exception {
+	private List<TechnologyDocument> createTechnologyDocumentBatch(List<FileMetaDataBean> fileMetaDataBeans,
+			String type) throws Exception {
 		List<TechnologyDocument> technologyDocuments = new ArrayList<>();
 		List<FileMetaData> fileMetaDatas = fileMetaDataService.saveFile(fileMetaDataBeans);
 		fileMetaDataService.createPreview(fileMetaDatas);
@@ -131,7 +133,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 					fileMetaData.getFileSize(),
 					FileFetchUtil.fetchContent(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase(),
 							fileByObjectId),
-					fileMetaData.getIdentification(), fileMetaData);
+					type, fileMetaData);
 			technologyDocuments.add(technologyDocument);
 		}
 		return Lists.newArrayList(technologyDocumentDao.save(technologyDocuments));
@@ -143,8 +145,6 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withPageable(pageable);
 		Page<TechnologyDocument> page = technologyDocumentDao.getHighLight(elasticsearchTemplate,
 				parseToQuery(technologyDocument, queryBuilder));
-		// 把上传人从登录帐号改为用户名
-		page.getContent().forEach(t -> t.setUploader(accountService.findByLoginId(t.getUploader()).getName()));
 		return page;
 	}
 
@@ -177,9 +177,9 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		if (StringUtils.isNoneBlank(type)) {
 			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("type", type));
 		}
-		
+
 		// 查询组标识
-		if(StringUtils.isNoneBlank(identification)){
+		if (StringUtils.isNoneBlank(identification)) {
 			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("identification", identification));
 		}
 

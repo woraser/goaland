@@ -67,45 +67,28 @@
 		                <div class="time-detail-top">
 		                </div>
 		                <div class="timeline-left" style="width: 4%;margin-left: 3.5%">
-		                    <div class="timeline-title">
-		                        <div class="timeline-title-img" style="float:left;font-weight:500;width: 15px;height: 15px;border-radius: 7.5px;background: #FC8060;color: #FFFFFF">
-		                        </div>
-		                        <div class="timeline-title-info">
-		                            	{{active}}
-		                        </div>
+		                    <div class="task-tab" style="margin-top: 30px;float: left">
+		                        	<img src="/webResources/img/process/发起.png"/>
 		                    </div>
-		                    <div class="task-tab" style="margin-top: 20px;float: left" th:text="#{customerService.task.completeStartDetail}">
-		                        	发起
+		                    <div v-if="'createTime' in examine" class="task-tab" style="margin-top: 100px;float: left">
+		                        	<img src="/webResources/img/process/审批.png"/>
 		                    </div>
-		                    <div class="task-tab-right" style="margin-top:20px;">
+		                    <div v-if="'createTime' in evaluating" class="task-tab" style="margin-top: 100px;float: left">
+		                        	<img src="/webResources/img/process/评估.png"/>
 		                    </div>
-		                    <div v-if="'endTime' in examine" class="task-tab" style="margin-top: 78px;float: left" th:text="#{customerService.task.examine}">
-		                        	审批
+		                    <div v-if="'createTime' in distribute" class="task-tab" style="margin-top: 110px;float: left">
+		                        	<img src="/webResources/img/process/派单.png"/>
 		                    </div>
-		                    <div v-if="'endTime' in examine" class="task-tab-right" style="margin-top: 78px;">
-		                    </div>
-		                    <div v-if="'endTime' in evaluating" class="task-tab" style="margin-top: 104px;float: left" th:text="#{customerService.task.evaluating}">
-		                        	评估
-		                    </div>
-		                    <div v-if="'endTime' in evaluating" class="task-tab-right" style="margin-top: 104px;">
-		                    </div>
-		                    <div v-if="'endTime' in distribute" class="task-tab" style="margin-top: 108px;float: left" th:text="#{customerService.task.distribute}">
-		                        	派单
-		                    </div>
-		                    <div v-if="'endTime' in distribute" class="task-tab-right" style="margin-top: 108px;">
-		                    </div>
-		                    <div v-if="'endTime' in repair" class="task-tab" style="margin-top: 110px;float: left" th:text="#{customerService.task.repair}">
-		                        	维修
-		                    </div>
-		                    <div v-if="'endTime' in repair" class="task-tab-right" style="margin-top: 110px;">
+		                    <div v-if="'createTime' in repair" class="task-tab" style="margin-top: 110px;float: left">
+		                        	<img src="/webResources/img/process/维修.png"/>
 		                    </div>
 		
 		                </div>
 		                <div class="timeline-center">
 		
-		                    <div v-if="completeStartDetail.active" v-on:click="completeForm = true" class="circle-timeline-head">
+		                    <div v-if="completeStartDetail.active" v-on:click="showFunc('completeForm')" class="circle-timeline-head">
 		                    </div>
-		                    <a v-if="!completeStartDetail.active" href="#" v-on:click="completeForm = true">
+		                    <a v-if="!completeStartDetail.active" href="#" v-on:click="showFunc('completeForm')">
 			                    <div class="circle-timeline-time">
 			                        <div class="circle-timeline-small" id="circle-timeline-small1">
 			                        </div>
@@ -115,11 +98,11 @@
 		                        {{completeStartDetail.endTime | yearFormat}}<br/>{{completeStartDetail.endTime | timeFormat}}
 		                    </div>
 		                    
-		                    <div v-if="'endTime' in examine" class="circle-line" id="line-1">
+		                    <div v-if="'createTime' in examine" class="circle-line" id="line-1">
 		                    </div>
-		                    <div v-if="examine.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    <div v-if="examine.active" class="circle-timeline-head" v-on:click="showFunc('examineShow')">
 		                    </div>
-		                    <a v-if="'endTime' in examine" href="#" v-on:click="completeForm = false">
+		                    <a v-if="'endTime' in examine" href="#" v-on:click="showFunc('examineShow')">
 			                    <div class="circle-timeline-time">
 			                        <div class="circle-timeline-small" id="circle-timeline-small1">
 			                        </div>
@@ -129,11 +112,11 @@
 		                        {{examine.endTime | yearFormat}}<br/>{{examine.endTime | timeFormat}}
 		                    </div>
 		
-		                    <div v-if="'endTime' in evaluating" class="circle-line" id="line-2">
+		                    <div v-if="'createTime' in evaluating" class="circle-line" id="line-2">
 		                    </div>
-		                    <div v-if="evaluating.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    <div v-if="evaluating.active" class="circle-timeline-head" v-on:click="showFunc('evaluatingShow')">
 		                    </div>
-		                    <a v-if="'endTime' in evaluating" href="#" v-on:click="completeForm = false">
+		                    <a v-if="'endTime' in evaluating" href="#" v-on:click="showFunc('evaluatingShow')">
 			                    <div class="circle-timeline-time">
 			                        <div class="circle-timeline-small" id="circle-timeline-small2">
 			                        </div>
@@ -143,11 +126,11 @@
 		                       {{evaluating.endTime | yearFormat}}<br/>{{evaluating.endTime | timeFormat}}
 		                    </div>
 		
-		                    <div v-if="'endTime' in distribute" class="circle-line" id="line-3">
+		                    <div v-if="'createTime' in distribute" class="circle-line" id="line-3">
 		                    </div>
-		                    <div v-if="distribute.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    <div v-if="distribute.active" class="circle-timeline-head" v-on:click="showFunc('distributeShow')">
 		                    </div>
-		                    <a v-if="'endTime' in distribute" href="#" v-on:click="completeForm = false"> 
+		                    <a v-if="'endTime' in distribute" href="#" v-on:click="showFunc('distributeShow')"> 
 			                    <div class="circle-timeline-time">
 			                        <div class="circle-timeline-small" id="circle-timeline-small3">
 			                        </div>
@@ -157,11 +140,11 @@
 		                        {{distribute.endTime | yearFormat}}<br/>{{distribute.endTime | timeFormat}}
 		                    </div>
 		
-		                    <div v-if="'endTime' in repair" class="circle-line" id="line-4">
+		                    <div v-if="'createTime' in repair" class="circle-line" id="line-4">
 		                    </div>
-		                    <div v-if="repair.active" class="circle-timeline-head" v-on:click="completeForm = false">
+		                    <div v-if="repair.active" class="circle-timeline-head" v-on:click="showFunc('repairShow')">
 		                    </div>
-		                    <a v-if="'endTime' in repair" href="#" v-on:click="completeForm = false">
+		                    <a v-if="'endTime' in repair" href="#" v-on:click="showFunc('repairShow')">
 			                    <div class="circle-timeline-time">
 			                        <div class="circle-timeline-small" id="circle-timeline-small4">
 			                        </div>
@@ -175,7 +158,10 @@
 		                <!-- 引入发起detail -->
 		                <div v-if="completeForm" class="detail-div" th:include="process/customerService/detail-completeForm::completeStartDetail"></div>
 		            	<!-- 引入其他节点detail -->
-		                <div v-if="!completeForm" class="detail-div" th:include="process/customerService/detail-other::other"></div>
+		                <div v-if="examineShow" class="detail-div" th:include="process/customerService/detail-examine::examine"></div>
+		                <div v-if="evaluatingShow" class="detail-div" th:include="process/customerService/detail-evaluating::evaluating"></div>
+		                <div v-if="distributeShow" class="detail-div" th:include="process/customerService/detail-distribute::distribute"></div>
+		                <div v-if="repairShow" class="detail-div" th:include="process/customerService/detail-repair::repair"></div>
 		            </div>
 		        </div>
 		    </div>

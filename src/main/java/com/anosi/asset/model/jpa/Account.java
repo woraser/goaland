@@ -76,6 +76,16 @@ public class Account extends BaseEntity {
 
 	@ContainedIn
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
+	
+	private List<CustomerServiceProcess> nextAssigneeProcesseList = new ArrayList<>();
+	
+	private List<CustomerServiceProcess> engineeDepProcesseList = new ArrayList<>();
+	
+	private List<CustomerServiceProcess> servicerProcesseList = new ArrayList<>();
+	
+	private List<CustomerServiceProcess> engineerProcesseList = new ArrayList<>();
+	
+	private List<CustomerServiceProcess> repairerProcesseList = new ArrayList<>();
 
 	// 密码加盐
 	private String salt;
@@ -176,6 +186,51 @@ public class Account extends BaseEntity {
 
 	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
 		this.customerServiceProcesseList = customerServiceProcesseList;
+	}
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "nextAssignee", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getNextAssigneeProcesseList() {
+		return nextAssigneeProcesseList;
+	}
+
+	public void setNextAssigneeProcesseList(List<CustomerServiceProcess> nextAssigneeProcesseList) {
+		this.nextAssigneeProcesseList = nextAssigneeProcesseList;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "engineeDep", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getEngineeDepProcesseList() {
+		return engineeDepProcesseList;
+	}
+
+	public void setEngineeDepProcesseList(List<CustomerServiceProcess> engineeDepProcesseList) {
+		this.engineeDepProcesseList = engineeDepProcesseList;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "servicer", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getServicerProcesseList() {
+		return servicerProcesseList;
+	}
+
+	public void setServicerProcesseList(List<CustomerServiceProcess> servicerProcesseList) {
+		this.servicerProcesseList = servicerProcesseList;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "engineer", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getEngineerProcesseList() {
+		return engineerProcesseList;
+	}
+
+	public void setEngineerProcesseList(List<CustomerServiceProcess> engineerProcesseList) {
+		this.engineerProcesseList = engineerProcesseList;
+	}
+
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "repairer", targetEntity = CustomerServiceProcess.class)
+	public List<CustomerServiceProcess> getRepairerProcesseList() {
+		return repairerProcesseList;
+	}
+
+	public void setRepairerProcesseList(List<CustomerServiceProcess> repairerProcesseList) {
+		this.repairerProcesseList = repairerProcesseList;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)

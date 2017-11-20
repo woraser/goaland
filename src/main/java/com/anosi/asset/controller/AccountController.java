@@ -3,6 +3,7 @@ package com.anosi.asset.controller;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Role;
+import com.anosi.asset.model.jpa.RoleFunction;
 import com.anosi.asset.model.jpa.RoleFunctionGroup;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.RoleFunctionGroupService;
@@ -152,6 +154,7 @@ public class AccountController extends BaseController<Account> {
 	 * @throws Exception
 	 */
 	@Transactional
+	@RequiresPermissions({ "employeeMgr:add", "employeeMgr:edit" })
 	@RequestMapping(value = "/account/save", method = RequestMethod.POST)
 	public JSONObject save(@ModelAttribute("account") Account account,
 			@RequestParam(name = "newPassword", required = false) String password,
@@ -189,7 +192,7 @@ public class AccountController extends BaseController<Account> {
 	public JSONObject checkExist(@QuerydslPredicate(root = Account.class) Predicate predicate) throws Exception {
 		return new JSONObject(ImmutableMap.of("result", accountService.exists(predicate)));
 	}
-	
+
 	/***
 	 * 判断是否是depCode这个部门的人
 	 * 
@@ -197,8 +200,37 @@ public class AccountController extends BaseController<Account> {
 	 * @return
 	 */
 	@RequestMapping(value = "/account/checkDep", method = RequestMethod.GET)
-	public JSONObject checkDep(@RequestParam("depCode")String depCode){
-		return new JSONObject(ImmutableMap.of("result", "success","dep",sessionComponent.getCurrentUser().getDepartment().getCode().equals(depCode)));
+	public JSONObject checkDep(@RequestParam("depCode") String depCode) {
+		return new JSONObject(ImmutableMap.of("result", "success", "dep",
+				sessionComponent.getCurrentUser().getDepartment().getCode().equals(depCode)));
+	}
+
+	/***
+	 * 获取当前用户的权限
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/account/permission", method = RequestMethod.GET)
+	public JSONObject getPermission() throws Exception {
+		Account account = sessionComponent.getCurrentUser();
+		JSONObject jsonObject = new JSONObject();
+		JSONArray roleArray = new JSONArray();
+		JSONArray permissionArray = new JSONArray();
+
+		account.getRoleList().forEach(role -> roleArray.add(role.getCode()));// 添加角色
+		// 添加权限
+		account.getPrivilegeList().forEach(privilege -> {
+			RoleFunction roleFunction = privilege.getRoleFunction();
+			// 默认添加view权限
+			permissionArray.add(roleFunction.getRoleFunctionPageId() + ":view");
+			// 添加详细的权限
+			privilege.getRoleFunctionBtnList()
+					.forEach(btn -> permissionArray.add(roleFunction.getRoleFunctionPageId() + ":" + btn.getBtnId()));
+		});
+		jsonObject.put("role", roleArray);
+		jsonObject.put("permission", permissionArray);
+		return jsonObject;
 	}
 
 }

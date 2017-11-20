@@ -5,9 +5,9 @@ $(document).ready(function(){
 	
     function loadyys2() {
         //第二个参数可以指定前面引入的主题
-        var myChart = echarts.init(document.getElementById('right-bar'));
+        var myLine = echarts.init(document.getElementById('right-bar'));
         //图表显示提示信息
-        myChart.showLoading();
+        myLine.showLoading();
         // Generate data
         var aaa = ['1','2','3','4','5','6','7','8','9','10','11','12'];
 
@@ -91,14 +91,14 @@ $(document).ready(function(){
         };
 
 
-        myChart.hideLoading();
-        myChart.setOption(option, true);
+        myLine.hideLoading();
+        myLine.setOption(option, true);
     }
     function loadyys3() {
         //第二个参数可以指定前面引入的主题
-        var myChart = echarts.init(document.getElementById('right-line'));
+        var myLine = echarts.init(document.getElementById('right-line'));
         //图表显示提示信息
-        myChart.showLoading();
+        myLine.showLoading();
         var data_val = [22700, 23066, 24066, 23492, 27532, 26694, 28757],
             xAxis_val = ['1', '2', '3', '4', '5', '6', '7'];
         var data_val1 = [0, 0, 0, 0, 0, 0, 0];
@@ -210,8 +210,8 @@ $(document).ready(function(){
 
             }]
         };
-        myChart.hideLoading();
-        myChart.setOption(option, true);
+        myLine.hideLoading();
+        myLine.setOption(option, true);
     }
     loadyys2();//柱状图
     loadyys3();//折线图

@@ -21,7 +21,9 @@ public class FileMetaData extends AbstractDocument {
 	private String identification;// 组标识，下次可以通过标识找到相应的fileList
 
 	private String uploader;
-
+	
+	private String uploaderName;
+	
 	private Date uploadTime;
 
 	private String fileName;
@@ -92,6 +94,14 @@ public class FileMetaData extends AbstractDocument {
 
 	public String getSuffix() {
 		return fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+	}
+	
+	public String getUploaderName() {
+		return uploaderName;
+	}
+
+	public void setUploaderName(String uploaderName) {
+		this.uploaderName = uploaderName;
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
@@ -109,10 +110,12 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		String code = currentAccount.getDepartment().getCode();
 		// 如果是工程部
 		if ("engineerDep".equals(code)) {
+			process.setEngineeDep(accountService.findByLoginId(process.getStartDetail().getNextAssignee()));
 			completeTask(taskId, () -> taskService.complete(taskId,
 					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)),
 					new ArrayList<>());
 		} else {
+			process.setNextAssignee(accountService.findByLoginId(process.getStartDetail().getNextAssignee()));
 			completeTask(taskId, () -> taskService.complete(taskId,
 					ImmutableMap.of("depManager", process.getStartDetail().getNextAssignee(), "isEnginee", false)),
 					new ArrayList<>());
@@ -133,6 +136,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 				}
 			}, type, reason, new ArrayList<>());
 		} else {
+			process.setEngineeDep(accountService.findByLoginId(process.getExamineDetail().getEngineeDep()));
 			completeTask(taskId,
 					() -> taskService.complete(taskId,
 							ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep())),
@@ -142,12 +146,20 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public void evaluating(String taskId, CustomerServiceProcess process) throws Exception {
+		process.setServicer(accountService.findByLoginId(process.getEvaluatingDetail().getServicer()));
 		completeTask(taskId, () -> taskService.complete(taskId,
 				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())), new ArrayList<>());
 	}
 
 	@Override
 	public void distribute(String taskId, CustomerServiceProcess process) throws Exception {
+		RepairDetail repairDetail = process.getRepairDetail();
+		if (repairDetail == null) {
+			repairDetail = new RepairDetail();
+		}
+		repairDetail.setRepairer(process.getDistributeDetail().getEngineer());
+		process.setEngineer(accountService.findByLoginId(process.getDistributeDetail().getEngineer()));
+		process.setRepairer(process.getEngineer());
 		completeTask(taskId, () -> taskService.complete(taskId,
 				ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer())), new ArrayList<>());
 	}
@@ -157,13 +169,14 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		process.setFinishType(FinishType.FINISHED);
 		process.setFinishDate(new Date());
 		customerServiceProcessDao.save(process);
-		process.getRepairDetail().setRepairer(sessionComponent.getCurrentUser().getName());
 		process.getRepairDetail().setRepairTime(new Date());
 		completeTask(taskId, () -> taskService.complete(taskId), new ArrayList<>());
 	}
 
 	@Override
 	public void entrust(String taskId, Account mandatary, String reason, CustomerServiceProcess process) {
+		process.getRepairDetail().setRepairer(mandatary.getName());
+		process.setRepairer(mandatary);
 		taskService.setAssignee(taskId, mandatary.getLoginId());// 任务委托
 		// 完成相应的流程记录
 		entrustProcessRecord(taskId, mandatary, reason);

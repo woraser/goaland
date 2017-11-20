@@ -34,6 +34,9 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 
 	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String uploader;
+	
+	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
+	private String uploaderName;
 
 	@Field(type = FieldType.Date, index = FieldIndex.not_analyzed, store = true)
 	private Date uploadTime;
@@ -165,6 +168,14 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 
 	public void setIdentification(String identification) {
 		this.identification = identification;
+	}
+
+	public String getUploaderName() {
+		return uploaderName;
+	}
+
+	public void setUploaderName(String uploaderName) {
+		this.uploaderName = uploaderName;
 	}
 	
 }

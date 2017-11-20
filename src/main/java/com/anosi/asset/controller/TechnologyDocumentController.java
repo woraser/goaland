@@ -1,5 +1,6 @@
 package com.anosi.asset.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 		return new ModelAndView("document/documentManage").addObject("types", documentTypeService.findAll())
 				.addObject("uploaders", accountService.findByIsUploadDocument(true));
 	}
-	
+
 	/***
 	 * 进去文档上传页面
 	 */
@@ -62,12 +63,18 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	 */
 	@RequestMapping(value = "/technologyDocument/upload", method = RequestMethod.POST)
 	public JSONObject fileUpload(@RequestParam("fileUpLoad") MultipartFile[] multipartFiles,
-			@RequestParam("type") String type) throws Exception {
+			@RequestParam("type") String type,
+			@RequestParam(value = "identification", required = false) String identification) throws Exception {
 		logger.info("technologyDocument upload");
+
+		if (StringUtils.isBlank(identification)) {
+			identification = type;
+		}
+		
 		JSONObject jsonObject = new JSONObject();
 		if (multipartFiles != null && multipartFiles.length > 0) {
 			logger.debug("is uploading");
-			technologyDocumentService.createTechnologyDocument(multipartFiles, type);
+			technologyDocumentService.createTechnologyDocument(multipartFiles, type, identification);
 			jsonObject.put("result", "success");
 		} else {
 			jsonObject.put("result", "error");
@@ -81,7 +88,8 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	 * 根据条件查找技术文档
 	 * 
 	 * @param showType
-	 * @param technologyDocument 查询条件已经参数绑定至这个bean里
+	 * @param technologyDocument
+	 *            查询条件已经参数绑定至这个bean里
 	 * @param showAttributes
 	 * @param rowId
 	 * @param pageable
@@ -92,12 +100,14 @@ public class TechnologyDocumentController extends BaseController<TechnologyDocum
 	public JSONObject fileDownloadList(@PathVariable ShowType showType, TechnologyDocument technologyDocument,
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
-			@PageableDefault(sort = { "uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
+			@PageableDefault(sort = {
+					"uploadTime" }, direction = Sort.Direction.DESC, page = 0, value = 20) Pageable pageable)
 			throws Exception {
 		logger.info("to view file list");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-		
-		return parseToJson(technologyDocumentService.getHighLight(technologyDocument, pageable), rowId, showAttributes, showType);
+
+		return parseToJson(technologyDocumentService.getHighLight(technologyDocument, pageable), rowId, showAttributes,
+				showType);
 	}
 
 }

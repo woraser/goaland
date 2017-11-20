@@ -61,7 +61,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	}
 
 	@Override
-	protected Map<String, Object> getStartProcessObjects() {
+	public Map<String, Object> getStartProcessObjects() {
 		String loginId = sessionComponent.getCurrentUser().getLoginId();
 		Account currentAccount = accountService.findByLoginId(loginId);
 		String code = currentAccount.getDepartment().getCode();
@@ -89,6 +89,24 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 		return map;
 	}
 
+	@Override
+	public JSONObject getStartProcessObjectsRemote() {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> startProcessObjects = getStartProcessObjects();
+		@SuppressWarnings("unchecked")
+		Iterable<Account> accounts = (Iterable<Account>) startProcessObjects.get("accounts");
+		JSONArray jsonArray = new JSONArray();
+		for (Account account : accounts) {
+			JSONObject nestJson = new JSONObject();
+			nestJson.put("id", account.getId());
+			nestJson.put("name", account.getName());
+			nestJson.put("loginId", account.getLoginId());
+			jsonArray.add(nestJson);
+		}
+		jsonObject.put("accounts", jsonArray);
+		return jsonObject;
+	}
+
 	/***
 	 * 发起流程
 	 * 
@@ -104,7 +122,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	}
 
 	@Override
-	protected Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey) {
+	public Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey) {
 		logger.debug("taskDefinitionKey:{},process:customerService", taskDefinitionKey);
 		Iterable<Account> accounts;
 		QAccount qAccount = QAccount.account;
@@ -126,6 +144,24 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 			return ImmutableMap.of("accounts", accounts);
 		}
 		throw new CustomRunTimeException("taskDefinitionKey is illegal");
+	}
+
+	@Override
+	public JSONObject getRunTimeTaskObjectsRemote(String taskDefinitionKey) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> startProcessObjects = getRunTimeTaskObjects(taskDefinitionKey);
+		@SuppressWarnings("unchecked")
+		Iterable<Account> accounts = (Iterable<Account>) startProcessObjects.get("accounts");
+		JSONArray jsonArray = new JSONArray();
+		for (Account account : accounts) {
+			JSONObject nestJson = new JSONObject();
+			nestJson.put("id", account.getId());
+			nestJson.put("name", account.getName());
+			nestJson.put("loginId", account.getLoginId());
+			jsonArray.add(nestJson);
+		}
+		jsonObject.put("accounts", jsonArray);
+		return jsonObject;
 	}
 
 	/***

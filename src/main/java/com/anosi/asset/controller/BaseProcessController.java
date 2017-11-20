@@ -35,9 +35,9 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	private static final Logger logger = LoggerFactory.getLogger(BaseProcessController.class);
 
 	@Autowired
-	protected TaskService taskService;
+	public TaskService taskService;
 
-	protected String definitionKey;
+	public String definitionKey;
 
 	public abstract BaseProcessService<T> getProcessService();
 
@@ -106,13 +106,31 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		return new ModelAndView("process/" + definitionKey + "/startProcessForm", "process", process)
 				.addAllObjects(getStartProcessObjects());
 	}
+	
+	/***
+	 * 获取发起流程需要的数据，json格式
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/startProcess/prepare/datas", method = RequestMethod.GET)
+	public JSONObject startProcessObjectsRemote() throws Exception{
+		return getStartProcessObjectsRemote();
+	}
 
 	/***
 	 * 发起流程所需的数据
 	 * 
 	 * @return
 	 */
-	protected abstract Map<String, Object> getStartProcessObjects();
+	public abstract Map<String, Object> getStartProcessObjects();
+	
+	/***
+	 * 发起流程所需的数据,json格式
+	 * 
+	 * @return
+	 */
+	public abstract JSONObject getStartProcessObjectsRemote();
 
 	/***
 	 * 进入查看当前account<b>待办的任务</b>的页面
@@ -168,6 +186,18 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		return new ModelAndView("process/" + definitionKey + "/runtimeTask-" + task.getTaskDefinitionKey())
 				.addObject("task", task).addAllObjects(getRunTimeTaskObjects(task.getTaskDefinitionKey()));
 	}
+	
+	/***
+	 * 获取办理需要的数据，json格式
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/runtimeTask/prepare/datas", method = RequestMethod.GET)
+	public JSONObject runTimeTasksObjectsRemote(@RequestParam String taskId) throws Exception{
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		return getRunTimeTaskObjectsRemote(task.getTaskDefinitionKey());
+	}
 
 	/***
 	 * 发起办理所需的数据
@@ -176,7 +206,16 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 *            task定义的key
 	 * @return
 	 */
-	protected abstract Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey);
+	public abstract Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey);
+	
+	/***
+	 * 发起办理所需的数据,json格式
+	 * 
+	 * @param taskDefinitionKey
+	 *            task定义的key
+	 * @return
+	 */
+	public abstract JSONObject getRunTimeTaskObjectsRemote(String taskDefinitionKey);
 
 	/***
 	 * 进入查看当前account<b>办理过的任务</b>的页面

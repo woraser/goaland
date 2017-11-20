@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.anosi.asset.model.elasticsearch.TechnologyDocument;
 
-public interface TechnologyDocumentService extends BaseElasticSearchService<TechnologyDocument, String>{
+public interface TechnologyDocumentService extends BaseElasticSearchService<TechnologyDocument, String> {
 
 	/***
 	 * 创建TechnologyDocument
@@ -19,40 +19,47 @@ public interface TechnologyDocumentService extends BaseElasticSearchService<Tech
 	 * @param is
 	 * @param fileSize
 	 * @param type
+	 * @param identification
 	 * @return
 	 * @throws Exception
 	 */
-	TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize,String type) throws Exception;
+	TechnologyDocument createTechnologyDocument(String fileName, InputStream is, Long fileSize, String type,
+			String identification) throws Exception;
 
 	/**
 	 * 重載
 	 * 
 	 * @param file
 	 * @param type
+	 * @param identification
 	 * @return
 	 * @throws Exception
 	 */
-	TechnologyDocument createTechnologyDocument(File file,String type) throws Exception;
+	TechnologyDocument createTechnologyDocument(File file, String type, String identification) throws Exception;
 
 	/****
 	 * 为List<File>进行重载重载
 	 * 
 	 * @param files
 	 * @param type
+	 * @param identification
 	 * @return
 	 * @throws Exception
 	 */
-	List<TechnologyDocument> createTechnologyDocument(List<File> files,String type) throws Exception;
+	List<TechnologyDocument> createTechnologyDocument(List<File> files, String type, String identification)
+			throws Exception;
 
 	/****
 	 * 为MultipartFile进行重载
 	 * 
 	 * @param files
 	 * @param type
+	 * @param identification
 	 * @return
 	 * @throws Exception
 	 */
-	List<TechnologyDocument> createTechnologyDocument(MultipartFile[] multipartFiles,String type) throws Exception;
+	List<TechnologyDocument> createTechnologyDocument(MultipartFile[] multipartFiles, String type,
+			String identification) throws Exception;
 
 	/***
 	 * 根据内容查找文档
@@ -62,21 +69,23 @@ public interface TechnologyDocumentService extends BaseElasticSearchService<Tech
 	 * @return
 	 * @throws Exception
 	 */
-	Page<TechnologyDocument> getHighLight( TechnologyDocument technologyDocument, Pageable pageable) throws Exception;
-	
+	Page<TechnologyDocument> getHighLight(TechnologyDocument technologyDocument, Pageable pageable) throws Exception;
+
 	/***
 	 * 根据类型精确查找文档
+	 * 
 	 * @param type
 	 * @return
 	 */
 	List<TechnologyDocument> findByType(String type);
 
 	/***
-	 *  更新type
+	 * 更新type
+	 * 
 	 * @param lastType
 	 * @param nowType
 	 * @return
 	 */
-	List<TechnologyDocument> updateType(String lastType,String nowType);
-	
+	List<TechnologyDocument> updateType(String lastType, String nowType);
+
 }

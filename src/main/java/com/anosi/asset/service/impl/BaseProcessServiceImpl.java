@@ -158,6 +158,10 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				.processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
 		t.setHistoricProcessInstance(historicProcessInstance);
 		t.setHistoricTaskInstance(historicTaskInstance);
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).list();
+		if(!CollectionUtils.isEmpty(tasks)){
+			t.setTask(tasks.get(0));
+		}
 		return t;
 	}
 
@@ -165,6 +169,10 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 	public T findAndSetInstanceValue(HistoricProcessInstance instance) {
 		T process = findByProcessInstanceId(instance.getId());
 		process.setHistoricProcessInstance(instance);
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(instance.getId()).list();
+		if(!CollectionUtils.isEmpty(tasks)){
+			process.setTask(tasks.get(0));
+		}
 		return process;
 	}
 

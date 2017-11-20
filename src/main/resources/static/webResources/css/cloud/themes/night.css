@@ -462,7 +462,7 @@
 .sidebar-menu > ul > li > a:hover,
 .sidebar-menu > ul > li:hover > a {
   background: #5F5C5B;/* 菜单栏选中  */
-  border-left: solid #1F8DE5 3px;
+  border-left: solid #F05F27 3px;
 }
 .sidebar-menu > ul > li.has-sub.open > ul > li.has-sub-sub.open > a {
   background: #4d5669;
@@ -471,7 +471,7 @@
   background: #5F5C5B !important;
   border-top-color: transparent !important;
   color: #fff;
-  border-left: solid #1F8DE5 3px;
+  border-left: solid #F05F27 3px;
   padding-left: 24px;
 }
 .sidebar-menu > ul > li > a.open {

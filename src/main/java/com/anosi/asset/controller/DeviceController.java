@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +150,7 @@ public class DeviceController extends BaseController<Device> {
 	 * @return
 	 * @throws Exception
 	 */
+	@RequiresPermissions({ "deviceManagement:add","deviceManagement:edit" })
 	@RequestMapping(value = "/device/save", method = RequestMethod.POST)
 	public JSONObject saveDevice(@ModelAttribute("device") Device device) throws Exception {
 		logger.debug("saveOrUpdate device");
@@ -163,6 +165,7 @@ public class DeviceController extends BaseController<Device> {
 	 * @return
 	 * @throws Exception
 	 */
+	@RequiresPermissions({ "deviceManagement:delete" })
 	@RequestMapping(value = "/device/delete", method = RequestMethod.POST)
 	public JSONObject deleteDevice(@RequestParam(value = "id") Long id) throws Exception {
 		logger.debug("delete device");

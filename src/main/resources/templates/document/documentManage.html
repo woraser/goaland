@@ -102,7 +102,7 @@
                          {{fileData.type}}
                     </div><!-- 文档类型-->
                     <div class="upLoader" >
-                       	 {{fileData.uploader}}
+                       	 {{fileData.uploaderName}}
                     </div><!--上传人-->
                     <div class="upTime" >
                          {{fileData.uploadTime}}
@@ -186,6 +186,14 @@
             <div class="select" style="margin-left: 10%;height: 10%">
             	 <input class="form-control input-sm" style="float:left;width:85%;height: 35px" id="lowerLimit" name="lowerLimit" type="text" th:placeholder="#{document.search.uploadTime.from}"/>
             	 <input class="form-control input-sm" style="margin-top:3%;float:left;width:85%;height: 35px" id="upperLimit" name="upperLimit" type="text" th:placeholder="#{document.search.uploadTime.to}"/>
+            </div>
+            <div class="knowledgebutton" style="width:80%;margin-left: 10%;height: 4%;margin-top:4%">
+                <button class="company-button-new" id="empty" style="width:25%;background:#B6B6BA;font-size:14px;height: 100%;margin-top: 0%" th:text="#{empty}">
+                    	清除
+                </button>
+                <button class="company-button-new" id="confirm" style="width:25%;margin-left:2%;font-size:14px;height: 100%;margin-top: 0%" th:text="#{confirm}">
+                    	确定
+                </button>
             </div>
          </div><!--文档信息  -->
 		</div>

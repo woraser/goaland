@@ -35,6 +35,7 @@
 		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
 		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
 		<roleFunctionBtn btnId="batadd" name="批量添加"></roleFunctionBtn>
+		<roleFunctionBtn btnId="viewDetail" name="查看详情"></roleFunctionBtn>
 	</roleFunction>
 	<roleFunction roleFunctionPageId="iotxManagement" name="iotx管理">
 		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>

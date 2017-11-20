@@ -66,6 +66,8 @@ public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> 
 		fileMetaData.setIdentification(identification);
 		fileMetaData.setUploader(sessionComponent.getCurrentUser() == null ? identification
 				: sessionComponent.getCurrentUser().getLoginId());
+		fileMetaData.setUploaderName(sessionComponent.getCurrentUser() == null ? identification
+				: sessionComponent.getCurrentUser().getName());
 		fileMetaData.setUploadTime(new Date());
 		fileMetaData.setFileName(fileName);
 		fileMetaData.setFileSize(fileSize);

@@ -27,6 +27,7 @@ public class GlobalController<T> {
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleAllException(HttpServletRequest request, Exception ex) throws IOException {
 		ex.printStackTrace();
+		logger.error("", ex);
 
 		String servletPath = request.getServletPath();
 
@@ -48,7 +49,11 @@ public class GlobalController<T> {
 			return mv;
 		} else {
 			ModelAndView mv = new ModelAndView(new MappingJackson2JsonView());
-			String message = ex.getMessage();
+			String message = "";
+			if (ex != null) {
+				message += ex.getClass().getName()+":";
+			}
+			message += ex.getMessage();
 			mv.addObject("result", "error");
 			mv.addObject("message", message);
 			return mv;

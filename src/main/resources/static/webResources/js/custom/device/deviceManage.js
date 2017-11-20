@@ -30,11 +30,16 @@ $(document).ready(function() {
 		{
             label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150,sortable: false, align:'center',
             formatter: function (cellvalue, options, rowObject) {
-            	var detail;
-            	var editImg = "<a href='#' edit='"+options.rowId+"'><img src='/webResources/img/operate/edit.png'/></a>"
-            	var deleteImg = "<a href='#' delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
-            	var detailImg = "<a href='#' detail='"+options.rowId+"'><img src='/webResources/img/operate/detail.png'/></a>"
-            	detail = editImg + deleteImg + detailImg
+            	var detail = "";
+            	if($("#allowEdit").length>0){
+            		detail += "<a href='#' edit='"+options.rowId+"'><img src='/webResources/img/operate/edit.png'/></a>"
+            	}
+            	if($("#allowDelete").length>0){
+            		detail += "<a href='#' delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
+            	}
+            	if($("#allowViewDetail").length>0){
+            		detail += "<a href='#' detail='"+options.rowId+"'><img src='/webResources/img/operate/detail.png'/></a>"
+            	}
             	return detail;
             },
         },
@@ -43,7 +48,7 @@ $(document).ready(function() {
 	 //每页显示多少行
 	 var rowNum=20;
 	 var page=0;
-	 var url='/device/management/data//GRID';
+	 var url='/device/management/data/GRID';
 	 var sort;
 	 var selectRowId;
 	 
@@ -187,5 +192,7 @@ $(document).ready(function() {
 	 $(document).on("click","a[detail]",function(){
 		 window.location.href="/device/management/detail/"+$(this).attr("detail")+"/view"
 	 });
+	 
+	 
 	 
 })

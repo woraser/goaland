@@ -20,7 +20,7 @@ $(document).ready(function() {
 		 
 	 //请求参数
 	 var params={}
-	 params['showAttributes']='suffix,highLightFileName,highLightContent,uploader,uploadTime,type,fileId';//要获取的属性名
+	 params['showAttributes']='suffix,highLightFileName,highLightContent,uploaderName,uploadTime,type,fileId';//要获取的属性名
 	 params['size']=rowNum;
 	 params['sort']=sort;
 	 
@@ -56,6 +56,16 @@ $(document).ready(function() {
 		 };
 		 createModalPage("文档上传","/technologyDocument/upload/view",func); 
 	 });
+	 
+	 $("#empty").click(function(){
+		 $("#lowerLimit").val("")
+		 $("#upperLimit").val("")
+	 })
+	 
+	 $("#confirm").click(function(){
+		//加载数据
+		$("#search").click()
+	 })
 	 
 	 $("#lowerLimit").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
 	 $("#upperLimit").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});

@@ -73,6 +73,10 @@ $(document).ready(function() {
 		   loginId : $("#loginId").val(),
 		   active : null,
 		   completeForm : true,
+		   examineShow : false,
+		   evaluatingShow : false,
+		   distributeShow : false,
+		   repairShow : false,
 	   },
 	   methods: {
 		   handle: function (key,taskName,taskId,processId) {
@@ -89,8 +93,15 @@ $(document).ready(function() {
 				   }
 				   createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId+"&processId="+processId,func)
 			   }
-			 
 		  }, 
+		  showFunc : function(show){
+			  detail.completeForm = false
+			  detail.examineShow = false
+			  detail.evaluatingShow = false
+			  detail.distributeShow = false
+			  detail.repairShow = false 
+			  detail[show] = true
+		  },
 	   },
 	   filters: {
 		  yearFormat: function (value) {
@@ -106,7 +117,7 @@ $(document).ready(function() {
 	var loadContent = function(){
 		$.ajax({
 			url : "/customerServiceProcess/process/detail/"+$("#processId").val(),
-			data : {'showAttributes':'id,name,processInstanceId,applicant.name,device.serialNo,project*,startDetail*,examineDetail*,evaluatingDetail*,distributeDetail*,repairDetail*,agreementStatus*,historicProcessInstance.startTime,historicProcessInstance.endTime,task.id,task.name,task.assignee,task.taskDefinitionKey'},
+			data : {'showAttributes':'id,name,processInstanceId,applicant.name,nextAssignee.name,engineeDep.name,servicer.name,engineer.name,repairer.name,device.serialNo,project*,startDetail*,examineDetail*,evaluatingDetail*,distributeDetail*,repairDetail*,agreementStatus*,historicProcessInstance.startTime,historicProcessInstance.endTime,task.id,task.name,task.assignee,task.taskDefinitionKey'},
 			type : 'get',
 			dataType : 'json',
 			success : function( data ) {

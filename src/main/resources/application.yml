@@ -26,7 +26,7 @@ spring:
   #hibernate
   jpa:
     database: MYSQL
-    show-sql: true
+    show-sql: false
     hibernate:
       # Hibernate ddl auto (create, create-drop, update)
       ddl-auto: update
