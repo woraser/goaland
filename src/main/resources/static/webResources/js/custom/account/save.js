@@ -4,6 +4,7 @@
 $(document).ready(function() {
 	$("#accountForm").validate({
 		//debug:true,
+		ignore: ":hidden:not(select)",
 		rules : {
 			loginId : {
 				required : true,
@@ -28,6 +29,13 @@ $(document).ready(function() {
 				required : true,
 			},
 		},
+		errorPlacement: function(error, element) {
+            if(element.parent('#roleSelect').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
 		submitHandler: function(form) {  
 			var afaTree = $.fn.zTree.getZTreeObj("accountRoleFunctionTree");
      	    var afaTrueNodes = afaTree.getCheckedNodes(true);

@@ -37,6 +37,14 @@
 	<div layout:fragment="content">
 		<div id="hotbox"></div>
 		<input type="hidden" id="processId" th:value="${id}"/>
+		<div class="table-top">
+		    <div class="title-big" th:text="#{customServiceProcess}">
+		        	业务管理
+		    </div>
+		    <a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" >
+		    	<button class="back" th:text="#{return}"></button>
+		    </a>
+		</div>
 		<div id="detail" class="companyMgr-page" style="height: 900px" v-cloak="v-cloak">
 		    <div class="process-table" style="height: 97%;padding-top: 1.5%;padding-left: 3%;padding-right: 3%">
 		        <div class="table-in">
@@ -53,9 +61,10 @@
 		                            </button>
 		                        </div>
 		                        <div class="process-in-title-right" style="width:4%">
-		                            <img src="/webResources/img/process/decice-state.png" style="margin-top: -13%"/>
+	                            	<img v-if="'agreementStatus.agreement' in detailData" v-bind:src="'/webResources/img/process/'+detailData.agreementPic+'.png'"/>
+	                            	<img v-else="v-else" src="/webResources/img/process/UNCOMFIRMED.png"/>
 		                        </div>
-		                        <div class="process-in-title-right" style="width: 18%;padding-top: 0.2%">
+		                        <div class="process-in-title-right" style="width: 27%;padding-top: 0.2%">
 		                            	<span th:text="#{customerService.applicant}">发起人</span>
 		                            	<span>:{{detailData["applicant.name"]}}</span>
 		                            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -67,13 +76,13 @@
 		                <div class="time-detail-top">
 		                </div>
 		                <div class="timeline-left" style="width: 4%;margin-left: 3.5%">
-		                    <div class="task-tab" style="margin-top: 30px;float: left">
+		                    <div class="task-tab" style="margin-top: 10px;float: left">
 		                        	<img src="/webResources/img/process/发起.png"/>
 		                    </div>
 		                    <div v-if="'createTime' in examine" class="task-tab" style="margin-top: 100px;float: left">
 		                        	<img src="/webResources/img/process/审批.png"/>
 		                    </div>
-		                    <div v-if="'createTime' in evaluating" class="task-tab" style="margin-top: 100px;float: left">
+		                    <div v-if="'createTime' in evaluating" class="task-tab" style="margin-top: 105px;float: left">
 		                        	<img src="/webResources/img/process/评估.png"/>
 		                    </div>
 		                    <div v-if="'createTime' in distribute" class="task-tab" style="margin-top: 110px;float: left">

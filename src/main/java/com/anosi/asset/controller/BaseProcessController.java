@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.BaseProcess;
+import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.util.JsonUtil;
 import com.anosi.asset.util.StringUtil;
@@ -69,16 +70,16 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
-			@RequestParam(value = "timeType", required = false) String timeType,
+			@RequestParam(value = "timeType", required = false, defaultValue = "start") String timeType,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
-			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
+			@RequestParam(value = "endTime", required = false) Date endTime,
+			@RequestParam(value = "finishType", required = false) FinishType finishType) throws Exception {
 		logger.info("find startedProcess");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(
-				getProcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime), rowId,
-				showAttributes, showType);
+		return parseToJson(getProcessService().findStartedProcess(pageable, searchContent, timeType, beginTime, endTime,
+				finishType), rowId, showAttributes, showType);
 	}
 
 	/****
@@ -106,7 +107,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		return new ModelAndView("process/" + definitionKey + "/startProcessForm", "process", process)
 				.addAllObjects(getStartProcessObjects());
 	}
-	
+
 	/***
 	 * 获取发起流程需要的数据，json格式
 	 * 
@@ -114,7 +115,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/startProcess/prepare/datas", method = RequestMethod.GET)
-	public JSONObject startProcessObjectsRemote() throws Exception{
+	public JSONObject startProcessObjectsRemote() throws Exception {
 		return getStartProcessObjectsRemote();
 	}
 
@@ -124,7 +125,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @return
 	 */
 	public abstract Map<String, Object> getStartProcessObjects();
-	
+
 	/***
 	 * 发起流程所需的数据,json格式
 	 * 
@@ -186,7 +187,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		return new ModelAndView("process/" + definitionKey + "/runtimeTask-" + task.getTaskDefinitionKey())
 				.addObject("task", task).addAllObjects(getRunTimeTaskObjects(task.getTaskDefinitionKey()));
 	}
-	
+
 	/***
 	 * 获取办理需要的数据，json格式
 	 * 
@@ -194,7 +195,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/runtimeTask/prepare/datas", method = RequestMethod.GET)
-	public JSONObject runTimeTasksObjectsRemote(@RequestParam String taskId) throws Exception{
+	public JSONObject runTimeTasksObjectsRemote(@RequestParam String taskId) throws Exception {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		return getRunTimeTaskObjectsRemote(task.getTaskDefinitionKey());
 	}
@@ -207,7 +208,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @return
 	 */
 	public abstract Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey);
-	
+
 	/***
 	 * 发起办理所需的数据,json格式
 	 * 
@@ -243,15 +244,16 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
-			@RequestParam(value = "timeType", required = false) String timeType,
+			@RequestParam(value = "timeType", required = false, defaultValue = "start") String timeType,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
-			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
+			@RequestParam(value = "endTime", required = false) Date endTime,
+			@RequestParam(value = "finishType", required = false) FinishType finishType) throws Exception {
 		logger.info("find historicTasks");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getProcessService().findHistoricTasks(pageable, searchContent, timeType, beginTime, endTime),
-				rowId, showAttributes, showType);
+		return parseToJson(getProcessService().findHistoricTasks(pageable, searchContent, timeType, beginTime, endTime,
+				finishType), rowId, showAttributes, showType);
 	}
 
 	/***
@@ -285,14 +287,16 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
 			@RequestParam(value = "searchContent", required = false) String searchContent,
-			@RequestParam(value = "timeType", required = false) String timeType,
+			@RequestParam(value = "timeType", required = false, defaultValue = "start") String timeType,
 			@RequestParam(value = "beginTime", required = false) Date beginTime,
-			@RequestParam(value = "endTime", required = false) Date endTime) throws Exception {
+			@RequestParam(value = "endTime", required = false) Date endTime,
+			@RequestParam(value = "finishType", required = false) FinishType finishType) throws Exception {
 		logger.info("find allProcesses");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
-		return parseToJson(getProcessService().findAllProcesses(pageable, searchContent, timeType, beginTime, endTime),
+		return parseToJson(
+				getProcessService().findAllProcesses(pageable, searchContent, timeType, beginTime, endTime, finishType),
 				rowId, showAttributes, showType);
 	}
 

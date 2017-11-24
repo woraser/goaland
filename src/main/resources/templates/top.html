@@ -5,60 +5,61 @@
 	<!-- HEADER -->
 	<header th:fragment="top">
 		<input type="hidden" id="loginId" name="loginId" th:value="${session.loginId}"/> 
-		<div id="top" class="container" v-cloak="v-cloak">
-				<div class="navbar-brand" style="padding: 0%">
+		<div id="top" class="container"  style="background: #FFF" v-cloak="v-cloak">
+				<div class="navbar-brand" style="padding: 0%;">
 					<!-- COMPANY LOGO -->
-					<div class="logo-top" >
+					<div class="logo-top" style="background: #4D4948;width:50%">
 						<a  href="/index">
-							<img src="/webResources/img/logo/logo3.png" style="width: 174px;height: 34px;top: 10px;left:100px"/>
+							<img src="/webResources/img/logo/logo-img2.png" style="width: 80px;height: 26px;top: 10px;left:65px"/>
 						</a>
 					</div>
 					<!-- /COMPANY LOGO -->
 					<!-- TEAM STATUS FOR MOBILE -->
 					<div class="visible-xs">
+
 						<a href="#" class="team-status-toggle switcher btn dropdown-toggle">
 							<i class="fa fa-users"></i>
 						</a>
 					</div>
 					<!-- /TEAM STATUS FOR MOBILE -->
 					<!-- SIDEBAR COLLAPSE -->
-					<div id="sidebar-collapse" class="sidebar-collapse btn">
-						<i class="fa fa-bars" 
-							data-icon1="fa fa-bars" 
+					<!--<div id="sidebar-collapse" class="sidebar-collapse btn">
+						<i id="sidebar-click" class="fa fa-bars"
+							data-icon1="fa fa-bars"
 							data-icon2="fa fa-bars" ></i>
-					</div>
+					</div>-->
 					<!-- /SIDEBAR COLLAPSE -->
 				</div>
-				
+
 				<!-- BEGIN TOP NAVIGATION MENU -->					
 				<ul class="nav navbar-nav pull-right">
-					
 					<!-- BEGIN INBOX DROPDOWN -->
-					<li class="dropdown" id="header-message">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-envelope"></i>
+					<li  id="header-message">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top: -6px">
+						<img src="/webResources/img/icon/message.jpg"/>
 						<span class="badge">{{messages.records}}</span>
 						</a>
 						<ul class="dropdown-menu inbox">
 							<li class="dropdown-title">
-								<span><i class="fa fa-envelope-o"></i></span>
-							</li>
-							<li v-for="message in messages.content">
-								<a href="#" v-on:click="viewMessageInfo(message.id)">
-									<img src="" alt="" />
-									<span class="body">
-										<span class="from">{{message['from.name']}}</span>
-										<span class="from">{{message.title}}</span>
-										<span class="message">
-											{{message.content}}
-										</span> 
-										<span class="time">
-											<i class="fa fa-clock-o"></i>
-											<span>{{message.sendTime}}</span>
-										</span>
-									</span>
-									 
-								</a>
+								<span><i class="fa fa-envelope-o"></i> {{messages.records}} Messages</span>
+								<span class="compose pull-right tip-right" title="Compose message">
+									<li v-for="message in messages.content">
+										<a href="#" v-on:click="viewMessageInfo(message.id)">
+											<span class="body">
+												<span class="from">{{message['from.name']}}</span>
+												<span class="from">{{message.title}}</span>
+												<span class="message">
+													{{message.content}}
+												</span> 
+												<span class="time">
+													<i class="fa fa-clock-o"></i>
+													<span>{{message.sendTime}}</span>
+												</span>
+											</span>
+											 
+										</a>
+									</li>
+								</span>
 							</li>
 							<li class="footer">
 								<a href="#">See all messages <i class="fa fa-arrow-circle-right"></i></a>
@@ -66,13 +67,10 @@
 						</ul>
 					</li>
 					<!-- END INBOX DROPDOWN -->
-					
 					<!-- BEGIN USER LOGIN DROPDOWN -->
 					<li class="dropdown user" id="header-user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<img alt="" src="" />
-							<span class="username" th:text="${session.user.name}">John Doe</span>
-							<i class="fa fa-angle-down"></i>
+							<img alt="" src="/webResources/img/icon/right-head.png" />
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="javascript:customPost('/logout',null)"><i class="fa fa-power-off"></i> Log Out</a></li>

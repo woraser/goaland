@@ -44,4 +44,9 @@
 		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
 	</roleFunction>
 	<roleFunction roleFunctionPageId="report" name="统计报表"></roleFunction>
+	<roleFunction roleFunctionPageId="advertisement" name="广告管理">
+		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+	</roleFunction>
 </roleFunctions>

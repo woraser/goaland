@@ -67,7 +67,6 @@
             padding: 0%;background: #FFFFFF;
         }
         .container{
-            padding-left: 50px;
             padding-right: 50px;
         }
         .container .jumbotron {
@@ -79,7 +78,7 @@
             line-height: 1.8;
             vertical-align: top;
             border-top: 0px solid #dddddd;
-            font-size: 16px;
+            font-size: 14px;
         }
         .aaa{
             text-align: right;width: 26%;
@@ -99,8 +98,12 @@
             border-top-style: solid;
             border-top-color: rgb(221, 221, 221);
         }
+        .warnings{
+        	font-size: 14px;
+        }
     </style>
 	
+	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/js/jquery.jqGrid.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
@@ -108,6 +111,11 @@
 	<script type="text/javascript" src="/webResources/js/custom/device/detail.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/repairRecord.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/technicalParameter.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/phaser/phaser.min.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/device/topology.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/device/sensorData.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/device/deviceAlarm.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/device/deviceHealth.js"></script>
 
 </head>
 
@@ -122,8 +130,11 @@
 	        <div class="title-small">
 	            >
 	        </div>
+	        <a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" >
+		    	<button class="back" th:text="#{return}"></button>
+		    </a>
 	    </div>
-	    <div class="container" style="padding-top: 30px">
+	    <div class="container" style="padding-top: 30px;padding-left: 50px;">
 	        <div class="jumbotron device-detail-info" style="background: #F4F6F9">
 	            <div class="title-div" th:text="#{device.message}">
 	                	设备信息
@@ -131,7 +142,7 @@
 	            <div id="detail" class="title-div-deviceInfo" v-cloak="v-cloak">
 	                <div class="col-lg-4" style="height: 100%">
 	                    <div style="width: 100%;height: 75%;">
-	                        <img src="img/goaland/device-img.png"/>
+	                        <img src="/webResources/img/device/直流设备.png" style="width:100%;margin-top:50%;"/>
 	                    </div>
 	                    <div style="width: 100%;height: 25%;text-align: center">
 	                        <button class="document-button" th:text="#{device.document}">
@@ -185,31 +196,89 @@
 	                </div>
 	            </div>
 	        </div>
-	        <div class="jumbotron device-technology-info" style="background: #F4F6F9">
-	            <div class="title-div" th:text="#{device.technicalParameter}">
-	                	技术参数
+	        <div id="paging" class="jumbotron device-technology-info" style="background: #F4F6F9">
+	            <div class="title-div">
+                	<span th:text="#{device.technicalParameter}">技术参数</span>
+                	<a v-if="last" href="#" v-on:click="nextPageClick" style="float: right;margin-right: 2%">
+	                    <img src="/webResources/img/page/nextPage.png"/>
+	                </a>
+	                <a v-if="!last" style="float: right;margin-right: 2%">
+	                	<img src="/webResources/img/page/nextPage_un.png"/>
+	                </a>
+                	<a v-if="first" href="#" v-on:click="lastPageClick" style="float: right;margin-right: 2%">
+		                <img src="/webResources/img/page/lastPage.png"/>
+	                </a>
+	                <a v-if="!first" style="float: right;margin-right: 2%">
+	                	<img src="/webResources/img/page/lastPage_un.png"/>
+	                </a>
 	            </div>
 	            <div class="title-div-technologyInfo">
                     <div class="data-table">
 	                    <table id="parameterTable"></table>
-	                    <div class="zxf_pagediv" id="parameterPager"></div>
+	                    <div id="parameterPager"></div>
 	                </div>
 	            </div>
 	        </div>
+	        
+	        <!-- 拓扑图 -->
+	        <div class="jumbotron col-lg-9" style="border-radius:0px;float:left;height:660px;margin-top: -30px;opacity:0.85;background:#4D4948;">
+            	<div id="topology" style="width:100%;height:100%">
+
+	            </div>
+	        </div>
+	        
+	        
+	        <div id="deviceAlarm" class="jumbotron col-lg-3" style="border-radius:0px;float:left;height:660px;margin-top: -30px;opacity:0.85" v-cloak="v-cloak">
+	            <!-- 健康状态 -->
+	            <div class="jumbotron col-lg-12" style="background: #F1F7F9;height: 30%" id="healthindex">
+	
+	            </div>
+	            <!-- 告警 -->
+	            <div class="jumbotron col-lg-12" style="background: #F1F7F9;height: 70%">
+	                <div class="iotx-top-right-warnings">
+	                    <div v-for="alarmData in alarmDatas" class="warnings">
+	                        <div class="warnings-img">
+	                            <img src="/webResources/img/iotx/warning.png"/>
+	                        </div>
+	                        <div class="iotx-name">
+	                            <div class="iotx-name-detail" style="color: #757575">
+	                                IOT-X:{{alarmData['sensor.dust.iotx.serialNo']}}
+	                            </div>
+	                            <div class="iotx-name-detail" style="color: #E56A38">
+	                                	{{alarmData.level}}
+	                            </div>
+	                        </div>
+	                        <div class="time-img">
+	                            <img src="/webResources/img/iotx/times.png"/>
+	                        </div>
+	                        <div class="iotx-time">
+	                            <div class="iotx-time-top">
+	                                {{alarmData.collectTime | yearFormat}}
+	                            </div>
+	                            <div class="iotx-time-down">
+	                                {{alarmData.collectTime | timeFormat}}
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        
 	        <div class="jumbotron col-lg-12" style="margin-top: -30px;">
 	            <div class="title-div" th:text="#{device.repair.record}">
 	                	维修记录
 	            </div>
 	            <div class="data-table">
                     <table id="recordTable"></table>
-                    <div class="zxf_pagediv" id="recordPager"></div>
+                    <div id="recordPager"></div>
                 </div>
 	        </div>
+	        
+	        <!-- 线图 -->
 	        <div class="jumbotron col-lg-12"  style="margin-top: 0px;">
 	            <div class="col-lg-12" id="charts" style="height: 345px;border: solid #E1E3E8 1px;">
 	            </div>
 	        </div>
-	
 	    </div>
 	</div>
 </body>

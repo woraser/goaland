@@ -60,6 +60,7 @@ $(document).ready(function() {
 				var content = data.content;
 				$.each(content,function(){
 					if('agreementStatus.agreement' in this){
+						this.agreementPic = this['agreementStatus.agreement']
 						this['agreementStatus.agreement'] = $.i18n.prop('customerService.agreement.status.'+this['agreementStatus.agreement'])
 					}
 				})

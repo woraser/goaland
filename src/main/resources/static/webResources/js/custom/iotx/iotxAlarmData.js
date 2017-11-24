@@ -2,7 +2,7 @@
  * 
  */
 $(document).ready(function(){
-	var size = 5
+	var size = 4
 	
 	var alarmDatas = new Vue({
 	   el: '#alarmDatas',

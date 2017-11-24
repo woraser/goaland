@@ -59,6 +59,11 @@
 						<span class="menu-text" style="margin-left:10px;" th:text="#{report}" >统计报表</span>
 					</a>
 				</li>
+				<li shiro:hasPermission="report:view">
+					<a style="padding-top: 20px;" href="/advertisement/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/数据报表.png"/>
+						<span class="menu-text" style="margin-left:10px;" th:text="#{advertisement.management}" >广告管理</span>
+					</a>
+				</li>
 			</ul>
 			<!-- /SIDEBAR MENU -->
 		</div>

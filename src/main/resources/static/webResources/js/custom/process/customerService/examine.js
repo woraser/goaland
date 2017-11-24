@@ -5,7 +5,7 @@ $(document).ready(function() {
 	var customerService = new Vue({
 	  el: '#customerServiceForm',
 	  data: {
-	    reject:false,
+	    reject:true,
 	  }
 	})
 	
@@ -51,5 +51,7 @@ $(document).ready(function() {
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	$("#checked_1").click();
 
 })

@@ -5,11 +5,12 @@ $(document).ready(function() {
 	var files = new Vue({
 	  el: '#files',
 	  data: {
-	    fileDatas:[],
-	    seenDetail:false,
-	    pdf:['TXT','XLS','XLSX','DOC','DOCX','CSV','PDF','DWG'],
-	    picture:['GIF','PNG','JPEG','BMP','ICON'],
-	  }
+	    fileDatas : [],
+	    seenDetail : false,
+	    pdf : ['TXT','XLS','XLSX','DOC','DOCX','CSV','PDF','DWG'],
+	    picture : ['GIF','PNG','JPEG','BMP','ICON'],
+	    isDevice : $("type").val == "技术文档",
+	  },
 	})
 	 //每页显示多少行
 	 var rowNum=5;
@@ -83,6 +84,15 @@ $(document).ready(function() {
 		 }else{
 			 delete params['searchContent']
 			 params['size']=5;
+		 }
+		 if($("#deviceSN").val()!=null && $("#deviceSN").val()!="" && $("#projectNo").val()!=null && $("#projectNo").val()!=""){
+			 params['identification']=$("#projectNo").val()+"_"+$("#deviceSN").val()
+		 }else if(($("#deviceSN").val()==null || $("#deviceSN").val()=="") && ($("#projectNo").val()!=null && $("#projectNo").val()!="")){
+			 params['identification']="start$" + $("#projectNo").val() + "_"
+		 }else if(($("#deviceSN").val()!=null && $("#deviceSN").val()!="") && ($("#projectNo").val()==null || $("#projectNo").val()=="")){
+			 params['identification']="end$" + "_" + $("#deviceSN").val()
+		 }else if(($("#deviceSN").val()==null || $("#deviceSN").val()=="") && ($("#projectNo").val()==null || $("#projectNo").val()=="")){
+			 delete params['identification']
 		 }
 		 search(0);
 	 })
@@ -160,5 +170,23 @@ $(document).ready(function() {
 	 
 	 //加载数据
 	 $("#search").click()
+	 
+	 function checkType(){
+		 if($("#isDevice").val()){
+			 $("#type").val("技术文档")
+		 }
+	 }
+	 
+	 checkType()
+	 
+	 $("#type").change(function(){
+		 if(this.value=="技术文档"){
+			 files.isDevice = true
+		 }else{
+			 files.isDevice = false
+			 $("#deviceSN").val()
+			 $("#projectNo").val()
+		 }
+	 })
 	 
 })

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +27,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.QDevice;
+import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.DevCategoryService;
 import com.anosi.asset.service.DeviceService;
+import com.anosi.asset.service.DocumentTypeService;
 import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -41,6 +44,10 @@ public class DeviceController extends BaseController<Device> {
 	private DeviceService deviceService;
 	@Autowired
 	private DevCategoryService devCategorySerivce;
+	@Autowired
+	private DocumentTypeService documentTypeService;
+	@Autowired
+	private AccountService accountService;
 
 	/***
 	 * 进入查看<b>所有设备信息</b>的页面
@@ -49,7 +56,7 @@ public class DeviceController extends BaseController<Device> {
 	 */
 	@RequestMapping(value = "/device/management/view", method = RequestMethod.GET)
 	public ModelAndView toViewDeviceManage() {
-		logger.debug("view account manage");
+		logger.debug("view device manage");
 		return new ModelAndView("device/deviceManage");
 	}
 
@@ -150,7 +157,7 @@ public class DeviceController extends BaseController<Device> {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequiresPermissions({ "deviceManagement:add","deviceManagement:edit" })
+	@RequiresPermissions({ "deviceManagement:add", "deviceManagement:edit" })
 	@RequestMapping(value = "/device/save", method = RequestMethod.POST)
 	public JSONObject saveDevice(@ModelAttribute("device") Device device) throws Exception {
 		logger.debug("saveOrUpdate device");
@@ -246,9 +253,16 @@ public class DeviceController extends BaseController<Device> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/device/rfid/binding", method = RequestMethod.POST)
+	@Transactional
 	public JSONObject bindingRfid(@RequestParam(value = "serialNo") String serialNo,
 			@RequestParam(value = "rfid") String rfid) throws Exception {
-		deviceService.findBySerialNo(serialNo).setRfid(rfid);
+		Device device = deviceService.findBySerialNo(serialNo);
+		if (StringUtils.isNoneBlank(device.getRfid())) {
+			return new JSONObject(
+					ImmutableMap.of("result", "error", "message", i18nComponent.getMessage("device.rfid.exist")));
+		} else {
+			device.setRfid(rfid);
+		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -260,6 +274,7 @@ public class DeviceController extends BaseController<Device> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/device/rfid/unBinding", method = RequestMethod.POST)
+	@Transactional
 	public JSONObject unBindingRfid(@RequestParam(value = "serialNo") String serialNo) throws Exception {
 		deviceService.findBySerialNo(serialNo).setRfid(null);
 		return new JSONObject(ImmutableMap.of("result", "success"));
@@ -268,7 +283,7 @@ public class DeviceController extends BaseController<Device> {
 	/***
 	 * 点击device详情进入的页面
 	 * 
-	 * @param iotxId
+	 * @param deviceId
 	 * @return
 	 */
 	@RequestMapping(value = "/device/management/detail/{deviceId}/view", method = RequestMethod.GET)
@@ -277,6 +292,32 @@ public class DeviceController extends BaseController<Device> {
 		Device device = deviceService.getOne(deviceId);
 		return new ModelAndView("device/detail").addObject("deviceId", deviceId).addObject("serialNo",
 				device.getSerialNo());
+	}
+
+	/***
+	 * 进入文档上传页面
+	 * 
+	 * @param deviceId
+	 * @return
+	 */
+	@RequestMapping(value = "/device/document/upload/{deviceId}/view", method = RequestMethod.GET)
+	public ModelAndView deviceDocumentUpload(@PathVariable Long deviceId) {
+		logger.debug("device document upload");
+		return new ModelAndView("device/upload").addObject("device", deviceService.getOne(deviceId));
+	}
+
+	/***
+	 * 进入设备技术文档页面
+	 * 
+	 * @param deviceId
+	 * @return
+	 */
+	@RequestMapping(value = "/device/technologyDocument/manage/{deviceId}/view", method = RequestMethod.GET)
+	public ModelAndView toTechnologyDocumentManage(@PathVariable Long deviceId) {
+		logger.debug("technologyDocument manage");
+		return new ModelAndView("document/documentManage").addObject("types", documentTypeService.findAll())
+				.addObject("uploaders", accountService.findByIsUploadDocument(true))
+				.addObject("device", deviceService.getOne(deviceId)).addObject("isDevice", true);
 	}
 
 }

@@ -76,15 +76,12 @@
 
 <body>
 	<div layout:fragment="content" >
-		<div class="companyMgr-edge" style="height: 1000px">
-		    <div class="company-top">
-		        <div class="company-big" th:text="#{systemMgr}">
-		            	公司管理
-		        </div>
-		        <div class="company-small" th:text="#{employeeMgr}">
-		            -人员管理
-		        </div>
+		<div class="table-top">
+		    <div class="title-big" th:text="#{employeeMgr}">
+		        	人员管理
 		    </div>
+		</div>
+		<div class="companyMgr-edge" style="height: 1000px">
 		  	<div class="company-tab" style="border:0px">
 				<div class="company-search" id="companySearch" style="margin-left:60%" v-cloak="v-cloak">
 	                <div class="input-group input-medium">
@@ -113,7 +110,7 @@
 			<div class="data-table">
 				<!-- 人员管理的表格 -->
 				<div><table id="accountTable"></table></div>
-				<div class="zxf_pagediv" id="accountPager"></div>
+				<div id="accountPager"></div>
 	    	</div>
 		</div>
 	</div>

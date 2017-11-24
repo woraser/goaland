@@ -30,7 +30,7 @@ import com.anosi.asset.util.JsonUtil;
 import com.anosi.asset.util.StringUtil;
 
 public class BaseController<T> extends GlobalController<T> {
-
+	
 	@Autowired
 	protected JqgridUtil<T> jqgridUtil;
 	@Autowired

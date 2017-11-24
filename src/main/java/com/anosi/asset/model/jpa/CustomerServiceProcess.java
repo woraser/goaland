@@ -42,7 +42,7 @@ public class CustomerServiceProcess extends BaseProcess {
 
 	private StartDetail startDetail;// 发起字段
 
-	private ExamineDetail examineDetail;// 领导审批字段
+	private ExamineDetail examineDetail = new ExamineDetail();// 领导审批字段
 
 	private EvaluatingDetail evaluatingDetail;// 评估字段
 
@@ -422,7 +422,7 @@ public class CustomerServiceProcess extends BaseProcess {
 		private Date endTime;
 
 		public static enum Agreement {
-			UNDERGUARANTEE, BEYONDGUARANTEE;
+			UNDERGUARANTEE, BEYONDGUARANTEE, UNCOMFIRMED, COMFIRMED;
 		}
 
 		public Date getBeginTime() {

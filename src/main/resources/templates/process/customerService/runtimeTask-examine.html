@@ -47,7 +47,9 @@
 				    	 	<input v-on:click="reject = !reject" id="checked_1" name="checked_1" class="theHelper" type="checkbox"/>
 			            	<label for="checked_1"></label>
 		    			</div>
+		    			<!-- reject:false -->
 		    			<label v-if="!reject" class="col-sm-3 control-label" style="float:left;width:10%" th:text="#{yes}">是</label> 
+		    			<!-- reject:true -->
 		    			<label v-if="reject" class="col-sm-3 control-label" style="float:left;width:10%" th:text="#{no}">否</label> 
 			    	</div>
 			    </div>

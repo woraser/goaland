@@ -68,12 +68,12 @@
 	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/js/jquery.jqGrid.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
-	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
-	<script type="text/javascript" src="/webResources/js/custom/page/createPage.js"></script>
-	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/sensor/detail.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/sensor/detail-allData.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/sensor/detail-alarmData.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/page/createPage.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 
 </head>
 
@@ -87,30 +87,34 @@
 		    <div class="title-small">
 		
 		    </div>
-		
+			<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" >
+		    	<button class="back" th:text="#{return}"></button>
+		    </a>
 		</div>
-		<div id="detail" class="companyMgr-page" style="padding: 1.5% 2.5%" v-cloak="v-cloak">
-		    <div class="sensor-div-top">
+		<div class="companyMgr-page" style="padding: 1.5% 2.5%" >
+		    <div id="detail" class="sensor-div-top" v-cloak="v-cloak">
 		        <div class="sensor-top-left" style="padding-top: 3%">
+		        	<a v-bind:href="'/iotx/management/detail/'+detailData['dust.iotx.id']+'/view'">
+			            <div class="sensor-top-left-div">
+			                <div style="width: 100%;height: 70%">
+		                		<img src="/webResources/img/iotx/iotx-top-img.png" style="width:100%;"/>
+			                </div>
+			                <div style="width: 100%;height: 30%">
+			                    <div class="half-div">
+			                        IOT-X
+			                    </div>
+			                    <div class="half-div">
+			                        {{detailData['dust.iotx.serialNo']}}
+			                    </div>
+			                </div>
+			            </div>
+		            </a>
+		            <div class="connect-img">
+		                <img src="/webResources/img/iotx/sensor-top.png" style="width:100%;"/>
+		            </div>
 		            <div class="sensor-top-left-div">
 		                <div style="width: 100%;height: 70%">
-		                    <img src="/webResources/img/iotx/iotx-top-img.png"/>
-		                </div>
-		                <div style="width: 100%;height: 30%">
-		                    <div class="half-div">
-		                        IOT-X
-		                    </div>
-		                    <div class="half-div">
-		                        {{detailData['dust.iotx.serialNo']}}
-		                    </div>
-		                </div>
-		            </div>
-		            <div class="connect-img">
-		                <img src="/webResources/img/iotx/sensor-top.png"/>
-		            </div>
-		            <div class="sensor-top-left-overdiv">
-		                <div style="width: 100%;height: 70%">
-		                    <img src="/webResources/img/iotx/iotx-top-img2.png"/>
+		                    <img src="/webResources/img/iotx/iotx-top-img2.png" style="width:100%;"/>
 		                </div>
 		                <div style="width: 100%;height: 30%">
 		                    <div class="half-div" th:text="#{sensor}">
@@ -122,21 +126,23 @@
 		                </div>
 		            </div>
 		            <div class="connect-img">
-		                <img src="/webResources/img/iotx/sensor-top.png"/>
+		                <img src="/webResources/img/iotx/sensor-top.png" style="width:100%;"/>
 		            </div>
-		            <div class="sensor-top-left-div">
-		                <div style="width: 100%;height: 70%">
-		                    <img src="/webResources/img/iotx/iotx-top-img3.png"/>
-		                </div>
-		                <div style="width: 100%;height: 30%">
-		                    <div class="half-div" th:text="#{sensor.device}">
-		                        	连接设备
-		                    </div>
-		                    <div class="half-div">
-		                         {{detailData['dust.device.serialNo']}}
-		                    </div>
-		                </div>
-		            </div>
+		            <a v-bind:href="'/device/management/detail/'+deviceId+'/view'">
+			            <div class="sensor-top-left-div">
+			                <div style="width: 100%;height: 70%">
+			                    <img src="/webResources/img/iotx/iotx-top-img3.png" style="width:100%;"/>
+			                </div>
+			                <div style="width: 100%;height: 30%">
+			                    <div class="half-div" th:text="#{sensor.device}">
+			                        	连接设备
+			                    </div>
+			                    <div class="half-div">
+			                         {{detailData['dust.device.serialNo']}}
+			                    </div>
+			                </div>
+			            </div>
+		            </a>
 		        </div>
 		        <div class="sensor-top-right">
 		            <div class="sensor-data" style="float: left;background: #FCAFA1">
@@ -182,14 +188,14 @@
 		        </div>
 		
 		    </div>
-		    <div class="sensor-div-right">
+		    <div id="paging" class="sensor-div-right">
 		        <div class="sensor-div-right-top">
 		            <div th:text="#{sensor.alarm.record}" class="sensor-warnings-title">
 		                	告警记录
 		            </div>
 		            <div class="sensor-warnings-data">
 		                <div class="half-div" style="color:#FFFFFF;font-weight: 500;font-size: 23px;padding-top:5%;text-align: center">
-		                    {{detailData.alarmQuantity}}
+		                    {{alarmQuantity}}
 		                </div>
 		                <div th:text="#{sensor.alarmQuantity}" class="half-div" style="color:#FFFFFF;font-weight: 500;font-size: 14px;text-align: center">
 		                    	告警总量
@@ -200,7 +206,20 @@
 		            <div class="box-body">
 		                <div class="data-table">
 		                    <table id="alarmDataTable"></table>
-		                    <div class="zxf_pagediv" id="alarmDataPager"></div>
+		                    <div style="margin-top:5%;margin-right: 40%">
+		                    	<a v-if="last" href="#" v-on:click="nextPageClick" style="float: right;margin-right: 2%">
+				                    <img src="/webResources/img/page/nextPage.png"/>
+				                </a>
+				                <a v-if="!last" style="float: right;margin-right: 2%">
+				                	<img src="/webResources/img/page/nextPage_un.png"/>
+				                </a>
+			                	<a v-if="first" href="#" v-on:click="lastPageClick" style="float: right;margin-right: 2%">
+					                <img src="/webResources/img/page/lastPage.png"/>
+				                </a>
+				                <a v-if="!first" style="float: right;margin-right: 2%">
+				                	<img src="/webResources/img/page/lastPage_un.png"/>
+				                </a>
+		                    </div>
 		                </div>
 		            </div>
 		        </div>
@@ -208,8 +227,8 @@
 		    <div class="sensor-div-bottom">
 		        <div class="tabbable" style="width: 100%;height: 40%;">
 		            <ul class="nav nav-tabs" style="width: 50%;float: left">
-		                <li class="active" style="width: 24%;font-size: 18px;margin-left: 1px"><a href="#tab_1_1" data-toggle="tab" id="raw-data" aria-expanded="false" th:text="#{iotxData.line.history}">历史曲线</a></li>
-		                <li style="width: 24%;font-size: 18px;margin-left: 1px" class="" ><a href="#tab_1_2" data-toggle="tab" id="back-data" aria-expanded="true" th:text="#{iotxData.history}">历史数据</a></li>
+		                <li class="active" style="width: 24%;font-size: 14px;margin-left: 1px"><a href="#tab_1_1" data-toggle="tab" id="raw-data" aria-expanded="false" th:text="#{iotxData.line.history}">历史曲线</a></li>
+		                <li style="width: 24%;font-size: 14px;margin-left: 1px" class="" ><a href="#tab_1_2" data-toggle="tab" id="back-data" aria-expanded="true" th:text="#{iotxData.history}">历史数据</a></li>
 		            </ul>
 		
 		            <div class="tab-content" style="width: 100%;height: 100%;padding-top: 6%">
@@ -221,7 +240,7 @@
 		                    <div class="box-body">
 		                        <div class="data-table" style="margin-left:6%">
 				                    <table id="allDataTable"></table>
-				                    <div class="zxf_pagediv" id="allDataPager" style="padding-right:6%;margin-top:1%"></div>
+				                    <div id="allDataPager" style="padding-right:6%;margin-top:1%"></div>
 				                </div>
 		                    </div>
 		                </div>

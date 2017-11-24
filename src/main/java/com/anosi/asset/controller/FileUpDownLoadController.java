@@ -113,6 +113,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 				throw new CustomRunTimeException("upload fail");
 			}
 			jsonObject.put("result", "upload success");
+			jsonObject.put("identification", identification);
 		} else {
 			jsonObject.put("result", "file is null");
 		}

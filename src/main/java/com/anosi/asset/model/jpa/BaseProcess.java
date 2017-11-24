@@ -56,7 +56,7 @@ public class BaseProcess extends BaseEntity {
 	protected FinishType finishType;
 
 	public static enum FinishType {
-		REAMIN("待办"), FINISHED("已完成"), DELETED("已删除"), REFUSED("被驳回"), FORCED("强制结束");
+		REMAIN("待办"), FINISHED("已完成"), DELETED("已删除"), REFUSED("被驳回"), FORCED("强制结束");
 
 		private String name;
 

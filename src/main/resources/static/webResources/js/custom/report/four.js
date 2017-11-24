@@ -53,6 +53,7 @@ $(document).ready(function(){
             },
         },
         legend: {
+        	show: false,
             orient: 'vertical',
             orient: 'vertical',
             right: '20%',
@@ -69,7 +70,7 @@ $(document).ready(function(){
                 name:'工单节点',
                 type:'pie',
                 radius: ['40%', '55%'],
-                center: ['30%', '60%'],
+                center: ['50%', '60%'],
                 label: {
                     normal: {
                         backgroundColor: '#eee',

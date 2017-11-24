@@ -7,6 +7,7 @@ $(document).ready(function(){
 	   el: '#detail',
 	   data: {
 		   detailData : {},
+		   deviceId : null,
 		   nowReading : 0,
 	   },
 	   methods: {
@@ -22,12 +23,24 @@ $(document).ready(function(){
 			url : "/sensor/management/data/one",
 			data : {
 				"serialNo" : $("#serialNo").val(),
-				"showAttributes" : "serialNo,dust.iotx.serialNo,dust.device.serialNo,alarmQuantity,maxVal,minVal,unit,isWorked",
+				"showAttributes" : "serialNo,dust.iotx.id,dust.iotx.serialNo,dust.device.serialNo,alarmQuantity,maxVal,minVal,unit,isWorked",
 			},
 			type : 'get',
 			dataType : 'json',
 			success : function( data ) {
 				detail.detailData = data;
+				$.ajax({
+					url : "/device/management/data/one",
+					data : {
+						"serialNo" : data['dust.device.serialNo'],
+						"showAttributes" : "id",
+					},
+					type : 'get',
+					dataType : 'json',
+					success : function( result ) {
+						detail.deviceId = result.id;
+					}
+				})
 			}
 		})
 	}
@@ -38,6 +51,9 @@ $(document).ready(function(){
 	
 	//线图
 	var dynamicData = echarts.init(document.getElementById('loy-tab'));
+	
+	//图表显示提示信息
+	dynamicData.showLoading();
 	
 	//发请求从后台数据库中取动态数据
 	function getDynamicData(){
@@ -86,6 +102,13 @@ $(document).ready(function(){
 		    title: {
 		        text: ''
 		    },
+		    grid: {
+                left: '1%',
+                right: '28%',
+                top: '16%',
+                bottom: '6%',
+                containLabel: true
+            },
 		    tooltip: {
 		        trigger: 'axis',
 		        formatter: function (params) {
@@ -124,5 +147,12 @@ $(document).ready(function(){
 		getDynamicData();
 		
 	}, 3000);
+	
+	$(".sensor-top-left-div").mouseover(function() {
+        $(this).attr('class','sensor-top-left-overdiv');
+        $(".sensor-top-left-overdiv").mouseout(function() {
+            $(this).attr('class','sensor-top-left-div');
+        });
+    });
 	
 })

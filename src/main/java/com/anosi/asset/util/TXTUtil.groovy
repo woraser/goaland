@@ -40,7 +40,7 @@ class TXTUtil {
 	static String readTXT(InputStream is){
 		byte[] byteArray = IOUtils.toByteArray(is);
 		def sb = new StringBuilder()
-		IOUtils.readLines(new ByteArrayInputStream(byteArray), Charset.forName(charsetName(is))).each{
+		IOUtils.readLines(new ByteArrayInputStream(byteArray), Charset.forName("UTF-8")).each{
 			sb.append(it+"\n")
 		}
 		return sb.toString()
@@ -56,7 +56,7 @@ class TXTUtil {
 		def doc = new Document();
 		def builder = new DocumentBuilder(doc);
 		byte[] byteArray = IOUtils.toByteArray(is);
-		IOUtils.readLines(new ByteArrayInputStream(byteArray), Charset.forName(charsetName(is))).each{
+		IOUtils.readLines(new ByteArrayInputStream(byteArray), Charset.forName("UTF-8")).each{
 			builder.write(it);  
 	        builder.write("\n");
 		}

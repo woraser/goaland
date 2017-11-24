@@ -41,7 +41,7 @@ public class ProcessRecord extends BaseEntity{
 	 */
 	public static enum HandleType{
 		
-		PASS("通过"),REFUSE("拒绝"),REAMIN_TO_DO("待办"),ENTRUST("委托");
+		PASS("通过"),REFUSE("拒绝"),REMAIN_TO_DO("待办"),ENTRUST("委托");
 		
 		private String type;
 

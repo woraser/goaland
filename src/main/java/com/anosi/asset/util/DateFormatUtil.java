@@ -62,26 +62,50 @@ public class DateFormatUtil {
 		return timeQuantum;
 	}
 
-	public static Date getBeforeMonthTime(Date date) {
+	public static Date getBeforeMonthTime(Date date, int i) {
+		return getLaterMonthTime(date, -i);
+	}
+
+	public static Date getBeforeWeekTime(Date date, int i) {
+		return getLaterWeekTime(date, -i);
+	}
+
+	public static Date getBeforeDayTime(Date date, int i) {
+		return getLaterDayTime(date, -i);
+	}
+
+	public static Date getBeforeYearTime(Date date, int i) {
+		return getLaterYearTime(date, -i);
+	}
+
+	public static Date getLaterMonthTime(Date date, int i) {
 		Calendar calendar = Calendar.getInstance();// 日历对象
 		calendar.setTime(date);// 设置当前日期
-		calendar.add(Calendar.MONTH, -1);// 月份减一
+		calendar.add(Calendar.MONTH, i);// 月份减一
 		Date startTimeString = calendar.getTime();
 		return startTimeString;
 	}
 
-	public static Date getBeforeWeekTime(Date date) {
+	public static Date getLaterWeekTime(Date date, int i) {
 		Calendar calendar = Calendar.getInstance();// 日历对象
 		calendar.setTime(date);// 设置当前日期
-		calendar.add(Calendar.WEDNESDAY, -1);//
+		calendar.add(Calendar.WEDNESDAY, i);//
 		Date startTimeString = calendar.getTime();
 		return startTimeString;
 	}
 
-	public static Date getYesterdayTime(Date date) {
+	public static Date getLaterDayTime(Date date, int i) {
 		Calendar calendar = Calendar.getInstance();// 日历对象
 		calendar.setTime(date);// 设置当前日期
-		calendar.add(Calendar.DATE, -1);//
+		calendar.add(Calendar.DATE, i);//
+		Date startTimeString = calendar.getTime();
+		return startTimeString;
+	}
+
+	public static Date getLaterYearTime(Date date, int i) {
+		Calendar calendar = Calendar.getInstance();// 日历对象
+		calendar.setTime(date);// 设置当前日期
+		calendar.add(Calendar.YEAR, i);//
 		Date startTimeString = calendar.getTime();
 		return startTimeString;
 	}

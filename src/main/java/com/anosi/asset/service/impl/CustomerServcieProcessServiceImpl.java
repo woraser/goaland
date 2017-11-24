@@ -1,5 +1,7 @@
 package com.anosi.asset.service.impl;
 
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,33 +12,40 @@ import javax.persistence.EntityManager;
 
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.component.I18nComponent;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
+import com.anosi.asset.model.jpa.QCustomerServiceProcess;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.FileMetaDataService;
+import com.anosi.asset.service.TechnologyDocumentService;
 import com.google.common.collect.ImmutableMap;
+import com.querydsl.core.types.Predicate;
 
 @Service("customerServcieProcessService")
-@Transactional
 public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<CustomerServiceProcess>
 		implements CustomerServcieProcessService {
 
@@ -48,6 +57,8 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	private FileMetaDataService fileMetaDataService;
 	@Autowired
 	private EntityManager entityManager;
+	@Autowired
+	private AsyncDocument asyncDocument;
 
 	public CustomerServcieProcessServiceImpl() {
 		super();
@@ -67,19 +78,22 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		return customerServiceProcessDao.findByProcessInstanceId(processInstanceId);
 	}
 
+	@Transactional
 	@Override
 	public void startProcess(CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception {
 		ProcessInstance processInstance;
 		// 启动流程，因为下一步为完善清单，所以将发起人设置为下一步的办理人
-		if (StringUtils.isBlank(process.getProcessInstanceId())) {
+		if (process.getId() == null) {
 			identityService.setAuthenticatedUserId(sessionComponent.getCurrentUser().getLoginId());
 			processInstance = runtimeService.startProcessInstanceByKey(getDefinitionKey());
 			process.setProcessInstanceId(processInstance.getId());
-			process.setFinishType(FinishType.REAMIN);
+			process.setFinishType(FinishType.REMAIN);
 			process.setApplicant(sessionComponent.getCurrentUser());
 
 			customerServiceProcessDao.save(process);
 		} else {
+			process.setFinishType(FinishType.REMAIN);
+			process.getExamineDetail().setReject(false);
 			processInstance = runtimeService.createProcessInstanceQuery()
 					.processInstanceId(process.getProcessInstanceId()).singleResult();
 		}
@@ -101,6 +115,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 				process);
 	}
 
+	@Transactional
 	@Override
 	public void completeStartDetail(String taskId, CustomerServiceProcess process) throws Exception {
 
@@ -111,6 +126,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		// 如果是工程部
 		if ("engineerDep".equals(code)) {
 			process.setEngineeDep(accountService.findByLoginId(process.getStartDetail().getNextAssignee()));
+			process.setFinishType(FinishType.REMAIN);
 			completeTask(taskId, () -> taskService.complete(taskId,
 					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)),
 					new ArrayList<>());
@@ -122,11 +138,13 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		}
 	}
 
+	@Transactional
 	@Override
 	public void examine(String taskId, CustomerServiceProcess process) throws Exception {
 		if (process.getExamineDetail().getReject()) {
 			HandleType type = HandleType.REFUSE;
 			String reason = process.getExamineDetail().getSuggestion();
+			process.setFinishType(FinishType.REFUSED);
 			completeTask(taskId, () -> {
 				// 被驳回，回退到完成工单节点
 				try {
@@ -144,6 +162,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		}
 	}
 
+	@Transactional
 	@Override
 	public void evaluating(String taskId, CustomerServiceProcess process) throws Exception {
 		process.setServicer(accountService.findByLoginId(process.getEvaluatingDetail().getServicer()));
@@ -151,6 +170,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())), new ArrayList<>());
 	}
 
+	@Transactional
 	@Override
 	public void distribute(String taskId, CustomerServiceProcess process) throws Exception {
 		RepairDetail repairDetail = process.getRepairDetail();
@@ -158,6 +178,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			repairDetail = new RepairDetail();
 		}
 		repairDetail.setRepairer(process.getDistributeDetail().getEngineer());
+		process.setRepairDetail(repairDetail);
 		process.setEngineer(accountService.findByLoginId(process.getDistributeDetail().getEngineer()));
 		process.setRepairer(process.getEngineer());
 		completeTask(taskId, () -> taskService.complete(taskId,
@@ -166,6 +187,12 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	public void repair(String taskId, CustomerServiceProcess process) throws Exception {
+		repairActual(taskId, process);
+		asyncDocument.insertIntoDocument(process);
+	}
+
+	@Transactional
+	public void repairActual(String taskId, CustomerServiceProcess process) throws Exception {
 		process.setFinishType(FinishType.FINISHED);
 		process.setFinishDate(new Date());
 		customerServiceProcessDao.save(process);
@@ -173,6 +200,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		completeTask(taskId, () -> taskService.complete(taskId), new ArrayList<>());
 	}
 
+	@Transactional
 	@Override
 	public void entrust(String taskId, Account mandatary, String reason, CustomerServiceProcess process) {
 		process.getRepairDetail().setRepairer(mandatary.getName());
@@ -231,7 +259,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		newRecord.setTaskId(task.getId());
 		newRecord.setTaskName(task.getName());
 		newRecord.setStartTime(new Date());
-		newRecord.setType(HandleType.REAMIN_TO_DO);
+		newRecord.setType(HandleType.REMAIN_TO_DO);
 		newRecord.setRemain(mandatary.getLoginId());// 待办人
 		processRecordService.save(newRecord);
 	}
@@ -274,6 +302,80 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	public List<CustomerServiceProcess> findByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds) {
 		return customerServiceProcessDao.findByDevice_devCategory_idEqualsAndProcessInstanceIdIn(id,
 				processInstanceIds);
+	}
+
+	@Override
+	public Predicate convertPredicate(Predicate predicate, String timeType, Date beginTime, Date endTime,
+			Agreement agreement) {
+		QCustomerServiceProcess qc = QCustomerServiceProcess.customerServiceProcess;
+		if (beginTime != null) {
+			if ("start".equals(timeType)) {
+				predicate = qc.createDate.after(beginTime).and(predicate);
+			} else if ("end".equals(timeType)) {
+				predicate = qc.finishDate.after(beginTime).and(predicate);
+			}
+		}
+		if (endTime != null) {
+			if ("start".equals(timeType)) {
+				predicate = qc.createDate.before(endTime).and(predicate);
+			} else if ("end".equals(timeType)) {
+				predicate = qc.finishDate.before(endTime).and(predicate);
+			}
+		}
+
+		if (agreement != null) {
+			switch (agreement) {
+			case UNCOMFIRMED:
+				predicate = qc.agreementStatus.endTime.isNull().and(predicate);
+				break;
+			case COMFIRMED:
+				predicate = qc.agreementStatus.endTime.isNotNull().and(predicate);
+				break;
+			default:
+				break;
+			}
+		}
+		return predicate;
+	}
+
+	@Override
+	public Page<CustomerServiceProcess> findbyContent(String searchContent, Pageable pageable) {
+		return customerServiceProcessDao.findBySearchContent(entityManager, searchContent, pageable);
+	}
+
+	@Component
+	public static class AsyncDocument {
+		
+		@Autowired
+		private TechnologyDocumentService technologyDocumentService;
+		@Autowired
+		private I18nComponent i18nComponent;
+		
+		/***
+		 * 将维修方案写入文档管理库
+		 * 
+		 * @param process
+		 * @throws Exception
+		 */
+		@Async
+		public void insertIntoDocument(CustomerServiceProcess process) throws Exception {
+			String problemDescription = process.getRepairDetail().getProblemDescription();
+			String failureCause = process.getRepairDetail().getFailureCause();
+			String processMode = process.getRepairDetail().getProcessMode();
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(i18nComponent.getMessage("customerService.problemDescription")).append(":")
+					.append(problemDescription).append("\n");
+			sb.append(i18nComponent.getMessage("customerService.failureCause")).append(":").append(failureCause)
+					.append("\n");
+			sb.append(i18nComponent.getMessage("customerService.processMode")).append(":").append(processMode)
+					.append("\n");
+
+			InputStream is = IOUtils.toInputStream(sb.toString(), Charset.forName("UTF-8"));
+
+			technologyDocumentService.createTechnologyDocument(process.getName() + ".txt", is,
+					((Number) sb.length()).longValue(), "故障规则", "故障规则");
+		}
 	}
 
 }

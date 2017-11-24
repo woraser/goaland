@@ -109,12 +109,12 @@
                     <div class="time-select">
                         <input id="endTime" class="form-control " size="10" th:placeholder="#{device.commissioningTime.to}" value=""/>
                     </div>
-                    <div class="time-select1" style="height:90%;padding-top: 0px;width: 3.5%;margin-left: 1.5%">
+                    <div class="time-select1" style="height:90%;padding-top: 0px;width: 5%;margin-left: 1.5%">
                         <button v-on:click="empty" class="company-button-new" style="background:#B6B6BA;font-size:14px;height: 100%;margin-top: 0%" th:text="#{empty}">
                             	清除
                         </button>
                     </div>
-                    <div class="time-select1" style="height:90%;padding-top: 0px;width: 3.5%;margin-left: 1.5%">
+                    <div class="time-select1" style="height:90%;padding-top: 0px;width: 5%;margin-left: 1.5%">
                         <button id="confirm" class="company-button-new" style="font-size:14px;height: 100%;margin-top: 0%" th:text="#{confirm}">
                             	确认
                         </button>
@@ -148,7 +148,7 @@
                 </div>
                 <div class="data-table">
                     <table id="deviceTable"></table>
-                    <div class="zxf_pagediv" id="devicePager"></div>
+                    <div id="devicePager"></div>
                 </div>
             </div>
         </div>

@@ -12,6 +12,7 @@ class TestFetchContent {
 	void testTxt(){
 		println FileFetchUtil.fetchContent(new File('E:/testFetch.txt'))
 		println TXTUtil.readTXT(new File('E:/testFetch.txt'))
+		println TXTUtil.readTXT(new File('C:/Users/jinyao/Downloads/20171121164102732.txt'))
 	}
 	
 	@Test

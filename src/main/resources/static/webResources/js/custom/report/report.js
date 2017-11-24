@@ -15,20 +15,4 @@ $(document).ready(function(){
         });
     });
     
-    $("#one").click(function(){
-    	window.location.href="/report/management/one/view"
-    })
-    
-    $("#two").click(function(){
-    	window.location.href="/report/management/two/view"
-    })
-    
-    $("#three").click(function(){
-    	window.location.href="/report/management/three/view"
-    })
-    
-    $("#four").click(function(){
-    	window.location.href="/report/management/four/view"
-    })
-    
 })

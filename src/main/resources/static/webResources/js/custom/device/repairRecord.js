@@ -14,7 +14,15 @@ $(document).ready(function() {
 	    {label:$.i18n.prop('device.serialNo'),name:'device.serialNo',index:'device.serialNo', width: '120',  align: 'center'},
        	{label:$.i18n.prop('customerService.name'),name:'name',index:'name', width: '120',  align: 'center'},
   		{label:$.i18n.prop('device.repair.time'),name:'repairDetail.repairTime',index:'repairDetail.repairTime', width: '120',  align: 'center'},
-  		{label:$.i18n.prop('device.repairer'),name:'repairDetail.repairer', index:'repairDetail.repairer', width:'120', align: 'center'},
+  		{label:$.i18n.prop('device.repairer'),name:'repairer.name', index:'repairer.name', width:'120', align: 'center'},
+  		{
+            label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150,sortable: false, align:'center',
+            formatter: function (cellvalue, options, rowObject) {
+            	var url = "/customerServiceProcess/process/detail/view?id="+options.rowId 
+            	var detail = "<a href="+url+"><img src='/webResources/img/operate/detail.png'/></a>"
+            	return detail;
+            },
+        },
   	];
   	
   	 //每页显示多少行
@@ -28,7 +36,7 @@ $(document).ready(function() {
   	 var params={}
   	 //设置请求需要的一些参数
   	 params['rowId']='id';
-  	 params['showAttributes']='device.serialNo,name,repairDetail.repairTime,repairDetail.repairer';//要获取的属性名
+  	 params['showAttributes']='device.serialNo,name,repairDetail.repairTime,repairer.name';//要获取的属性名
   	 params['page']=page;
   	 params['size']=rowNum;
   	 params['sort']=sort;

@@ -11,8 +11,8 @@ $(document).ready(function() {
 	});
 	
 	var colModel=[
-           	{label:$.i18n.prop('iotxData.collectTime'),name:'collectTime',index:'collectTime', width: '500',  align: 'center'},
-      		{label:$.i18n.prop('iotxData.val'),name:'val',index:'val', width: '500',  align: 'center'},
+           	{label:$.i18n.prop('iotxData.collectTime'),name:'collectTime',index:'collectTime', width: '400',  align: 'center'},
+      		{label:$.i18n.prop('iotxData.val'),name:'val',index:'val', width: '400',  align: 'center'},
       	];
       	
   	 //每页显示多少行
@@ -51,7 +51,7 @@ $(document).ready(function() {
 	   	
 	   	gridComplete:function(){
 	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
-	   		createPage(myGrid,myPager,lastPage,params.page,11,url,params);//调用自定义的方法来生成pager
+	   		createPage(myGrid,myPager,lastPage,params.page,5,url,params);//调用自定义的方法来生成pager
 	    },
 	    	
 	   	//当触发排序时

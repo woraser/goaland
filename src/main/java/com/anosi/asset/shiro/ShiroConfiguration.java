@@ -143,6 +143,7 @@ public class ShiroConfiguration {
 
 		Map<String, Filter> map = new HashMap<>();
 		map.put("addPrincipal", addPrincipalToSessionFilter());
+		map.put("checkRemote", checkRemoteFilter());
 		shiroFilterFactoryBean.setFilters(map);
 		shiroFilterFactoryBean.setSecurityManager(getDefaultWebSecurityManager());
 
@@ -176,6 +177,11 @@ public class ShiroConfiguration {
 	@Bean
 	public AddPrincipalToSessionFilter addPrincipalToSessionFilter() {
 		return new AddPrincipalToSessionFilter();
+	}
+
+	@Bean
+	public CheckRemoteFilter checkRemoteFilter() {
+		return new CheckRemoteFilter();
 	}
 
 	/***

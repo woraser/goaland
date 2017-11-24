@@ -1,11 +1,14 @@
 package com.anosi.asset.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
@@ -24,10 +27,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.QAccount;
-import com.anosi.asset.model.jpa.QRole;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail.Belong;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail.ProductType;
+import com.anosi.asset.model.jpa.QAccount;
+import com.anosi.asset.model.jpa.QRole;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
@@ -294,17 +298,73 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 		return customerServcieProcessService.getTaskDistribute();
 	}
 
+	/***
+	 * 获取流程数据
+	 * 
+	 * @param showType
+	 * @param pageable
+	 * @param predicate
+	 * @param showAttributes
+	 * @param rowId
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/management/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findProcessManageData(@PathVariable ShowType showType,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = CustomerServiceProcess.class) Predicate predicate,
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
-			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "timeType", required = false, defaultValue = "start") String timeType,
+			@RequestParam(value = "beginTime", required = false) Date beginTime,
+			@RequestParam(value = "endTime", required = false) Date endTime,
+			@RequestParam(value = "agreement", required = false) Agreement agreement) throws Exception {
 		logger.info("find process");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
 
+		predicate = customerServcieProcessService.convertPredicate(predicate, timeType, beginTime, endTime, agreement);
 		return parseToJson(customerServcieProcessService.findAll(predicate, pageable), rowId, showAttributes, showType);
+	}
+
+	/***
+	 * 获取所有发起的流程
+	 * 
+	 * @param showType
+	 * @param pageable
+	 * @param showAttributes
+	 * @param rowId
+	 * @param searchContent
+	 * @param timeType
+	 * @param beginTime
+	 * @param endTime
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/allProcesses/data/override/{showType}", method = RequestMethod.GET)
+	public JSONObject findAllProcesses(@PathVariable ShowType showType,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
+			@QuerydslPredicate(root = CustomerServiceProcess.class) Predicate predicate,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes,
+			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
+			@RequestParam(value = "searchContent", required = false) String searchContent,
+			@RequestParam(value = "timeType", required = false, defaultValue = "start") String timeType,
+			@RequestParam(value = "beginTime", required = false) Date beginTime,
+			@RequestParam(value = "endTime", required = false) Date endTime,
+			@RequestParam(value = "agreement", required = false) Agreement agreement) throws Exception {
+		logger.info("find allProcesses");
+		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
+
+		Page<CustomerServiceProcess> page;
+		predicate = customerServcieProcessService.convertPredicate(predicate, timeType, beginTime, endTime, agreement);
+		if (StringUtils.isNoneBlank(searchContent)) {
+			page = customerServcieProcessService.findbyContent(searchContent, pageable);
+		} else {
+			page = customerServcieProcessService.findAll(predicate, pageable);
+		}
+		page.getContent().forEach(cs -> customerServcieProcessService.setHistoricValueForProcess(cs));
+		return parseToJson(page, rowId, showAttributes, showType);
 	}
 
 }

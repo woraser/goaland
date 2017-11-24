@@ -48,6 +48,7 @@ import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
+import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
@@ -158,8 +159,22 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				.processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
 		t.setHistoricProcessInstance(historicProcessInstance);
 		t.setHistoricTaskInstance(historicTaskInstance);
-		List<Task> tasks = taskService.createTaskQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).list();
-		if(!CollectionUtils.isEmpty(tasks)){
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(historicTaskInstance.getProcessInstanceId())
+				.list();
+		if (!CollectionUtils.isEmpty(tasks)) {
+			t.setTask(tasks.get(0));
+		}
+		return t;
+	}
+
+	@Override
+	public T setHistoricValueForProcess(T t) {
+		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(t.getProcessInstanceId()).singleResult();
+		t.setHistoricProcessInstance(historicProcessInstance);
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(t.getProcessInstanceId())
+				.list();
+		if (!CollectionUtils.isEmpty(tasks)) {
 			t.setTask(tasks.get(0));
 		}
 		return t;
@@ -170,7 +185,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		T process = findByProcessInstanceId(instance.getId());
 		process.setHistoricProcessInstance(instance);
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(instance.getId()).list();
-		if(!CollectionUtils.isEmpty(tasks)){
+		if (!CollectionUtils.isEmpty(tasks)) {
 			process.setTask(tasks.get(0));
 		}
 		return process;
@@ -246,7 +261,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 				processRecord.setTaskId(task.getId());
 				processRecord.setTaskName(task.getName());
 				processRecord.setStartTime(new Date());
-				processRecord.setType(HandleType.REAMIN_TO_DO);
+				processRecord.setType(HandleType.REMAIN_TO_DO);
 				processRecord.setRemain(StringUtils.isBlank(task.getAssignee()) ? remain : task.getAssignee());
 				processRecordService.save(processRecord);
 			}
@@ -274,7 +289,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 
 	@Override
 	public Page<T> findStartedProcess(Pageable pageable, String searchContent, String timeType, Date beginTime,
-			Date endTime) {
+			Date endTime, FinishType finishType) {
 		HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
 				.processDefinitionKey(getDefinitionKey()).startedBy(sessionComponent.getCurrentUser().getLoginId())
 				.orderByProcessInstanceStartTime().desc();
@@ -282,18 +297,30 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 			if ("start".equals(timeType)) {
 				historicProcessInstanceQuery.startedAfter(beginTime);
 			} else if ("end".equals(timeType)) {
-				historicProcessInstanceQuery.finishedAfter(endTime);
+				historicProcessInstanceQuery.finishedAfter(beginTime);
 			} else {
 				throw new CustomRunTimeException("timeType illegal");
 			}
 		}
 		if (endTime != null) {
 			if ("start".equals(timeType)) {
-				historicProcessInstanceQuery.startedBefore(beginTime);
+				historicProcessInstanceQuery.startedBefore(endTime);
 			} else if ("end".equals(timeType)) {
 				historicProcessInstanceQuery.finishedBefore(endTime);
 			} else {
 				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (finishType != null) {
+			switch (finishType) {
+			case FINISHED:
+				historicProcessInstanceQuery.finished();
+				break;
+			case REMAIN:
+				historicProcessInstanceQuery.unfinished();
+				break;
+			default:
+				break;
 			}
 		}
 		if (StringUtils.isNoneBlank(searchContent)) {
@@ -333,7 +360,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 
 	@Override
 	public Page<T> findHistoricTasks(Pageable pageable, String searchContent, String timeType, Date beginTime,
-			Date endTime) {
+			Date endTime, FinishType finishType) {
 		HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
 				.processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
 				.taskAssignee(sessionComponent.getCurrentUser().getLoginId());
@@ -341,18 +368,30 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 			if ("start".equals(timeType)) {
 				historicTaskInstanceQuery.taskCreatedAfter(beginTime);
 			} else if ("end".equals(timeType)) {
-				historicTaskInstanceQuery.taskCompletedAfter(endTime);
+				historicTaskInstanceQuery.taskCompletedAfter(beginTime);
 			} else {
 				throw new CustomRunTimeException("timeType illegal");
 			}
 		}
 		if (endTime != null) {
 			if ("start".equals(timeType)) {
-				historicTaskInstanceQuery.taskCreatedBefore(beginTime);
+				historicTaskInstanceQuery.taskCreatedBefore(endTime);
 			} else if ("end".equals(timeType)) {
 				historicTaskInstanceQuery.taskCompletedBefore(endTime);
 			} else {
 				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (finishType != null) {
+			switch (finishType) {
+			case FINISHED:
+				historicTaskInstanceQuery.processFinished();
+				break;
+			case REMAIN:
+				historicTaskInstanceQuery.processUnfinished();
+				break;
+			default:
+				break;
 			}
 		}
 		if (StringUtils.isNoneBlank(searchContent)) {
@@ -369,25 +408,37 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 
 	@Override
 	public Page<T> findAllProcesses(Pageable pageable, String searchContent, String timeType, Date beginTime,
-			Date endTime) {
+			Date endTime, FinishType finishType) {
 		HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
 				.processDefinitionKey(getDefinitionKey()).orderByProcessInstanceStartTime().desc();
 		if (beginTime != null) {
 			if ("start".equals(timeType)) {
 				historicProcessInstanceQuery.startedAfter(beginTime);
 			} else if ("end".equals(timeType)) {
-				historicProcessInstanceQuery.finishedAfter(endTime);
+				historicProcessInstanceQuery.finishedAfter(beginTime);
 			} else {
 				throw new CustomRunTimeException("timeType illegal");
 			}
 		}
 		if (endTime != null) {
 			if ("start".equals(timeType)) {
-				historicProcessInstanceQuery.startedBefore(beginTime);
+				historicProcessInstanceQuery.startedBefore(endTime);
 			} else if ("end".equals(timeType)) {
 				historicProcessInstanceQuery.finishedBefore(endTime);
 			} else {
 				throw new CustomRunTimeException("timeType illegal");
+			}
+		}
+		if (finishType != null) {
+			switch (finishType) {
+			case FINISHED:
+				historicProcessInstanceQuery.finished();
+				break;
+			case REMAIN:
+				historicProcessInstanceQuery.unfinished();
+				break;
+			default:
+				break;
 			}
 		}
 		if (StringUtils.isNoneBlank(searchContent)) {
@@ -443,7 +494,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskToDo"), t.getName(),
 				task.getName()));// 流程编号为{0},任务名称为{1},等待办理
 		messageInfo.setUrl(detailUrl + t.getId());
-		
+
 		messageInfos.add(messageInfo);
 	}
 
@@ -466,7 +517,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
 		messageInfo.setContent(MessageFormat.format(i18nComponent.getMessage("message.content.taskComplete"),
 				t.getName(), task.getName(), messageInfo.getFrom().getName(), reason));// 你发起的流程{0},{1}已经被办理,办理人为{2},办理说明:{3}
 		messageInfo.setUrl(detailUrl + t.getId());
-		
+
 		messageInfos.add(messageInfo);
 	}
 

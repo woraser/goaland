@@ -34,7 +34,7 @@ $(document).ready(function() {
     	];
     	
 	 //每页显示多少行
-	 var rowNum=8;
+	 var rowNum=15;
 	 var page=0;
 	 var url='/alarmData/management/data/GRID';
 	 var sort;
@@ -48,6 +48,51 @@ $(document).ready(function() {
 	 params['size']=rowNum;
 	 params['sort']=sort;
 	 params['sensor.serialNo']=$("#serialNo").val();
+	 
+	 var paging = new Vue({
+ 	   el: '#paging',
+ 	   data: {
+ 		   first : false,
+ 		   last : false,
+ 		   alarmQuantity : 0,
+ 	   },
+ 	   methods: {
+ 		  nextPageClick : function(){
+ 			 page+=1
+ 			 params['page'] = page
+ 			 myGrid.jqGrid().setGridParam({
+ 				url:url,
+ 				postData:params,
+ 			 }).trigger("reloadGrid");
+ 		 },
+ 		 lastPageClick : function(){
+ 			 page-=1
+ 			 params['page'] = page
+ 			 myGrid.jqGrid().setGridParam({
+ 				url:url,
+ 				postData:params,
+ 			 }).trigger("reloadGrid");
+ 		 }
+ 	   },
+ 	})
+	 
+	var loadAlarm =  function(){
+		$.ajax({
+			url : "/sensor/management/data/one",
+			data : {
+				"serialNo" : $("#serialNo").val(),
+				"showAttributes" : "alarmQuantity",
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function( data ) {
+				paging.alarmQuantity = data.alarmQuantity;
+			}
+		})
+	}
+	 
+	 //加载告警数量
+	 loadAlarm()
 	 
 	 var myGrid = jQuery("#alarmDataTable");
   	 var myPager = jQuery("#alarmDataPager");
@@ -68,8 +113,19 @@ $(document).ready(function() {
   	   	viewrecords: true,
   	   	
   	   	gridComplete:function(){
-  	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
-  	   		createPage(myGrid,myPager,lastPage,params.page,11,url,params);//调用自定义的方法来生成pager
+	  	   	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
+	   		//判断是否第一页
+	   		if(page==0){
+	   			paging.first=false
+	   		}else{
+	   			paging.first=true
+	   		}
+	   		//判断是否最后一页
+	   		if(page==lastPage){
+	   			paging.last=false
+	   		}else{
+	   			paging.last=true
+	   		}
   	    },
   	    	
   	   	//当触发排序时

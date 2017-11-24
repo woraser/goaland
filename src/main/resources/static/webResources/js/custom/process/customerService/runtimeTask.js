@@ -9,15 +9,19 @@ $(document).ready(function() {
 	   },
 	   methods: {
 		  handle: function (taskName,taskId,processId) {
-			 var func=function(){
-				 if($("#customerServiceForm").valid()){
-					 $("#customerServiceForm").submit();
-					 return true;
-				 }else{
-					 return false;
+			 if(taskName=="销售部/工程部/质检部发起") {
+				 window.location.href="/customerServiceProcess/startProcess/form/view?processId="+processId 
+			 } else {
+				 var func=function(){
+					 if($("#customerServiceForm").valid()){
+						 $("#customerServiceForm").submit();
+						 return true;
+					 }else{
+						 return false;
+					 }
 				 }
+				 createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId+"&processId="+processId,func)
 			 }
-			 createModalPage("办理"+taskName,"/customerServiceProcess/runtimeTask/form/view?taskId="+taskId+"&processId="+processId,func)
 		  },
 	   	  detail: function(id){
 	   		window.location.href="/customerServiceProcess/process/detail/view?id="+id 
@@ -75,6 +79,7 @@ $(document).ready(function() {
 					var content = data.content;
 					$.each(content,function(){
 						if('agreementStatus.agreement' in this){
+							this.agreementPic = this['agreementStatus.agreement']
 							this['agreementStatus.agreement'] = $.i18n.prop('customerService.agreement.status.'+this['agreementStatus.agreement'])
 						}
 					})

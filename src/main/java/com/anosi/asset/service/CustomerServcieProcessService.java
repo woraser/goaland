@@ -1,12 +1,17 @@
 package com.anosi.asset.service;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
+import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
+import com.querydsl.core.types.Predicate;
 
 public interface CustomerServcieProcessService extends BaseProcessService<CustomerServiceProcess> {
 
@@ -95,5 +100,28 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @return
 	 */
 	List<CustomerServiceProcess> findByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds);
+
+	/**
+	 * 转换条件
+	 * 
+	 * @param predicate
+	 * @param timeType
+	 * @param beginTime
+	 * @param endTime
+	 * @param agreement
+	 * @return
+	 */
+	Predicate convertPredicate(Predicate predicate, String timeType, Date beginTime, Date endTime, Agreement agreement);
+
+	/**
+	 * 模糊查询
+	 * 
+	 * @param searchContent
+	 * @param pageable
+	 * @return
+	 */
+	Page<CustomerServiceProcess> findbyContent(String searchContent, Pageable pageable);
+	
+	
 
 }

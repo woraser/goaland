@@ -117,13 +117,17 @@ $(document).ready(function() {
 	var loadContent = function(){
 		$.ajax({
 			url : "/customerServiceProcess/process/detail/"+$("#processId").val(),
-			data : {'showAttributes':'id,name,processInstanceId,applicant.name,nextAssignee.name,engineeDep.name,servicer.name,engineer.name,repairer.name,device.serialNo,project*,startDetail*,examineDetail*,evaluatingDetail*,distributeDetail*,repairDetail*,agreementStatus*,historicProcessInstance.startTime,historicProcessInstance.endTime,task.id,task.name,task.assignee,task.taskDefinitionKey'},
+			data : {'showAttributes':'id,name,processInstanceId,applicant.name,nextAssignee.name,engineeDep.name,servicer.name,engineer.name,repairer.name,device.serialNo,project*,startDetail*,examineDetail*,evaluatingDetail*,distributeDetail*,repairDetail*,agreementStatus*,historicProcessInstance.startTime,historicProcessInstance.endTime,task.id,task.name,task.assignee,task.taskDefinitionKey,agreementStatus.agreement'},
 			type : 'get',
 			dataType : 'json',
 			success : function( data ) {
 				detail.detailData = data;
 				detail.detailData.startDetail.belong = $.i18n.prop('customerService.belong.' + data.startDetail.belong)
 				detail.detailData.startDetail.productType = $.i18n.prop('customerService.productType.' + data.startDetail.productType)
+				if('agreementStatus.agreement' in this){
+					this.agreementPic = this['agreementStatus.agreement']
+					this['agreementStatus.agreement'] = $.i18n.prop('customerService.agreement.status.'+this['agreementStatus.agreement'])
+				}
 				$.ajax({
 					url : '/fileDownload/list/group/customerService_'+data.name,
 					type : 'get',

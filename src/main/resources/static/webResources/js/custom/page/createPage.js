@@ -3,8 +3,10 @@
  */
 
 function createPage(gridDom,pageDom,pageNum,page,showNum,url,params){
+	pageDom.empty()
+	pageDom.append("<div class='zxf_pagediv'></div>")
 	//加载页码
-	pageDom.createPage({
+	pageDom.children(".zxf_pagediv").createPage({
 		//初始化参数
 		pageNum: pageNum,//总页码
 		current: page+1,//当前页

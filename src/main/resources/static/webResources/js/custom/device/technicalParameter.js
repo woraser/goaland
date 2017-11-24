@@ -18,7 +18,7 @@ $(document).ready(function() {
   	];
   	
   	 //每页显示多少行
-  	 var rowNum=6;
+  	 var rowNum=8;
   	 var page=0;
   	 var url='/sensor/management/data/GRID';
   	 var sort;
@@ -34,6 +34,32 @@ $(document).ready(function() {
   	 params['sort']=sort;
   	 params['actual']=true;
   	 params['dust.device.serialNo']=$("#deviceSN").val();
+  	 
+  	var paging = new Vue({
+ 	   el: '#paging',
+ 	   data: {
+ 		   first:false,
+ 		   last:false,
+ 	   },
+ 	   methods: {
+ 		  nextPageClick : function(){
+ 			 page+=1
+ 			 params['page'] = page
+ 			 myGrid.jqGrid().setGridParam({
+ 				url:url,
+ 				postData:params,
+ 			 }).trigger("reloadGrid");
+ 		 },
+ 		 lastPageClick : function(){
+ 			 page-=1
+ 			 params['page'] = page
+ 			 myGrid.jqGrid().setGridParam({
+ 				url:url,
+ 				postData:params,
+ 			 }).trigger("reloadGrid");
+ 		 }
+ 	   },
+ 	})
   	 
   	 var myGrid = jQuery("#parameterTable");
 	 var myPager = jQuery("#parameterPager");
@@ -54,8 +80,19 @@ $(document).ready(function() {
 	   	viewrecords: true,
 	   	
 	   	gridComplete:function(){
-	   	 	var lastPage = myGrid.getGridParam('lastpage');//获取总页数
-	   		createPage(myGrid,myPager,lastPage,params.page,11,url,params);//调用自定义的方法来生成pager
+	   		var lastPage = myGrid.getGridParam('lastpage');//获取总页数
+	   		//判断是否第一页
+	   		if(page==0){
+	   			paging.first=false
+	   		}else{
+	   			paging.first=true
+	   		}
+	   		//判断是否最后一页
+	   		if(page==lastPage){
+	   			paging.last=false
+	   		}else{
+	   			paging.last=true
+	   		}
 	    },
 	    	
 	   	//当触发排序时
@@ -68,5 +105,5 @@ $(document).ready(function() {
 	   	}
 		    	
     });
-	
+	 
 })

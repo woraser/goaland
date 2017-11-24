@@ -4,6 +4,8 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
+import static org.elasticsearch.index.query.QueryBuilders.wildcardQuery;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +41,6 @@ import com.anosi.asset.util.FileFetchUtil;
 import com.google.common.collect.Lists;
 
 @Service("technologyDocumentService")
-@Transactional
 public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<TechnologyDocument, String>
 		implements TechnologyDocumentService {
 
@@ -180,7 +180,18 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 
 		// 查询组标识
 		if (StringUtils.isNoneBlank(identification)) {
-			boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder, termQuery("identification", identification));
+			if (identification.startsWith("start$")) {
+				identification = identification.replace("start$", "");
+				boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder,
+						prefixQuery("identification", identification));
+			} else if (identification.startsWith("end$")) {
+				identification = identification.replace("end$", "");
+				boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder,
+						wildcardQuery("identification", "*"+identification));
+			} else {
+				boolQueryBuilder = checkBoolQueryBuilderMust(boolQueryBuilder,
+						termQuery("identification", identification));
+			}
 		}
 
 		// 查询文档上传人

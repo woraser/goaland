@@ -108,6 +108,7 @@ public interface TechnologyDocumentDao extends BaseElasticSearchDao<TechnologyDo
 							technologyDocument.setFileName((String) searchHit.getSource().get("fileName"));
 							technologyDocument.setType((String) searchHit.getSource().get("type"));
 							technologyDocument.setUploader((String) searchHit.getSource().get("uploader"));
+							technologyDocument.setUploaderName((String) searchHit.getSource().get("uploaderName"));
 							technologyDocument.setUploadTime(new Date((Long) searchHit.getSource().get("uploadTime")));
 
 							chunk.add(technologyDocument);

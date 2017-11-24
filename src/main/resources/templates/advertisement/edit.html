@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="base">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:text="#{advertisement.management}">广告管理</title>
+	
+	<style>
+        .toolbar {
+            border: 1px solid #ccc;
+        }
+        .text {
+            border: 1px solid #ccc;
+            min-height:600px;
+        }
+        table {
+		  border-top: 1px solid #ccc;
+		  border-left: 1px solid #ccc;
+		}
+		table td,
+		table th {
+		  border-bottom: 1px solid #ccc;
+		  border-right: 1px solid #ccc;
+		  padding: 3px 5px;
+		}
+		table th {
+		  border-bottom: 2px solid #ccc;
+		  text-align: center;
+		}
+		
+		/* blockquote 样式 */
+		blockquote {
+		  display: block;
+		  border-left: 8px solid #d0e5f2;
+		  padding: 5px 10px;
+		  margin: 10px 0;
+		  line-height: 1.4;
+		  font-size: 100%;
+		  background-color: #f1f1f1;
+		}
+		
+		/* code 样式 */
+		code {
+		  display: inline-block;
+		  *display: inline;
+		  *zoom: 1;
+		  background-color: #f1f1f1;
+		  border-radius: 3px;
+		  padding: 3px 5px;
+		  margin: 0 3px;
+		}
+		pre code {
+		  display: block;
+		}
+		
+		/* ul ol 样式 */
+		ul, ol {
+		  margin: 10px 0 10px 20px;
+		}
+    </style>
+	
+	<script type="text/javascript" src="/webResources/js/custom/wangEditor/wangEditor.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/advertisement/edit.js" ></script>
+
+</head>
+
+<body>
+	<div layout:fragment="content" >
+		<input type="hidden" id="advertisementId" name="advertisementId" th:value="${id}"/> 
+		<div class="table-top">
+	        <div class="title-big" th:text="#{advertisement.management}">
+	            	广告管理
+	        </div>
+	        <div class="title-small">
+	            >
+	        </div>
+	    </div>
+	    <div class="container" style="padding-top: 4%;padding-left: 3%;padding-right: 3%;height: 846px">
+	        <div id="div1" class="toolbar">
+	        </div>
+        	<div style="padding: 5px 0; color: #ccc"></div>
+	        <div id="div2" class="text"> <!--可使用 min-height 实现编辑区域自动增加高度-->
+	        </div>
+            <button th:text="#{advertisement.publish}" style="margin-top:1%;width: 80px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;">
+              	  发起
+            </button>
+	    </div>	
+	</div>
+</body>
+
+
+</html>
+

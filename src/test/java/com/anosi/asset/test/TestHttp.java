@@ -32,5 +32,5 @@ public class TestHttp {
 		/* end:trywithresource */
 		System.out.println(JSON.parseObject(result.toString()).toString());
 	}
-
+	
 }

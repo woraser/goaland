@@ -86,6 +86,9 @@ public class Account extends BaseEntity {
 	private List<CustomerServiceProcess> engineerProcesseList = new ArrayList<>();
 	
 	private List<CustomerServiceProcess> repairerProcesseList = new ArrayList<>();
+	
+	@ContainedIn
+	private List<Advertisement> advertisementList = new ArrayList<>();
 
 	// 密码加盐
 	private String salt;
@@ -240,6 +243,15 @@ public class Account extends BaseEntity {
 
 	public void setRoleFunctionGroupList(List<RoleFunctionGroup> roleFunctionGroupList) {
 		this.roleFunctionGroupList = roleFunctionGroupList;
+	}
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "creater", targetEntity = Advertisement.class)
+	public List<Advertisement> getAdvertisementList() {
+		return advertisementList;
+	}
+
+	public void setAdvertisementList(List<Advertisement> advertisementList) {
+		this.advertisementList = advertisementList;
 	}
 
 	/***

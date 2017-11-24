@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	
+	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
+	
+	<style type="text/css">
+		.ui-autocomplete {
+			display: block;
+			z-index: 99999;
+		}
+	</style>
+	
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/advertisement/save.js" ></script>
+	
+</head>
+
+<body class="skin-blue sidebar-mini">
+	<form class="form-horizontal" role="form" th:object="${advertisement}" id="advertisementForm">
+		<input type="hidden" id="advertisementId" name="advertisementId" th:value="${advertisement.id}"/> 
+	    <fieldset>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{advertisement.name}" for="name"></label>  
+		    	<div class="col-sm-8">
+		    		<input type="text" th:field="*{name}" class="form-control" th:placeholder="#{advertisement.name}"/>  
+    			</div>
+	    	</div>
+	    </fieldset>  
+	</form>  
+</body>
+
+</html>
+

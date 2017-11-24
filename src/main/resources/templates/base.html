@@ -41,6 +41,8 @@
 <link href="/webResources/css/custom/loading.css" rel="stylesheet" />
 <link href="/webResources/css/custom/vclock.css" rel="stylesheet" />
 <link href="/webResources/css/custom/menu.css" rel="stylesheet" />
+<link href="/webResources/plugins/toast/dist/jquery.toast.min.css"
+	rel="stylesheet" />
 
 <style type="text/css">
 body, html {
@@ -54,16 +56,70 @@ body, html {
 }
 
 @media screen and (min-width: 768px) {
-    .modal-dialog {
-        width: 540px;
-        margin-left: 40%;
-        margin-top: 10%;
-        height: 460px;
-    }
-    .modal-content {
-        -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    }
+	.modal-dialog {
+		width: 540px;
+		margin-left: 40%;
+		margin-top: 10%;
+		height: 460px;
+	}
+	.modal-content {
+		-webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+	}
+}
+
+.navbar .nav.navbar-nav.pull-right {
+	min-width: 0px;
+	height: 50px;
+}
+
+#sidebar {
+	background: none repeat scroll 0 0 #4D4948;
+	padding: 0 !important;
+	width: 230px;
+	position: absolute;
+	border-bottom: 0px solid #22262e;
+	padding-top: 0px;
+}
+
+.sidebar-menu>ul {
+	list-style: none;
+	margin: 0;
+	margin-top: 0px;
+	padding: 0;
+	margin-top: 0px;
+	border-bottom: 0px solid #4D4948 !important;
+	border-top: 0px solid #4D4948 !important;
+}
+
+.sidebar-menu>ul>li>a {
+	border-bottom: 0px solid #383e4c !important;
+	border-top: 0px solid #22262e !important;
+	color: #cdd0d8 !important;
+	text-shadow: 0 1px 0 #000000;
+	padding-left: 25px;
+}
+
+body {
+	font-family: "\5FAE\8F6F\96C5\9ED1", "Helvetica Neue", Helvetica, Arial,
+		sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	color: #333333;
+}
+
+.navbar .nav>li>a:hover, .navbar .nav>li>a:focus, .navbar .nav .open>a,
+	.navbar .nav .open>a:hover, .navbar .nav .open>a :focus {
+	background-color: #FFFFFF;
+}
+
+.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+	background-color: #FFFFFF;
+	border-color: #5e87b0;
+}
+
+.dropdown-menu.inbox .body {
+	max-width: 250px;
 }
 </style>
 
@@ -94,12 +150,17 @@ body, html {
 <script type="text/javascript" src="/webResources/plugins/vue/vue.js"></script>
 <script type="text/javascript"
 	src="/webResources/plugins/dateFormat/dateFormat.js"></script>
-<script type="text/javascript" src="/webResources/plugins/toaster/jquery.toaster.js"></script>
+<script type="text/javascript"
+	src="/webResources/plugins/toaster/jquery.toaster.js"></script>
 <!-- CUSTOM SCRIPT -->
 <script type="text/javascript" src="/webResources/js/script.js"></script>
-<script type="text/javascript" src="/webResources/plugins/SockJS/sockjs.min.js"></script>
-<script type="text/javascript" src="/webResources/plugins/stompJs/stomp.js"></script>
+<script type="text/javascript"
+	src="/webResources/plugins/SockJS/sockjs.min.js"></script>
+<script type="text/javascript"
+	src="/webResources/plugins/stompJs/stomp.js"></script>
 <script type="text/javascript" src="/webResources/js/custom/top/top.js"></script>
+<script type="text/javascript"
+	src="/webResources/plugins/toast/dist/jquery.toast.min.js"></script>
 
 
 <script>

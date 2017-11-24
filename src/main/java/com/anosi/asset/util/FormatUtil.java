@@ -34,5 +34,5 @@ public class FormatUtil {
 			return String.valueOf((fileSize / 100)) + "." + String.valueOf((fileSize % 100)) + "GB";
 		}
 	}
-
+	
 }

@@ -119,8 +119,13 @@
                     <div class="process-border-right" >
                     </div>
                     <div class="process-Info-second">
-                        <div class="process-apply">
-                            	{{processData["agreementStatus.agreement"]}}
+                        <div v-if="'agreementStatus.agreement' in processData" class="process-apply">
+                            	<img v-bind:src="'/webResources/img/process/'+processData.agreementPic+'.png'"/>
+                            	<span>{{processData["agreementStatus.agreement"]}}</span>
+                        </div>
+                        <div v-else="v-else" class="process-apply" style="margin-top:7%">
+                            	<img src="/webResources/img/process/UNCOMFIRMED.png"/>
+                            	<span th:text="#{customerService.agreement.status.UNCOMFIRMED}"></span>
                         </div>
                         <div v-if="'agreementStatus.agreement' in processData" class="process-applyTime">
                             {{processData["agreementStatus.beginTime"] | dateFormat}} - {{processData["agreementStatus.endTime"] | dateFormat}}
@@ -133,7 +138,10 @@
                             	{{processData["finishType.name"]}}
                         </div>
                         <div v-if="'historicProcessInstance.endTime' in processData" class="process-applyTime" style="padding-left: 20%">
-                            {{processData["historicProcessInstance.endTime"]}}
+                            {{processData["historicProcessInstance.startTime"] | dateFormat}} - {{processData["historicProcessInstance.endTime"] | dateFormat}}
+                        </div>
+                        <div v-else="v-else" class="process-applyTime" style="padding-left: 20%">
+                            {{processData["historicProcessInstance.startTime"] | dateFormat}} -
                         </div>
                     </div>
                     <div class="process-border-right" >

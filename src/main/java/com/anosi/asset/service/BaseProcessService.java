@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.BaseProcess;
+import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.service.impl.BaseProcessServiceImpl.DoInComplete;
@@ -44,6 +45,15 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * @return
 	 */
 	T setHistoricValueForProcess(T t, HistoricTaskInstance historicTaskInstance);
+	
+	/***
+	 * 设置historic属性
+	 * 
+	 * @param t
+	 * @param historicTaskInstance
+	 * @return
+	 */
+	T setHistoricValueForProcess(T t);
 
 	/***
 	 * 为T设置HistoricProcessInstance 内部通过调用父接口的findAndSetRunTimeValue来减少重复代码
@@ -192,9 +202,10 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * @param beginTime
 	 * @param timeType
 	 * @param searchContent
+	 * @param finishType 
 	 * @return
 	 */
-	Page<T> findStartedProcess(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
+	Page<T> findStartedProcess(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime, FinishType finishType);
 
 	/***
 	 * 获取待办任务，默认实现
@@ -215,9 +226,10 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * @param beginTime
 	 * @param timeType
 	 * @param searchContent
+	 * @param finishType 
 	 * @return
 	 */
-	Page<T> findHistoricTasks(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
+	Page<T> findHistoricTasks(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime, FinishType finishType);
 
 	/***
 	 * 获取所有发起的流程，默认实现
@@ -227,9 +239,10 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 * @param timeType
 	 * @param beginTime
 	 * @param endTime
+	 * @param finishType 
 	 * @return
 	 */
-	Page<T> findAllProcesses(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime);
+	Page<T> findAllProcesses(Pageable pageable, String searchContent, String timeType, Date beginTime, Date endTime, FinishType finishType);
 
 	/***
 	 * 查出下一步任务id，发给下一步代办人

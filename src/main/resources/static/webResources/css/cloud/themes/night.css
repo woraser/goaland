@@ -78,7 +78,7 @@
 .navbar .nav .open > a,
 .navbar .nav .open > a:hover,
 .navbar .nav .open > a :focus {
-  background-color: #486d93 !important;
+  background-color: red;
 }
 /* Navbar Dropdown */
 .dropdown-menu {
@@ -310,8 +310,7 @@
   border: 0 none;
   padding: 15px 15px 15px 20px;
   text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
   text-transform: uppercase;
 }
 .sidebar-menu > ul > li a i {
@@ -489,7 +488,7 @@
   color: #cdd0d8;
   margin-left: 0px;
   padding-left: 5px;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
 }
 .sidebar-menu > ul > li > ul.sub > li:first-child > a {

@@ -20,7 +20,7 @@ public class SessionRedisDao extends AbstractSessionDAO {
 	@Lazy
 	private RedisTemplate<String, Session> redisTemplate;
 
-	private static int timeout = 1800;
+	private static int timeout = 60 * 60 * 24 * 7;// 一星期
 
 	@Override
 	protected Serializable doCreate(Session session) {
