@@ -42,7 +42,7 @@ $(document).ready(function() {
 		$.ajax({
 			url : '/advertisement/save',
 			data : {
-				"id" : $("#advertisementId").val(),
+				"advertisementId" : $("#advertisementId").val(),
 				"content" : editor.txt.html(),
 			},
 			type : 'post',
@@ -51,7 +51,7 @@ $(document).ready(function() {
 				if(data.result == "success"){
 					$.toast({ 
 					  text : "自动保存成功", 
-					  hideAfter : 3000,
+					  hideAfter : 2000,
 					  position : 'mid-center'
 					})     
 				}
@@ -85,29 +85,14 @@ $(document).ready(function() {
         fail: function (xhr, editor, result) {
             // 图片上传并返回结果，但图片插入错误时触发
         	console.info("upload success but insert fail")
-        	$.toast({ 
-    		  text : "upload success but insert fail", 
-    		  hideAfter : 3000,
-    		  position : 'mid-center'
-    		})
         },
         error: function (xhr, editor) {
             // 图片上传出错时触发
         	console.info("upload fail")
-        	$.toast({ 
-    		  text : "upload fail", 
-    		  hideAfter : 3000,
-    		  position : 'mid-center'
-    		})   
         },
         timeout: function (xhr, editor) {
             // 图片上传超时时触发
         	console.info("time out")
-        	$.toast({ 
-      		  text : "time out", 
-      		  hideAfter : 3000,
-      		  position : 'mid-center'
-      		})     
         },
 
         // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
@@ -129,7 +114,7 @@ $(document).ready(function() {
 				dataType : 'json',
 				success : function( data ) {
 					$.each(data.content,function(){
-						insertImg("/fileDownload/" + this.stringObjectId)
+						insertImg("http://" + window.location.host + "/fileDownload/" + this.stringObjectId)
 					})
 				}
 			 })
@@ -158,5 +143,50 @@ $(document).ready(function() {
     }
    
     checkLastContent()
+    
+    // 发布广告
+    $("#publish").click(function(){
+    	$.blockUI({
+			message: '<div class="lds-css ng-scope"><div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>',
+			// 指的是提示框的css
+			css: {
+             width: "0px",
+             top: "40%",
+             left: "50%"
+         },
+		}); 
+    	
+    	$.ajax({
+			url : '/advertisement/publish',
+			data : {
+				"advertisementId" : $("#advertisementId").val(),
+			},
+			type : 'post',
+			dataType : 'json',
+			success : function( data ) {
+				$.unblockUI();
+				if(data.result=='success'){
+					$.toast({ 
+					  text : "发布成功", 
+					  hideAfter : 2000,
+					  position : 'mid-center'
+					})     
+					window.location.href="/advertisement/management/view"
+				}else if(data.result=='error'){
+					$.toast({ 
+						  text : "发布失败:"+data.message, 
+						  hideAfter : 5000,
+						  position : 'mid-center'
+						})     
+				}else{
+					$.toast({ 
+					  text : "发布失败", 
+					  hideAfter : 5000,
+					  position : 'mid-center'
+					})     
+				}
+			}
+		 })
+    })
     
 })

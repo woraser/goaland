@@ -58,6 +58,8 @@
 	<div layout:fragment="content">
 		<div id="files" v-cloak="v-cloak" style="width:100%;background:#F4F6F9;height:898px;">
 			<input type="hidden" id="isDevice" name="isDevice" th:value="${isDevice}?${isDevice}:false"/>
+			<input type="hidden" id="deviceSN" name="deviceSN" th:value="${device!=null?device.serialNo:''}"/>
+			<input type="hidden" id="projectNo" name="projectNo" th:value="${device!=null?device.project.number:''}"/>
     		<div class="table-top">
         		<div class="title-big" th:text="#{documentMgr}">
             	文档管理
@@ -67,9 +69,6 @@
 		        </div>
     		</div>
         	<div style="margin-top:1.5%;float:right;width: 77%;height: 87%;margin-right: 1%;background: #FFFFFF;border: solid #E6E8EA 2px">
-	            <div style="width: 100%;height: 8%;margin-left: 1%">
-	                <button class="doButton" id="upload" th:text="#{document.upload}">上传</button>
-	            </div>
             	<div style="width: 95%;height: 90%;margin-left: 3%">
                 	<div style="width: 100%;height: 6%;border-bottom: 2px solid #DADADA">
 	                    <div th:text="#{document.fileName}" style="float:left;width: 31%;height: 100%;font-size: 16px;color: #697E99;font-weight: 900;padding-left: 2%;padding-top: 1%">
@@ -175,17 +174,22 @@
                      </ul>
                      <div class="select" style="padding-top: 3%">
                          <select name="type" id="type" class="myselect"> 
-		            		<option th:each="type : ${types}" th:value="${type.name}" th:text="${type.name}"></option>
+		            		<option th:each="type : ${types}" th:value="${type.typeValue}" th:text="#{'document.type.'+${type.typeValue}}"></option>
 		            	</select>
                      </div>
                  </div>
              </div>
-             <div style="height: 3%;width: 80%;margin-left: 10%;font-size: 16px" th:text="#{document.search.uploadTime}">
-                 	按上传日期查询:
-             </div>
-            <!-- <div class="select" style="margin-left: 10%;height: 10%">
-                <input class="form-control " id="indate" size="10" placeholder="开始时间" value=""/>
-            </div> -->
+            <div v-if="isDevice" style="height: 3%;width: 80%;margin-left: 10%;font-size: 16px" th:text="#{document.search.device}">
+                	按设备查询:
+            </div>
+            <div v-if="isDevice" class="select" style="margin-left: 10%;height: 10%">
+            	 <input class="form-control input-sm" style="float:left;width:70%;height: 35px" id="deviceSN" name="deviceSN" v-model="deviceSN" type="text" th:placeholder="#{device.serialNo}"/>
+            	 <input class="form-control input-sm" style="margin-top:3%;float:left;width:70%;height: 35px" id="projectNo"  v-model="projectNo" name="projectNo" type="text" th:placeholder="#{customerService.projectNo}"/>
+            </div>
+            
+            <div style="height: 3%;width: 80%;margin-left: 10%;font-size: 16px" th:text="#{document.search.uploadTime}">
+                	按上传日期查询:
+            </div>
             <div class="select" style="margin-left: 10%;height: 10%">
             	 <input class="form-control input-sm" style="float:left;width:70%;height: 35px" id="lowerLimit" name="lowerLimit" type="text" th:placeholder="#{document.search.uploadTime.from}"/>
             	 <input class="form-control input-sm" style="margin-top:3%;float:left;width:70%;height: 35px" id="upperLimit" name="upperLimit" type="text" th:placeholder="#{document.search.uploadTime.to}"/>

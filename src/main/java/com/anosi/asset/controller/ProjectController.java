@@ -1,6 +1,7 @@
 package com.anosi.asset.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,6 +58,24 @@ public class ProjectController extends BaseController<Project> {
 	}
 
 	/***
+	 * batch save or update project
+	 * 
+	 * @param project
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/project/save/batch", method = RequestMethod.POST)
+	public JSONObject saveBatch(@ModelAttribute("projectVO") ProjectVO projectVO) throws Exception {
+		logger.debug("batch saveOrUpdate project");
+		List<Project> projects = projectVO.getProjects().parallelStream()
+				.map(project -> projectService.findByNumber(project.getNumber()) == null ? project
+						: projectService.findByNumber(project.getNumber()))
+				.collect(Collectors.toList());
+		projectService.save(projects);
+		return new JSONObject(ImmutableMap.of("result", "success"));
+	}
+
+	/***
 	 * 获取根据number模糊搜索的project
 	 * 
 	 * @param number
@@ -82,6 +101,20 @@ public class ProjectController extends BaseController<Project> {
 			jsonArray.add(jsonObject);
 		}
 		return jsonArray;
+	}
+
+	public static class ProjectVO {
+
+		private List<Project> projects;
+
+		public List<Project> getProjects() {
+			return projects;
+		}
+
+		public void setProjects(List<Project> projects) {
+			this.projects = projects;
+		}
+
 	}
 
 }

@@ -34,6 +34,8 @@ public class Advertisement extends BaseEntity {
 	private Date createTime = new Date();// 创建时间
 
 	private Date sendTime;// 发送时间
+	
+	private String objectId;// 文件id
 
 	@Field
 	private String content;// html内容
@@ -80,4 +82,12 @@ public class Advertisement extends BaseEntity {
 		this.creater = creater;
 	}
 
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+	
 }

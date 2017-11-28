@@ -57,9 +57,9 @@ spring:
   
   #mail
   mail:
-    host: smtp.qq.com
-    username: 573380618@qq.com
-    password: wjberetzvinnbdji
+    host: smtp.anosi.cn
+    username: test1@anosi.cn
+    password: Anosi.cn
     properties:
       mail:
         smtp:

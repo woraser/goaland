@@ -28,6 +28,10 @@ $(document).ready(function() {
 			role : {
 				required : true,
 			},
+			emailAddress : {
+				required : true,
+				checkEmail : true,
+			}
 		},
 		errorPlacement: function(error, element) {
             if(element.parent('#roleSelect').length) {
@@ -79,6 +83,13 @@ $(document).ready(function() {
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	//邮箱验证
+	jQuery.validator.addMethod("checkEmail", function(value, element) {
+		var length = value.length;
+		var mobile = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b/i;
+		return this.optional(element) || mobile.test(value);
+	}, "请正确填写您的邮箱地址");
 	
 	jQuery.validator.addMethod("checkUniqueLoginId", function(value, element) {
 		var flag;

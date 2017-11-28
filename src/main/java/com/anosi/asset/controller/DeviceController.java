@@ -257,9 +257,18 @@ public class DeviceController extends BaseController<Device> {
 	public JSONObject bindingRfid(@RequestParam(value = "serialNo") String serialNo,
 			@RequestParam(value = "rfid") String rfid) throws Exception {
 		Device device = deviceService.findBySerialNo(serialNo);
-		if (StringUtils.isNoneBlank(device.getRfid())) {
+		if (device == null) {
+			return new JSONObject(ImmutableMap.of("result", "error", "message",
+					MessageFormat.format(i18nComponent.getMessage("device.rfid.exist"), serialNo)));
+		} else if (StringUtils.isNoneBlank(device.getRfid())) {
 			return new JSONObject(
 					ImmutableMap.of("result", "error", "message", i18nComponent.getMessage("device.rfid.exist")));
+		} else if (StringUtils.isBlank(rfid)) {
+			return new JSONObject(
+					ImmutableMap.of("result", "error", "message", i18nComponent.getMessage("rfid.cannot.null")));
+		} else if (deviceService.findByRfid(rfid) != null) {
+			return new JSONObject(
+					ImmutableMap.of("result", "error", "message", i18nComponent.getMessage("rfid.repeat")));
 		} else {
 			device.setRfid(rfid);
 		}

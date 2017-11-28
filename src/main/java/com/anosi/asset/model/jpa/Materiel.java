@@ -1,10 +1,13 @@
 package com.anosi.asset.model.jpa;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -36,6 +39,8 @@ public class Materiel extends BaseEntity {
 	private int checkYear = 0, checkMonth = 0, checkDay = 0;// 设备检测周期
 
 	private int remindYear = 0, remindMonth = 0, remindDay = 0;// 提前预警年数,月数,天数
+	
+	private List<Account> accountList = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -110,6 +115,15 @@ public class Materiel extends BaseEntity {
 	public void setRemindDay(int remindDay) {
 		this.remindDay = remindDay;
 	}
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<Account> getAccountList() {
+		return accountList;
+	}
+
+	public void setAccountList(List<Account> accountList) {
+		this.accountList = accountList;
+	}
 
 	/****
 	 * 判断是否需要预警
@@ -122,15 +136,23 @@ public class Materiel extends BaseEntity {
 	 */
 	@Transient
 	public boolean needRemind() {
-		Date nowDate = new Date();
-		Date cycleDate = ensureCycle(nowDate, beginTime);
-		Date remindTime = DateFormatUtil.getBeforeDayTime(DateFormatUtil.getBeforeMonthTime(
-				DateFormatUtil.getBeforeYearTime(cycleDate, this.remindYear), this.remindMonth), this.remindDay);
-		if (nowDate.getTime() < remindTime.getTime()) {
-			return false;
-		} else {
-			return true;
+		if (checkYear != 0 || checkMonth != 0 || checkDay != 0) {
+			Date nowDate = new Date();
+			Date cycleDate = ensureCycle(nowDate, beginTime);
+			Date remindTime = DateFormatUtil
+					.getBeforeDayTime(
+							DateFormatUtil.getBeforeMonthTime(
+									DateFormatUtil.getBeforeYearTime(cycleDate, this.remindYear), this.remindMonth),
+							this.remindDay);
+			// 如果年月日相等
+			if (DateFormatUtil.compareYear(nowDate, remindTime) && DateFormatUtil.compareMonth(nowDate, remindTime)
+					&& DateFormatUtil.compareDay(nowDate, remindTime)) {
+				return true;
+			} else {
+				return false;
+			}
 		}
+		return false;
 	}
 
 	/***

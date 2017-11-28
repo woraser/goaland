@@ -14,12 +14,10 @@ import com.anosi.asset.GoalandApplication;
 import com.anosi.asset.component.PasswordEncry;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Device;
-import com.anosi.asset.model.jpa.DocumentType;
 import com.anosi.asset.model.jpa.Project;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.DevCategoryService;
 import com.anosi.asset.service.DeviceService;
-import com.anosi.asset.service.DocumentTypeService;
 import com.anosi.asset.service.ProjectService;
 import com.anosi.asset.service.RoleService;
 
@@ -33,8 +31,6 @@ public class InitData {
 	@Autowired
 	private RoleService roleService;
 	@Autowired
-	private DocumentTypeService documentTypeService;
-	@Autowired
 	private DeviceService deviceService;
 	@Autowired
 	private DevCategoryService devCategoryService;
@@ -47,7 +43,6 @@ public class InitData {
 		/*initEngineerManager();
 		initCustomerServicer();
 		initEngineer();*/
-		initType();
 		//initDevice();
 		initProject();
 	}
@@ -103,20 +98,6 @@ public class InitData {
 		}
 		accountService.save(account);
 		account.setName("测试工程师");
-	}
-	
-	@Test
-	@Rollback(false)
-	public void initType(){
-		DocumentType type = new DocumentType();
-		type.setName("储备文档");
-		documentTypeService.save(type);
-		DocumentType type2 = new DocumentType();
-		type2.setName("技术文档");
-		documentTypeService.save(type2);
-		DocumentType type3 = new DocumentType();
-		type3.setName("设备文档");
-		documentTypeService.save(type3);
 	}
 	
 	@Test

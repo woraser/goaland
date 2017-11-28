@@ -61,14 +61,15 @@
 		}
     </style>
 	
-	<script type="text/javascript" src="/webResources/js/custom/wangEditor/wangEditor.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/wangEditor/wangEditor.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/advertisement/edit.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 
 </head>
 
 <body>
 	<div layout:fragment="content" >
-		<input type="hidden" id="advertisementId" name="advertisementId" th:value="${id}"/> 
+		<input type="hidden" id="advertisementId" name="advertisementId" th:value="${advertisementId}"/> 
 		<div class="table-top">
 	        <div class="title-big" th:text="#{advertisement.management}">
 	            	广告管理
@@ -83,7 +84,7 @@
         	<div style="padding: 5px 0; color: #ccc"></div>
 	        <div id="div2" class="text"> <!--可使用 min-height 实现编辑区域自动增加高度-->
 	        </div>
-            <button th:text="#{advertisement.publish}" style="margin-top:1%;width: 80px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;">
+            <button id="publish" th:text="#{advertisement.publish}" style="margin-top:1%;width: 80px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;">
               	  发起
             </button>
 	    </div>	

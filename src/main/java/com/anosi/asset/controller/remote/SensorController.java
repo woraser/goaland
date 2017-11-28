@@ -2,7 +2,6 @@ package com.anosi.asset.controller.remote;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +24,6 @@ public class SensorController extends BaseRemoteController {
 	 * 
 	 * @return
 	 */
-	@RequiresPermissions({ "sensorManagement:view" })
 	@RequestMapping(value = "/sensor/management/view", method = RequestMethod.GET)
 	public ModelAndView toViewSensorManageTable() {
 		logger.info("view sensor management");
@@ -38,7 +36,6 @@ public class SensorController extends BaseRemoteController {
 	 * @param request
 	 * @return
 	 */
-	@RequiresPermissions({ "sensorManagement:view" })
 	@RequestMapping(value = "/sensor/management/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findSensorManageData(HttpServletRequest request) throws Exception {
 		String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath(request.getServletPath()),
@@ -52,7 +49,6 @@ public class SensorController extends BaseRemoteController {
 	 * @param sensorId
 	 * @return
 	 */
-	@RequiresPermissions({ "sensorManagement:view" })
 	@RequestMapping(value = "/sensor/management/detail/{serialNo}/view", method = RequestMethod.GET)
 	public ModelAndView toViewSensorManageTable(@PathVariable String serialNo) {
 		logger.info("view sensor management detail");

@@ -35,6 +35,7 @@ import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
+import com.anosi.asset.model.jpa.DocumentType.TypeValue;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
@@ -193,6 +194,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Transactional
 	public void repairActual(String taskId, CustomerServiceProcess process) throws Exception {
+		sessionComponent.getCurrentUser();// 利用shiro缓存机制，防止异步任务获取session出错
 		process.setFinishType(FinishType.FINISHED);
 		process.setFinishDate(new Date());
 		customerServiceProcessDao.save(process);
@@ -345,12 +347,12 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Component
 	public static class AsyncDocument {
-		
+
 		@Autowired
 		private TechnologyDocumentService technologyDocumentService;
 		@Autowired
 		private I18nComponent i18nComponent;
-		
+
 		/***
 		 * 将维修方案写入文档管理库
 		 * 
@@ -374,7 +376,8 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			InputStream is = IOUtils.toInputStream(sb.toString(), Charset.forName("UTF-8"));
 
 			technologyDocumentService.createTechnologyDocument(process.getName() + ".txt", is,
-					((Number) sb.length()).longValue(), "故障规则", "故障规则");
+					((Number) sb.length()).longValue(), TypeValue.BREAKDOWNDOCUMENT.toString(),
+					TypeValue.BREAKDOWNDOCUMENT.toString());
 		}
 	}
 

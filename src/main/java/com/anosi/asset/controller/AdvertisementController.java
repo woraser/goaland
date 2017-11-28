@@ -1,5 +1,7 @@
 package com.anosi.asset.controller;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.component.WebSocketComponent;
 import com.anosi.asset.model.jpa.Advertisement;
+import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.AdvertisementService;
+import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -32,6 +39,10 @@ public class AdvertisementController extends BaseController<Advertisement> {
 
 	@Autowired
 	private AdvertisementService advertisementService;
+	@Autowired
+	private WebSocketComponent webSocketComponent;
+	@Autowired
+	private FileMetaDataService fileMetaDataService;
 
 	/***
 	 * 进入查看<b>所有广告信息</b>的页面
@@ -43,7 +54,7 @@ public class AdvertisementController extends BaseController<Advertisement> {
 		logger.debug("view advertisement manage");
 		return new ModelAndView("advertisement/manage");
 	}
-	
+
 	/***
 	 * 根据条件查询某个广告
 	 * 
@@ -134,10 +145,16 @@ public class AdvertisementController extends BaseController<Advertisement> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/advertisement/save", method = RequestMethod.POST)
-	public JSONObject saveadvertisement(@ModelAttribute("advertisement") Advertisement advertisement) throws Exception {
+	public JSONObject saveadvertisement(@ModelAttribute("advertisement") Advertisement advertisement,
+			@RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture) throws Exception {
 		logger.debug("saveOrUpdate advertisement");
 		if (advertisement.getId() == null) {
 			advertisement.setCreater(sessionComponent.getCurrentUser());
+		}
+		if (coverPicture != null) {
+			FileMetaData fileMetaData = fileMetaDataService.saveFile("advertisement", coverPicture.getName(),
+					coverPicture.getInputStream(), coverPicture.getSize());
+			advertisement.setObjectId(fileMetaData.getStringObjectId());
 		}
 		advertisementService.save(advertisement);
 		return new JSONObject(ImmutableMap.of("result", "success"));
@@ -165,7 +182,22 @@ public class AdvertisementController extends BaseController<Advertisement> {
 	@RequestMapping(value = "/advertisement/content/edit", method = RequestMethod.GET)
 	public ModelAndView toEditAdvertisementContent(@RequestParam(value = "id") Long id) {
 		logger.debug("edit advertisement content");
-		return new ModelAndView("advertisement/edit").addObject("id", id);
+		return new ModelAndView("advertisement/edit").addObject("advertisementId", id);
+	}
+
+	/***
+	 * 发布广告
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/advertisement/publish", method = RequestMethod.POST)
+	@Transactional
+	public JSONObject publishAdvertisement(@RequestParam(value = "advertisementId") Long id) throws Exception {
+		logger.debug("publish advertisement");
+		Advertisement advertisement = advertisementService.getOne(id);
+		advertisement.setSendTime(new Date());
+		webSocketComponent.sendByBroadcast("/topic/broadcast/advertisement", advertisement.getContent());
+		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
 }

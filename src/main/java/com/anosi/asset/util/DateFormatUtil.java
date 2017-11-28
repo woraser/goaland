@@ -109,5 +109,32 @@ public class DateFormatUtil {
 		Date startTimeString = calendar.getTime();
 		return startTimeString;
 	}
+	
+	public static boolean compareYear(Date date1,Date date2){
+		Calendar calendar1 = Calendar.getInstance();// 日历对象
+		calendar1.setTime(date1);// 设置当前日期
+		
+		Calendar calendar2 = Calendar.getInstance();// 日历对象
+		calendar2.setTime(date2);// 设置当前日期
+		return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
+	}
+	
+	public static boolean compareMonth(Date date1,Date date2){
+		Calendar calendar1 = Calendar.getInstance();// 日历对象
+		calendar1.setTime(date1);// 设置当前日期
+		
+		Calendar calendar2 = Calendar.getInstance();// 日历对象
+		calendar2.setTime(date2);// 设置当前日期
+		return calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH);
+	}
+	
+	public static boolean compareDay(Date date1,Date date2){
+		Calendar calendar1 = Calendar.getInstance();// 日历对象
+		calendar1.setTime(date1);// 设置当前日期
+		
+		Calendar calendar2 = Calendar.getInstance();// 日历对象
+		calendar2.setTime(date2);// 设置当前日期
+		return calendar1.get(Calendar.DATE) == calendar2.get(Calendar.DATE);
+	}
 
 }

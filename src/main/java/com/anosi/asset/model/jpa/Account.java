@@ -57,6 +57,10 @@ public class Account extends BaseEntity {
 
 	private String password;
 
+	private String emailAddress;
+
+	private boolean active = false;
+
 	@Content(extractFields = { "roleList*.name", "roleList*.depGroup.name", "roleList*.depGroup.department.name" })
 	@IndexedEmbedded
 	private List<Role> roleList = new ArrayList<>();
@@ -76,17 +80,19 @@ public class Account extends BaseEntity {
 
 	@ContainedIn
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcess> nextAssigneeProcesseList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcess> engineeDepProcesseList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcess> servicerProcesseList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcess> engineerProcesseList = new ArrayList<>();
-	
+
 	private List<CustomerServiceProcess> repairerProcesseList = new ArrayList<>();
 	
+	private List<Materiel> materielList = new ArrayList<>();
+
 	@ContainedIn
 	private List<Advertisement> advertisementList = new ArrayList<>();
 
@@ -108,6 +114,22 @@ public class Account extends BaseEntity {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@JSONField(serialize = false)
@@ -190,7 +212,7 @@ public class Account extends BaseEntity {
 	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
 		this.customerServiceProcesseList = customerServiceProcesseList;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "nextAssignee", targetEntity = CustomerServiceProcess.class)
 	public List<CustomerServiceProcess> getNextAssigneeProcesseList() {
 		return nextAssigneeProcesseList;
@@ -244,7 +266,7 @@ public class Account extends BaseEntity {
 	public void setRoleFunctionGroupList(List<RoleFunctionGroup> roleFunctionGroupList) {
 		this.roleFunctionGroupList = roleFunctionGroupList;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "creater", targetEntity = Advertisement.class)
 	public List<Advertisement> getAdvertisementList() {
 		return advertisementList;
@@ -252,6 +274,15 @@ public class Account extends BaseEntity {
 
 	public void setAdvertisementList(List<Advertisement> advertisementList) {
 		this.advertisementList = advertisementList;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "accountList", targetEntity = Materiel.class)
+	public List<Materiel> getMaterielList() {
+		return materielList;
+	}
+
+	public void setMaterielList(List<Materiel> materielList) {
+		this.materielList = materielList;
 	}
 
 	/***

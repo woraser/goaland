@@ -140,5 +140,10 @@ public class DeviceServiceImpl extends BaseJPAServiceImpl<Device> implements Dev
 		logger.debug("page:{},size:{}", pageable.getPageNumber(), pageable.getPageSize());
 		return deviceDao.findBySearchContent(entityManager, searchContent, pageable);
 	}
+	
+	@Override
+	public Device findByRfid(String rfid){
+		return deviceDao.findByRfid(rfid);
+	}
 
 }

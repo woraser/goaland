@@ -15,8 +15,11 @@ import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.DevCategory;
 import com.anosi.asset.model.jpa.DevCategory.CategoryType;
+import com.anosi.asset.model.jpa.DocumentType;
+import com.anosi.asset.model.jpa.DocumentType.TypeValue;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.DevCategoryService;
+import com.anosi.asset.service.DocumentTypeService;
 import com.anosi.asset.service.RoleService;
 
 /***
@@ -42,6 +45,8 @@ public class InitData {
 	private RoleService roleService;
 	@Autowired
 	private DevCategoryService devCategoryService;
+	@Autowired
+	private DocumentTypeService documentTypeService;
 
 	@PostConstruct
 	public void init() {
@@ -54,6 +59,7 @@ public class InitData {
 				initAdmin();
 				initRoleFunctionRelated.initRoleFunctionRelated();
 				initDevCategory();
+				initType();
 			}
 		});
 	}
@@ -90,6 +96,20 @@ public class InitData {
 				DevCategory devCategory = new DevCategory();
 				devCategory.setCategoryType(categoryType);
 				devCategoryService.save(devCategory);
+			}
+		}
+	}
+
+	/***
+	 * 初始化文档类型
+	 */
+	private void initType() {
+		if (documentTypeService.count() == 0) {
+			TypeValue[] typeValues = TypeValue.values();
+			for (TypeValue typeValue : typeValues) {
+				DocumentType documentType = new DocumentType();
+				documentType.setTypeValue(typeValue);
+				documentTypeService.save(documentType);
 			}
 		}
 	}

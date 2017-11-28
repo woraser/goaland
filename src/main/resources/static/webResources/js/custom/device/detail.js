@@ -38,4 +38,21 @@ $(document).ready(function() {
 	
 	loadContent();
 	
+	//上传
+	 $("#upload").click(function(){
+		 var func=function(){
+			 if($("#documentForm").valid()){
+				 $("#documentForm").submit();
+				 return true;
+			 }else{
+				 return false;
+			 }
+		 };
+		 createModalPage("文档上传","/device/document/upload/"+$("#deviceId").val()+"/view",func); 
+	 });
+	 
+	 $("#viewDocument").click(function(){
+		 window.location.href="/device/technologyDocument/manage/"+$("#deviceId").val()+"/view"
+	 });
+	
 })

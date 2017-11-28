@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.anosi.asset.bean.FileMetaDataBean;
 import com.anosi.asset.dao.mongo.BaseMongoDao;
@@ -30,7 +29,6 @@ import com.anosi.asset.util.FileConvertUtil;
 import com.anosi.asset.util.FileConvertUtil.Suffix;
 
 @Service("fileMetaDataService")
-@Transactional
 public class FileMetaDataServiceImpl extends BaseMongoServiceImpl<FileMetaData> implements FileMetaDataService {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileMetaDataServiceImpl.class);

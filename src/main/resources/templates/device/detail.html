@@ -101,6 +101,14 @@
         .warnings{
         	font-size: 14px;
         }
+        .document-button{
+		    height: 40%;background: #078AE4;color: #FFF;border: 0px;border-radius: 5px;
+		    margin-top: 5%;
+		    font-size: 12px;
+		    width: 45%;
+		    float: left;
+		    margin-left: 5%;
+		}
     </style>
 	
 	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
@@ -145,7 +153,10 @@
 	                        <img src="/webResources/img/device/直流设备.png" style="width:100%;margin-top:50%;"/>
 	                    </div>
 	                    <div style="width: 100%;height: 25%;text-align: center">
-	                        <button class="document-button" th:text="#{device.document}">
+	                    	<button id="upload" class="document-button" th:text="#{document.upload}">
+	                            	上传
+	                        </button>
+	                        <button id="viewDocument" class="document-button" th:text="#{device.document}">
 	                            	技术文档
 	                        </button>
 	                    </div>

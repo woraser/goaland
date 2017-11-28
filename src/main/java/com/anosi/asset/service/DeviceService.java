@@ -35,5 +35,7 @@ public interface DeviceService extends BaseJPAService<Device>{
 	 * @return
 	 */
 	public Page<Device> findByContentSearch(String searchContent, Pageable pageable);
+	
+	public Device findByRfid(String rfid);
 
 }

@@ -2,7 +2,6 @@ package com.anosi.asset.controller.remote;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +25,6 @@ public class IotxController extends BaseRemoteController {
 	 * 
 	 * @return
 	 */
-	@RequiresPermissions({ "iotxManagement:view" })
 	@RequestMapping(value = "/iotx/management/view", method = RequestMethod.GET)
 	public ModelAndView toViewIotxManageTable() {
 		logger.info("view iotx management");
@@ -39,7 +37,6 @@ public class IotxController extends BaseRemoteController {
 	 * @param request
 	 * @return
 	 */
-	@RequiresPermissions({ "iotxManagement:view" })
 	@RequestMapping(value = "/iotx/management/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findIotxManageData(HttpServletRequest request) throws Exception{
 		String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath(request.getServletPath()),
@@ -54,7 +51,6 @@ public class IotxController extends BaseRemoteController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequiresPermissions({ "iotxManagement:view" })
 	@RequestMapping(value = "/iotx/iotxDistribute/data", method = RequestMethod.GET)
 	public JSONArray iotxDistribute(HttpServletRequest request) throws Exception {
 		String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath(request.getServletPath()),
@@ -68,7 +64,6 @@ public class IotxController extends BaseRemoteController {
 	 * @param iotxId
 	 * @return
 	 */
-	@RequiresPermissions({ "iotxManagement:view"})
 	@RequestMapping(value = "/iotx/management/detail/{iotxId}/view", method = RequestMethod.GET)
 	public ModelAndView toViewIotxManageTable(@PathVariable Long iotxId) throws Exception {
 		logger.info("view iotx management detail");

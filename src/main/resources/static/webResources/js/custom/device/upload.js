@@ -14,12 +14,13 @@ $(document).ready(function() {
 				type : "post",
 				url : '/technologyDocument/upload',
 				data : {
-					"identification" : $("#projectNo")+"_"+$("#deviceSN"),
+					"identification" : $("#projectNo").val()+"_"+$("#deviceSN").val(),
+					"type" : "TECHNOLOGYDOCUMENT",
 				},
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){
-						infoAndFunc('操作成功');
+						info('操作成功');
 					}else if(data.result=='error'){
 						warning('操作失败:'+data.message);
 					}else{

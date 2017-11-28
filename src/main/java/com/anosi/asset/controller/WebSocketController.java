@@ -6,7 +6,12 @@ import org.springframework.stereotype.Controller;
 
 import com.anosi.asset.component.WebSocketComponent;
 
-
+/***
+ * 测试webSocket
+ * 
+ * @author jinyao
+ *
+ */
 @Controller
 public class WebSocketController {
 	

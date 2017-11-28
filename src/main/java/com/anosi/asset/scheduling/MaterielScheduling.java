@@ -1,10 +1,9 @@
 package com.anosi.asset.scheduling;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -15,8 +14,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.Materiel;
 import com.anosi.asset.service.MaterielService;
 
 import freemarker.core.ParseException;
@@ -30,12 +33,7 @@ import freemarker.template.TemplateNotFoundException;
 public class MaterielScheduling {
 
 	@Autowired
-	private MaterielService materielService;
-	@Autowired
-	private JavaMailSender mailSender;
-
-	@Value("${spring.mail.username}")
-	private String from;
+	private ConvertRemindMail convertRemindMail;
 
 	/***
 	 * 每天0点进行预测性维护检测
@@ -47,38 +45,60 @@ public class MaterielScheduling {
 	 * @throws TemplateNotFoundException
 	 * @throws TemplateException
 	 */
-	// @Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	public void checkCalculate() throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException,
 			ParseException, IOException, TemplateException {
-		MimeMessage mimeMessage = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-		// 基本设置.
-		helper.setFrom(from);// 发送者.
-		helper.setTo("jinyao@anosi.cn");// 接收者.
-		helper.setSubject("模板邮件（邮件主题）");// 邮件主题.
+		convertRemindMail.checkRemind();
+	}
 
-		Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
-		// 设定去哪里读取相应的ftl模板
-		cfg.setClassForTemplateLoading(this.getClass(), "/templates/mail/");
-		// 在模板文件目录中寻找名称为name的模板文件
-		Template template = cfg.getTemplate("email.ftl");
+	@Component
+	public static class ConvertRemindMail {
 
-		// 获取需要发送的邮件内容
-		List<Map<String, Object>> models = materielService.findAll().parallelStream().map(ma -> {
-			// 判断是否预警,如果已经到了需要预警的天数,则发邮件
-			if (ma.needRemind()) {
-				Map<String, Object> model = new HashMap<String, Object>();
-				return model;
+		@Autowired
+		private MaterielService materielService;
+		@Autowired
+		private JavaMailSender mailSender;
+		@Autowired
+		private I18nComponent i18nComponent;
+
+		@Value("${spring.mail.username}")
+		private String from;
+
+		@Transactional
+		public void checkRemind() throws TemplateNotFoundException, MalformedTemplateNameException, ParseException,
+				IOException, MessagingException, TemplateException {
+			Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
+			// 设定去哪里读取相应的ftl模板
+			cfg.setClassForTemplateLoading(this.getClass(), "/templates/mail/");
+			// 在模板文件目录中寻找名称为name的模板文件
+			Template template = cfg.getTemplate("remind.ftl");
+
+			for (Materiel ma : materielService.findAll()) {
+				// 判断是否预警,如果已经到了需要预警的天数,则发邮件
+				if (ma.needRemind()) {
+					for (Account account : ma.getAccountList()) {
+						MimeMessage mimeMessage = mailSender.createMimeMessage();
+						MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+						// 基本设置.
+						helper.setFrom(from);// 发送者.
+						helper.setTo(account.getEmailAddress());// 接收者.
+						helper.setSubject(MessageFormat.format(i18nComponent.getMessage("materiel.remind"),
+								ma.getDevice().getSerialNo(), ma.getName()));// 邮件主题.
+
+						// 设置model
+						Map<String, Object> model = new HashMap<String, Object>();
+						model.put("ma", ma);
+						model.put("account", account);
+
+						String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+						helper.setText(html, true);
+						// 发送
+						mailSender.send(mimeMessage);
+					}
+				}
 			}
-			return null;
-		}).filter(message -> message != null).collect(Collectors.toList());
-
-		// 发送邮件
-		for (Map<String, Object> model : models) {
-			String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-			helper.setText(html, true);
-			mailSender.send(mimeMessage);
 		}
+
 	}
 
 }

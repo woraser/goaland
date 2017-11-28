@@ -31,6 +31,8 @@ public interface DeviceDao extends BaseJPADao<Device>, QuerydslBinderCustomizer<
 	}
 
 	public Device findBySerialNo(String serialNo);
+	
+	public Device findByRfid(String rfid);
 
 	default public Page<Device> findBySearchContent(EntityManager entityManager, String searchContent,
 			Pageable pageable) {

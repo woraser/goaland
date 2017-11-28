@@ -9,7 +9,9 @@ $(document).ready(function() {
 	    seenDetail : false,
 	    pdf : ['TXT','XLS','XLSX','DOC','DOCX','CSV','PDF','DWG'],
 	    picture : ['GIF','PNG','JPEG','BMP','ICON'],
-	    isDevice : $("type").val == "技术文档",
+	    isDevice : $("#type").val() == "TECHNOLOGYDOCUMENT",
+	    deviceSN : $("#deviceSN").val(),
+	    projectNo : $("#projectNo").val(),
 	  },
 	})
 	 //每页显示多少行
@@ -85,17 +87,21 @@ $(document).ready(function() {
 			 delete params['searchContent']
 			 params['size']=5;
 		 }
-		 if($("#deviceSN").val()!=null && $("#deviceSN").val()!="" && $("#projectNo").val()!=null && $("#projectNo").val()!=""){
-			 params['identification']=$("#projectNo").val()+"_"+$("#deviceSN").val()
-		 }else if(($("#deviceSN").val()==null || $("#deviceSN").val()=="") && ($("#projectNo").val()!=null && $("#projectNo").val()!="")){
-			 params['identification']="start$" + $("#projectNo").val() + "_"
-		 }else if(($("#deviceSN").val()!=null && $("#deviceSN").val()!="") && ($("#projectNo").val()==null || $("#projectNo").val()=="")){
-			 params['identification']="end$" + "_" + $("#deviceSN").val()
-		 }else if(($("#deviceSN").val()==null || $("#deviceSN").val()=="") && ($("#projectNo").val()==null || $("#projectNo").val()=="")){
-			 delete params['identification']
-		 }
+		 checkIdentification();
 		 search(0);
 	 })
+	 
+	 function checkIdentification(){
+		 if(files.deviceSN != "" && files.projectNo != ""){
+			 params['identification']=files.projectNo + "_" + files.deviceSN
+		 }else if( files.deviceSN == "" && files.projectNo != ""){
+			 params['identification']="start$" + files.projectNo + "_"
+		 }else if(files.deviceSN != "" && files.projectNo == ""){
+			 params['identification']="end$" + "_" + files.deviceSN
+		 }else if(files.deviceSN == "" && files.projectNo == ""){
+			 delete params['identification']
+		 }
+	 }
 	 
 	 var search = function(page){
 		 params['page']=page;
@@ -113,6 +119,9 @@ $(document).ready(function() {
 					files.seenDetail=true;
 				}
 				files.fileDatas = data.content;
+				$.each(files.fileDatas,function(){
+					this.type=$.i18n.prop('document.type.'+this.type)
+				})
 				//刷新分页插件
 				createPage($("#dataPager"),pageNum,page,11,search)
 			}
@@ -172,21 +181,22 @@ $(document).ready(function() {
 	 $("#search").click()
 	 
 	 function checkType(){
-		 if($("#isDevice").val()){
-			 $("#type").val("技术文档")
+		 if($("#isDevice").val()=="true"){
+			 $("#type").val("TECHNOLOGYDOCUMENT")
 		 }
 	 }
 	 
 	 checkType()
 	 
 	 $("#type").change(function(){
-		 if(this.value=="技术文档"){
+		 if(this.value=="TECHNOLOGYDOCUMENT"){
 			 files.isDevice = true
 		 }else{
+			 files.deviceSN = "" 
+			 files.projectNo = ""
 			 files.isDevice = false
-			 $("#deviceSN").val()
-			 $("#projectNo").val()
 		 }
+		 $("#search").click()
 	 })
 	 
 })
