@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	
+	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="/webResources/css/custom/validate.css" rel="stylesheet"/>
+	<link href="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+	
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/jquery.validate.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-validate/dist/localization/messages_zh.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-form/jquery.form.min.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/materiel/save.js" ></script>
+	
+</head>
+
+<body class="skin-blue sidebar-mini">
+	<form class="form-horizontal" role="form" th:object="${materiel}" id="materielForm">
+		<input type="hidden" id="device.id" name="device.id" th:value="${device.id}"/> 
+		<input type="hidden" id="device.serialNo" name="device.serialNo" th:value="${device.serialNo}"/> 
+		<input type="hidden" id="materielId" name="materielId" th:value="${materiel.id}"/> 
+	    <fieldset>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{materiel.name}" for="name">物料名称</label>  
+		    	<div class="col-sm-8">
+		    		<input type="text" th:field="*{name}" class="form-control" th:placeholder="#{materiel.name}"/>  
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{materiel.beginTime}" for="name">投运时间</label>  
+		    	<div class="col-sm-8">
+		    		<input type="text" th:field="*{beginTime}" class="form-control" th:placeholder="#{materiel.beginTime}"/>  
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{materiel.lastCheckTime}" for="name">上一次维护时间</label>  
+		    	<div class="col-sm-8">
+		    		<input type="text" th:field="*{lastCheckTime}" class="form-control" th:placeholder="#{materiel.lastCheckTime}"/>  
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{materiel.checkDate}" for="name">维护周期</label>  
+		    	<div class="col-sm-8">
+		    		<input class="form-control" style="float:left;width:25%" th:field="*{checkYear}" value=""/>
+		    		<h5 style="float:left;" th:text="#{year}"></h5>
+		    		<input class="form-control" style="float:left;width:25%" th:field="*{checkMonth}" value=""/>
+		    		<h5 style="float:left;" th:text="#{month}"></h5>
+		    		<input class="form-control" style="float:left;width:25%" th:field="*{checkDay}" value=""/>
+		    		<h5 style="float:left;" th:text="#{day}"></h5>
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{materiel.remindDate}" for="name">预警周期</label>  
+		    	<div class="col-sm-8">
+		    		<input class="form-control" style="float:left;width:25%" th:field="*{remindYear}" value=""/>
+		    		<h5 style="float:left;" th:text="#{year}"></h5>
+		    		<input class="form-control" style="float:left;width:25%" th:field="*{remindMonth}" value=""/>
+		    		<h5 style="float:left;" th:text="#{month}"></h5>
+		    		<input class="form-control" style="float:left;width:25%" th:field="*{remindDay}" value=""/>
+		    		<h5 style="float:left;" th:text="#{day}"></h5>
+    			</div>
+	    	</div>
+	    </fieldset>  
+	</form>  
+</body>
+
+</html>
+

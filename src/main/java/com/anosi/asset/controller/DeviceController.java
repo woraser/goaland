@@ -2,6 +2,7 @@ package com.anosi.asset.controller;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.QDevice;
 import com.anosi.asset.service.AccountService;
@@ -127,13 +129,16 @@ public class DeviceController extends BaseController<Device> {
 	@RequestMapping(value = "/device/save", method = RequestMethod.GET)
 	public ModelAndView toSaveDevicePage(@RequestParam(value = "id", required = false) Long id) throws Exception {
 		Device device;
+		ModelAndView mv = new ModelAndView("device/save");
 		if (id == null) {
 			device = new Device();
 		} else {
 			device = deviceService.getOne(id);
+			mv.addObject("receiverIds",
+					device.getRemindReceiverList().stream().map(Account::getId).collect(Collectors.toList()));
 		}
-		return new ModelAndView("device/save").addObject("device", device).addObject("devCategorys",
-				devCategorySerivce.findAll());
+		return mv.addObject("device", device).addObject("devCategorys", devCategorySerivce.findAll())
+				.addObject("receivers", accountService.findAll());
 	}
 
 	/****
@@ -159,9 +164,15 @@ public class DeviceController extends BaseController<Device> {
 	 */
 	@RequiresPermissions({ "deviceManagement:add", "deviceManagement:edit" })
 	@RequestMapping(value = "/device/save", method = RequestMethod.POST)
-	public JSONObject saveDevice(@ModelAttribute("device") Device device) throws Exception {
+	@Transactional
+	public JSONObject saveDevice(@ModelAttribute("device") Device device,
+			@RequestParam(name = "remindReceivers") Long[] receivers) throws Exception {
 		logger.debug("saveOrUpdate device");
 		deviceService.save(device);
+		device.getRemindReceiverList().clear();
+		for (Long receiver : receivers) {
+			device.getRemindReceiverList().add(accountService.getOne(receiver));
+		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

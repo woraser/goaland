@@ -4,6 +4,7 @@
 $(document).ready(function() {
 	$("#deviceForm").validate({
 		//debug:true,
+		ignore: ":hidden:not(select)",
 		rules : {
 			"project.number" : {
 				required : true,
@@ -30,7 +31,17 @@ $(document).ready(function() {
 			rfid : {
 				checkUniqueRfid : true,
 			},
+			remindReceivers : {
+				required : true,
+			},
 		},
+		errorPlacement: function(error, element) {
+            if(element.parent('#roleSelect').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
 		submitHandler: function(form) {  
 			var options = {
 				type : "post",
@@ -60,6 +71,14 @@ $(document).ready(function() {
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	 $("#remindReceivers").chosen();
+	 
+	 if($("#deviceId").val()!=null&&$("#deviceId").val()!=""){
+		$.each(eval($("#receiverIds").val()),function(index,item){
+			$("#remindReceivers option[value='"+ item.id +"']").attr("selected","selected");
+		}); 
+	 }
 	
 	jQuery.validator.addMethod("checkUniqueSerialNo", function(value, element) {
 		var flag;
@@ -207,5 +226,5 @@ $(document).ready(function() {
         return false;
       }
     }); 
-	
+	 
 })

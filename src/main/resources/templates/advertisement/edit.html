@@ -54,16 +54,28 @@
 		pre code {
 		  display: block;
 		}
-		
 		/* ul ol 样式 */
 		ul, ol {
 		  margin: 10px 0 10px 20px;
 		}
+		
+		#clipArea {
+            margin: 20px;
+            height: 300px;float: left;width: 45%;
+        }
+        #view {
+            height: 300px;
+            float: left;width: 260px;margin: 20px;
+        }
     </style>
 	
 	<script type="text/javascript" src="/webResources/plugins/wangEditor/wangEditor.js" ></script>
-	<script type="text/javascript" src="/webResources/js/custom/advertisement/edit.js" ></script>
 	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/photoClip/iscroll-zoom.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/photoClip/hammer.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/photoClip/lrz.all.bundle.js" ></script>
+	<script type="text/javascript" src="/webResources/plugins/photoClip/jquery.photoClip.js" ></script>
+	<script type="text/javascript" src="/webResources/js/custom/advertisement/edit.js" ></script>
 
 </head>
 
@@ -78,7 +90,27 @@
 	            >
 	        </div>
 	    </div>
-	    <div class="container" style="padding-top: 4%;padding-left: 3%;padding-right: 3%;height: 846px">
+	    <div id="container" class="container" style="padding-top: 0.5%;padding-left: 3%;padding-right: 3%;min-height:846px" v-cloak="v-cloak">
+	    	<h4 style="font-weight:500" th:text="#{advertisement.coverPicture}"></h4>
+       		<div v-show="!isPicture" style="height: 320px;width: 100%">
+		    	<div id="clipArea"></div>
+		    	<div id="view"></div>
+			</div>
+	        <div v-show="!isPicture" style="margin-top:20px;height: 70px;width: 100%;text-align: center">
+		        <input type="file" id="file" style="float: left;margin: 20px;"/>
+		        <button id="clipBtn" style="margin: 20px;float: left;width: 70px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;" th:text="#{advertisement.cutOut}">截取</button>
+		        <button id="commit" style="margin: 20px;float: left;width: 70px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;" th:text="#{commit}">提交</button>
+	         	<button v-if="pictureId != null" v-on:click="isPicture=!isPicture" style="margin: 20px;float: left;width: 70px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;" th:text="#{dvertisement.cutOut.cancel}">取消</button>
+	        </div>
+	        
+	        <div v-show="isPicture" style="height: 320px;width: 100%">
+		    	<img v-bind:src="'/fileDownload/'+pictureId"/>
+			</div>
+			<div v-show="isPicture" style="margin-top:20px;height: 70px;width: 100%;text-align: center">
+		        <button id="reCutOut" style="margin: 20px;float: left;width: 70px;height: 30px;border-radius: 5px;border: solid black 0px;background: #e25921;color: #FFF;" th:text="#{advertisement.reCutOut}">重新截取</button>
+	        </div>
+	        
+	        <h4 style="font-weight:500" th:text="#{advertisement.content}"></h4>
 	        <div id="div1" class="toolbar">
 	        </div>
         	<div style="padding: 5px 0; color: #ccc"></div>

@@ -2,6 +2,17 @@
  * 
  */
 $(document).ready(function() {
+	var container = new Vue({
+		 el: '#container',
+		 data: {
+			 isPicture : false,
+			 pictureId : null,
+		 },
+		 methods:{
+			 
+		 }
+	 })
+	
 	var E = window.wangEditor
     var editor = new E('#div1', '#div2')
     
@@ -34,7 +45,7 @@ $(document).ready(function() {
     editor.customConfig.uploadImgShowBase64 = true   
 	
 	// 自定义 onchange 触发的延迟时间，默认为 200 ms
-	editor.customConfig.onchangeTimeout = 1000 // 单位 ms
+	editor.customConfig.onchangeTimeout = 1500 // 单位 ms
 	
 	editor.customConfig.onchange = function (html) {
         //保存到服务器
@@ -43,7 +54,8 @@ $(document).ready(function() {
 			url : '/advertisement/save',
 			data : {
 				"advertisementId" : $("#advertisementId").val(),
-				"content" : editor.txt.html(),
+				"unPubishContent" : editor.txt.text(),
+				"unPubishHtmlContent" : editor.txt.html(),
 			},
 			type : 'post',
 			dataType : 'json',
@@ -130,13 +142,17 @@ $(document).ready(function() {
 			$.ajax({
 				url : '/advertisement/management/data/one',
 				data : {
-					"id" : $("advertisementId").val(),
-					"showAttributes" : "content",
+					"id" : $("#advertisementId").val(),
+					"showAttributes" : "unPubishHtmlContent,coverPictureId",
 				},
 				type : 'get',
 				dataType : 'json',
 				success : function( data ) {
-					editor.txt.html(data.content)
+					editor.txt.html(data.unPubishHtmlContent)
+					if("coverPictureId" in data){
+						container.isPicture = true
+						container.pictureId = data.coverPictureId
+					}
 				}
 			 })
 		}
@@ -146,6 +162,15 @@ $(document).ready(function() {
     
     // 发布广告
     $("#publish").click(function(){
+    	if(container.pictureId==null){
+    		$.toast({ 
+			  text : "发布前必须上传轮播图", 
+			  hideAfter : 5000,
+			  position : 'mid-center'
+			})  
+			return false;
+    	}
+    	
     	$.blockUI({
 			message: '<div class="lds-css ng-scope"><div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>',
 			// 指的是提示框的css
@@ -182,6 +207,72 @@ $(document).ready(function() {
 					$.toast({ 
 					  text : "发布失败", 
 					  hideAfter : 5000,
+					  position : 'mid-center'
+					})     
+				}
+			}
+		 })
+    })
+    
+    var coverPicture = null;
+    
+    var photo = function(){
+    	var clipArea = new bjj.PhotoClip("#clipArea", {
+            size: [585, 260],
+            outputSize: [720, 320],
+            file: "#file",
+            view: "#view",
+            ok: "#clipBtn",
+            loadStart: function() {
+                console.log("照片读取中");
+            },
+            loadComplete: function() {
+                console.log("照片读取完成");
+            },
+            clipFinish: function(dataURL) {
+            	coverPicture = dataURL;
+            }
+        });
+    }
+    
+    photo()
+    
+    $("#reCutOut").click(function(){
+    	container.isPicture = false
+    	photo()
+    })
+    
+    $("#commit").click(function(){
+    	if(coverPicture == null){
+    		warning("尚未截取图片")
+    		return false
+    	}
+    	
+    	$.blockUI({
+			message: '<div class="lds-css ng-scope"><div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>',
+			// 指的是提示框的css
+			css: {
+             width: "0px",
+             top: "40%",
+             left: "50%"
+         },
+		}); 
+    	
+        $.ajax({
+			url : '/advertisement/save',
+			data : {
+				"coverPictureBase64" : coverPicture,
+				"advertisementId" : $("#advertisementId").val(),
+			},
+			type : "post",
+			dataType : 'json',
+			success : function( data ) {
+				$.unblockUI();
+				checkLastContent();
+				if(data.result == "success"){
+					$.toast({ 
+					  text : "上传成功", 
+					  hideAfter : 2000,
 					  position : 'mid-center'
 					})     
 				}

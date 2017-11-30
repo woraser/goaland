@@ -76,7 +76,7 @@ public class MaterielScheduling {
 			for (Materiel ma : materielService.findAll()) {
 				// 判断是否预警,如果已经到了需要预警的天数,则发邮件
 				if (ma.needRemind()) {
-					for (Account account : ma.getAccountList()) {
+					for (Account account : ma.getDevice().getRemindReceiverList()) {
 						MimeMessage mimeMessage = mailSender.createMimeMessage();
 						MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 						// 基本设置.

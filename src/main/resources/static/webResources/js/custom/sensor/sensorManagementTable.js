@@ -27,7 +27,6 @@ $(document).ready(function() {
                     formatter: function (cellvalue, options, rowObject) {
                     	var hrefUrl='/sensor/management/detail/'+options.rowId+"/view";
                         var detail;
-                    	var editImg = "<a href='#'><img src='/webResources/img/operate/edit.png'/></a>"
                     	var detailImg = "<a href="+hrefUrl+"><img src='/webResources/img/operate/detail.png'/></a>"
                     	detail = editImg + detailImg
                     	return detail;

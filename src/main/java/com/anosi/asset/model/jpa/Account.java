@@ -91,7 +91,7 @@ public class Account extends BaseEntity {
 
 	private List<CustomerServiceProcess> repairerProcesseList = new ArrayList<>();
 	
-	private List<Materiel> materielList = new ArrayList<>();
+	private List<Device> reciveDeviceList = new ArrayList<>();
 
 	@ContainedIn
 	private List<Advertisement> advertisementList = new ArrayList<>();
@@ -276,13 +276,13 @@ public class Account extends BaseEntity {
 		this.advertisementList = advertisementList;
 	}
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "accountList", targetEntity = Materiel.class)
-	public List<Materiel> getMaterielList() {
-		return materielList;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "remindReceiverList", targetEntity = Device.class)
+	public List<Device> getReciveDeviceList() {
+		return reciveDeviceList;
 	}
 
-	public void setMaterielList(List<Materiel> materielList) {
-		this.materielList = materielList;
+	public void setReciveDeviceList(List<Device> reciveDeviceList) {
+		this.reciveDeviceList = reciveDeviceList;
 	}
 
 	/***

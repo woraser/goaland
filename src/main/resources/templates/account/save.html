@@ -65,7 +65,7 @@
 	    	<div class="form-group">
 		    	<label class="col-sm-3 control-label" th:text="#{account.role-group-dep}">选择角色-组-部门</label>  
 		    	<div id="roleSelect" class="col-sm-8">
-		    	 	<select name="role" id="role" class="form-control" multiple="multiple" style="width: 390px"> 
+		    	 	<select name="role" id="role" class="form-control" multiple="multiple" style="width: 350px"> 
 		            	<option th:each="role : ${roles}" th:field="*{roleList}" th:attr="depId=${role.depGroup.department.id}" th:value="${role.id}" th:text="${role.name}+'-'+${role.depGroup.name}+'-'+${role.depGroup.department.name}"></option>
 		            </select>
     			</div>
@@ -73,7 +73,7 @@
 	    	<div class="form-group">
 		    	<label class="col-sm-3 control-label"  th:text="#{account.roleFunctionGroup.choose}">选择权限组</label>  
 		    	<div class="col-sm-8">
-		    	 	<select name="roleFunctionGroup" id="roleFunctionGroup" class="form-control" multiple="multiple" style="width: 390px"> 
+		    	 	<select name="roleFunctionGroup" id="roleFunctionGroup" class="form-control" multiple="multiple" style="width: 350px"> 
 		            	<option th:each="roleFunctionGroup : ${roleFunctionGroups}" th:field="*{roleFunctionGroupList}" th:value="${roleFunctionGroup.id}" th:text="${roleFunctionGroup.name}"></option>
 		            </select>
     			</div>

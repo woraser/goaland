@@ -35,10 +35,16 @@ public class Advertisement extends BaseEntity {
 
 	private Date sendTime;// 发送时间
 	
-	private String objectId;// 文件id
+	private String coverPictureId;// 轮播图id
+	
+	private String unPubishContent;// 未发布的内容
+	
+	private String unPubishHtmlContent;// 未发布的html内容
 
 	@Field
-	private String content;// html内容
+	private String content;// 不带html的内容
+	
+	private String htmlContent;// html内容
 
 	public String getName() {
 		return name;
@@ -82,12 +88,39 @@ public class Advertisement extends BaseEntity {
 		this.creater = creater;
 	}
 
-	public String getObjectId() {
-		return objectId;
+	public String getCoverPictureId() {
+		return coverPictureId;
 	}
 
-	public void setObjectId(String objectId) {
-		this.objectId = objectId;
+	public void setCoverPictureId(String coverPictureId) {
+		this.coverPictureId = coverPictureId;
+	}
+
+	@Type(type="text")
+	public String getHtmlContent() {
+		return htmlContent;
+	}
+
+	public void setHtmlContent(String htmlContent) {
+		this.htmlContent = htmlContent;
+	}
+
+	@Type(type="text")
+	public String getUnPubishContent() {
+		return unPubishContent;
+	}
+
+	public void setUnPubishContent(String unPubishContent) {
+		this.unPubishContent = unPubishContent;
+	}
+
+	@Type(type="text")
+	public String getUnPubishHtmlContent() {
+		return unPubishHtmlContent;
+	}
+
+	public void setUnPubishHtmlContent(String unPubishHtmlContent) {
+		this.unPubishHtmlContent = unPubishHtmlContent;
 	}
 	
 }

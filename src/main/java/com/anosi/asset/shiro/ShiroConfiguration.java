@@ -105,7 +105,7 @@ public class ShiroConfiguration {
 	public SessionManager getRedisSessionManager() {
 		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
 		sessionManager.setSessionDAO(getSessionRedisDao());
-		sessionManager.setGlobalSessionTimeout(1000 * 60 * 30);// 毫秒，设置30分钟过期
+		sessionManager.setGlobalSessionTimeout(1000 * 60 * 60 * 24 * 7);// 毫秒，设置一周过期
 		return sessionManager;
 	}
 

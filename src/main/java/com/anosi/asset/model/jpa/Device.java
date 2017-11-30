@@ -15,7 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -43,7 +45,7 @@ public class Device extends BaseEntity {
 	private String productName;// 产品名称
 
 	@Content
-	@Field
+	@Field(analyze = Analyze.NO)
 	private String productNo;// 产品编号
 
 	@Content
@@ -51,17 +53,18 @@ public class Device extends BaseEntity {
 	private String productSpecifications;// 产品规格
 
 	@Content
-	@Field
+	@Field(analyze = Analyze.NO)
 	private String serialNo;
 
 	@Content
-	@Field
+	@Field(analyze = Analyze.NO)
 	private String rfid;// rfid的值等于二维码的值
 
 	private DevCategory devCategory;
 
 	private Date commissioningTime;// 投运时间
 
+	@ContainedIn
 	private List<Materiel> materielList = new ArrayList<>();// 物料
 
 	private List<TechnicalParameter> technicalParameterList = new ArrayList<>();// 技术参数
@@ -80,6 +83,8 @@ public class Device extends BaseEntity {
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 	
 	private List<RepairedDeviceDailyPer> repairedDeviceDailyPerList = new ArrayList<>();
+	
+	private List<Account> remindReceiverList = new ArrayList<>();
 
 	public String getProductName() {
 		return productName;
@@ -226,6 +231,15 @@ public class Device extends BaseEntity {
 
 	public void setRepairedDeviceDailyPerList(List<RepairedDeviceDailyPer> repairedDeviceDailyPerList) {
 		this.repairedDeviceDailyPerList = repairedDeviceDailyPerList;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<Account> getRemindReceiverList() {
+		return remindReceiverList;
+	}
+
+	public void setRemindReceiverList(List<Account> remindReceiverList) {
+		this.remindReceiverList = remindReceiverList;
 	}
 
 	@Override

@@ -40,6 +40,7 @@ $(document).ready(function() {
 		 params['page']=page;
 		 params['size']=rowNum;
 		 params['sort']=sort;
+		 params['finished']=false;
 		 params['searchContent']=null;
 		 
 		 var contentSearch = new Vue({

@@ -50,6 +50,7 @@ public class LoginComponent {
 		Session session = currentUser.getSession();
 		session.setAttribute("loginId", loginId);
 		session.setAttribute("user", this.accountService.findByLoginId(loginId));
+		session.setTimeout(1000 * 60 * 60 * 24 * 7);
 	}
 
 	private String login(Subject currentUser, String loginId, UsernamePasswordToken token) {

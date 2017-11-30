@@ -23,11 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.anosi.asset.component.WebSocketComponent;
 import com.anosi.asset.model.jpa.Advertisement;
+import com.anosi.asset.model.jpa.QAdvertisement;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.AdvertisementService;
 import com.anosi.asset.service.FileMetaDataService;
+import com.anosi.asset.util.ImageUtil;
+import com.anosi.asset.util.ImageUtil.Base64ImageBean;
 import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -39,8 +41,6 @@ public class AdvertisementController extends BaseController<Advertisement> {
 
 	@Autowired
 	private AdvertisementService advertisementService;
-	@Autowired
-	private WebSocketComponent webSocketComponent;
 	@Autowired
 	private FileMetaDataService fileMetaDataService;
 
@@ -89,10 +89,16 @@ public class AdvertisementController extends BaseController<Advertisement> {
 			@QuerydslPredicate(root = Advertisement.class) Predicate predicate,
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,
-			@RequestParam(value = "searchContent", required = false) String searchContent) throws Exception {
+			@RequestParam(value = "searchContent", required = false) String searchContent,
+			@RequestParam(value = "finished", required = false, defaultValue = "true") boolean finished)
+			throws Exception {
 		logger.info("find advertisement");
 		logger.debug("page:{},size{},sort{}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 		logger.debug("rowId:{},showAttributes:{}", rowId, showAttributes);
+
+		if (finished) {
+			predicate = QAdvertisement.advertisement.sendTime.isNotNull().and(predicate);
+		}
 
 		Page<Advertisement> advertisements;
 		if (StringUtils.isNoneBlank(searchContent)) {
@@ -146,7 +152,8 @@ public class AdvertisementController extends BaseController<Advertisement> {
 	 */
 	@RequestMapping(value = "/advertisement/save", method = RequestMethod.POST)
 	public JSONObject saveadvertisement(@ModelAttribute("advertisement") Advertisement advertisement,
-			@RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture) throws Exception {
+			@RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture,
+			@RequestParam(value = "coverPictureBase64", required = false) String coverPictureBase64) throws Exception {
 		logger.debug("saveOrUpdate advertisement");
 		if (advertisement.getId() == null) {
 			advertisement.setCreater(sessionComponent.getCurrentUser());
@@ -154,7 +161,13 @@ public class AdvertisementController extends BaseController<Advertisement> {
 		if (coverPicture != null) {
 			FileMetaData fileMetaData = fileMetaDataService.saveFile("advertisement", coverPicture.getName(),
 					coverPicture.getInputStream(), coverPicture.getSize());
-			advertisement.setObjectId(fileMetaData.getStringObjectId());
+			advertisement.setCoverPictureId(fileMetaData.getStringObjectId());
+		}
+		if (StringUtils.isNoneBlank(coverPictureBase64)) {
+			Base64ImageBean base64ImageBean = ImageUtil.convertBase64ToImage(coverPictureBase64);
+			FileMetaData fileMetaData = fileMetaDataService.saveFile("advertisement", base64ImageBean.getFileName(),
+					base64ImageBean.getIs(), base64ImageBean.getFileSize());
+			advertisement.setCoverPictureId(fileMetaData.getStringObjectId());
 		}
 		advertisementService.save(advertisement);
 		return new JSONObject(ImmutableMap.of("result", "success"));
@@ -196,7 +209,8 @@ public class AdvertisementController extends BaseController<Advertisement> {
 		logger.debug("publish advertisement");
 		Advertisement advertisement = advertisementService.getOne(id);
 		advertisement.setSendTime(new Date());
-		webSocketComponent.sendByBroadcast("/topic/broadcast/advertisement", advertisement.getContent());
+		advertisement.setContent(advertisement.getUnPubishContent());
+		advertisement.setHtmlContent(advertisement.getUnPubishHtmlContent());
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

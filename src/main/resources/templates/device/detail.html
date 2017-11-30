@@ -13,21 +13,16 @@
 	
 	<style>
         .ui-jqgrid-htable{
-            height: 40px;font-size: 14px;color: #80909c;font-weight: 500;
+            height: 50px;font-size: 14px;color: #80909c;font-weight: 500;
         }
         .ui-jqgrid .ui-jqgrid-htable th div {
             overflow: hidden;
             position: relative;
-            height: 40px;
-            padding-top: 10px;color: #798692;font-weight: 500;
+            height: 50px;
+            padding-top: 5px;color: #BBC5D2;font-weight: 800;
         }
-        .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
-		    height: 40px;
-		    margin-top: 5px;
-		    display: inine-block;
-		}
         .ui-jqgrid .ui-jqgrid-resize {
-            height: 40px !important;
+            height: 50px !important;
             position: relative;
             cursor: e-resize;
             display: inline;
@@ -35,7 +30,7 @@
         }
         .ui-jqgrid tr.jqgrow {
             outline-style: none;
-            height: 40px;
+            height: 50px;
         }
         .ui-jqgrid tr.ui-row-ltr td {
             text-align: left;
@@ -44,6 +39,7 @@
             border-right-style: solid;
             color: #4F6A7F;
             font-size: 14px;
+            font-weight: 400;
         }
         .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
             border: 0px solid #fcd3a1;
@@ -55,25 +51,41 @@
             background: #fff;
         }
         .ui-jqgrid tr:nth-child(even) {
-            background: #F4F8F9;
+            background: #F5F9FA;
         }
         .ui-jqgrid tr:nth-child(odd) {
             background: #FFFFFF;
         }
-        .table-tr{
-            height: 5px;
+        .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
+		    height: 40px;
+		    margin-top: 5px;
+		    display: inine-block;
+		}
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+            border: 0px solid #d8dcdf;
+            border-top-width: 1px;
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            border-top-style: solid;
+            border-bottom-style: solid;
+            border-left-style: solid;
+            border-top-color: rgb(216, 220, 223);
+            border-bottom-color: rgb(216, 220, 223);
+            border-left-color: rgb(216, 220, 223);
+            background: #FFFFFF;
+            font-weight: normal;
+            color: #555;
         }
         .jumbotron{
             padding: 0%;background: #FFFFFF;
         }
         .container{
-            padding-right: 50px;
+
         }
         .container .jumbotron {
             padding-left: 0px;
             padding-right: 0px;
-        }
-        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        }.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
             padding: 8px;
             line-height: 1.8;
             vertical-align: top;
@@ -98,17 +110,24 @@
             border-top-style: solid;
             border-top-color: rgb(221, 221, 221);
         }
-        .warnings{
-        	font-size: 14px;
+        body{ font: 62.5%/1.4 Arial Sans-serif; ... }
+        .wrapper{ min-width:600px; width:98%; margin: 0 auto; }
+        .wrapper .content{ min-width:400px; width:70%; ... }
+        .wrapper .sidebar{ min-width:180px; width:28%; ... }
+        .wrapper h1{ font-size:2em; }
+        .wrapper p{ padding: 0 0 1em; }
+        .iotx-name{
+            font-size: 15px;
         }
-        .document-button{
-		    height: 40%;background: #078AE4;color: #FFF;border: 0px;border-radius: 5px;
-		    margin-top: 5%;
-		    font-size: 12px;
-		    width: 45%;
-		    float: left;
-		    margin-left: 5%;
-		}
+        .iotx-time {
+            width: 26%;
+            height: 80%;
+            float: right;
+            margin-top: 2%;
+        }
+        .warnings-img {
+            padding-top: 0%;
+        }
     </style>
 	
 	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
@@ -124,6 +143,8 @@
 	<script type="text/javascript" src="/webResources/js/custom/device/sensorData.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/deviceAlarm.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/deviceHealth.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/device/materiel.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/jquery-BlockUI/jquery.blockUI.js" ></script>
 
 </head>
 
@@ -274,8 +295,42 @@
 	                </div>
 	            </div>
 	        </div>
+	        <div class="jumbotron col-lg-12" style="margin-top: -10px;">
+		        <div class="title-div" th:text="#{materiel.predictive.maintenance}">
+		           	 预测性维护
+		        </div>
+		        <div id="materielSearch" class="col-lg-12" style="padding-left: 0%;padding-right: 0%;">
+		            <div class="company-select" style="height: 40px">
+		                <div class="company-button" style="height:85%;margin-right: 2%;">
+		                    <button v-on:click="downloadTemplate" class="company-button-new" style="height: 100%;margin-top: 0%" th:text="#{template.download}">
+		                        	模板下载
+		                    </button>
+		                </div>
+		                <div class="company-button" style="height:85%;margin-right: 1%;">
+		                    <button v-on:click="batchSave" class="company-button-new" style="background:#00ABF7;height: 100%;margin-top: 0%" th:text="#{batadd}">
+		                        	批量导入
+		                    </button>
+		                </div>
+		                <div class="company-button" style="height:85%;margin-right: 1%;width:5%;">
+		                    <button id="addMateriel" class="company-button-new" style="background:#00ABF7;height: 100%;margin-top: 0%" th:text="#{add}">
+		                       	 新增
+		                    </button>
+		                </div>
+		                <div class="company-search" style="float: left;margin-left:1%;margin-top: -1%;margin-right: 2%">
+		                        <div class="input-group input-medium">
+		                            <input v-model="searchContent" class="form-control" th:placeholder="#{searchContent}" type="text" style="height: 31px"/>
+		                            <span class="input-group-btn">
+				                        <button id="searchMateriel" class="btn btn-success" style="background: #FC8060;border: 0px"><i class="fa fa-search"></i></button>
+				                    </span>
+		                        </div>
+		                </div>
+		            </div>
+		            <table id="materielTable"></table>
+		            <div id="materielPager"></div>
+		        </div>
+		    </div>
 	        
-	        <div class="jumbotron col-lg-12" style="margin-top: -30px;">
+	        <div class="jumbotron col-lg-12" style="margin-top: -10px;">
 	            <div class="title-div" th:text="#{device.repair.record}">
 	                	维修记录
 	            </div>

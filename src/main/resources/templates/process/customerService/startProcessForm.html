@@ -49,7 +49,7 @@
 			<input type="hidden" id="processName" name="processName" th:value="${process.name}"/> 
 			<input type="hidden" id="reject" name="reject" th:value="${process.examineDetail.reject}"/> 
 	        <fieldset>
-				<div class="companyMgr-edge" style="height: 1550px">
+				<div class="companyMgr-edge" style="height: 2000px">
 				    <div class="company-top">
 				        <div class="company-big" th:text="#{customServiceProcess}">
 				            	业务流程
@@ -265,8 +265,8 @@
 				                        </div>
 				                    </div>
 				                    <div class="project-text" style="margin-top: 5%">
-				                        <div class="project-text-in">
-				                            <div class="project-text-left" th:text="#{customerService.uploadFile}">
+				                        <div class="project-text-in" style="width:100%">
+				                            <div class="project-text-left" style="width:8.5%" th:text="#{customerService.uploadFile}">
 				                               	 上传附件
 				                            </div>
 				                            <div class="project-text-right">
