@@ -16,7 +16,7 @@ import com.anosi.asset.util.URLConncetUtil;
 public class IotxDataController extends BaseRemoteController {
 
 	private static final Logger logger = LoggerFactory.getLogger(IotxDataController.class);
-
+	
 	/***
 	 * 获取iotx采集的数据
 	 * 

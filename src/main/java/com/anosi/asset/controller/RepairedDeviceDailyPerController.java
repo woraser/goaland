@@ -25,7 +25,7 @@ public class RepairedDeviceDailyPerController extends BaseController<RepairedDev
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/RepairedDeviceDailyPer/report/data/", method = RequestMethod.GET)
+	@RequestMapping(value = "/repairedDeviceDailyPer/report/data/", method = RequestMethod.GET)
 	public JSONObject findToReport(@PageableDefault(sort = { "countDate" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable) throws Exception{
 		return repairedDeviceDailyPerService.findToReport(pageable);
 	}

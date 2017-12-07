@@ -65,6 +65,7 @@ $(document).ready(function() {
 	   data: {
 		   detailData : {},
 		   fileDatas : [],
+		   repairFiles : [],
 		   completeStartDetail : {'active':true},
 		   examine : {'active':false},
 		   evaluating : {'active':false},
@@ -128,23 +129,32 @@ $(document).ready(function() {
 					this.agreementPic = this['agreementStatus.agreement']
 					this['agreementStatus.agreement'] = $.i18n.prop('customerService.agreement.status.'+this['agreementStatus.agreement'])
 				}
-				$.ajax({
-					url : '/fileDownload/list/group/customerService_'+data.name,
-					type : 'get',
-					dataType : 'json',
-					success : function( fileData ) {
-						detail.fileDatas = fileData.content
-						$.each(fileData.content,function(){
-							var stringObjectId = this.stringObjectId;
-							//绑定右击事件
-							$(document).on("contextmenu","#"+stringObjectId,function(){
-								objectId = stringObjectId;
-							})
-						})
-					}
-				 })
+			    loadPicture("customerService_"+data.name)
+			    loadPicture("customerService_repair_"+data.name)
 			}
 		})
+	}
+	
+	var loadPicture = function(identification){
+		$.ajax({
+			url : '/fileDownload/list/group/'+identification,
+			type : 'get',
+			dataType : 'json',
+			success : function( fileData ) {
+				if(identification.indexOf("repair")!=-1){
+					detail.repairFiles = fileData.content
+				}else{
+					detail.fileDatas = fileData.content
+					$.each(fileData.content,function(){
+						var stringObjectId = this.stringObjectId;
+						//绑定右击事件
+						$(document).on("contextmenu","#"+stringObjectId,function(){
+							objectId = stringObjectId;
+						})
+					})
+				}
+			}
+		 })
 	}
 	
 	// 加载

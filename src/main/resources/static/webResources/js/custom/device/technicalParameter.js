@@ -15,20 +15,27 @@ $(document).ready(function() {
        	{label:$.i18n.prop('device.technicalParameter.parameterDescribe'),name:'parameterDescribe',index:'parameterDescribe', width: '150',  align: 'center'},
   		{label:$.i18n.prop('device.technicalParameter.actualValue'),name:'actualValue',index:'actualValue', width: '150',  align: 'center'},
   		{label:$.i18n.prop('device.technicalParameter.unit'),name:'unit', index:'unit', width:'150', align: 'center'},
+  		{
+            label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150,sortable: false, align:'center',
+            formatter: function (cellvalue, options, rowObject) {
+            	var url = "/sensor/management/detail/"+ cellvalue +"/view"
+            	var detail = "<a href="+ url +"><img src='/webResources/img/operate/detail.png'/></a>";
+            	return detail;
+            },
+        },
   	];
   	
   	 //每页显示多少行
-  	 var rowNum=8;
+  	 var rowNum=6;
   	 var page=0;
   	 var url='/sensor/management/data/GRID';
   	 var sort;
-  	 var selectRowId;
   	 
   	 //请求参数
   	 var params={}
   	 //设置请求需要的一些参数
   	 params['rowId']='id';
-  	 params['showAttributes']='name,parameterDescribe,actualValue,unit';//要获取的属性名
+  	 params['showAttributes']='name,parameterDescribe,actualValue,unit,serialNo';//要获取的属性名
   	 params['page']=page;
   	 params['size']=rowNum;
   	 params['sort']=sort;
@@ -88,7 +95,7 @@ $(document).ready(function() {
 	   			paging.first=true
 	   		}
 	   		//判断是否最后一页
-	   		if(page==lastPage){
+	   		if(page==lastPage-1){
 	   			paging.last=false
 	   		}else{
 	   			paging.last=true

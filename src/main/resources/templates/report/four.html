@@ -10,16 +10,21 @@
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
+	<link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie.css"/>
+    <link rel="stylesheet" href="/webResources/plugins/selectJquery/css/selectordie_theme_03.css"/>
 	
     <style>
 	    .five-div{
-	        border-radius: 20px;background: #FFFFFF;width: 90%;height: 15%;margin-top: 3%;
+        border-radius: 20px;background: #FFFFFF;width: 90%;height: 15%;margin-top: 3%;
 	    }
 	    .half-div{
 	        text-align: center;font-size: 16px;
 	    }
 	    .half-width-div{
 	        text-align: center;
+	    }
+	    .sod_label{
+	        margin-top: -1.5%;
 	    }
        .ui-jqgrid-htable{
             height: 50px;font-size: 14px;color: #80909c;font-weight: 500;
@@ -93,7 +98,8 @@
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/pageJquery/js/zxf_page.js" ></script>
 	<script type="text/javascript" src="/webResources/js/custom/page/createPage.js"></script>
-	<script type="text/javascript" src="/webResources/js/custom/report/detail-one.js"></script>
+	<script type="text/javascript" src="/webResources/plugins/selectJquery/js/selectordie.min.js"></script>
+	<script type="text/javascript" src="/webResources/js/custom/report/detail-four.js"></script>
 	
 </head>
 
@@ -112,83 +118,63 @@
 		    </a>
 		</div>
 		<div class="companyMgr-page" style="padding: 1.5%;padding-bottom: 1%;background: #FFFFFF">
-		    <div style="width: 100%;height: 100%;background:#ECF0F5">
-		        <div class="half-div">
-		            <div class="half-width-div" id="charts" style="width: 75%;float: left">
-		            </div>
-		            <div class="half-width-div" style="width: 25%;float: left;padding-right: 0%">
-		                <div class="five-div">
-		                    <div class="half-div" style="color: #00ABF7">
-		                        直流输电换流阀水冷设备
-		                    </div>
-		                    <div class="half-div">
-		                        <div class="half-width-div">
-		                            产品健康度：
-		                        </div>
-		                        <div class="half-width-div">
-		                            65%
-		                        </div>
-		                    </div>
+		    <div style="width: 100%;height: 100%;">
+		        <div style="height: 4%;width: 100%">
+		            <div class="company-select" style="width: 100%;height: 100%">
+		                <div class="company-select-title" style="width: 5%;color: #0a0a0a">
+		                    筛选：
 		                </div>
-		                <div class="five-div">
-		                    <div class="half-div" style="color: #00ABF7">
-		                        柔性交流输配电晶闸管阀纯水冷却设备
-		                    </div>
-		                    <div class="half-div">
-		                        <div class="half-width-div">
-		                            健康指数：
-		                        </div>
-		                        <div class="half-width-div">
-		                            65%
-		                        </div>
-		                    </div>
+		                <div class="time-select1">
+		                    时间
 		                </div>
-		                <div class="five-div">
-		                    <div class="half-div" style="color: #00ABF7">
-		                        新能源发电变流器纯水冷却设备
-		                    </div>
-		                    <div class="half-div">
-		                        <div class="half-width-div">
-		                            健康指数：
-		                        </div>
-		                        <div class="half-width-div">
-		                            65%
-		                        </div>
-		                    </div>
+		                <div class="time-select">
+		                    <input class="form-control " id="indate" size="10" placeholder="开始时间" value=""/>
 		                </div>
-		                <div class="five-div">
-		                    <div class="half-div" style="color: #00ABF7">
-		                        大功率电气传动变频器纯水冷却设备
-		                    </div>
-		                    <div class="half-div">
-		                        <div class="half-width-div">
-		                            健康指数：
-		                        </div>
-		                        <div class="half-width-div">
-		                            65%
-		                        </div>
-		                    </div>
+		                <div class="time-select2">
+		                    至
 		                </div>
-		                <div class="five-div">
-		                    <div class="half-div" style="color: #00ABF7">
-		                        蓄冷设备
-		                    </div>
-		                    <div class="half-div">
-		                        <div class="half-width-div">
-		                            健康指数：
-		                        </div>
-		                        <div class="half-width-div">
-		                            65%
-		                        </div>
-		                    </div>
+		                <div class="time-select">
+		                    <input class="form-control " id="indate1" size="10" placeholder="结束时间" value=""/>
+		                </div>
+		                <div class="time-select1">
+		                    种类
+		                </div>
+		                <div class="select" style="float: left;width: 12%;margin-left:0%">
+		                    <select class="myselect">
+		                        <option value="111">全部 </option>
+		                        <option value="111">已过保 </option>
+		                        <option value="222">保修期</option>
+		                        <option value="333">未确认 </option>
+		                    </select>
+		                </div>
+		                <div class="time-select1" style="height:110%;padding-top: 0px;width: 3.5%;margin-left: 1.5%">
+		                    <button class="company-button-new" style="background:#B6B6BA;font-size:14px;height: 100%;margin-top: 0%">
+		                        清除
+		                    </button>
+		                </div>
+		                <div class="time-select1" style="height:110%;padding-top: 0px;width: 3.5%;margin-left: 1.5%">
+		                    <button class="company-button-new" style="font-size:14px;height: 100%;margin-top: 0%">
+		                        确认
+		                    </button>
 		                </div>
 		
 		            </div>
 		        </div>
-		        <div class="data-table" style="padding-left: 2%;padding-right: 2%">
-					<div><table id="deviceTable"></table></div>
-					<div id="devicePager"></div>
-		    	</div>
+		        <div class="half-div" style="height: 46%">
+		            <div class="half-width-div" id="charts" style="width: 50%;float: left">
+		
+		            </div>
+		            <div class="half-width-div" id="charts2" style="width: 50%;float: left">
+		
+		            </div>
+		
+		        </div>
+		        <div class="half-div" style="padding-left: 2%;padding-right: 2%">
+		            <div class="data-table" style="padding-left: 2%;padding-right: 2%">
+						<div><table id="deviceTable"></table></div>
+						<div id="devicePager"></div>
+			    	</div>
+		        </div>
 		    </div>
 		
 		</div>

@@ -147,7 +147,7 @@ public class DateFormatUtil {
 	 * @return 相差天数
 	 */
 	public static int daysBetween(Date smdate, Date bdate) {
-		long between_days = (smdate.getTime() - bdate.getTime()) / (1000 * 3600 * 24);
+		long between_days = (bdate.getTime() - smdate.getTime()) / (1000 * 3600 * 24);
 		return ((Number)between_days).intValue();
 	}
 

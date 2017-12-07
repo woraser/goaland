@@ -62,9 +62,10 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 工程师上门维修
 	 * 
 	 * @param taskId
+	 * @param multipartFiles 
 	 * @throws Exception
 	 */
-	void repair(String taskId, CustomerServiceProcess process) throws Exception;
+	void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception;
 
 	/***
 	 * 委托
@@ -121,7 +122,14 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @return
 	 */
 	Page<CustomerServiceProcess> findbyContent(String searchContent, Pageable pageable);
-	
-	
 
+	/***
+	 * 获取每日工单发起数量
+	 * @param predicate 
+	 * 
+	 * @param pageable
+	 * @return
+	 */
+	JSONArray getDailyStartedProcess(Predicate predicate, Pageable pageable);
+	
 }

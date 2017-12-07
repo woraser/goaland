@@ -14,6 +14,7 @@ function preload() {
 	game.stage.backgroundColor = '#4D4948';
 }
 var platforms;
+var button;
 var scoreText11;
 var scoreText22;
 var scoreText33;
@@ -26,7 +27,7 @@ function create() {
 	// A simple background for our game
 	game.add.sprite(80, 160, 'sky');
 
-	game.add.sprite(730, 600, 'button');
+	button = game.add.button(730, 600, 'button', actionOnClick, this, 2, 1, 0);
 
 	// The platforms group contains the ground and the 2 ledges we can jump on
 	platforms = game.add.group();
@@ -119,30 +120,28 @@ function create() {
 
 	// Now let's create two ledges控制位置
 	var bb = platforms.create(150, 100, 'ground');
-	bb.body.immovable = true;
 	var aa = platforms.create(350, 50, 'ground');
-	aa.body.immovable = true;
 	var cc = platforms.create(500, 120, 'ground');
-	cc.body.immovable = true;
 	var cc = platforms.create(550, 220, 'ground');
-	cc.body.immovable = true;
 	var dd = platforms.create(680, 320, 'ground');
-	dd.body.immovable = true;
 
 }
 
 function update() {
-	
+	game.input.onDown.addOnce(updateText, this);
 }
 
-function play() {
-	setInterval(function () {
-		scoreText11.text = Math.round(Math.random()*1000)+"  kw.h"
-		scoreText22.text = Math.round(Math.random()*1000)+"  kw.h"
-		scoreText33.text = Math.round(Math.random()*1000)+"  kw.h"
-		scoreText44.text = Math.round(Math.random()*1000)+"  kw.h"
-		scoreText55.text = Math.round(Math.random()*1000)+"  kw.h"
-		scoreText66.text = Math.round(Math.random()*1000)+"  kw.h"
-	}, 2000);
+function updateText() {
+	console.info("updateText")
+	scoreText11.text = Math.round(Math.random() * 1000) + "  kw.h"
+	scoreText22.text = Math.round(Math.random() * 1000) + "  kw.h"
+	scoreText33.text = Math.round(Math.random() * 1000) + "  kw.h"
+	scoreText44.text = Math.round(Math.random() * 1000) + "  kw.h"
+	scoreText55.text = Math.round(Math.random() * 1000) + "  kw.h"
+	scoreText66.text = Math.round(Math.random() * 1000) + "  kw.h"
+}
+
+function actionOnClick () {
+    window.location.href = "/device/allData/"+ $("#deviceSN").val() +"/view"
 }
 

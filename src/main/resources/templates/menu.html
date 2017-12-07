@@ -34,24 +34,14 @@
 						<li shiro:hasPermission="customServiceProcessAllProcesses:view"><a th:href="@{/customerServiceProcess/allProcesses/view(menuId=customServiceProcessAllProcesses)}"><span class="sub-menu-text" th:text="#{customServiceProcessAllProcesses}">任务总览</span></a></li>
 					</ul>
 				</li>
-				<li shiro:hasPermission="documentMgr:view">
-					<a style="padding-top: 20px;" href="/technologyDocument/manage/view"><img style="margin-top: -7px;" src="/webResources/img/menu/资料管理.png"/>
-						<span class="menu-text" style="margin-left:10px;" th:text="#{documentMgr}" >资料管理</span>
-					</a>
-				</li>
 				<li shiro:hasPermission="deviceManagement:view">
 					<a style="padding-top: 20px;" href="/device/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/设备管理.png"/>
 						<span class="menu-text" style="margin-left:10px;" th:text="#{deviceManagement}" >设备管理</span>
 					</a>
 				</li>
-				<li shiro:hasPermission="iotxManagement:view">
-					<a style="padding-top: 20px;" href="/iotx/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/iotx.png"/>
-						<span class="menu-text" style="margin-left:10px;" th:text="#{iotxMgr}" >iotx管理</span>
-					</a>
-				</li>
-				<li shiro:hasPermission="sensorManagement:view">
-					<a style="padding-top: 20px;" href="/sensor/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/传感器.png"/>
-						<span class="menu-text" style="margin-left:10px;" th:text="#{sensorMgr}" >传感器管理</span>
+				<li shiro:hasPermission="documentMgr:view">
+					<a style="padding-top: 20px;" href="/technologyDocument/manage/view"><img style="margin-top: -7px;" src="/webResources/img/menu/资料管理.png"/>
+						<span class="menu-text" style="margin-left:10px;" th:text="#{documentMgr}" >资料管理</span>
 					</a>
 				</li>
 				<li shiro:hasPermission="report:view">
@@ -62,6 +52,16 @@
 				<li shiro:hasPermission="report:view">
 					<a style="padding-top: 20px;" href="/advertisement/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/advertisement.png"/>
 						<span class="menu-text" style="margin-left:10px;" th:text="#{advertisement.management}" >广告管理</span>
+					</a>
+				</li>
+				<li shiro:hasPermission="iotxManagement:view">
+					<a style="padding-top: 20px;" href="/iotx/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/iotx.png"/>
+						<span class="menu-text" style="margin-left:10px;" th:text="#{iotxMgr}" >iotx管理</span>
+					</a>
+				</li>
+				<li shiro:hasPermission="sensorManagement:view">
+					<a style="padding-top: 20px;" href="/sensor/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/传感器.png"/>
+						<span class="menu-text" style="margin-left:10px;" th:text="#{sensorMgr}" >传感器管理</span>
 					</a>
 				</li>
 			</ul>

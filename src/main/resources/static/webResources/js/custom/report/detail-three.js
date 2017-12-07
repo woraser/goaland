@@ -7,8 +7,9 @@ $(document).ready(function(){
     myGrid.jqGrid({
         height: '100%',
         datatype: "local",
-        colNames:['项目名称','项目编号', '产品名称', '产品编号','产品规格', '投运时间', '生产厂家','联系地址', 'RFID编码', '操作'],
+        colNames:['工单编号','项目名称','项目编号', '产品名称', '产品编号','产品规格',  '生产厂家','联系地址','完成时间', '操作'],
         colModel:[
+            {name:'snNo', index:'assetCoding', width:'60', sortable: true, search: true,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
             {name:'assetCoding', index:'assetCoding', width:'60', sortable: true, search: true,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
             {name:'devFactory', index:'devFactory', width:'60', sortable: true, search: true,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
             {name:'devType', index:'devType', width:'120', sortable: true, search: true,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
@@ -17,10 +18,9 @@ $(document).ready(function(){
             {name:'baseStation', index:'baseStation', width:'160', sortable: true, search: true,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
             {name:'serialNo', index:'serialNo', width:'160', sortable: true, searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
             {name:'networkCategory', index:'networkCategory', width:'80', sortable: true, searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
-            {name:'quantity', index:'quantity', width:'60', sortable: true, search: true,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'},
             {name:'remark', index:'remark', width:'200', sortable: true, search: false,searchoptions: {sopt: ['cn', 'eq'], required: true }, align: 'center'}
         ],
-        multiselect: true,
+        multiselect: false,
         multiboxonly: true,
         multiselectWidth: 30,
         pager: myPager,
@@ -44,7 +44,7 @@ $(document).ready(function(){
         {multipleSearch: false, multipleGroup: false, showQuery: false});// search options
 
     mydata = [
-        {assetCoding: "荣信墨西哥BrovaBia钢厂电炉SVCLWW168水冷系统 ",devFactory: "密封式循环纯水冷却装置", devType: "12112458", devModel: "200124785", devProfession: "2017/05/31", baseStation: "广州高澜节能股份有限公司", serialNo: "广州市高新技术产业开发区科学城南云五路3号 ", networkCategory: "201710202-0001", quantity: "201710202-0001", remark: ""},
+        {snNo:"",assetCoding: "荣信墨西哥BrovaBia钢厂电炉SVCLWW168水冷系统 ",devFactory: "密封式循环纯水冷却装置", devType: "12112458", devModel: "200124785", devProfession: "2017/05/31", baseStation: "广州高澜节能股份有限公司", serialNo: "广州市高新技术产业开发区科学城南云五路3号 ", networkCategory: "201710202-0001", quantity: "201710202-0001", remark: ""},
         {assetCoding: "荣信墨西哥BrovaBia钢厂电炉SVCLWW168水冷系统 ",devFactory: "密封式循环纯水冷却装置", devType: "12112458", devModel: "200124785", devProfession: "2017/05/31", baseStation: "广州高澜节能股份有限公司", serialNo: "广州市高新技术产业开发区科学城南云五路3号 ", networkCategory: "201710202-0001", quantity: "201710202-0001", remark: ""},
         {assetCoding: "荣信墨西哥BrovaBia钢厂电炉SVCLWW168水冷系统 ",devFactory: "密封式循环纯水冷却装置", devType: "12112458", devModel: "200124785", devProfession: "2017/05/31", baseStation: "广州高澜节能股份有限公司", serialNo: "广州市高新技术产业开发区科学城南云五路3号 ", networkCategory: "201710202-0001", quantity: "201710202-0001", remark: ""},
         {assetCoding: "荣信墨西哥BrovaBia钢厂电炉SVCLWW168水冷系统 ",devFactory: "密封式循环纯水冷却装置", devType: "12112458", devModel: "200124785", devProfession: "2017/05/31", baseStation: "广州高澜节能股份有限公司", serialNo: "广州市高新技术产业开发区科学城南云五路3号 ", networkCategory: "201710202-0001", quantity: "201710202-0001", remark: ""},
@@ -56,21 +56,29 @@ $(document).ready(function(){
     }
     myGrid.setGridParam({total: "2"}).trigger("reloadGrid");
     
-    function loadyys1() {
+    function loadyys3() {
         //第二个参数可以指定前面引入的主题
         var myChart = echarts.init(document.getElementById('charts'));
         //图表显示提示信息
         myChart.showLoading();
+        // Generate data
+        var aaa = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+
+        var lineData = ['100','300','200','300','200','300','200','300','200','300','200','250'];
+        var barData = ['50','50','30','50','30','50','30','50','30','50','30','60'];
+        // option
         option = {
+            backgroundColor:'#FFFFFF',
             title: {
                 left:'center',
                 top:'20',
-                text: '设备数量统计',
+                text: '工单数量统计',
                 subtext: '数据更新时间2017-10-24',
                 textStyle: {
                     align: 'right',
                 },
             },
+
             toolbox: {
                 show: true,
                 top:'50',
@@ -84,27 +92,43 @@ $(document).ready(function(){
                     saveAsImage: {}
                 }
             },
+            grid: {
+                top:'30%',
+                left: '3%',
+                right: '5%',
+                bottom: '10%',
+                containLabel: true
+            },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
-                    type: 'shadow'
+                    type: 'shadow',
+                    label: {
+                        show: true,
+                        backgroundColor: '#333'
+                    }
                 }
             },
+            legend: {
 
-            grid: {
-
+                data: ['未完成', '已完成'],
+                top:'20%',
+                left:'70%',
+                textStyle: {
+                }
             },
             xAxis: {
+                data: aaa,
+
                 axisLine:{
                     lineStyle:{
                         type:'dashed',
-                        /*color:'#BFBFBF',*/
+                        color:'#BFBFBF',
                         width:0,   //这里是坐标轴的宽度,可以去掉
                     }
                 },
-                type: 'value',
-                boundaryGap: [0, 0.01],
-                splitNumber: 10,
+            },
+            yAxis: {
                 splitLine: {
                     show: true,
                     lineStyle: {
@@ -112,76 +136,55 @@ $(document).ready(function(){
                         type:'dashed',
                     }
                 },
-            },
-            yAxis: {
                 axisLine:{
                     lineStyle:{
                         type:'dashed',
-                        /*color:'#BFBFBF',*/
+                        color:'#BFBFBF',
                         width:0,   //这里是坐标轴的宽度,可以去掉
                     }
                 },
-                type: 'category',
-                data: ['直流输电换流阀水冷设备','柔性交流输配电晶闸管阀纯水冷却设备','新能源发电变流器纯水冷却设备','大功率电气传动变频器纯水冷却设备','蓄冷设备'],
-                axisLabel:{
-                    interval: 0,//标签设置为全部显示
-                    formatter:function(params){
-                        var newParamsName = "";// 最终拼接成的字符串
-                        var paramsNameNumber = params.length;// 实际标签的个数
-                        var provideNumber = 7;// 每行能显示的字的个数
-                        var rowNumber = Math.ceil(paramsNameNumber / provideNumber);// 换行的话，需要显示几行，向上取整
-
-                        // 条件等同于rowNumber>1
-                        if (paramsNameNumber > provideNumber) {
-
-                            for (var p = 0; p < rowNumber; p++) {
-                                var tempStr = "";// 表示每一次截取的字符串
-                                var start = p * provideNumber;// 开始截取的位置
-                                var end = start + provideNumber;// 结束截取的位置
-                                // 此处特殊处理最后一行的索引值
-                                if (p == rowNumber - 1) {
-                                    // 最后一次不换行
-                                    tempStr = params.substring(start, paramsNameNumber);
-                                } else {
-                                    // 每一次拼接字符串并换行
-                                    tempStr = params.substring(start, end) + "\n";
-                                }
-                                newParamsName += tempStr;// 最终拼成的字符串
-                            }
-
-                        } else {
-                            // 将旧标签的值赋给新标签
-                            newParamsName = params;
-                        }
-                        //将最终的字符串返回
-                        return newParamsName
-                    }
-
-                }
             },
-            series: [
-
-                {
-
-                    type: 'bar',
-                    barWidth : 20,//柱图宽度
-                    data: [18203, 23489, 29034, 104970, 131744],
-                    itemStyle:{
-
-                        normal:{
-                            color:'#00ABF7',
-                            barBorderRadius: 20
-                        }
-                    },
+            series: [{
+                name: '已完成',
+                type: 'bar',
+                barWidth:'20',
+                itemStyle: {
+                    normal: {
+                        color:'#00ABF7',
+                    }
                 },
-
-
-            ]
+                data: barData
+            }, {
+                name: '未完成',
+                type: 'bar',
+                barWidth:'20',
+                barGap: '-100%',
+                z: -10,
+                itemStyle: {
+                    normal: {
+                        //柱形图圆角，初始化效果
+                        color:'#FC8060',
+                        barBorderRadius:[2, 2, 2, 2],
+                        label: {
+                            show: false,//是否展示
+                            textStyle: {
+                                fontWeight:'bolder',
+                                fontSize : '12',
+                                fontFamily : '微软雅黑',
+                            }
+                        }
+                    }
+                },
+                data: lineData
+            }]
         };
         myChart.hideLoading();
         myChart.setOption(option, true);
     }
+
+    loadyys3()
     
-    loadyys1();
-    
+    $('select').selectOrDie({
+
+    });
 })

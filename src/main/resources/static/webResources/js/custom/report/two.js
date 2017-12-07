@@ -15,7 +15,7 @@ $(document).ready(function(){
 	function getDynamicData(){
 		$.ajax({
 			type:"get",
-			url:'/RepairedDeviceDailyPer/report/data/',
+			url:'/repairedDeviceDailyPer/report/data/',
 			async:true,
 			success:function(data){
 				// 填入数据

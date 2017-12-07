@@ -93,6 +93,7 @@ public class TechnologyDocumentServiceImpl extends BaseElasticSearchServiceImpl<
 		td.setUploaderName(fileMetaData.getUploaderName());
 		td.setUploadTime(fileMetaData.getUploadTime());
 		td.setIdentification(fileMetaData.getIdentification());
+		td.setFileSize(fileSize);
 		accountService.getOne(sessionComponent.getCurrentUser().getId()).setUploadDocument(true);
 		return td;
 	}

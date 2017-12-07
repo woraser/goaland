@@ -11,6 +11,8 @@ import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
+import com.anosi.asset.util.FormatUtil;
+
 @Document(indexName = "goaland", type = "technologyDocument", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
 @Setting(settingPath = "elasticsearch-analyser.json")
 public class TechnologyDocument extends BaseElasticSearchModel implements Serializable {
@@ -49,6 +51,9 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 	
 	@Field(type = FieldType.String, index = FieldIndex.not_analyzed, store = true)
 	private String identification;
+	
+	@Field(type = FieldType.Long, index = FieldIndex.not_analyzed, store = true)
+	private Long fileSize;
 
 	private String highLightContent;
 
@@ -176,6 +181,23 @@ public class TechnologyDocument extends BaseElasticSearchModel implements Serial
 
 	public void setUploaderName(String uploaderName) {
 		this.uploaderName = uploaderName;
+	}
+
+	public Long getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(Long fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	/***
+	 * 返回文件大小 -h
+	 * 
+	 * @return
+	 */
+	public String getFileSizeH() {
+		return FormatUtil.getFileSizeH(fileSize);
 	}
 	
 }

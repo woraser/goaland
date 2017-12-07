@@ -34,5 +34,15 @@ public class FormatUtil {
 			return String.valueOf((fileSize / 100)) + "." + String.valueOf((fileSize % 100)) + "GB";
 		}
 	}
-	
+
+	/***
+	 * 百分比转换为小数
+	 * 
+	 * @param percent
+	 * @return
+	 */
+	public static double convertPerCent2Double(String percent) {
+		return Double.parseDouble(percent.replace("%", "")) / 100;
+	}
+
 }

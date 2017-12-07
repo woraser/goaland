@@ -121,7 +121,7 @@ $(document).ready(function() {
 	   			paging.first=true
 	   		}
 	   		//判断是否最后一页
-	   		if(page==lastPage){
+	   		if(page==lastPage-1){
 	   			paging.last=false
 	   		}else{
 	   			paging.last=true

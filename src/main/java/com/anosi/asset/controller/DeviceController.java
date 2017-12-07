@@ -339,5 +339,17 @@ public class DeviceController extends BaseController<Device> {
 				.addObject("uploaders", accountService.findByIsUploadDocument(true))
 				.addObject("device", deviceService.getOne(deviceId)).addObject("isDevice", true);
 	}
+	
+	/***
+	 * 进入查看设备所有数据的页面
+	 * 
+	 * @param deviceId
+	 * @return
+	 */
+	@RequestMapping(value = "/device/allData/{deviceSN}/view", method = RequestMethod.GET)
+	public ModelAndView toViewAllData(@PathVariable String deviceSN) {
+		logger.debug("device all datas");
+		return new ModelAndView("device/allData").addObject("deviceSN", deviceSN);
+	}
 
 }

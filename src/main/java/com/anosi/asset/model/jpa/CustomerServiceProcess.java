@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -333,6 +334,7 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.estimatedTime = estimatedTime;
 		}
 
+		@Type(type="text")
 		public String getBaseDemands() {
 			return baseDemands;
 		}
@@ -341,6 +343,7 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.baseDemands = baseDemands;
 		}
 
+		@Type(type="text")
 		public String getSpecialDemands() {
 			return specialDemands;
 		}
@@ -390,6 +393,7 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.reject = reject;
 		}
 
+		@Type(type="text")
 		public String getSuggestion() {
 			return suggestion;
 		}
@@ -461,10 +465,11 @@ public class CustomerServiceProcess extends BaseProcess {
 	@Embeddable
 	public static class EvaluatingDetail {
 
-		private String breakdownDevice;// 故障设备
+		private String breakdownDevice;// 故障评估
 
 		private String servicer;// 服务组人员
 
+		@Type(type="text")
 		public String getBreakdownDevice() {
 			return breakdownDevice;
 		}
@@ -523,6 +528,7 @@ public class CustomerServiceProcess extends BaseProcess {
 
 		private String processMode;// 处理方式
 
+		@Type(type="text")
 		public String getProblemDescription() {
 			return problemDescription;
 		}
@@ -531,6 +537,7 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.problemDescription = problemDescription;
 		}
 
+		@Type(type="text")
 		public String getFailureCause() {
 			return failureCause;
 		}
@@ -539,6 +546,7 @@ public class CustomerServiceProcess extends BaseProcess {
 			this.failureCause = failureCause;
 		}
 
+		@Type(type="text")
 		public String getProcessMode() {
 			return processMode;
 		}

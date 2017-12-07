@@ -31,6 +31,9 @@ $(document).ready(function() {
 			reason : {
 				required : true,
 			},
+			fileUpLoad : {
+				required : true,
+			},
 		},
 		submitHandler: function(form) {  
 			var url;
@@ -155,5 +158,13 @@ $(document).ready(function() {
             }
           })
     }); 
+	 
+	 $("#fileUpLoad").fileinput({
+		language: 'zh', //设置语言
+		maxFileCount: 10,
+		showUpload: false, //是否显示上传按钮
+		maxFileSize : 50000,
+		allowedFileExtensions: ["jpg","jpeg","png"]
+	});
 	
 })

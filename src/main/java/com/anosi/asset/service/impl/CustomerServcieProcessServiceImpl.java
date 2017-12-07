@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +45,12 @@ import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.FileMetaDataService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.google.common.collect.ImmutableMap;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Service("customerServcieProcessService")
 public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<CustomerServiceProcess>
@@ -187,7 +193,13 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	}
 
 	@Override
-	public void repair(String taskId, CustomerServiceProcess process) throws Exception {
+	public void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception {
+		if (multipartFiles != null && multipartFiles.length != 0) {
+			for (MultipartFile multipartFile : multipartFiles) {
+				this.fileMetaDataService.saveFile("customerService_repair_" + process.getName(),
+						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
+			}
+		}
 		repairActual(taskId, process);
 		asyncDocument.insertIntoDocument(process);
 	}
@@ -379,6 +391,31 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 					((Number) sb.length()).longValue(), TypeValue.BREAKDOWNDOCUMENT.toString(),
 					TypeValue.BREAKDOWNDOCUMENT.toString());
 		}
+	}
+
+	@Override
+	public JSONArray getDailyStartedProcess(Predicate predicate, Pageable pageable) {
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		QCustomerServiceProcess qc = QCustomerServiceProcess.customerServiceProcess;
+		// 调用mysql的DATE_FORMAT函数
+		StringTemplate datePath = Expressions.stringTemplate("DATE_FORMAT({0},'{1s}')", qc.createDate,
+				ConstantImpl.create("%Y-%m-%d"));
+		
+		List<Tuple> processTuples = queryFactory.select(qc.count(), datePath).from(qc).where(predicate)
+				.groupBy(datePath).orderBy(datePath.desc()).limit(pageable.getPageSize()).offset(pageable.getOffset())
+				.fetch();// 按照时间倒序排列
+		// 由于查询结果是越新的数据越靠前，所以需要再一次倒序
+		Collections.reverse(processTuples);
+		
+		JSONArray jsonArray = new JSONArray();
+		for (Tuple tuple : processTuples) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("count", tuple.get(0, Long.class));
+			jsonObject.put("date", tuple.get(1, String.class));
+			jsonArray.add(jsonObject);
+		}
+		
+		return jsonArray;
 	}
 
 }

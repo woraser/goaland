@@ -173,7 +173,7 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 				IOUtils.copy(bis, bos);
 			}
 		};
-		return fileResponse(objectId, response, doResponseOut);
+		return fileResponse(objectId, fileMetaDataService.findByObjectId(objectId), response, doResponseOut);
 	}
 
 	/***
@@ -186,14 +186,21 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 */
 	@RequestMapping(value = "/filePreview/{objectId}", method = RequestMethod.GET)
 	public JSONObject filePreview(@PathVariable BigInteger objectId, HttpServletResponse response) throws Exception {
+		FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
+		BigInteger preview = fileMetaData.getPreview();
+		FileMetaData previewMetaData = null;
+		if (preview != null) {
+			previewMetaData = fileMetaDataService.findByObjectId(preview);
+		}
+		// 实现接口
 		DoResponseOut doResponseOut = (is, os) -> {
-			FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
-			BigInteger preview = fileMetaData.getPreview();
+			String fileName = "";
 			if (preview != null) {
-				fileMetaData = fileMetaDataService.findByObjectId(preview);
 				is = fileMetaDataService.getFileByObjectId(preview);
+				fileName = fileMetaDataService.findByObjectId(preview).getFileName();
+			} else {
+				fileName = fileMetaData.getFileName();
 			}
-			String fileName = fileMetaData.getFileName();
 			try {
 				FileConvertUtil.convert(is,
 						Suffix.valueOf(fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase()), os,
@@ -204,7 +211,9 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 								fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()));
 			}
 		};
-		return fileResponse(objectId, response, doResponseOut);
+
+		return fileResponse(objectId, previewMetaData == null ? fileMetaData : previewMetaData, response,
+				doResponseOut);
 	}
 
 	/***
@@ -224,16 +233,15 @@ public class FileUpDownLoadController extends BaseController<FileMetaData> {
 	 * 文件流返回给浏览器
 	 * 
 	 * @param objectId
+	 * @param fileMetaData
 	 * @param response
 	 * @param doResponseOut
 	 *            对response.outPutStream的具体操作
 	 * @return
 	 * @throws Exception
 	 */
-	private JSONObject fileResponse(BigInteger objectId, HttpServletResponse response, DoResponseOut doResponseOut)
-			throws Exception {
-		FileMetaData fileMetaData = fileMetaDataService.findByObjectId(objectId);
-
+	private JSONObject fileResponse(BigInteger objectId, FileMetaData fileMetaData, HttpServletResponse response,
+			DoResponseOut doResponseOut) throws Exception {
 		JSONObject jsonObject = new JSONObject();
 
 		if (fileMetaData != null) {

@@ -247,9 +247,10 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/repair", method = RequestMethod.POST)
 	public JSONObject repair(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process) throws Exception {
+			@ModelAttribute("process") CustomerServiceProcess process,
+			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) throws Exception {
 		logger.debug("customerServiceProcess -> repair");
-		customerServcieProcessService.repair(taskId, process);
+		customerServcieProcessService.repair(taskId, process, multipartFiles);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -296,6 +297,20 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	@RequestMapping(value = "/task/distribute", method = RequestMethod.GET)
 	public JSONArray getTaskDistribute() throws Exception {
 		return customerServcieProcessService.getTaskDistribute();
+	}
+
+	/***
+	 * 获取每日工单发起数量
+	 * 
+	 * @param pageable
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/process/started/daily", method = RequestMethod.GET)
+	public JSONArray getTaskDistribute(@QuerydslPredicate(root = CustomerServiceProcess.class) Predicate predicate,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 6) Pageable pageable)
+			throws Exception {
+		return customerServcieProcessService.getDailyStartedProcess(predicate, pageable);
 	}
 
 	/***

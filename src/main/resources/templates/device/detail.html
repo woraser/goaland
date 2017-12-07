@@ -10,6 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/jqgrid/css/ui.jqgrid.css" />
 	<link rel="stylesheet" type="text/css" href="/webResources/plugins/pageJquery/css/zxf_page.css"/>
+	<link href="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
 	
 	<style>
         .ui-jqgrid-htable{
@@ -130,6 +131,7 @@
         }
     </style>
 	
+	<script type="text/javascript" src="/webResources/plugins/jquery-UI/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/echarts/echarts.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/js/jquery.jqGrid.min.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/jqgrid/src/i18n/grid.locale-cn.js"></script>
@@ -140,7 +142,6 @@
 	<script type="text/javascript" src="/webResources/js/custom/device/technicalParameter.js"></script>
 	<script type="text/javascript" src="/webResources/plugins/phaser/phaser.min.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/topology.js"></script>
-	<script type="text/javascript" src="/webResources/js/custom/device/sensorData.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/deviceAlarm.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/deviceHealth.js"></script>
 	<script type="text/javascript" src="/webResources/js/custom/device/materiel.js"></script>
@@ -317,12 +318,12 @@
 		                    </button>
 		                </div>
 		                <div class="company-search" style="float: left;margin-left:1%;margin-top: -1%;margin-right: 2%">
-		                        <div class="input-group input-medium">
-		                            <input v-model="searchContent" class="form-control" th:placeholder="#{searchContent}" type="text" style="height: 31px"/>
-		                            <span class="input-group-btn">
-				                        <button id="searchMateriel" class="btn btn-success" style="background: #FC8060;border: 0px"><i class="fa fa-search"></i></button>
-				                    </span>
-		                        </div>
+	                        <div class="input-group input-medium">
+	                            <input v-model="searchContent" class="form-control" th:placeholder="#{searchContent}" type="text" style="height: 31px"/>
+	                            <span class="input-group-btn">
+			                        <button id="searchMateriel" class="btn btn-success" style="background: #FC8060;border: 0px"><i class="fa fa-search"></i></button>
+			                    </span>
+	                        </div>
 		                </div>
 		            </div>
 		            <table id="materielTable"></table>
@@ -341,10 +342,10 @@
 	        </div>
 	        
 	        <!-- 线图 -->
-	        <div class="jumbotron col-lg-12"  style="margin-top: 0px;">
+	        <!-- <div class="jumbotron col-lg-12"  style="margin-top: 0px;">
 	            <div class="col-lg-12" id="charts" style="height: 345px;border: solid #E1E3E8 1px;">
 	            </div>
-	        </div>
+	        </div> -->
 	    </div>
 	</div>
 </body>

@@ -246,11 +246,11 @@
 		                </div>
 		            </div>
 		            <div class="detail-top-four-right" style="background: #68D8B8">
-		                <div th:text="#{iotx.continue.min}" style="width: 60%;height: 45%;color: #FFFFFF;font-size: 15px;font-weight: 900;padding-top: 7%;padding-left: 10%">
+		                <div th:text="#{iotx.continue.day}" style="width: 60%;height: 45%;color: #FFFFFF;font-size: 15px;font-weight: 900;padding-top: 7%;padding-left: 10%">
 		                    	总运行时间(min)
 		                </div>
 		                <div style="width: 60%;height: 55%;color: #FFFFFF;font-size: 20px;font-weight: 800;padding-left: 10%">
-		                    {{Math.round(detailData.continueTime/60000)}}
+		                    {{Math.round(detailData.continueTime/(1000*60*60*24))}}
 		                </div>
 		            </div>
 		        </div>

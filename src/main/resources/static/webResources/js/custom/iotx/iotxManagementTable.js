@@ -25,7 +25,7 @@ $(document).ready(function() {
 			                	var hrefUrl='/iotx/management/detail/'+options.rowId+"/view";
 		                        var detail;
 		                    	var detailImg = "<a href="+hrefUrl+"><img src='/webResources/img/operate/detail.png'/></a>"
-		                    	detail = editImg + detailImg
+		                    	detail = detailImg
 		                    	return detail;
 			                },
 			            },
@@ -94,24 +94,6 @@ $(document).ready(function() {
 		    	}
 		    	
 	     });
-		 
-		 //edit按钮被点击
-		 $("#edit").click(function(){
-			 selectRowId = myGrid.getGridParam('selarrrow');
-			 if(selectRowId!=null&&selectRowId!=""){
-				 var func=function(){
-					 if($("#iotxForm").valid()){
-						 $("#iotxForm").submit();
-						 return true;
-					 }else{
-						 return false;
-					 }
-				 };
-				 createModalPage("配置iotx节点","/iotx/update?id="+selectRowId,func); 
-			 }else{
-				 warning("配置时必须选择一行");
-			 }
-		 })
 		 
 		 //查询按钮点击事件
 		 $('#search').click(function(){

@@ -5,13 +5,15 @@
 	<!-- HEADER -->
 	<header th:fragment="top">
 		<input type="hidden" id="loginId" name="loginId" th:value="${session.loginId}"/> 
-		<div id="top" class="container"  style="background: #FFF" v-cloak="v-cloak">
+		<div id="top" class="container"  style="background: #4D4948" v-cloak="v-cloak">
 				<div class="navbar-brand" style="padding: 0%;">
 					<!-- COMPANY LOGO -->
 					<div class="logo-top" style="background: #4D4948;width:50%">
 						<a  href="/index">
 							<img src="/webResources/img/logo/logo-img2.png" style="width: 80px;height: 26px;top: 10px;left:65px"/>
 						</a>
+						<div style="margin-left: 300px;width: 500px;padding-top: 10px;color: #FFF" th:text="#{app.name}">
+						</div>
 					</div>
 					<!-- /COMPANY LOGO -->
 					<!-- TEAM STATUS FOR MOBILE -->
@@ -36,7 +38,7 @@
 					<!-- BEGIN INBOX DROPDOWN -->
 					<li  id="header-message">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-top: -6px">
-						<img src="/webResources/img/icon/message.jpg"/>
+						<img src="/webResources/img/icon/message.png"/>
 						<span class="badge">{{messages.records}}</span>
 						</a>
 						<ul class="dropdown-menu inbox">
@@ -56,7 +58,6 @@
 													<span>{{message.sendTime}}</span>
 												</span>
 											</span>
-											 
 										</a>
 									</li>
 								</span>
@@ -73,7 +74,7 @@
 							<img alt="" src="/webResources/img/icon/right-head.png" />
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="javascript:customPost('/logout',null)"><i class="fa fa-power-off"></i> Log Out</a></li>
+							<li><a href="javascript:customPost('/logout',null)"><i class="fa fa-power-off"></i><span th:text="#{logOut}"  style="margin-left:5%"></span></a></li>
 						</ul>
 					</li>
 					<!-- END USER LOGIN DROPDOWN -->

@@ -1,6 +1,9 @@
 div.zxf_pagediv{
 	text-align: center;
-	color: #999999;
+    color: #999999;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 div.zxf_pagediv a{
 	text-decoration: none;

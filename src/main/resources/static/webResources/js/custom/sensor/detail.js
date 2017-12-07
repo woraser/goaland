@@ -66,7 +66,7 @@ $(document).ready(function(){
 			},
 			async:true,
 			success:function(data){
-				if(data!=null){
+				if(data != null && data.content != null){
 					//设置当前读数
 					var size = data.content.length
 					detail.nowReading = data.content[size-1].val
@@ -103,8 +103,8 @@ $(document).ready(function(){
 		        text: ''
 		    },
 		    grid: {
-                left: '1%',
-                right: '28%',
+                left: '10%',
+                right: '10%',
                 top: '16%',
                 bottom: '6%',
                 containLabel: true
@@ -146,7 +146,7 @@ $(document).ready(function(){
 
 		getDynamicData();
 		
-	}, 3000);
+	}, 5000);
 	
 	$(".sensor-top-left-div").mouseover(function() {
         $(this).attr('class','sensor-top-left-overdiv');

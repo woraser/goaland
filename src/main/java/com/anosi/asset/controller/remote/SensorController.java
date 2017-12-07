@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.util.URLConncetUtil;
 
@@ -46,7 +47,7 @@ public class SensorController extends BaseRemoteController {
 	/***
 	 * 点进传感器查看详情的页面
 	 * 
-	 * @param sensorId
+	 * @param serialNo
 	 * @return
 	 */
 	@RequestMapping(value = "/sensor/management/detail/{serialNo}/view", method = RequestMethod.GET)
@@ -58,9 +59,7 @@ public class SensorController extends BaseRemoteController {
 	/***
 	 * 根据条件查询某个sensor
 	 * 
-	 * @param showType
-	 * @param predicate
-	 * @param showAttributes
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
@@ -70,6 +69,20 @@ public class SensorController extends BaseRemoteController {
 		String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath(request.getServletPath()),
 				request.getParameterMap(), remoteComponent.getHearders());
 		return JSON.parseObject(result);
+	}
+
+	/***
+	 * 获取autocomplete的source
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/sensor/autocomplete", method = RequestMethod.GET)
+	public JSONArray autocomplete(HttpServletRequest request) throws Exception {
+		String result = URLConncetUtil.sendGetString(remoteComponent.getFullPath(request.getServletPath()),
+				request.getParameterMap(), remoteComponent.getHearders());
+		return JSON.parseArray(result);
 	}
 
 }
