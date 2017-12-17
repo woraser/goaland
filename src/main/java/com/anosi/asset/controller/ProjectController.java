@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,13 +65,22 @@ public class ProjectController extends BaseController<Project> {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional
 	@RequestMapping(value = "/project/save/batch", method = RequestMethod.POST)
 	public JSONObject saveBatch(@ModelAttribute("projectVO") ProjectVO projectVO) throws Exception {
 		logger.debug("batch saveOrUpdate project");
-		List<Project> projects = projectVO.getProjects().parallelStream()
-				.map(project -> projectService.findByNumber(project.getNumber()) == null ? project
-						: projectService.findByNumber(project.getNumber()))
-				.collect(Collectors.toList());
+		List<Project> projects = projectVO.getProjects().parallelStream().map(project -> {
+			Project existProject = projectService.findByNumber(project.getNumber());
+			if (existProject == null) {
+				return project;
+			} else {
+				// 直接赋值id，因为project不被hibernate管理，可以统一save到数据库
+				// 如果为existProject赋值的话，那么会在查询的时候，因为hibernate的dirtyFlush而直接更新到数据库
+				// 这样每次查询都会发生一次更新，效率太低
+				project.setId(existProject.getId());
+				return project;
+			}
+		}).collect(Collectors.toList());
 		projectService.save(projects);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}

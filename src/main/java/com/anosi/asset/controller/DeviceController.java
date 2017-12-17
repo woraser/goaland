@@ -92,7 +92,7 @@ public class DeviceController extends BaseController<Device> {
 	 */
 	@RequestMapping(value = "/device/management/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findDeviceManageData(@PathVariable ShowType showType,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC, page = 0, size = 20) Pageable pageable,
 			@QuerydslPredicate(root = Device.class) Predicate predicate,
 			@RequestParam(value = "showAttributes", required = false) String showAttributes,
 			@RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId,

@@ -41,6 +41,17 @@
         .upLoader{float:left;width: 16%;height: 100%;;padding-top: 3%;font-size: 15px;padding-left: 1.2%}
         .upTime{float: left;width: 20%;height: 100%;font-size: 15px;padding-top: 3%;padding-left: 1%}
         .handle{float:left;width: 16%;height: 100%;padding-top: 3%;font-size: 15px;padding-left: 1.5%}
+        .text-ellipsis{
+        	overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+        }
+        .content-ellipsis{
+        	display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 3;
+			overflow: hidden;
+        }
     </style>
 	
 	<script type="text/javascript" src="/webResources/plugins/datetimepicker/bootstrap-datetimepicker.min.js" ></script>
@@ -95,12 +106,13 @@
                  <div v-if="seenDetail" v-for="fileData in fileDatas" style="width:100%;height: 53%;border-bottom: 1px solid #DADADA"> <!--文档列表 -->
                     <div class="half-div">
                     <div style="float:left;width: 9%;height: 100%;">
-                        <img v-if="pdf.indexOf(fileData.suffix) >= 0" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 65%;margin-top: 10%;margin-left: 10%"/>
                     	<img v-if="picture.indexOf(fileData.suffix) >= 0" v-bind:src="'/fileDownload/'+fileData.fileId" style="width: 65%;margin-top: 10%;margin-left: 10%"/>
+                    	<img v-else="v-else" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 65%;margin-top: 10%;margin-left: 10%"/>
                     </div>
                     <div class="knowledgeInfo" >
                         <div style="float: left;width: 100%;height: 50%;">
-                            <div v-html="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;padding-left: 5%;padding-top: 13%">
+                            <div v-bind:title="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;padding-left: 5%;padding-top: 13%">
+                            	<p v-html="fileData.highLightFileName" class="text-ellipsis"></p>
                             </div>
                         </div>
                     </div> <!--文档信息 -->
@@ -122,7 +134,8 @@
                     <div class="half-div" style="height:45%">
                         <div style="width: 10%;height: 100%;float: left">
                         </div>
-                        <div v-html="fileData.highLightContent" style="overflow:hidden;text-overflow:ellipsis;width: 82%;height: 100%;float: left">
+                        <div style="width: 82%;height: 100%;float: left">
+                        	<p class="content-ellipsis" v-html="fileData.highLightContent"></p>
                         </div>
                     </div>
                 </div>
@@ -130,16 +143,17 @@
               	  <!-- 不查询 -->
                   <div v-if="!seenDetail" v-for="fileData in fileDatas" style="width:100%;height: 30%;border-bottom: 1px solid #DADADA"> <!--文档列表 -->
                     <div style="float:left;width: 9%;height: 100%;">
-                        <img v-if="pdf.indexOf(fileData.suffix) >= 0" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
                     	<img v-if="picture.indexOf(fileData.suffix) >= 0" v-bind:src="'/fileDownload/'+fileData.fileId" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
+                    	<img v-else="v-else" v-bind:src="'/webResources/img/file/'+fileData.suffix+'.png'" style="width: 80%;height: 80%;margin-top: 10%;margin-left: 10%"/>
                     </div>
                     <div class="knowledgeInfo" >
                         <div style="float: left;width: 100%;height: 50%;">
-                            <div v-html="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;padding-left: 5%;padding-top: 13%">
+                            <div v-bind:title="fileData.highLightFileName" style="float:left;width: 100%;height: 50%;font-weight: 800;font-size: 15px;padding-left: 5%;padding-top: 13%;">
+                            	<p v-html="fileData.highLightFileName" class="text-ellipsis"></p>
                             </div>
                         </div>
                     </div> <!--文档信息 -->
-                    <div class="knowledgeDev" >
+                    <div class="knowledgeDev">
                         	{{fileData.type}}
                     </div><!-- 文档类型-->
                     <div class="upLoader" >

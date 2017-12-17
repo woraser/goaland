@@ -2,7 +2,6 @@ package com.anosi.asset.controller.remote;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class AlarmDataController extends BaseRemoteController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequiresPermissions({ "iotxAlarmData:view" })
 	@RequestMapping(value = "/alarmData/management/data/{showType}", method = RequestMethod.GET)
 	public JSONObject findAlarmDataManageData(HttpServletRequest request) throws Exception {
 		logger.debug("get iotxData");

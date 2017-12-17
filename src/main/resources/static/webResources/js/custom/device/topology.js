@@ -23,93 +23,93 @@ var scoreText55;
 var scoreText66;
 
 function create() {
-	
+
 	// A simple background for our game
 	game.add.sprite(80, 160, 'sky');
 
-	button = game.add.button(730, 600, 'button', actionOnClick, this, 2, 1, 0);
+	//button = game.add.button(730, 600, 'button', actionOnClick, this, 2, 1, 0);
 
 	// The platforms group contains the ground and the 2 ledges we can jump on
 	platforms = game.add.group();
 
 	var scoreText = game.add.text(160, 115, '水槽夜间总需冷量11', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	scoreText11 = game.add.text(180, 135, '642.4  kw.h', {
-		font : '14px Arial',
-		fill : '#66A9D2'
+		font: '14px Arial',
+		fill: '#66A9D2'
 	});
 
 	var scoreText = game.add.text(50, 235, '水槽夜间总需冷量22', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	scoreText22 = game.add.text(70, 255, '642.4  kw.h', {
-		font : '14px Arial',
-		fill : '#66A9D2'
+		font: '14px Arial',
+		fill: '#66A9D2'
 	});
 
 	var scoreText = game.add.text(360, 65, '水槽夜间总需冷量33', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	scoreText33 = game.add.text(380, 85, '642.4  kw.h', {
-		font : '14px Arial',
-		fill : '#66A9D2'
+		font: '14px Arial',
+		fill: '#66A9D2'
 	});
 
 	var scoreText = game.add.text(510, 135, '水槽夜间总需冷量44', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	scoreText44 = game.add.text(530, 155, '642.4  kw.h', {
-		font : '14px Arial',
-		fill : '#66A9D2'
+		font: '14px Arial',
+		fill: '#66A9D2'
 	});
 
 	var scoreText = game.add.text(560, 235, '水槽夜间总需冷量55', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	scoreText55 = game.add.text(580, 255, '642.4  kw.h', {
-		font : '14px Arial',
-		fill : '#66A9D2'
+		font: '14px Arial',
+		fill: '#66A9D2'
 	});
 
 	var scoreText = game.add.text(690, 335, '水槽夜间总需冷量66', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	scoreText66 = game.add.text(710, 355, '642.4  kw.h', {
-		font : '14px Arial',
-		fill : '#66A9D2'
+		font: '14px Arial',
+		fill: '#66A9D2'
 	});
 
 	var scoreText = game.add.text(770, 25, '温度', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	var scoreText = game.add.text(830, 22, '60', {
-		font : '18px Arial',
-		fill : '#FFF'
+		font: '18px Arial',
+		fill: '#FFF'
 	});
 	var scoreText = game.add.text(880, 25, '℃', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 
 	var scoreText = game.add.text(770, 65, '湿度', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 	var scoreText = game.add.text(830, 62, '50', {
-		font : '18px Arial',
-		fill : '#FFF'
+		font: '18px Arial',
+		fill: '#FFF'
 	});
 	var scoreText = game.add.text(880, 65, '℃', {
-		font : '14px Arial',
-		fill : '#FFF'
+		font: '14px Arial',
+		fill: '#FFF'
 	});
 
 	// Here we create the ground.
@@ -124,15 +124,20 @@ function create() {
 	var cc = platforms.create(500, 120, 'ground');
 	var cc = platforms.create(550, 220, 'ground');
 	var dd = platforms.create(680, 320, 'ground');
-
+	
+	game.time.desiredFps = 1;
+	
+	setInterval(function() {
+		updateText()
+	}, 1000);
+	
 }
 
 function update() {
-	game.input.onDown.addOnce(updateText, this);
+	
 }
 
 function updateText() {
-	console.info("updateText")
 	scoreText11.text = Math.round(Math.random() * 1000) + "  kw.h"
 	scoreText22.text = Math.round(Math.random() * 1000) + "  kw.h"
 	scoreText33.text = Math.round(Math.random() * 1000) + "  kw.h"

@@ -31,10 +31,10 @@ $(document).ready(function() {
 		 params['page']=page;
 		 params['size']=rowNum;
 		 params['sort']=sort;
-		 params['deviceSN']=deviceSN;
+		 params['deviceSN']=$("#deviceSN").val();
 		 
-		 var myGrid = jQuery("#allDataTable");
-		 var myPager = jQuery("#allDataPager");
+		 var myGrid = $("#allDataTable");
+		 var myPager = $("#allDataPager");
 		 
 		 myGrid.jqGrid({
     		datatype: "json",
@@ -42,7 +42,6 @@ $(document).ready(function() {
     		postData:params,
     		height: '100%',
     	   	colModel:colModel,
-    	   	multiselect: true,
     	   	multiboxonly: true,
     	   	multiselectWidth: 30,
     	   	rowNum: rowNum,

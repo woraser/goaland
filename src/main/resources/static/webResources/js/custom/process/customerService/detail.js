@@ -125,10 +125,6 @@ $(document).ready(function() {
 				detail.detailData = data;
 				detail.detailData.startDetail.belong = $.i18n.prop('customerService.belong.' + data.startDetail.belong)
 				detail.detailData.startDetail.productType = $.i18n.prop('customerService.productType.' + data.startDetail.productType)
-				if('agreementStatus.agreement' in this){
-					this.agreementPic = this['agreementStatus.agreement']
-					this['agreementStatus.agreement'] = $.i18n.prop('customerService.agreement.status.'+this['agreementStatus.agreement'])
-				}
 			    loadPicture("customerService_"+data.name)
 			    loadPicture("customerService_repair_"+data.name)
 			}

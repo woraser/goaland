@@ -7,7 +7,7 @@ $(document).ready(function() {
 	  data: {
 	    fileDatas : [],
 	    seenDetail : false,
-	    pdf : ['TXT','XLS','XLSX','DOC','DOCX','CSV','PDF','DWG'],
+	    pdf : ['TXT','XLS','XLSX','DOC','DOCX','CSV','PDF'],
 	    picture : ['GIF','PNG','JPEG','BMP','ICON'],
 	    isDevice : $("#type").val() == "TECHNOLOGYDOCUMENT",
 	    deviceSN : $("#deviceSN").val(),

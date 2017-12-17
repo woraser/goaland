@@ -22,6 +22,11 @@
 						<li shiro:hasPermission="roleFunctionGroupMgr:view"><a href="/roleFunctionGroup/management/view"><span class="sub-menu-text" th:text="#{roleFucntionGroupMgr}">权限组管理</span></a></li>
 					</ul>
 				</li>
+				<li shiro:hasPermission="deviceManagement:view">
+					<a style="padding-top: 20px;" href="/device/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/设备管理.png"/>
+						<span class="menu-text" style="margin-left:10px;" th:text="#{deviceManagement}" >设备管理</span>
+					</a>
+				</li>
 				<li class="has-sub" shiro:hasPermission="customServiceProcess:view">
 					<a style="padding-top: 20px;" href="#" class="">
 					<img style="margin-top: -7px;" src="/webResources/img/menu/售后流程.png"/> <span class="menu-text" style="margin-left:10px;" th:text="#{customServiceProcess}">售后流程</span>
@@ -33,11 +38,6 @@
 						<li shiro:hasPermission="customServiceProcessHistoricTasks:view"><a th:href="@{/customerServiceProcess/historicTasks/view(menuId=customServiceProcessHistoricTasks)}"><span class="sub-menu-text" th:text="#{customServiceProcessHistoricTasks}">我办过的任务</span></a></li>
 						<li shiro:hasPermission="customServiceProcessAllProcesses:view"><a th:href="@{/customerServiceProcess/allProcesses/view(menuId=customServiceProcessAllProcesses)}"><span class="sub-menu-text" th:text="#{customServiceProcessAllProcesses}">任务总览</span></a></li>
 					</ul>
-				</li>
-				<li shiro:hasPermission="deviceManagement:view">
-					<a style="padding-top: 20px;" href="/device/management/view"><img style="margin-top: -7px;" src="/webResources/img/menu/设备管理.png"/>
-						<span class="menu-text" style="margin-left:10px;" th:text="#{deviceManagement}" >设备管理</span>
-					</a>
 				</li>
 				<li shiro:hasPermission="documentMgr:view">
 					<a style="padding-top: 20px;" href="/technologyDocument/manage/view"><img style="margin-top: -7px;" src="/webResources/img/menu/资料管理.png"/>
