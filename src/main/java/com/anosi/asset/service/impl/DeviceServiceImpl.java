@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.TermQuery;
+import org.hibernate.search.query.dsl.MustJunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.component.MapComponent;
+import com.anosi.asset.component.SessionComponent;
+import com.anosi.asset.dao.hibernateSearch.SupplyQuery;
 import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.DeviceDao;
 import com.anosi.asset.model.jpa.Device;
@@ -138,7 +143,21 @@ public class DeviceServiceImpl extends BaseJPAServiceImpl<Device> implements Dev
 	@Override
 	public Page<Device> findByContentSearch(String searchContent, Pageable pageable) {
 		logger.debug("page:{},size:{}", pageable.getPageNumber(), pageable.getPageSize());
-		return deviceDao.findBySearchContent(entityManager, searchContent, pageable);
+		if (SessionComponent.isClient()) {
+			SupplyQuery supplyQuery = (queryBuilder) -> {
+				MustJunction mustJunction = queryBuilder.bool()
+						.must(queryBuilder.keyword()
+								.onFields("project.name",
+										"project.number", "project.location", "productName", "productNo", "productSpecifications", "serialNo",
+										"rfid")
+								.matching(searchContent).createQuery())
+						.must(new TermQuery(new Term("ownerList.loginId", sessionComponent.getCurrentUser().getLoginId())));
+				return mustJunction.createQuery();
+			};
+			return deviceDao.findBySearchContent(entityManager, searchContent, pageable, Device.class, supplyQuery, "");
+		} else {
+			return deviceDao.findBySearchContent(entityManager, searchContent, pageable);
+		}
 	}
 	
 	@Override

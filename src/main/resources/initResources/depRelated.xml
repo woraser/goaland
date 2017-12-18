@@ -40,4 +40,9 @@
 			<role code="customServicClerk" name="客服部文员"></role>
 		</depGroup>
 	</department>
+	<department code="clientDep" name="客户">
+		<depGroup code="clientGroup" name="客户组">
+			<role code="client" name="客户"></role>
+		</depGroup>
+	</department>
 </departments>

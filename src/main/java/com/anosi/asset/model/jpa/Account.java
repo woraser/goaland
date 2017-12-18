@@ -92,6 +92,9 @@ public class Account extends BaseEntity {
 	private List<CustomerServiceProcess> repairerProcesseList = new ArrayList<>();
 	
 	private List<Device> reciveDeviceList = new ArrayList<>();
+	
+	@ContainedIn
+	private List<Device> ownerDeviceList = new ArrayList<>();
 
 	@ContainedIn
 	private List<Advertisement> advertisementList = new ArrayList<>();
@@ -283,6 +286,15 @@ public class Account extends BaseEntity {
 
 	public void setReciveDeviceList(List<Device> reciveDeviceList) {
 		this.reciveDeviceList = reciveDeviceList;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "ownerList", targetEntity = Device.class)
+	public List<Device> getOwnerDeviceList() {
+		return ownerDeviceList;
+	}
+
+	public void setOwnerDeviceList(List<Device> ownerDeviceList) {
+		this.ownerDeviceList = ownerDeviceList;
 	}
 
 	/***

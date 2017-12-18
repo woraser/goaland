@@ -37,5 +37,10 @@ public class SessionComponent {
 		Subject currentUser = SecurityUtils.getSubject();
 		return currentUser.hasRole("admin");
 	}
+	
+	public static boolean isClient() {
+		Subject currentUser = SecurityUtils.getSubject();
+		return currentUser.hasRole("client");
+	}
 
 }

@@ -85,6 +85,9 @@ public class Device extends BaseEntity {
 	private List<RepairedDeviceDailyPer> repairedDeviceDailyPerList = new ArrayList<>();
 	
 	private List<Account> remindReceiverList = new ArrayList<>();
+	
+	@IndexedEmbedded
+	private List<Account> ownerList = new ArrayList<>();
 
 	public String getProductName() {
 		return productName;
@@ -240,6 +243,15 @@ public class Device extends BaseEntity {
 
 	public void setRemindReceiverList(List<Account> remindReceiverList) {
 		this.remindReceiverList = remindReceiverList;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<Account> getOwnerList() {
+		return ownerList;
+	}
+
+	public void setOwnerList(List<Account> ownerList) {
+		this.ownerList = ownerList;
 	}
 
 	@Override

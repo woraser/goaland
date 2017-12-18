@@ -10,6 +10,7 @@ $(document).ready(function() {
 				required : true,
 				minlength: 2,
 				checkUniqueLoginId : true,
+				digitAndLetter : true,
 			},
 			name : {
 				minlength: 2,
@@ -83,6 +84,13 @@ $(document).ready(function() {
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	//账号验证
+	jQuery.validator.addMethod("digitAndLetter", function(value, element) {
+		var length = value.length;
+		var mobile = /^[A-Za-z0-9]+$/;
+		return this.optional(element) || mobile.test(value);
+	}, "账号只能由字母和数字组成");
 	
 	//邮箱验证
 	jQuery.validator.addMethod("checkEmail", function(value, element) {

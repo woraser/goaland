@@ -39,7 +39,7 @@ spring:
         search:
           default:
             directory_provider: filesystem
-            indexBase: d:/hibernateSearch/goaland/
+            indexBase: g:/hibernateSearch/goaland/
     open-in-view: true
 
   #i18n

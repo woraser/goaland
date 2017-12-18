@@ -12,7 +12,7 @@ public interface AccountDao extends BaseJPADao<Account> {
 	public Account findByLoginId(String loginId);
 
 	public Iterable<Account> findByUploadDocument(boolean uploadDocument);
-
+	
 	default public Page<Account> findBySearchContent(EntityManager entityManager, String searchContent,
 			Pageable pageable) {
 		return findBySearchContent(entityManager, searchContent, pageable, Account.class, "name", "loginId",

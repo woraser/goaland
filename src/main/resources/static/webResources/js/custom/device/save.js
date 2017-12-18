@@ -73,10 +73,14 @@ $(document).ready(function() {
 	});
 	
 	 $("#remindReceivers").chosen();
+	 $("#owners").chosen();
 	 
 	 if($("#deviceId").val()!=null&&$("#deviceId").val()!=""){
 		$.each(eval($("#receiverIds").val()),function(index,item){
 			$("#remindReceivers option[value='"+ item.id +"']").attr("selected","selected");
+		}); 
+		$.each(eval($("#ownerIds").val()),function(index,item){
+			$("#owners option[value='"+ item.id +"']").attr("selected","selected");
 		}); 
 	 }
 	

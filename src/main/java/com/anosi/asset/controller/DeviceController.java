@@ -26,13 +26,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.component.SessionComponent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Device;
+import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.QDevice;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.DevCategoryService;
 import com.anosi.asset.service.DeviceService;
 import com.anosi.asset.service.DocumentTypeService;
+import com.anosi.asset.service.RoleService;
 import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -50,6 +53,8 @@ public class DeviceController extends BaseController<Device> {
 	private DocumentTypeService documentTypeService;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private RoleService roleService;
 
 	/***
 	 * 进入查看<b>所有设备信息</b>的页面
@@ -113,6 +118,9 @@ public class DeviceController extends BaseController<Device> {
 		if (StringUtils.isNoneBlank(searchContent)) {
 			devices = deviceService.findByContentSearch(searchContent, pageable);
 		} else {
+			if (SessionComponent.isClient()) {
+				predicate = QDevice.device.ownerList.contains(sessionComponent.getCurrentUser()).and(predicate);
+			}
 			devices = deviceService.findAll(predicate, pageable);
 		}
 
@@ -136,9 +144,11 @@ public class DeviceController extends BaseController<Device> {
 			device = deviceService.getOne(id);
 			mv.addObject("receiverIds",
 					device.getRemindReceiverList().stream().map(Account::getId).collect(Collectors.toList()));
+			mv.addObject("ownerIds", device.getOwnerList().stream().map(Account::getId).collect(Collectors.toList()));
 		}
 		return mv.addObject("device", device).addObject("devCategorys", devCategorySerivce.findAll())
-				.addObject("receivers", accountService.findAll());
+				.addObject("receivers", accountService.findAll()).addObject("owners",
+						accountService.findAll(QAccount.account.roleList.contains(roleService.findByCode("client"))));
 	}
 
 	/****
@@ -159,6 +169,10 @@ public class DeviceController extends BaseController<Device> {
 	 * save/update device
 	 * 
 	 * @param device
+	 * @param receivers
+	 *            预测性维护提醒人
+	 * @param owners
+	 *            所属用户
 	 * @return
 	 * @throws Exception
 	 */
@@ -166,12 +180,19 @@ public class DeviceController extends BaseController<Device> {
 	@RequestMapping(value = "/device/save", method = RequestMethod.POST)
 	@Transactional
 	public JSONObject saveDevice(@ModelAttribute("device") Device device,
-			@RequestParam(name = "remindReceivers") Long[] receivers) throws Exception {
+			@RequestParam(name = "remindReceivers") Long[] receivers,
+			@RequestParam(name = "owners", required = false) Long[] owners) throws Exception {
 		logger.debug("saveOrUpdate device");
 		deviceService.save(device);
 		device.getRemindReceiverList().clear();
 		for (Long receiver : receivers) {
 			device.getRemindReceiverList().add(accountService.getOne(receiver));
+		}
+		device.getOwnerList().clear();
+		if (owners != null && owners.length != 0) {
+			for (Long owner : owners) {
+				device.getOwnerList().add(accountService.getOne(owner));
+			}
 		}
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
@@ -339,7 +360,7 @@ public class DeviceController extends BaseController<Device> {
 				.addObject("uploaders", accountService.findByIsUploadDocument(true))
 				.addObject("device", deviceService.getOne(deviceId)).addObject("isDevice", true);
 	}
-	
+
 	/***
 	 * 进入查看设备所有数据的页面
 	 * 

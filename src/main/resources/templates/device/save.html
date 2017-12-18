@@ -33,6 +33,7 @@
 	<form class="form-horizontal" role="form" th:object="${device}" id="deviceForm">
 		<input type="hidden" id="deviceId" name="deviceId" th:value="${device.id}"/> 
 		<input type="hidden" id="receiverIds" name="receiverIds" th:value="${receiverIds}"/>
+		<input type="hidden" id="ownerIds" name="ownerIds" th:value="${ownerIds}"/>
 	    <fieldset>
 	    	<input type="hidden" th:field="*{project.id}"/>
 	    	<div class="form-group">
@@ -102,6 +103,14 @@
 		    	<div class="col-sm-8">
 		    	 	<select name="remindReceivers" id="remindReceivers" class="form-control" multiple="multiple" style="width: 350px"> 
 		            	<option th:each="receiver : ${receivers}" th:field="*{remindReceiverList}" th:value="${receiver.id}" th:text="${receiver.name}"></option>
+		            </select>
+    			</div>
+	    	</div>
+	    	<div class="form-group">
+		    	<label class="col-sm-3 control-label"  th:text="#{device.owners}">所属客户</label>  
+		    	<div class="col-sm-8">
+		    	 	<select name="owners" id="owners" class="form-control" multiple="multiple" style="width: 350px"> 
+		            	<option th:each="owner : ${owners}" th:field="*{ownerList}" th:value="${owner.id}" th:text="${owner.name}"></option>
 		            </select>
     			</div>
 	    	</div>
