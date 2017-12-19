@@ -42,7 +42,7 @@
 			    	<label class="col-sm-3 control-label"  th:text="#{customerService.distribute.choose}">选择服务组人员</label>  
 			    	<div class="col-sm-8">
 			    	 	<select th:field="*{evaluatingDetail.servicer}" class="form-control"> 
-			            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
+			            	<option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.name}"></option>
 			            </select>
 	    			</div>
 		    	</div>

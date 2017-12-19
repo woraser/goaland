@@ -6,7 +6,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -32,17 +34,23 @@ import com.anosi.asset.dao.jpa.BaseJPADao;
 import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.BaseRepairDetail;
+import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.RepairDetail;
 import com.anosi.asset.model.jpa.DocumentType.TypeValue;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.model.jpa.QCustomerServiceProcess;
 import com.anosi.asset.service.CustomerServcieProcessService;
+import com.anosi.asset.service.DistributeDetailService;
+import com.anosi.asset.service.EntrustDetailService;
+import com.anosi.asset.service.EvaluatingDetailService;
+import com.anosi.asset.service.ExamineDetailService;
 import com.anosi.asset.service.FileMetaDataService;
+import com.anosi.asset.service.RepairDetailService;
+import com.anosi.asset.service.StartDetailService;
 import com.anosi.asset.service.TechnologyDocumentService;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.Tuple;
@@ -66,6 +74,18 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	private EntityManager entityManager;
 	@Autowired
 	private AsyncDocument asyncDocument;
+	@Autowired
+	private StartDetailService startDetailService;
+	@Autowired
+	private ExamineDetailService examineDetailService;
+	@Autowired
+	private EvaluatingDetailService evaluatingDetailService;
+	@Autowired
+	private DistributeDetailService distributeDetailService;
+	@Autowired
+	private RepairDetailService repairDetailService;
+	@Autowired
+	private EntrustDetailService entrustDetailService;
 
 	public CustomerServcieProcessServiceImpl() {
 		super();
@@ -97,6 +117,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			process.setFinishType(FinishType.REMAIN);
 			process.setApplicant(sessionComponent.getCurrentUser());
 
+			startDetailService.save(process.getStartDetail());
 			customerServiceProcessDao.save(process);
 		} else {
 			process.setFinishType(FinishType.REMAIN);
@@ -130,15 +151,13 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		String loginId = sessionComponent.getCurrentUser().getLoginId();
 		Account currentAccount = accountService.findByLoginId(loginId);
 		String code = currentAccount.getDepartment().getCode();
+		process.setFinishType(FinishType.REMAIN);
 		// 如果是工程部
 		if ("engineerDep".equals(code)) {
-			process.setEngineeDep(accountService.findByLoginId(process.getStartDetail().getNextAssignee()));
-			process.setFinishType(FinishType.REMAIN);
 			completeTask(taskId, () -> taskService.complete(taskId,
 					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)),
 					new ArrayList<>());
 		} else {
-			process.setNextAssignee(accountService.findByLoginId(process.getStartDetail().getNextAssignee()));
 			completeTask(taskId, () -> taskService.complete(taskId,
 					ImmutableMap.of("depManager", process.getStartDetail().getNextAssignee(), "isEnginee", false)),
 					new ArrayList<>());
@@ -148,6 +167,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Transactional
 	@Override
 	public void examine(String taskId, CustomerServiceProcess process) throws Exception {
+		examineDetailService.save(process.getExamineDetail());
 		if (process.getExamineDetail().getReject()) {
 			HandleType type = HandleType.REFUSE;
 			String reason = process.getExamineDetail().getSuggestion();
@@ -161,7 +181,6 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 				}
 			}, type, reason, new ArrayList<>());
 		} else {
-			process.setEngineeDep(accountService.findByLoginId(process.getExamineDetail().getEngineeDep()));
 			completeTask(taskId,
 					() -> taskService.complete(taskId,
 							ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep())),
@@ -172,7 +191,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Transactional
 	@Override
 	public void evaluating(String taskId, CustomerServiceProcess process) throws Exception {
-		process.setServicer(accountService.findByLoginId(process.getEvaluatingDetail().getServicer()));
+		evaluatingDetailService.save(process.getEvaluatingDetail());
 		completeTask(taskId, () -> taskService.complete(taskId,
 				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())), new ArrayList<>());
 	}
@@ -180,19 +199,13 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Transactional
 	@Override
 	public void distribute(String taskId, CustomerServiceProcess process) throws Exception {
-		RepairDetail repairDetail = process.getRepairDetail();
-		if (repairDetail == null) {
-			repairDetail = new RepairDetail();
-		}
-		repairDetail.setRepairer(process.getDistributeDetail().getEngineer());
-		process.setRepairDetail(repairDetail);
-		process.setEngineer(accountService.findByLoginId(process.getDistributeDetail().getEngineer()));
-		process.setRepairer(process.getEngineer());
+		distributeDetailService.save(process.getDistributeDetail());
 		completeTask(taskId, () -> taskService.complete(taskId,
 				ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer())), new ArrayList<>());
 	}
 
 	@Override
+	@Transactional
 	public void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception {
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
@@ -200,25 +213,46 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
 			}
 		}
-		repairActual(taskId, process);
-		asyncDocument.insertIntoDocument(process);
+		sessionComponent.getCurrentUser();// 利用shiro缓存机制，防止异步任务获取session出错
+		repairDetailService.save(process.getRepairDetail());
+		boolean entrust = process.getRepairDetail().getEntrust();
+		Map<String, Object> map = new HashMap<>();
+		map.put("entrust", entrust);
+		if (entrust) {
+			// 转派
+			map.put("entruster", process.getRepairDetail().getEntruster().getLoginId());
+		} else {
+			process.setFinishType(FinishType.FINISHED);
+			process.setFinishDate(new Date());
+			// 把解决方案写入到方案库
+			asyncDocument.insertIntoDocument(process.getRepairDetail(), process);
+		}
+		customerServiceProcessDao.save(process);
+		completeTask(taskId, () -> taskService.complete(taskId, map), new ArrayList<>());
 	}
 
+	@Override
 	@Transactional
-	public void repairActual(String taskId, CustomerServiceProcess process) throws Exception {
-		sessionComponent.getCurrentUser();// 利用shiro缓存机制，防止异步任务获取session出错
+	public void entrust(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles)
+			throws Exception {
+		if (multipartFiles != null && multipartFiles.length != 0) {
+			for (MultipartFile multipartFile : multipartFiles) {
+				this.fileMetaDataService.saveFile("customerService_repair_" + process.getName(),
+						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
+			}
+		}
+		entrustDetailService.save(process.getEntrustDetail());
 		process.setFinishType(FinishType.FINISHED);
 		process.setFinishDate(new Date());
-		customerServiceProcessDao.save(process);
-		process.getRepairDetail().setRepairTime(new Date());
 		completeTask(taskId, () -> taskService.complete(taskId), new ArrayList<>());
+		// 把解决方案写入到方案库
+		asyncDocument.insertIntoDocument(process.getEntrustDetail(), process);
 	}
 
 	@Transactional
 	@Override
+	@Deprecated
 	public void entrust(String taskId, Account mandatary, String reason, CustomerServiceProcess process) {
-		process.getRepairDetail().setRepairer(mandatary.getName());
-		process.setRepairer(mandatary);
 		taskService.setAssignee(taskId, mandatary.getLoginId());// 任务委托
 		// 完成相应的流程记录
 		entrustProcessRecord(taskId, mandatary, reason);
@@ -231,7 +265,9 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	 * 
 	 * @param taskId
 	 * @param mandatary
+	 * @deprecated 转派已经是一个节点
 	 */
+	@Deprecated
 	private void entrustMessageInfo(String taskId, Account mandatary, String reason) {
 		CustomerServiceProcess customerServiceProcess = findBytaskId(taskId);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -256,7 +292,9 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	 * 
 	 * @param taskId
 	 * @param mandatary
+	 * @deprecated 转派已经是一个节点
 	 */
+	@Deprecated
 	private void entrustProcessRecord(String taskId, Account mandatary, String reason) {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		// 找出这个任务的记录,设置任务的完成时间和完成类型
@@ -304,18 +342,6 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		}
 
 		return jsonArray;
-	}
-
-	@Override
-	public Long countByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds) {
-		return customerServiceProcessDao.countByDevice_devCategory_idEqualsAndProcessInstanceIdIn(id,
-				processInstanceIds);
-	}
-
-	@Override
-	public List<CustomerServiceProcess> findByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds) {
-		return customerServiceProcessDao.findByDevice_devCategory_idEqualsAndProcessInstanceIdIn(id,
-				processInstanceIds);
 	}
 
 	@Override
@@ -372,10 +398,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		 * @throws Exception
 		 */
 		@Async
-		public void insertIntoDocument(CustomerServiceProcess process) throws Exception {
-			String problemDescription = process.getRepairDetail().getProblemDescription();
-			String failureCause = process.getRepairDetail().getFailureCause();
-			String processMode = process.getRepairDetail().getProcessMode();
+		public void insertIntoDocument(BaseRepairDetail detail, CustomerServiceProcess process) throws Exception {
+			String problemDescription = detail.getProblemDescription();
+			String failureCause = detail.getFailureCause();
+			String processMode = detail.getProcessMode();
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(i18nComponent.getMessage("customerService.problemDescription")).append(":")
@@ -400,13 +426,13 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		// 调用mysql的DATE_FORMAT函数
 		StringTemplate datePath = Expressions.stringTemplate("DATE_FORMAT({0},'{1s}')", qc.createDate,
 				ConstantImpl.create("%Y-%m-%d"));
-		
+
 		List<Tuple> processTuples = queryFactory.select(qc.count(), datePath).from(qc).where(predicate)
 				.groupBy(datePath).orderBy(datePath.desc()).limit(pageable.getPageSize()).offset(pageable.getOffset())
 				.fetch();// 按照时间倒序排列
 		// 由于查询结果是越新的数据越靠前，所以需要再一次倒序
 		Collections.reverse(processTuples);
-		
+
 		JSONArray jsonArray = new JSONArray();
 		for (Tuple tuple : processTuples) {
 			JSONObject jsonObject = new JSONObject();
@@ -414,7 +440,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			jsonObject.put("date", tuple.get(1, String.class));
 			jsonArray.add(jsonObject);
 		}
-		
+
 		return jsonArray;
 	}
 

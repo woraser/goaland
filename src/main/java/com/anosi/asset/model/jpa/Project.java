@@ -42,7 +42,7 @@ public class Project extends BaseEntity {
 
 	@JSONField(serialize=false)  
 	@ContainedIn
-	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
+	private List<StartDetail> startDetailList = new ArrayList<>();
 
 	@JSONField(serialize=false)  
 	@ContainedIn
@@ -72,14 +72,14 @@ public class Project extends BaseEntity {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "project", targetEntity = CustomerServiceProcess.class)
-	public List<CustomerServiceProcess> getCustomerServiceProcesseList() {
-		return customerServiceProcesseList;
+	
+	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "project")
+	public List<StartDetail> getStartDetailList() {
+		return startDetailList;
 	}
 
-	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
-		this.customerServiceProcesseList = customerServiceProcesseList;
+	public void setStartDetailList(List<StartDetail> startDetailList) {
+		this.startDetailList = startDetailList;
 	}
 
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "project", targetEntity = Device.class)

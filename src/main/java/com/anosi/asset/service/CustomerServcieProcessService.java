@@ -1,7 +1,6 @@
 package com.anosi.asset.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
 import com.querydsl.core.types.Predicate;
 
 public interface CustomerServcieProcessService extends BaseProcessService<CustomerServiceProcess> {
@@ -66,6 +65,15 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @throws Exception
 	 */
 	void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception;
+	
+	/***
+	 * 转派维修
+	 * 
+	 * @param taskId
+	 * @param multipartFiles 
+	 * @throws Exception
+	 */
+	void entrust(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception;
 
 	/***
 	 * 委托
@@ -74,7 +82,9 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @param mandatary
 	 *            代理人
 	 * @param process
+	 * @deprecated 转派已经是一个节点
 	 */
+	@Deprecated
 	void entrust(String taskId, Account mandatary, String reason, CustomerServiceProcess process);
 
 	/***
@@ -83,24 +93,6 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * @return
 	 */
 	JSONArray getTaskDistribute();
-
-	/***
-	 * 根据种类和流程实例id进行count
-	 * 
-	 * @param id
-	 * @param processInstanceIds
-	 * @return
-	 */
-	Long countByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds);
-
-	/***
-	 * 根据种类和流程实例id进行查询
-	 * 
-	 * @param id
-	 * @param processInstanceIds
-	 * @return
-	 */
-	List<CustomerServiceProcess> findByDevCategoryAndInstanceId(Long id, List<String> processInstanceIds);
 
 	/**
 	 * 转换条件

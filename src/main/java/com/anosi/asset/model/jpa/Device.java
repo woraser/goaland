@@ -80,7 +80,9 @@ public class Device extends BaseEntity {
 
 	private District district;// 所属区县
 
-	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
+	private List<RepairDetail> repairDetailList = new ArrayList<>();
+	
+	private List<EntrustDetail> entrustDetailList = new ArrayList<>();
 	
 	private List<RepairedDeviceDailyPer> repairedDeviceDailyPerList = new ArrayList<>();
 	
@@ -202,13 +204,22 @@ public class Device extends BaseEntity {
 		this.district = district;
 	}
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "device", targetEntity = CustomerServiceProcess.class)
-	public List<CustomerServiceProcess> getCustomerServiceProcesseList() {
-		return customerServiceProcesseList;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "deviceList")
+	public List<RepairDetail> getRepairDetailList() {
+		return repairDetailList;
 	}
 
-	public void setCustomerServiceProcesseList(List<CustomerServiceProcess> customerServiceProcesseList) {
-		this.customerServiceProcesseList = customerServiceProcesseList;
+	public void setRepairDetailList(List<RepairDetail> repairDetailList) {
+		this.repairDetailList = repairDetailList;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "deviceList")
+	public List<EntrustDetail> getEntrustDetailList() {
+		return entrustDetailList;
+	}
+
+	public void setEntrustDetailList(List<EntrustDetail> entrustDetailList) {
+		this.entrustDetailList = entrustDetailList;
 	}
 
 	public String getProductSpecifications() {

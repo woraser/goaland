@@ -43,7 +43,7 @@ $(document).ready(function() {
 		 
 	 //请求参数
 	 var params={}
-	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,project.number,project.name,project.location,finishType.name,agreementStatus.agreement,agreementStatus.beginTime,agreementStatus.endTime,task.id,task.name';//要获取的属性名
+	 params['showAttributes']='id,name,historicProcessInstance.startTime,historicProcessInstance.endTime,applicant.name,startDetail.project.number,startDetail.project.name,startDetail.project.location,finishType.name,agreementStatus.agreement,agreementStatus.beginTime,agreementStatus.endTime,task.id,task.name';//要获取的属性名
 	 params['size']=rowNum;
 	 params['sort']=sort;
 	 params['searchContent']=null;

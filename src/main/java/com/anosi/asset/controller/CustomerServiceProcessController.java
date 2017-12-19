@@ -26,12 +26,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.AgreementStatus.Agreement;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail.Belong;
-import com.anosi.asset.model.jpa.CustomerServiceProcess.StartDetail.ProductType;
 import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.QRole;
+import com.anosi.asset.model.jpa.StartDetail.Belong;
+import com.anosi.asset.model.jpa.StartDetail.ProductType;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
@@ -146,6 +146,9 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 		case "repair":
 			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
 			return ImmutableMap.of("accounts", accounts);
+		case "entrust":
+			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
+			return ImmutableMap.of("accounts", accounts);
 		}
 		throw new CustomRunTimeException("taskDefinitionKey is illegal");
 	}
@@ -241,7 +244,8 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * 工程师上门维修
 	 * 
 	 * @param taskId
-	 * @param repairDetail
+	 * @param process
+	 * @param multipartFiles
 	 * @return
 	 * @throws Exception
 	 */
@@ -258,15 +262,17 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * 委托
 	 * 
 	 * @param taskId
-	 * @param mandatary
+	 * @param process
+	 * @param multipartFiles
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/entrust", method = RequestMethod.POST)
 	public JSONObject entrust(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "mandatary") String mandatary, @RequestParam(value = "reason") String reason,
-			@ModelAttribute("process") CustomerServiceProcess process) {
+			@ModelAttribute("process") CustomerServiceProcess process,
+			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) throws Exception {
 		logger.debug("customerServiceProcess -> entrust");
-		customerServcieProcessService.entrust(taskId, accountService.findByLoginId(mandatary), reason, process);
+		customerServcieProcessService.entrust(taskId, process, multipartFiles);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -287,6 +293,7 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 */
 	@RequestMapping(value = "/fillInAgreement", method = RequestMethod.POST)
 	public JSONObject toFillInAgreement(@ModelAttribute("process") CustomerServiceProcess process) {
+		process.getAgreementStatus().setAgreement(process.getAgreementStatus().checkAgreement());
 		customerServcieProcessService.save(process);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}

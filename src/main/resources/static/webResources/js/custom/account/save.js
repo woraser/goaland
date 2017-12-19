@@ -32,7 +32,11 @@ $(document).ready(function() {
 			emailAddress : {
 				required : true,
 				checkEmail : true,
-			}
+			},
+			tel : {
+				required : true,
+				isMobile : true,
+			},
 		},
 		errorPlacement: function(error, element) {
             if(element.parent('#roleSelect').length) {
@@ -84,6 +88,13 @@ $(document).ready(function() {
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	// 手机号码验证
+	jQuery.validator.addMethod("isMobile", function(value, element) {
+		var length = value.length;
+		var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+		return this.optional(element) || (length == 11 && mobile.test(value));
+	}, "请正确填写手机号码");
 	
 	//账号验证
 	jQuery.validator.addMethod("digitAndLetter", function(value, element) {

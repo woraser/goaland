@@ -95,12 +95,12 @@
 				                    </div>
 				                    <div class="project-text">
 				                    	<div class="project-text-in">
-				                    		<input type="hidden" th:field="*{project.id}"/>
+				                    		<input type="hidden" th:field="*{startDetail.project.id}"/>
 				                            <div class="project-text-left" th:text="#{customerService.projectNo}">
 				                               	 项目编号：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <input class="form-control" type="text" th:field="*{project.number}" th:placeholder="#{customerService.projectNo}"/>
+				                                <input class="form-control" type="text" th:field="*{startDetail.project.number}" th:placeholder="#{customerService.projectNo}"/>
 				                            </div>
 				                        </div>
 				                        <div class="project-text-in">
@@ -108,7 +108,7 @@
 				                               	 项目名称：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <input class="form-control" type="text" th:field="*{project.name}" th:placeholder="#{customerService.projectName}" readonly="readonly"/>
+				                                <input class="form-control" type="text" th:field="*{startDetail.project.name}" th:placeholder="#{customerService.projectName}" readonly="readonly"/>
 				                            </div>
 				                        </div>
 				                        <div class="project-text-in">
@@ -116,7 +116,7 @@
 				                               	 项目地址：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <input class="form-control" type="text" th:field="*{project.location}" th:placeholder="#{customerService.projectLocation}" readonly="readonly"/>
+				                                <input class="form-control" type="text" th:field="*{startDetail.project.location}" th:placeholder="#{customerService.projectLocation}" readonly="readonly"/>
 				                            </div>
 				                        </div>
 				                        
@@ -185,7 +185,7 @@
 				                                	项目联系人：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <input class="form-control" type="text" th:field="*{startDetail.projectMan}" th:placeholder="#{customerService.projectMan}"/>
+				                                <input class="form-control" th:value="${process.startDetail.projectMan!=null?process.startDetail.projectMan:session.user.name}" type="text" id="startDetail.projectMan" name="startDetail.projectMan" th:placeholder="#{customerService.projectMan}"/>
 				                            </div>
 				                        </div>
 				                        <div class="project-text-in">
@@ -193,7 +193,7 @@
 				                                	联系电话：
 				                            </div>
 				                            <div class="project-text-right">
-				                                <input class="form-control" type="text" th:field="*{startDetail.projectNumber}" th:placeholder="#{customerService.projectNumber}"/>
+				                                <input class="form-control" th:value="${process.startDetail.projectNumber!=null?process.startDetail.projectNumber:session.user.tel}" type="text" id="startDetail.projectNumber" name="startDetail.projectNumber" th:placeholder="#{customerService.projectNumber}"/>
 				                            </div>
 				                        </div>
 				
@@ -210,7 +210,7 @@
 				                            </div>
 				                            <div class="project-text-right">
 				                                <select th:field="*{startDetail.nextAssignee}" name="startDetail.nextAssignee" id="startDetail.nextAssignee" class="form-control"> 
-									            	<option th:each="account : ${accounts}" th:value="${account.loginId}" th:text="${account.name}"></option>
+									            	<option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.name}"></option>
 									            </select>
 				                            </div>
 				                        </div>

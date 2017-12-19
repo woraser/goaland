@@ -16,17 +16,11 @@ public interface CustomerServiceProcessDao extends BaseJPADao<CustomerServicePro
 
 	default public Page<CustomerServiceProcess> findBySearchContent(EntityManager entityManager, String searchContent,
 			Pageable pageable) {
-		return findBySearchContent(entityManager, searchContent, pageable, CustomerServiceProcess.class, "project.name",
-				"project.number", "project.location", "name", "applicant.name");
+		return findBySearchContent(entityManager, searchContent, pageable, CustomerServiceProcess.class, "startDetail.project.name",
+				"startDetail.project.number", "startDetail.project.location", "name", "applicant.name");
 	}
 
 	@Query(value = "SELECT t.TASK_DEF_KEY_,count(*) FROM act_ru_task t LEFT JOIN act_re_procdef p ON t.PROC_DEF_ID_ = p.ID_ where p.KEY_=?1 GROUP BY t.TASK_DEF_KEY_", nativeQuery = true)
 	List<Object[]> countTaskDistribute(String processDefKey);
-
-	public long countByDevice_devCategory_idEqualsAndProcessInstanceIdIn(Long devCateogryId,
-			List<String> processInstanceIds);
-	
-	public List<CustomerServiceProcess> findByDevice_devCategory_idEqualsAndProcessInstanceIdIn(Long devCateogryId,
-			List<String> processInstanceIds);
 
 }

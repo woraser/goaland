@@ -113,10 +113,10 @@ $(document).ready(function() {
 			"startDetail.belong" : {
 				required : true,
 			},
-			"project.number" : {
+			"startDetail.project.number" : {
 				required : true,
 			},
-			"project.name" : {
+			"startDetail.project.name" : {
 				required : true,
 			},
 			"startDetail.productName" : {
@@ -207,7 +207,7 @@ $(document).ready(function() {
 	});
 	
 	//search autocomplete
-	 $( "#project\\.number" )
+	 $( "#startDetail\\.project\\.number" )
      // 当选择一个条目时不离开文本域
      .bind( "keydown", function( event ) {
        if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -250,10 +250,10 @@ $(document).ready(function() {
        },
        select: function( event, ui ) {
          var words=ui.item.label.split("-")
-         $( "#project\\.number" ).val(words[0]);
-         $( "#project\\.name" ).val(words[1]);
-         $( "#project\\.location" ).val(words[2]);
-         $( "#project\\.id" ).val(ui.item.value);
+         $( "#startDetail\\.project\\.number" ).val(words[0]);
+         $( "#startDetail\\.project\\.name" ).val(words[1]);
+         $( "#startDetail\\.project\\.location" ).val(words[2]);
+         $( "#startDetail\\.project\\.id" ).val(ui.item.value);
          return false;
        }
      }); 

@@ -63,20 +63,18 @@ public class RepairedDeviceDailyPerServiceImpl extends BaseJPAServiceImpl<Repair
 		List<String> processInstanceIds = tasks.stream().map(task -> task.getProcessInstanceId())
 				.collect(Collectors.toList());
 
-		devCategoryService.findAll().forEach(devCategory -> {
+		/*devCategoryService.findAll().forEach(devCategory -> {
 			RepairedDeviceDailyPer rp = new RepairedDeviceDailyPer();
 			rp.setCountDate(lastDate);
 			rp.setDevCategory(devCategory);
-			rp.setRepaired(customerServcieProcessService.countByDevCategoryAndInstanceId(devCategory.getId(),
-					processInstanceIds)); // 设置维修数量
+			//rp.setRepaired(customerServcieProcessService.countByDevCategoryAndInstanceId(devCategory.getId(),processInstanceIds)); // 设置维修数量
 			repairedDeviceDailyPerDao.save(rp);
 			// 设置具体的维修设备
-			List<CustomerServiceProcess> cps = customerServcieProcessService
-					.findByDevCategoryAndInstanceId(devCategory.getId(), processInstanceIds);
+			//List<CustomerServiceProcess> cps = customerServcieProcessService.findByDevCategoryAndInstanceId(devCategory.getId(), processInstanceIds);
 			for (CustomerServiceProcess cp : cps) {
-				rp.getDeviceList().add(cp.getDevice());
+				//rp.getDeviceList().add(cp.getDevice());
 			}
-		});
+		});*/
 	}
 
 	@Override
