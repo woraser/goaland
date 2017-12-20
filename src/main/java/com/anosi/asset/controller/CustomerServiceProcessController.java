@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.AgreementStatus;
 import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
 import com.anosi.asset.model.jpa.Device;
@@ -36,6 +38,7 @@ import com.anosi.asset.model.jpa.QRole;
 import com.anosi.asset.model.jpa.StartDetail.Belong;
 import com.anosi.asset.model.jpa.StartDetail.ProductType;
 import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.AgreementStatusService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.DeviceService;
@@ -61,6 +64,8 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	private DeviceService deviceService;
 	@Autowired
 	private FaultCategoryService faultCategoryService;
+	@Autowired
+	private AgreementStatusService agreementStatusService;
 
 	public CustomerServiceProcessController() {
 		super();
@@ -324,9 +329,12 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @return
 	 */
 	@RequestMapping(value = "/fillInAgreement", method = RequestMethod.POST)
+	@Transactional
 	public JSONObject toFillInAgreement(@ModelAttribute("process") CustomerServiceProcess process) {
-		process.getAgreementStatus().setAgreement(process.getAgreementStatus().checkAgreement());
-		customerServcieProcessService.save(process);
+		AgreementStatus agreementStatus = process.getAgreementStatus();
+		agreementStatus.setCustomerServiceProcess(process);
+		agreementStatus.setAgreement(agreementStatus.checkAgreement());
+		agreementStatusService.save(agreementStatus);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

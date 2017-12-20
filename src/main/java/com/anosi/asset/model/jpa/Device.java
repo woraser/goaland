@@ -23,6 +23,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
@@ -38,18 +39,22 @@ public class Device extends BaseEntity {
 
 	@Content(extractFields = { "project.name", "project.number", "project.location" })
 	@IndexedEmbedded(depth = 1)
+	@JSONField(serialize = false)
 	private Project project;
 
 	@Content
 	@Field
+	@JSONField(serialize = false)
 	private String productName;// 产品名称
 
 	@Content
 	@Field(analyze = Analyze.NO)
+	@JSONField(serialize = false)
 	private String productNo;// 产品编号
 
 	@Content
 	@Field
+	@JSONField(serialize = false)
 	private String productSpecifications;// 产品规格
 
 	@Content
@@ -58,36 +63,51 @@ public class Device extends BaseEntity {
 
 	@Content
 	@Field(analyze = Analyze.NO)
+	@JSONField(serialize = false)
 	private String rfid;// rfid的值等于二维码的值
 
+	@JSONField(serialize = false)
 	private DevCategory devCategory;
 
+	@JSONField(serialize = false)
 	private Date commissioningTime;// 投运时间
 
+	@JSONField(serialize = false)
 	@ContainedIn
 	private List<Materiel> materielList = new ArrayList<>();// 物料
 
+	@JSONField(serialize = false)
 	private List<TechnicalParameter> technicalParameterList = new ArrayList<>();// 技术参数
 
+	@JSONField(serialize = false)
 	private Double longitude;// 经度
 
+	@JSONField(serialize = false)
 	private Double latitude;// 纬度
 
+	@JSONField(serialize = false)
 	// 为了在百度地图上显示点，还需要存储百度坐标
 	private Double baiduLongitude;// 经度
 
+	@JSONField(serialize = false)
 	private Double baiduLatitude;// 纬度
 
+	@JSONField(serialize = false)
 	private District district;// 所属区县
 
+	@JSONField(serialize = false)
 	private List<RepairDetail> repairDetailList = new ArrayList<>();
-	
+
+	@JSONField(serialize = false)
 	private List<EntrustDetail> entrustDetailList = new ArrayList<>();
-	
+
+	@JSONField(serialize = false)
 	private List<RepairedDeviceDailyPer> repairedDeviceDailyPerList = new ArrayList<>();
-	
+
+	@JSONField(serialize = false)
 	private List<Account> remindReceiverList = new ArrayList<>();
-	
+
+	@JSONField(serialize = false)
 	@IndexedEmbedded
 	private List<Account> ownerList = new ArrayList<>();
 
@@ -246,7 +266,7 @@ public class Device extends BaseEntity {
 	public void setRepairedDeviceDailyPerList(List<RepairedDeviceDailyPer> repairedDeviceDailyPerList) {
 		this.repairedDeviceDailyPerList = repairedDeviceDailyPerList;
 	}
-	
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	public List<Account> getRemindReceiverList() {
 		return remindReceiverList;
@@ -255,7 +275,7 @@ public class Device extends BaseEntity {
 	public void setRemindReceiverList(List<Account> remindReceiverList) {
 		this.remindReceiverList = remindReceiverList;
 	}
-	
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	public List<Account> getOwnerList() {
 		return ownerList;
@@ -290,7 +310,7 @@ public class Device extends BaseEntity {
 		return true;
 	}
 
-	public Device(Long id,String serialNo) {
+	public Device(Long id, String serialNo) {
 		super();
 		setId(id);
 		this.serialNo = serialNo;
@@ -300,5 +320,5 @@ public class Device extends BaseEntity {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 }

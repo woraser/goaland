@@ -55,58 +55,81 @@ public class Account extends BaseEntity {
 	@Field(analyze = Analyze.NO)
 	private String loginId;
 
+	@JSONField(serialize=false)  
 	private String password;
 
 	@Field(analyze = Analyze.NO)
+	@JSONField(serialize=false)  
 	private String emailAddress;
 	
 	@Field(analyze = Analyze.NO)
+	@JSONField(serialize=false)  
 	private String tel;
 
+	@JSONField(serialize=false)  
 	private boolean active = false;
 
 	@Content(extractFields = { "roleList*.name", "roleList*.depGroup.name", "roleList*.depGroup.department.name" })
 	@IndexedEmbedded
+	@JSONField(serialize=false)  
 	private List<Role> roleList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private boolean uploadDocument = false;// 是否上传过技术文档
 
+	@JSONField(serialize=false)  
 	private List<Privilege> privilegeList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	@Content(extractFields = { "roleFunctionGroupList*.name" })
 	private List<RoleFunctionGroup> roleFunctionGroupList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<MessageInfo> formMessageList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<MessageInfo> toMessageList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<ProcessRecord> processRecordList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	@ContainedIn
 	private List<CustomerServiceProcess> customerServiceProcesseList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<StartDetail> startDetailList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<ExamineDetail> examineDetailList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<EvaluatingDetail> evaluatingDetailList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<DistributeDetail> distributeDetailList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<Device> reciveDeviceList = new ArrayList<>();
 	
+	@JSONField(serialize=false)  
 	private List<RepairDetail> entrusterList = new ArrayList<>();
 	
+	@JSONField(serialize=false)  
 	private List<RepairDetail> repairFellowList = new ArrayList<>();
 	
+	@JSONField(serialize=false)  
 	private List<EntrustDetail> entrustFellowList = new ArrayList<>();
 	
+	@JSONField(serialize=false)  
 	@ContainedIn
 	private List<Device> ownerDeviceList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	@ContainedIn
 	private List<Advertisement> advertisementList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	// 密码加盐
 	private String salt;
 
@@ -337,6 +360,7 @@ public class Account extends BaseEntity {
 	 * @return
 	 */
 	@Transient
+	@JSONField(serialize=false)
 	public Department getDepartment() {
 		return roleList.get(0).getDepGroup().getDepartment();
 	}
@@ -347,6 +371,7 @@ public class Account extends BaseEntity {
 	 * @return
 	 */
 	@Transient
+	@JSONField(serialize=false)
 	public String getCredentialsSalt() {
 		return this.loginId + this.salt;
 	}

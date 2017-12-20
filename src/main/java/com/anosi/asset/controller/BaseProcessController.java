@@ -22,13 +22,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.anosi.asset.model.jpa.BaseProcess;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.util.JsonUtil;
 import com.anosi.asset.util.StringUtil;
+import com.google.common.collect.ImmutableMap;
 
 @RestController
 public abstract class BaseProcessController<T extends BaseProcess> extends BaseController<T> {
@@ -323,10 +326,16 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/process/detail/{id}", method = RequestMethod.GET)
-	public JSONObject findById(@PathVariable Long id,
-			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
-		return jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes),
-				getProcessService().getDetail(getProcessService().findOne(id)));
+	public JSONObject findById(@PathVariable Long id) throws Exception {
+		T t = getProcessService().getOne(id);
+		t = getProcessService().getDetail(t);
+		JSONObject jsonObject = JSON.parseObject(JSON.toJSONStringWithDateFormat(t, "yyyy-MM-dd HH:mm:ss",
+				SerializerFeature.DisableCircularReferenceDetect));
+		if (t.getTask() != null) {
+			jsonObject.put("task", new JSONObject(ImmutableMap.of("id", t.getTask().getId(), "name",
+					t.getTask().getName(), "taskDefinitionKey", t.getTask().getTaskDefinitionKey())));
+		}
+		return jsonObject;
 	}
 
 	/***

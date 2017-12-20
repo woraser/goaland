@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /***
  * 故障分类
  * @author jinyao
@@ -25,8 +27,10 @@ public class FaultCategory extends BaseEntity{
 
 	private String name;
 	
+	@JSONField(serialize=false)
 	private List<RepairDetail> repairDetailList = new ArrayList<>();
 	
+	@JSONField(serialize=false)
 	private List<EntrustDetail> entrustDetailList = new ArrayList<>();
 
 	@Column(unique = true, nullable = false)

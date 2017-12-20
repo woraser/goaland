@@ -6,6 +6,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /***
  * 派单字段
  * 
@@ -23,6 +25,7 @@ public class DistributeDetail extends BaseEntity{
 
 	private Account engineer;// 工程师
 	
+	@JSONField(serialize=false)  
 	private CustomerServiceProcess customerServiceProcess;
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)

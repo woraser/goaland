@@ -8,6 +8,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /***
  * 合同状态
  * 
@@ -29,6 +31,7 @@ public class AgreementStatus extends BaseEntity {
 
 	private Agreement agreement;
 
+	@JSONField(serialize=false)  
 	private CustomerServiceProcess customerServiceProcess;
 
 	public static enum Agreement {

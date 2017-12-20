@@ -63,6 +63,7 @@ public class StartDetail extends BaseEntity {
 
 	private Account nextAssignee;// 下一步办理人
 
+	@JSONField(serialize=false)  
 	private CustomerServiceProcess customerServiceProcess;
 
 	public Belong getBelong() {

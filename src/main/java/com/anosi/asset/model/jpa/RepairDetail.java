@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 
 /***
  * 维修的表单字段
@@ -28,6 +30,7 @@ public class RepairDetail extends BaseRepairDetail {
 
 	private boolean entrust = false;
 
+	@JSONField(serialize=false)  
 	private CustomerServiceProcess customerServiceProcess;
 	
 	private Account entruster;

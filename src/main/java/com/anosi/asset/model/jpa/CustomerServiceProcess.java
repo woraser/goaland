@@ -16,6 +16,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
@@ -49,8 +50,10 @@ public class CustomerServiceProcess extends BaseProcess {
 
 	private boolean file = false;// 是否有上传文件
 
+	@JSONField(serialize=false)  
 	private List<CustomerServiceProcessDailyPer> completedPerList = new ArrayList<>();
 
+	@JSONField(serialize=false)  
 	private List<CustomerServiceProcessDailyPer> unCompletedPerList = new ArrayList<>();
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "completedProcessList", targetEntity = CustomerServiceProcessDailyPer.class)

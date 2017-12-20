@@ -288,7 +288,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			Long[] fellows, Long[] faultCategorys) throws Exception {
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
-				this.fileMetaDataService.saveFile("customerService_repair_" + process.getName(),
+				this.fileMetaDataService.saveFile("customerService_entrust_" + process.getName(),
 						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
 			}
 		}

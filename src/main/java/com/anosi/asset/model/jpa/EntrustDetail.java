@@ -9,6 +9,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /***
  * 委派的详情
  * 
@@ -24,6 +26,7 @@ public class EntrustDetail extends BaseRepairDetail{
 	 */
 	private static final long serialVersionUID = -9184539580181895001L;
 
+	@JSONField(serialize=false)  
 	private CustomerServiceProcess customerServiceProcess;
 	
 	private List<Account> fellowList = new ArrayList<>();

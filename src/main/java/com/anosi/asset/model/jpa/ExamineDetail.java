@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /***
  * 领导审批字段
  * 
@@ -29,6 +31,7 @@ public class ExamineDetail extends BaseEntity {
 
 	private Account engineeDep;// 工程部评估人
 
+	@JSONField(serialize=false)  
 	private CustomerServiceProcess customerServiceProcess;
 
 	public boolean getReject() {
