@@ -3,6 +3,7 @@ package com.anosi.asset.controller;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,6 +29,8 @@ import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
+import com.anosi.asset.model.jpa.Device;
+import com.anosi.asset.model.jpa.FaultCategory;
 import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.QRole;
 import com.anosi.asset.model.jpa.StartDetail.Belong;
@@ -35,6 +38,8 @@ import com.anosi.asset.model.jpa.StartDetail.ProductType;
 import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.BaseProcessService;
 import com.anosi.asset.service.CustomerServcieProcessService;
+import com.anosi.asset.service.DeviceService;
+import com.anosi.asset.service.FaultCategoryService;
 import com.anosi.asset.service.RoleService;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -52,6 +57,10 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	private AccountService accountService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private DeviceService deviceService;
+	@Autowired
+	private FaultCategoryService faultCategoryService;
 
 	public CustomerServiceProcessController() {
 		super();
@@ -126,37 +135,50 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	}
 
 	@Override
-	public Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey) {
+	public Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey, String processInstanceId) {
 		logger.debug("taskDefinitionKey:{},process:customerService", taskDefinitionKey);
 		Iterable<Account> accounts;
 		QAccount qAccount = QAccount.account;
 		QRole qRole = QRole.role;
+
 		switch (taskDefinitionKey) {
 		case "examine":
 			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineerManager")));
 			return ImmutableMap.of("accounts", accounts);
+
 		case "evaluating":
 			JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 			accounts = queryFactory.select(qAccount).from(qAccount, qRole)
 					.where(qRole.depGroup.code.eq("customerServiceGroup"), qAccount.roleList.contains(qRole)).fetch();
 			return ImmutableMap.of("accounts", accounts);
+
 		case "distribute":
 			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
 			return ImmutableMap.of("accounts", accounts);
+
 		case "repair":
 			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
-			return ImmutableMap.of("accounts", accounts);
+			return ImmutableMap.of("accounts", accounts, "devices", deviceService.findIdAndSN(), "faultCategorys",
+					faultCategoryService.findAll());
+
 		case "entrust":
 			accounts = accountService.findAll(qAccount.roleList.contains(roleService.findByCode("engineer")));
-			return ImmutableMap.of("accounts", accounts);
+			CustomerServiceProcess customerServiceProcess = customerServcieProcessService
+					.findByProcessInstanceId(processInstanceId);
+			return ImmutableMap.of("accounts", accounts, "devices", deviceService.findIdAndSN(), "faultCategorys",
+					faultCategoryService.findAll(), "faultCategoryIds",
+					customerServiceProcess.getEntrustDetail().getFaultCategoryList().stream().map(FaultCategory::getId)
+							.collect(Collectors.toList()),
+					"deviceIds", customerServiceProcess.getEntrustDetail().getDeviceList().stream().map(Device::getId)
+							.collect(Collectors.toList()));
 		}
 		throw new CustomRunTimeException("taskDefinitionKey is illegal");
 	}
 
 	@Override
-	public JSONObject getRunTimeTaskObjectsRemote(String taskDefinitionKey) {
+	public JSONObject getRunTimeTaskObjectsRemote(String taskDefinitionKey, String processInstanceId) {
 		JSONObject jsonObject = new JSONObject();
-		Map<String, Object> startProcessObjects = getRunTimeTaskObjects(taskDefinitionKey);
+		Map<String, Object> startProcessObjects = getRunTimeTaskObjects(taskDefinitionKey, processInstanceId);
 		@SuppressWarnings("unchecked")
 		Iterable<Account> accounts = (Iterable<Account>) startProcessObjects.get("accounts");
 		JSONArray jsonArray = new JSONArray();
@@ -246,15 +268,20 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param process
 	 * @param multipartFiles
+	 * @param fellows
+	 * @param devices
+	 * @param faultCategorys
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/repair", method = RequestMethod.POST)
 	public JSONObject repair(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process,
+			@ModelAttribute("process") CustomerServiceProcess process, @RequestParam(name = "device") Long[] devices,
+			@RequestParam(name = "fellow", required = false) Long[] fellows,
+			@RequestParam(name = "faultCategory") Long[] faultCategorys,
 			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) throws Exception {
 		logger.debug("customerServiceProcess -> repair");
-		customerServcieProcessService.repair(taskId, process, multipartFiles);
+		customerServcieProcessService.repair(taskId, process, multipartFiles, devices, fellows, faultCategorys);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 
@@ -264,15 +291,20 @@ public class CustomerServiceProcessController extends BaseProcessController<Cust
 	 * @param taskId
 	 * @param process
 	 * @param multipartFiles
+	 * @param fellows
+	 * @param devices
+	 * @param faultCategorys
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/entrust", method = RequestMethod.POST)
 	public JSONObject entrust(@RequestParam(value = "taskId") String taskId,
-			@ModelAttribute("process") CustomerServiceProcess process,
+			@ModelAttribute("process") CustomerServiceProcess process, @RequestParam(name = "device") Long[] devices,
+			@RequestParam(name = "fellow", required = false) Long[] fellows,
+			@RequestParam(name = "faultCategory") Long[] faultCategorys,
 			@RequestParam(value = "fileUpLoad", required = false) MultipartFile[] multipartFiles) throws Exception {
 		logger.debug("customerServiceProcess -> entrust");
-		customerServcieProcessService.entrust(taskId, process, multipartFiles);
+		customerServcieProcessService.entrust(taskId, process, multipartFiles, devices, fellows, faultCategorys);
 		return new JSONObject(ImmutableMap.of("result", "success"));
 	}
 

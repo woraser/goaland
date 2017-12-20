@@ -26,15 +26,19 @@ public class RepairDetail extends BaseRepairDetail {
 	 */
 	private static final long serialVersionUID = -4786482777775582115L;
 
-	private boolean entrust;
+	private boolean entrust = false;
 
 	private CustomerServiceProcess customerServiceProcess;
 	
 	private Account entruster;
 	
+	private String reason;
+	
 	private List<Account> fellowList = new ArrayList<>();
 	
 	private List<Device> deviceList = new ArrayList<>();
+	
+	private List<FaultCategory> faultCategoryList = new ArrayList<>();
 
 	public boolean getEntrust() {
 		return entrust;
@@ -61,6 +65,14 @@ public class RepairDetail extends BaseRepairDetail {
 	public void setEntruster(Account entruster) {
 		this.entruster = entruster;
 	}
+	
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	public List<Account> getFellowList() {
@@ -78,6 +90,15 @@ public class RepairDetail extends BaseRepairDetail {
 
 	public void setDeviceList(List<Device> deviceList) {
 		this.deviceList = deviceList;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<FaultCategory> getFaultCategoryList() {
+		return faultCategoryList;
+	}
+
+	public void setFaultCategoryList(List<FaultCategory> faultCategoryList) {
+		this.faultCategoryList = faultCategoryList;
 	}
 	
 }

@@ -62,18 +62,24 @@ public interface CustomerServcieProcessService extends BaseProcessService<Custom
 	 * 
 	 * @param taskId
 	 * @param multipartFiles 
+	 * @param fellows 
+	 * @param devices 
+	 * @param faultCategorys 
 	 * @throws Exception
 	 */
-	void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception;
+	void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles, Long[] devices, Long[] fellows, Long[] faultCategorys) throws Exception;
 	
 	/***
 	 * 转派维修
 	 * 
 	 * @param taskId
 	 * @param multipartFiles 
+	 * @param fellows 
+	 * @param devices 
+	 * @param faultCategorys 
 	 * @throws Exception
 	 */
-	void entrust(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception;
+	void entrust(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles, Long[] devices, Long[] fellows, Long[] faultCategorys) throws Exception;
 
 	/***
 	 * 委托

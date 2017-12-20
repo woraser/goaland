@@ -14,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.anosi.asset.GoalandApplication;
 import com.anosi.asset.model.jpa.Account;
+import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.QCustomerServiceProcess;
 import com.anosi.asset.model.jpa.QCustomerServiceProcessDailyPer;
 import com.anosi.asset.model.jpa.QRole;
 import com.anosi.asset.service.AccountService;
+import com.anosi.asset.service.DeviceService;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -32,6 +34,8 @@ public class TestQueryDsl {
 	private AccountService accountService;
 	@Autowired
 	protected EntityManager entityManager;
+	@Autowired
+	private DeviceService deviceService;
 
 	protected JPAQueryFactory queryFactory;
 
@@ -76,6 +80,15 @@ public class TestQueryDsl {
 				.limit(1).offset(0).groupBy(csp.id).fetch();
 		System.out.println(coms);
 		System.out.println(unComs);
+	}
+	
+	@Test
+	public void testDevice(){
+		List<Device> devices = deviceService.findIdAndSN();
+		for (Device device : devices) {
+			System.out.println(device.getId());
+			System.out.println(device.getSerialNo());
+		}
 	}
 
 }

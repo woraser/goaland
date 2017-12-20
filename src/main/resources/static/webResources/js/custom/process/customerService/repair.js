@@ -11,11 +11,8 @@ $(document).ready(function() {
 	
 	$("#customerServiceForm").validate({
 		//debug:true,
+		ignore: ":hidden:not(select)",
 		rules : {
-			"device.serialNo" : {
-				required : true,
-				checkExist : true,
-			},
 			"repairDetail.problemDescription" : {
 				required : true,
 			},
@@ -25,23 +22,34 @@ $(document).ready(function() {
 			"repairDetail.processMode" : {
 				required : true,
 			},
-			mandatary : {
+			"repairDetail.entruster.id" : {
 				required : true,
 			},
 			reason : {
 				required : true,
 			},
-			fileUpLoad : {
+			device : {
+				required : true,
+			},
+			faultCategory : {
+				required : true,
+			},
+			"repairDetail.repairStartTime" : {
+				required : true,
+			},
+			"repairDetail.repairEndTime" : {
 				required : true,
 			},
 		},
+		errorPlacement: function(error, element) {
+            if(element.parent('#deviceSelect').length || element.parent('#faultCategorySelect').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
 		submitHandler: function(form) {  
-			var url;
-			if($('#isEntrust').is(':checked')) {
-				url='/customerServiceProcess/entrust'
-			}else{
-				url='/customerServiceProcess/repair'
-			}
+			var url='/customerServiceProcess/repair'
 			var options = {
 				type : "post",
 				url : url,
@@ -72,6 +80,13 @@ $(document).ready(function() {
 			$(form).ajaxSubmit(options);     
 		}  
 	});
+	
+	$("#repairDetail\\.repairStartTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
+	$("#repairDetail\\.repairEndTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
+	
+	$("#faultCategory").chosen();
+	$("#device").chosen();
+	$("#fellow").chosen();
 	
 	jQuery.validator.addMethod("checkExist", function(value, element) {
 		var flag;

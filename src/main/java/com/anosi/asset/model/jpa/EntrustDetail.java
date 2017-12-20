@@ -29,6 +29,8 @@ public class EntrustDetail extends BaseRepairDetail{
 	private List<Account> fellowList = new ArrayList<>();
 	
 	private List<Device> deviceList = new ArrayList<>();
+	
+	private List<FaultCategory> faultCategoryList = new ArrayList<>();
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "entrustDetail")
 	public CustomerServiceProcess getCustomerServiceProcess() {
@@ -55,6 +57,15 @@ public class EntrustDetail extends BaseRepairDetail{
 
 	public void setDeviceList(List<Device> deviceList) {
 		this.deviceList = deviceList;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	public List<FaultCategory> getFaultCategoryList() {
+		return faultCategoryList;
+	}
+
+	public void setFaultCategoryList(List<FaultCategory> faultCategoryList) {
+		this.faultCategoryList = faultCategoryList;
 	}
 	
 }

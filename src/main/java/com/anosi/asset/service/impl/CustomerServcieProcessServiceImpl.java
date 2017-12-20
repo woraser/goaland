@@ -38,11 +38,16 @@ import com.anosi.asset.model.jpa.BaseRepairDetail;
 import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
 import com.anosi.asset.model.jpa.BaseProcess.FinishType;
 import com.anosi.asset.model.jpa.CustomerServiceProcess;
+import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.DocumentType.TypeValue;
+import com.anosi.asset.model.jpa.EntrustDetail;
+import com.anosi.asset.model.jpa.FaultCategory;
 import com.anosi.asset.model.jpa.MessageInfo;
 import com.anosi.asset.model.jpa.ProcessRecord;
 import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
 import com.anosi.asset.model.jpa.QCustomerServiceProcess;
+import com.anosi.asset.model.jpa.RepairDetail;
+import com.anosi.asset.service.AccountService;
 import com.anosi.asset.service.CustomerServcieProcessService;
 import com.anosi.asset.service.DistributeDetailService;
 import com.anosi.asset.service.EntrustDetailService;
@@ -86,6 +91,8 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	private RepairDetailService repairDetailService;
 	@Autowired
 	private EntrustDetailService entrustDetailService;
+	@Autowired
+	private AccountService accountService;
 
 	public CustomerServcieProcessServiceImpl() {
 		super();
@@ -117,6 +124,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			process.setFinishType(FinishType.REMAIN);
 			process.setApplicant(sessionComponent.getCurrentUser());
 
+			examineDetailService.save(process.getExamineDetail());
 			startDetailService.save(process.getStartDetail());
 			customerServiceProcessDao.save(process);
 		} else {
@@ -154,12 +162,14 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		process.setFinishType(FinishType.REMAIN);
 		// 如果是工程部
 		if ("engineerDep".equals(code)) {
-			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("engineeDep", process.getStartDetail().getNextAssignee(), "isEnginee", true)),
+			completeTask(taskId,
+					() -> taskService.complete(taskId, ImmutableMap.of("engineeDep",
+							process.getStartDetail().getNextAssignee().getLoginId(), "isEnginee", true)),
 					new ArrayList<>());
 		} else {
-			completeTask(taskId, () -> taskService.complete(taskId,
-					ImmutableMap.of("depManager", process.getStartDetail().getNextAssignee(), "isEnginee", false)),
+			completeTask(taskId,
+					() -> taskService.complete(taskId, ImmutableMap.of("depManager",
+							process.getStartDetail().getNextAssignee().getLoginId(), "isEnginee", false)),
 					new ArrayList<>());
 		}
 	}
@@ -183,7 +193,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		} else {
 			completeTask(taskId,
 					() -> taskService.complete(taskId,
-							ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep())),
+							ImmutableMap.of("engineeDep", process.getExamineDetail().getEngineeDep().getLoginId())),
 					new ArrayList<>());
 		}
 	}
@@ -192,39 +202,80 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Override
 	public void evaluating(String taskId, CustomerServiceProcess process) throws Exception {
 		evaluatingDetailService.save(process.getEvaluatingDetail());
-		completeTask(taskId, () -> taskService.complete(taskId,
-				ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer())), new ArrayList<>());
+		completeTask(taskId,
+				() -> taskService.complete(taskId,
+						ImmutableMap.of("servicer", process.getEvaluatingDetail().getServicer().getLoginId())),
+				new ArrayList<>());
 	}
 
 	@Transactional
 	@Override
 	public void distribute(String taskId, CustomerServiceProcess process) throws Exception {
 		distributeDetailService.save(process.getDistributeDetail());
-		completeTask(taskId, () -> taskService.complete(taskId,
-				ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer())), new ArrayList<>());
+		completeTask(taskId,
+				() -> taskService.complete(taskId,
+						ImmutableMap.of("engineer", process.getDistributeDetail().getEngineer().getLoginId())),
+				new ArrayList<>());
 	}
 
 	@Override
 	@Transactional
-	public void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles) throws Exception {
+	public void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles, Long[] devices,
+			Long[] fellows, Long[] faultCategorys) throws Exception {
+		// 上传文件
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
 				this.fileMetaDataService.saveFile("customerService_repair_" + process.getName(),
 						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
 			}
 		}
-		sessionComponent.getCurrentUser();// 利用shiro缓存机制，防止异步任务获取session出错
+
+		// 设置关联设备
+		for (Long deviceId : devices) {
+			Device device = new Device();
+			device.setId(deviceId);
+			process.getRepairDetail().getDeviceList().add(device);
+		}
+		// 同行工程师
+		if (fellows != null && fellows.length != 0) {
+			for (Long fellowId : fellows) {
+				Account account = new Account();
+				account.setId(fellowId);
+				process.getRepairDetail().getFellowList().add(account);
+			}
+		}
+		// 故障分类
+		for (Long faultCategoryId : faultCategorys) {
+			FaultCategory faultCategory = new FaultCategory();
+			faultCategory.setId(faultCategoryId);
+			process.getRepairDetail().getFaultCategoryList().add(faultCategory);
+		}
+
 		repairDetailService.save(process.getRepairDetail());
 		boolean entrust = process.getRepairDetail().getEntrust();
 		Map<String, Object> map = new HashMap<>();
 		map.put("entrust", entrust);
 		if (entrust) {
 			// 转派
-			map.put("entruster", process.getRepairDetail().getEntruster().getLoginId());
+			map.put("entruster", accountService.getOne(process.getRepairDetail().getEntruster().getId()).getLoginId());
+
+			RepairDetail repairDetail = process.getRepairDetail();
+			// 给entrustDetail赋初始值
+			EntrustDetail entrustDetail = new EntrustDetail();
+			entrustDetail.setProblemDescription(repairDetail.getProblemDescription());
+			entrustDetail.setFailureCause(repairDetail.getFailureCause());
+			entrustDetail.setProcessMode(repairDetail.getProcessMode());
+			repairDetail.getDeviceList().forEach(device -> entrustDetail.getDeviceList().add(device));
+			repairDetail.getFaultCategoryList()
+					.forEach(faultCategory -> entrustDetail.getFaultCategoryList().add(faultCategory));
+
+			entrustDetailService.save(entrustDetail);
+			process.setEntrustDetail(entrustDetail);
 		} else {
 			process.setFinishType(FinishType.FINISHED);
 			process.setFinishDate(new Date());
 			// 把解决方案写入到方案库
+			sessionComponent.getCurrentUser();// 利用shiro缓存机制，防止异步任务获取session出错
 			asyncDocument.insertIntoDocument(process.getRepairDetail(), process);
 		}
 		customerServiceProcessDao.save(process);
@@ -233,19 +284,46 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 
 	@Override
 	@Transactional
-	public void entrust(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles)
-			throws Exception {
+	public void entrust(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles, Long[] devices,
+			Long[] fellows, Long[] faultCategorys) throws Exception {
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
 				this.fileMetaDataService.saveFile("customerService_repair_" + process.getName(),
 						multipartFile.getOriginalFilename(), multipartFile.getInputStream(), multipartFile.getSize());
 			}
 		}
+
+		// 先清空关联设备
+		process.getEntrustDetail().getDeviceList().clear();
+		// 设置关联设备
+		for (Long deviceId : devices) {
+			Device device = new Device();
+			device.setId(deviceId);
+			process.getRepairDetail().getDeviceList().add(device);
+		}
+		// 同行工程师
+		if (fellows != null && fellows.length != 0) {
+			for (Long fellowId : fellows) {
+				Account account = new Account();
+				account.setId(fellowId);
+				process.getRepairDetail().getFellowList().add(account);
+			}
+		}
+		
+		// 故障分类
+		process.getEntrustDetail().getFaultCategoryList().clear();
+		for (Long faultCategoryId : faultCategorys) {
+			FaultCategory faultCategory = new FaultCategory();
+			faultCategory.setId(faultCategoryId);
+			process.getRepairDetail().getFaultCategoryList().add(faultCategory);
+		}
+
 		entrustDetailService.save(process.getEntrustDetail());
 		process.setFinishType(FinishType.FINISHED);
 		process.setFinishDate(new Date());
 		completeTask(taskId, () -> taskService.complete(taskId), new ArrayList<>());
 		// 把解决方案写入到方案库
+		sessionComponent.getCurrentUser();// 利用shiro缓存机制，防止异步任务获取session出错
 		asyncDocument.insertIntoDocument(process.getEntrustDetail(), process);
 	}
 

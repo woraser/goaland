@@ -1,7 +1,10 @@
 @CHARSET "UTF-8";
 input.error{  
 	border: 2px dashed red;  
-}  
+}
+textarea.error{  
+	border: 2px dashed red;  
+}
 label.error{
 	color:Red;
 	font-size:13px;

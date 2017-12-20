@@ -15,7 +15,7 @@ import org.hibernate.annotations.Type;
  *
  */
 @Entity
-@Table(name = "startDetail")
+@Table(name = "examineDetail")
 public class ExamineDetail extends BaseEntity {
 
 	/**

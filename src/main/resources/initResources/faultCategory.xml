@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<faultCategorys>
+  <faultCategory name="主泵故障"></faultCategory>
+  <faultCategory name="补水泵故障"></faultCategory>
+  <faultCategory name="原水泵故障"></faultCategory>
+  <faultCategory name="离子交换器故障"></faultCategory>
+  <faultCategory name="过滤器故障"></faultCategory>
+  <faultCategory name="电动球阀故障"></faultCategory>
+  <faultCategory name="止回阀故障"></faultCategory>
+  <faultCategory name="整套系统管路中蝶阀故障"></faultCategory>
+  <faultCategory name="电磁阀故障"></faultCategory>
+  <faultCategory name="氮气瓶故障"></faultCategory>
+  <faultCategory name="法兰密封圈故障"></faultCategory>
+  <faultCategory name="电加热器故障"></faultCategory>
+  <faultCategory name="二次电器原件故障"></faultCategory>
+  <faultCategory name="冷却塔故障"></faultCategory>
+  <faultCategory name="喷淋水处理装置故障"></faultCategory>
+  <faultCategory name="加药装置故障"></faultCategory>
+  <faultCategory name="反渗透膜故障"></faultCategory>
+  <faultCategory name="阀冷系统仪表故障"></faultCategory>
+  <faultCategory name="阀冷电器故障"></faultCategory>
+</faultCategorys>

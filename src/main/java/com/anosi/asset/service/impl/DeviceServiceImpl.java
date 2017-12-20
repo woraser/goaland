@@ -165,4 +165,9 @@ public class DeviceServiceImpl extends BaseJPAServiceImpl<Device> implements Dev
 		return deviceDao.findByRfid(rfid);
 	}
 
+	@Override
+	public List<Device> findIdAndSN() {
+		return deviceDao.findIdAndSN();
+	}
+
 }

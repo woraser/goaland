@@ -185,7 +185,8 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 		logger.debug("view startProcess form");
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		return new ModelAndView("process/" + definitionKey + "/runtimeTask-" + task.getTaskDefinitionKey())
-				.addObject("task", task).addAllObjects(getRunTimeTaskObjects(task.getTaskDefinitionKey()));
+				.addObject("task", task)
+				.addAllObjects(getRunTimeTaskObjects(task.getTaskDefinitionKey(), task.getProcessInstanceId()));
 	}
 
 	/***
@@ -197,7 +198,7 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	@RequestMapping(value = "/runtimeTask/prepare/datas", method = RequestMethod.GET)
 	public JSONObject runTimeTasksObjectsRemote(@RequestParam String taskId) throws Exception {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		return getRunTimeTaskObjectsRemote(task.getTaskDefinitionKey());
+		return getRunTimeTaskObjectsRemote(task.getTaskDefinitionKey(), task.getProcessInstanceId());
 	}
 
 	/***
@@ -205,18 +206,20 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * 
 	 * @param taskDefinitionKey
 	 *            task定义的key
+	 * @param processInstanceId
 	 * @return
 	 */
-	public abstract Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey);
+	public abstract Map<String, Object> getRunTimeTaskObjects(String taskDefinitionKey, String processInstanceId);
 
 	/***
 	 * 发起办理所需的数据,json格式
 	 * 
 	 * @param taskDefinitionKey
 	 *            task定义的key
+	 * @param processInstanceId
 	 * @return
 	 */
-	public abstract JSONObject getRunTimeTaskObjectsRemote(String taskDefinitionKey);
+	public abstract JSONObject getRunTimeTaskObjectsRemote(String taskDefinitionKey, String processInstanceId);
 
 	/***
 	 * 进入查看当前account<b>办理过的任务</b>的页面

@@ -47,6 +47,8 @@ public class InitData {
 	private DevCategoryService devCategoryService;
 	@Autowired
 	private DocumentTypeService documentTypeService;
+	@Autowired
+	private InitFaultCategory initFaultCategory;
 
 	@PostConstruct
 	public void init() {
@@ -60,6 +62,7 @@ public class InitData {
 				initRoleFunctionRelated.initRoleFunctionRelated();
 				initDevCategory();
 				initType();
+				initFaultCategory.initFalutCategory();
 			}
 		});
 	}

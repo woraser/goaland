@@ -1,5 +1,7 @@
 package com.anosi.asset.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -37,5 +39,7 @@ public interface DeviceService extends BaseJPAService<Device>{
 	public Page<Device> findByContentSearch(String searchContent, Pageable pageable);
 	
 	public Device findByRfid(String rfid);
+	
+	public List<Device> findIdAndSN();
 
 }

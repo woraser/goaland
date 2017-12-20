@@ -290,4 +290,15 @@ public class Device extends BaseEntity {
 		return true;
 	}
 
+	public Device(Long id,String serialNo) {
+		super();
+		setId(id);
+		this.serialNo = serialNo;
+	}
+
+	public Device() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 }

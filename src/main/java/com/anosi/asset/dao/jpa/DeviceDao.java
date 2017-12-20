@@ -1,9 +1,12 @@
 package com.anosi.asset.dao.jpa;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 
@@ -40,5 +43,8 @@ public interface DeviceDao extends BaseJPADao<Device>, QuerydslBinderCustomizer<
 				"project.number", "project.location", "productName", "productNo", "productSpecifications", "serialNo",
 				"rfid");
 	}
+	
+	@Query(value="SELECT new Device(d.id,d.serialNo) FROM Device d")
+	public List<Device> findIdAndSN();
 
 }
