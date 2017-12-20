@@ -18,7 +18,7 @@ public interface MaterielDao extends BaseJPADao<Materiel>{
 		SupplyQuery supplyQuery = (queryBuilder) -> {
 			MustJunction mustJunction = queryBuilder.bool()
 					.must(queryBuilder.keyword()
-							.onFields("name")
+							.onFields("name","number")
 							.matching(searchContent).createQuery())
 					.must(new TermQuery(new Term("device.serialNo", deviceSN)));
 			return mustJunction.createQuery();

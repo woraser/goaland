@@ -5,9 +5,11 @@ $(document).ready(function() {
 	$("#materielForm").validate({
 		//debug:true,
 		rules : {
+			number : {
+				required : true,
+			}
 			name : {
 				required : true,
-				checkUniqueName : true,
 			},
 			beginTime : {
 				required : true,

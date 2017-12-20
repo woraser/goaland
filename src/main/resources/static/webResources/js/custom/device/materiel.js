@@ -11,6 +11,7 @@ $(document).ready(function() {
 	});
 	
 	var colModel=[
+	    {label:$.i18n.prop('materiel.number'),name:'name',index:'name', width: '120',  align: 'center'},
   	    {label:$.i18n.prop('materiel.name'),name:'name',index:'name', width: '120',  align: 'center'},
      	{label:$.i18n.prop('materiel.beginTime'),name:'beginTime',index:'beginTime', width: '120',  align: 'center'},
 		{label:$.i18n.prop('materiel.lastCheckTime'),name:'lastCheckTime',index:'lastCheckTime', width: '120',  align: 'center'},
@@ -52,7 +53,7 @@ $(document).ready(function() {
 	 var params={}
 	 //设置请求需要的一些参数
 	 params['rowId']='id';
-	 params['showAttributes']='name,beginTime,lastCheckTime,checkDate,remindDate,status,id';//要获取的属性名
+	 params['showAttributes']='number,name,beginTime,lastCheckTime,checkDate,remindDate,status,id';//要获取的属性名
 	 params['page']=page;
 	 params['size']=rowNum;
 	 params['sort']=sort;

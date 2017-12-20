@@ -36,6 +36,9 @@ public class Materiel extends BaseEntity {
 	private static final long serialVersionUID = 6709768657814585431L;
 
 	@Field
+	private String number;// 物料编码
+
+	@Field
 	private String name;
 
 	@IndexedEmbedded
@@ -52,12 +55,12 @@ public class Materiel extends BaseEntity {
 	private int remainderDay = 0;// 距离检测时间还剩下的天数，每日更新
 
 	private Status status = Status.NORMAL;
-	
+
 	public Materiel() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Materiel(String name, Device device, Date beginTime, int checkYear, int checkMonth, int checkDay,
 			int remindYear, int remindMonth, int remindDay) {
 		super();
@@ -71,8 +74,6 @@ public class Materiel extends BaseEntity {
 		this.remindMonth = remindMonth;
 		this.remindDay = remindDay;
 	}
-
-
 
 	public String getName() {
 		return name;
@@ -170,6 +171,14 @@ public class Materiel extends BaseEntity {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	/****
