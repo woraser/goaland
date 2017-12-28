@@ -360,7 +360,6 @@ public class Account extends BaseEntity {
 	 * @return
 	 */
 	@Transient
-	@JSONField(serialize=false)
 	public Department getDepartment() {
 		return roleList.get(0).getDepGroup().getDepartment();
 	}

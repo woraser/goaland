@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 @Entity
 @Table(name="department")
 public class Department extends BaseEntity{
@@ -26,11 +28,14 @@ public class Department extends BaseEntity{
 	@Field
 	private String name;
 	
+	@JSONField(serialize=false)
 	private String code;
 	
+	@JSONField(serialize=false)
 	@ContainedIn
 	private List<DepGroup> depGroupList = new ArrayList<>();
 	
+	@JSONField(serialize=false)
 	private Company company;
 
 	public String getName() {

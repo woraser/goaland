@@ -246,6 +246,12 @@
 .out-button{
     width: 7%;height: 100%;background: #BECBD4;font-size: 14px;border: 0px;border-radius: 3px;color: #FFFFFF;
 }
+.process-out-button{
+    width: 5%;height: 35px;background: #BECBD4;font-size: 14px;border: 0px;border-radius: 3px;color: #FFFFFF;margin-top: 15px;margin-left: 12%;
+}
+.process-save-button{
+    width: 5%;height: 35px;background: #F77A4B;font-size: 14px;border: 0px;border-radius: 3px;color: #FFFFFF;margin-top: 15px;
+}
 .save-button{
     width: 7%;height: 100%;background: #F77A4B;font-size: 14px;border: 0px;border-radius: 3px;color: #FFFFFF;
 }
@@ -264,6 +270,9 @@
 .project-info-title{
     width: 100%;height: 2%;border-left: solid #FBBCA5 3px;font-size: 16px;color: dimgrey;padding-left: 1%;
     margin-bottom: 1.5%;
+}
+.project-info-title1{
+    height:30px;border-left: solid #FBBCA5 3px;font-size: 16px;color: dimgrey;margin-left:12%;margin-top: 15px;
 }
 .project-info{
     padding-left: 4%;padding-right: 4%;
@@ -581,15 +590,15 @@
     width: 49.3%;height: 95%;float: right;box-shadow: #979797 0px 6px 10px;background: #FFFFFF;
 }
 .back{
-    float: right;width: 4%;
-    height: 55%;
+    float: right;width: 5%;
+    height: 70%;
     background: #FFFFFF;
     border: 0px;
     border-radius: 10px;
     color: #FC8060;
-    font-size: 12px;
-    font-weight: 400;
-    margin-top: 0.9%;
+    font-size: 16px;
+    font-weight: 800;
+    margin-top: 0.5%;
     margin-right: 2%;
 }
 .device-detail-info{
@@ -615,7 +624,15 @@
     float: left;
     margin-left: 5%;
 }
-
+.delete-button{
+    color: #FFF;background: #CCCCCC;border: 0px;margin-left: 2%;width: 25%;
+}
+.edit-button{
+    color: #FFF;background: #999999;border: 0px;margin-left: 2%;width: 25%;
+}
+.done-button{
+    color: #FFF;background: #FC8060;border: 0px;margin-left: 2%;width: 25%;
+}
 
 
 
