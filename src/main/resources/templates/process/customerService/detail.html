@@ -64,10 +64,10 @@
 		                        </div>
 		                        <div class="process-in-title-right" style="width: 27%;padding-top: 0.2%">
 		                            	<span th:text="#{customerService.applicant}">发起人</span>
-		                            	<span>:{{detailData["applicant.name"]}}</span>
+		                            	<span>:{{detailData.applicant.name}}</span>
 		                            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		                            	<span th:text="#{customerService.startTime}">发起时间</span>
-		                            	<span>:{{detailData["historicProcessInstance.startTime"]}}</span>
+		                            	<span>:{{detailData.createDate}}</span>
 		                        </div>
 		                    </div>
 		                </div>

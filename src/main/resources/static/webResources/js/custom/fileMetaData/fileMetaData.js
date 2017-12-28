@@ -16,7 +16,7 @@ $(document).ready(function() {
 	var loadFileMetaData = function(){
 		$.ajax({
 			url : "/fileMetaData/management/data/one?objectId="+$("#fileMetaDataId").val(),
-			data : {"showAttributes":"fileName,fileSize,suffix,uploaderName,uploadTime"},
+			data : {"showAttributes":"fileName,fileSizeH,suffix,uploaderName,uploadTime"},
 			type : 'get',
 			dataType : 'json',
 			success : function( data ) {

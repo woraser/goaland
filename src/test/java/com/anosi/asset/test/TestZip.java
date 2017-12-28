@@ -2,6 +2,7 @@ package com.anosi.asset.test;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.dom4j.Document;
@@ -69,6 +70,13 @@ public class TestZip {
 		XMLWriter writer = new XMLWriter(out, format);
 		writer.write(document);// 写入文件
 		writer.close();
+	}
+	
+	@Test
+	public void testRandom(){
+		Random random = new Random();
+		System.out.println(random.nextDouble());
+		System.out.println(random.nextDouble()*(1-0.6)+0.6);
 	}
 
 }

@@ -68,7 +68,7 @@
 			    	<div class="form-group">
 				    	<label class="col-sm-3 control-label"  th:text="#{reason}">理由</label>  
 				    	<div class="col-sm-8">
-				            <textarea id="reason" name="reason" class="form-control" th:placeholder="#{reason}"></textarea> 
+				            <textarea th:field="*{repairDetail.reason}" class="form-control" th:placeholder="#{reason}"></textarea> 
 		    			</div>
 			    	</div>
 		    	</div>

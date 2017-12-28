@@ -25,7 +25,7 @@ $(document).ready(function() {
 			"repairDetail.entruster.id" : {
 				required : true,
 			},
-			reason : {
+			"repairDetail.reason" : {
 				required : true,
 			},
 			device : {

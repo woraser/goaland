@@ -19,7 +19,7 @@
                </div>
                <div class="detail-div-title5">
                    <div style="width: 100%;height: 50%;font-size: 16px;color: #637B93;padding-top: 8%">
-                       {{detailData['applicant.name']}}
+                       {{detailData.applicant.name}}
                    </div>
                    <div style="width: 100%;height: 50%;color: #C7CFDA;" th:text="#{applyer}">
                    </div>
@@ -42,17 +42,17 @@
                                    </tr>
                                    <tr>
                                        <td class="aaa" th:text="#{customerService.projectName}">项目名称：</td>
-                                       <td class="bbb">{{detailData.project.name}}</td>
+                                       <td class="bbb">{{detailData.startDetail.project.name}}</td>
 
                                    </tr>
                                    <tr>
                                        <td class="aaa" th:text="#{customerService.projectNo}">项目编号：</td>
-                                       <td class="bbb">{{detailData.project.number}}</td>
+                                       <td class="bbb">{{detailData.startDetail.project.number}}</td>
 
                                    </tr>
                                    <tr>
                                        <td class="aaa" th:text="#{customerService.projectLocation}">项目地点：</td>
-                                       <td class="bbb">{{detailData.project.location}} </td>
+                                       <td class="bbb">{{detailData.startDetail.project.location}} </td>
 
                                    </tr>
                                    <tr>

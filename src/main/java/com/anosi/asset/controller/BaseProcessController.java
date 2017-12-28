@@ -7,6 +7,7 @@ import java.util.Map;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -326,14 +327,20 @@ public abstract class BaseProcessController<T extends BaseProcess> extends BaseC
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/process/detail/{id}", method = RequestMethod.GET)
-	public JSONObject findById(@PathVariable Long id) throws Exception {
+	public JSONObject findById(@PathVariable Long id,
+			@RequestParam(value = "showAttributes", required = false) String showAttributes) throws Exception {
 		T t = getProcessService().getOne(id);
-		t = getProcessService().getDetail(t);
-		JSONObject jsonObject = JSON.parseObject(JSON.toJSONStringWithDateFormat(t, "yyyy-MM-dd HH:mm:ss",
-				SerializerFeature.DisableCircularReferenceDetect));
-		if (t.getTask() != null) {
-			jsonObject.put("task", new JSONObject(ImmutableMap.of("id", t.getTask().getId(), "name",
-					t.getTask().getName(), "taskDefinitionKey", t.getTask().getTaskDefinitionKey())));
+		JSONObject jsonObject;
+		if (StringUtils.isBlank(showAttributes)) {
+			t = getProcessService().getDetail(t);
+			jsonObject = JSON.parseObject(JSON.toJSONStringWithDateFormat(t, "yyyy-MM-dd HH:mm:ss",
+					SerializerFeature.DisableCircularReferenceDetect));
+			if (t.getTask() != null) {
+				jsonObject.put("task", new JSONObject(ImmutableMap.of("id", t.getTask().getId(), "name",
+						t.getTask().getName(), "taskDefinitionKey", t.getTask().getTaskDefinitionKey())));
+			}
+		} else {
+			jsonObject = jsonUtil.parseAttributesToJson(StringUtil.splitAttributes(showAttributes), t);
 		}
 		return jsonObject;
 	}
