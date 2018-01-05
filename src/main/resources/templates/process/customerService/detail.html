@@ -25,6 +25,15 @@
             padding-left: 30px;
             color: #5A7387;
         }
+        .formone{
+		    text-align: left;
+		}
+		.titleprocessdetail{
+		    text-align: right;color:#566E88;font-weight: 200;
+		}
+		.processdetail-label{
+		    font-size: 13px;
+		}
 	</style>
 	
 	<script type="text/javascript" src="/webResources/js/custom/process/customerService/detail.js" ></script>
@@ -169,6 +178,7 @@
 		                <div v-if="evaluatingShow" class="detail-div" th:include="process/customerService/detail-evaluating::evaluating"></div>
 		                <div v-if="distributeShow" class="detail-div" th:include="process/customerService/detail-distribute::distribute"></div>
 		                <div v-if="repairShow" class="detail-div" th:include="process/customerService/detail-repair::repair"></div>
+		                <div v-if="entrustShow" class="detail-div" th:include="process/customerService/detail-entrust::entrust"></div>
 		            </div>
 		        </div>
 		    </div>
