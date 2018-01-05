@@ -66,6 +66,7 @@ $(document).ready(function() {
 		   detailData : {},
 		   fileDatas : [],
 		   repairFiles : [],
+		   entrustFiles : [],
 		   completeStartDetail : {'active':true},
 		   examine : {'active':false},
 		   evaluating : {'active':false},
@@ -78,6 +79,7 @@ $(document).ready(function() {
 		   evaluatingShow : false,
 		   distributeShow : false,
 		   repairShow : false,
+		   entrustShow : false,
 	   },
 	   methods: {
 		   handle: function (key,taskName,taskId,processId) {
@@ -101,6 +103,7 @@ $(document).ready(function() {
 			  detail.evaluatingShow = false
 			  detail.distributeShow = false
 			  detail.repairShow = false 
+			  detail.entrustShow = false 
 			  detail[show] = true
 		  },
 	   },
@@ -126,6 +129,7 @@ $(document).ready(function() {
 				detail.detailData.startDetail.productType = $.i18n.prop('customerService.productType.' + data.startDetail.productType)
 			    loadPicture("customerService_"+data.name)
 			    loadPicture("customerService_repair_"+data.name)
+			    loadPicture("customerService_entrust_"+data.name)
 			}
 		})
 	}
@@ -138,6 +142,8 @@ $(document).ready(function() {
 			success : function( fileData ) {
 				if(identification.indexOf("repair")!=-1){
 					detail.repairFiles = fileData.content
+				}else if(identification.indexOf("entrust")!=-1){
+					detail.entrustFiles = fileData.content
 				}else{
 					detail.fileDatas = fileData.content
 					$.each(fileData.content,function(){
