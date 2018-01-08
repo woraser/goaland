@@ -18,7 +18,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) { //endPoint 注册协议节点,并映射指定的URl
-        registry.addEndpoint("/endpointWisely").withSockJS();//注册一个Stomp 协议的endpoint,并指定 SockJS协议。
+        registry.addEndpoint("/endpointWisely").setAllowedOrigins("*").withSockJS();//注册一个Stomp 协议的endpoint,并指定 SockJS协议。
     }
 
     @Override

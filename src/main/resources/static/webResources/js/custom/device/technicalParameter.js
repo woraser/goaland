@@ -111,5 +111,21 @@ $(document).ready(function() {
 	   	}
 		    	
     });
+
+	// webSocket监听
+    var stompClient = null;
+
+    var socket = new SockJS('http://10.1.1.93:8080/endpointWisely'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+    stompClient = Stomp.over(socket);//使用stomp子协议的WebSocket 客户端
+    stompClient.connect('guest', 'guest', function(frame) {//链接Web Socket的服务端。
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/broadcast/fbox/data/'+$("#boxId").val(), function(respnose){ //订阅/topic/broadcast/fbox/data/目标发送的消息。
+            //responseMessage:[{"id":"86642487332017342","value":57,"name":"蓄冷槽液位","t":1515066692342,"gname":"Default Group"}]
+            var valueArray = JSON.parse(JSON.parse(respnose.body).responseMessage);
+            $.each(valueArray,function(){
+            	myGrid.setCell(this.id,"actualValue",this.value);
+			})
+        });
+    });
 	 
 })
