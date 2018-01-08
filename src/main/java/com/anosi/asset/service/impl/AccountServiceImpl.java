@@ -2,7 +2,6 @@ package com.anosi.asset.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -17,14 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.component.PasswordEncry;
-import com.anosi.asset.component.RemoteComponent;
 import com.anosi.asset.dao.jpa.AccountDao;
 import com.anosi.asset.dao.jpa.BaseJPADao;
-import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Privilege;
 import com.anosi.asset.model.jpa.RoleFunction;
@@ -35,7 +30,6 @@ import com.anosi.asset.service.RoleFunctionBtnService;
 import com.anosi.asset.service.RoleFunctionGroupService;
 import com.anosi.asset.service.RoleFunctionService;
 import com.anosi.asset.service.RoleService;
-import com.anosi.asset.util.URLConncetUtil;
 
 @Service("accountService")
 @Transactional
@@ -55,8 +49,6 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 	private RoleService roleService;
 	@Autowired
 	private RoleFunctionGroupService roleFunctionGroupService;
-	@Autowired
-	private RemoteComponent remoteComponent;
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -74,15 +66,6 @@ public class AccountServiceImpl extends BaseJPAServiceImpl<Account> implements A
 	@Override
 	public Account save(Account account, String password, String[] roles, String[] roleFunctionGroups,
 			String[] selRolesFunctionNode) throws Exception {
-		// 如果是新添加用户，在iotx系统中远程添加
-		if (account.getId() == null) {
-			String result = URLConncetUtil.sendPostString(remoteComponent.getFullPath("/account/save/remote"),
-					"loginId=" + account.getLoginId() + "&password=" + password, remoteComponent.getHearders());
-			JSONObject jsonObject = JSON.parseObject(result);
-			if (!Objects.equals(jsonObject.getString("result"), "success")) {
-				throw new CustomRunTimeException(jsonObject.toString());
-			}
-		}
 		if (StringUtils.isNoneBlank(password)) {
 			account.setPassword(password);
 			// 设置密码

@@ -75,19 +75,28 @@ $(document).ready(function(){
 					var x_data;
 					var y_data;
 					var showDatas = [];
+					var allDatas = [];
 				
 					//遍历data,取出val和collect_time
 					$.each(data.content,function(i,value){
 						x_data = this.collectTime;
 						y_data = this.val;
+						allDatas.push(y_data);
 						showDatas.push({name:x_data.toString(),value:[x_data,y_data]})
 					})
+
+					var max_y_data = Math.max.apply(null,allDatas);
+                    var min_y_data = Math.min.apply(null,allDatas);
 					
 					// 填入数据
 				    dynamicData.setOption({
 				        series: [{
 				            data: showDatas
-				        }]
+				        }],
+                        yAxis:{
+				        	max : max_y_data,
+							min : min_y_data,
+						}
 				    });
 				    
 				}
@@ -128,13 +137,14 @@ $(document).ready(function(){
 		    yAxis: {
 		        type: 'value',
 		        boundaryGap: [0, '50%'],
-		        splitLine: {
+                splitLine: {
 		            show: false
 		        }
 		    },
 		    series: [{
 		        name: 'dynamicData',
 		        type: 'line',
+				symbol: 'none',
 		    }]
 		};
 	getDynamicData();
@@ -147,12 +157,5 @@ $(document).ready(function(){
 		getDynamicData();
 		
 	}, 5000);
-	
-	$(".sensor-top-left-div").mouseover(function() {
-        $(this).attr('class','sensor-top-left-overdiv');
-        $(".sensor-top-left-overdiv").mouseout(function() {
-            $(this).attr('class','sensor-top-left-div');
-        });
-    });
 	
 })

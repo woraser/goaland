@@ -100,7 +100,7 @@ server:
 #remote
 remote:
   protocol: http
-  host: 127.0.0.1
+  host: 10.1.1.93
   port: 8080
   
 #local

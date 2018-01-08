@@ -111,6 +111,29 @@ public class Device extends BaseEntity {
 	@IndexedEmbedded
 	private List<Account> ownerList = new ArrayList<>();
 
+	// fbox
+	private String boxId;
+
+	private String boxSN;
+
+	@Column(unique = true, nullable = false)
+	public String getBoxId() {
+		return boxId;
+	}
+
+	public void setBoxId(String boxId) {
+		this.boxId = boxId;
+	}
+
+	@Column(unique = true, nullable = false)
+	public String getBoxSN() {
+		return boxSN;
+	}
+
+	public void setBoxSN(String boxSN) {
+		this.boxSN = boxSN;
+	}
+
 	public String getProductName() {
 		return productName;
 	}

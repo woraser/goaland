@@ -331,8 +331,7 @@ public class DeviceController extends BaseController<Device> {
 	public ModelAndView toViewDeviceManageTable(@PathVariable Long deviceId) throws Exception {
 		logger.info("view device management detail");
 		Device device = deviceService.getOne(deviceId);
-		return new ModelAndView("device/detail").addObject("deviceId", deviceId).addObject("serialNo",
-				device.getSerialNo());
+		return new ModelAndView("device/detail").addObject("device", device);
 	}
 
 	/***

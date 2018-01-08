@@ -94,21 +94,19 @@
 		<div class="companyMgr-page" style="padding: 1.5% 2.5%" >
 		    <div id="detail" class="sensor-div-top" v-cloak="v-cloak">
 		        <div class="sensor-top-left" style="padding-top: 3%">
-		        	<a v-bind:href="'/iotx/management/detail/'+detailData['dust.iotx.id']+'/view'">
-			            <div class="sensor-top-left-div">
-			                <div style="width: 100%;height: 70%">
-		                		<img src="/webResources/img/iotx/iotx-top-img.png" style="width:100%;"/>
-			                </div>
-			                <div style="width: 100%;height: 30%">
-			                    <div class="half-div">
-			                        IOT-X
-			                    </div>
-			                    <div class="half-div">
-			                        {{detailData['dust.iotx.serialNo']}}
-			                    </div>
-			                </div>
-			            </div>
-		            </a>
+					<div class="sensor-top-left-div">
+						<div style="width: 100%;height: 70%">
+							<img src="/webResources/img/iotx/iotx-top-img.png" style="width:100%;"/>
+						</div>
+						<div style="width: 100%;height: 30%">
+							<div class="half-div">
+								IOT-X
+							</div>
+							<div class="half-div">
+								{{detailData['dust.iotx.serialNo']}}
+							</div>
+						</div>
+					</div>
 		            <div class="connect-img">
 		                <img src="/webResources/img/iotx/sensor-top.png" style="width:100%;"/>
 		            </div>
@@ -128,21 +126,19 @@
 		            <div class="connect-img">
 		                <img src="/webResources/img/iotx/sensor-top.png" style="width:100%;"/>
 		            </div>
-		            <a v-bind:href="'/device/management/detail/'+deviceId+'/view'">
-			            <div class="sensor-top-left-div">
-			                <div style="width: 100%;height: 70%">
-			                    <img src="/webResources/img/iotx/iotx-top-img3.png" style="width:100%;"/>
-			                </div>
-			                <div style="width: 100%;height: 30%">
-			                    <div class="half-div" th:text="#{sensor.device}">
-			                        	连接设备
-			                    </div>
-			                    <div class="half-div">
-			                         {{detailData['dust.device.serialNo']}}
-			                    </div>
-			                </div>
-			            </div>
-		            </a>
+					<div class="sensor-top-left-div">
+						<div style="width: 100%;height: 70%">
+							<img src="/webResources/img/iotx/iotx-top-img3.png" style="width:100%;"/>
+						</div>
+						<div style="width: 100%;height: 30%">
+							<div class="half-div" th:text="#{sensor.device}">
+									连接设备
+							</div>
+							<div class="half-div">
+								 {{detailData['dust.device.serialNo']}}
+							</div>
+						</div>
+					</div>
 		        </div>
 		        <div class="sensor-top-right">
 		            <div class="sensor-data" style="float: left;background: #FCAFA1">

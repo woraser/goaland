@@ -12,25 +12,8 @@ $(document).ready(function() {
 	
 	var colModel=[
          	{label:$.i18n.prop('iotxData.collectTime'),name:'collectTime',index:'collectTime', width: '150',  align: 'center'},
-         	{
-         		label:$.i18n.prop('iotxData.level'),name:'val',index:'val', width: '120',sortable: false,  align: 'center',
-    			formatter: function (cellvalue, options, rowObject) {
-    				var detail = $.i18n.prop('iotxData.' + cellvalue)
-                    return detail;
-                },
-    		},
-    		{
-    			label:$.i18n.prop('operate'),name:'val',index:'val', width: '150',sortable: false,  align: 'center',
-    			formatter: function (cellvalue, options, rowObject) {
-    				var detail;
-                	if(cellvalue==null){
-                		detail = '<button style="color:#FFFFFF;border:0px;width: 60%;height: 25px;background: #FF955E;border-radius: 5px" confirm="'+options.rowId+'">确认</button>'
-                	}else{
-                		detail = '<button style="cursor:default;color:#FFFFFF;border:0px;width: 60%;height: 25px;background: #B6B6BA;border-radius: 5px">已确认</button>'
-                	}
-    				return detail;
-                },
-    		},
+        	{label:$.i18n.prop('iotxData.val'),name:'val',index:'val', width: '150',  align: 'center'},
+        	{label:$.i18n.prop('iotxData.message'),name:'message',index:'message', width: '150',  align: 'center'},
     	];
     	
 	 //每页显示多少行
@@ -43,11 +26,11 @@ $(document).ready(function() {
 	 var params={}
 	 //设置请求需要的一些参数
 	 params['rowId']='id'
-	 params['showAttributes']='collectTime,level,closeTime';//要获取的属性名
+	 params['showAttributes']='collectTime,val,msg';//要获取的属性名
 	 params['page']=page;
 	 params['size']=rowNum;
 	 params['sort']=sort;
-	 params['sensor.serialNo']=$("#serialNo").val();
+	 params['sensorSN']=$("#serialNo").val();
 	 
 	 var paging = new Vue({
  	   el: '#paging',

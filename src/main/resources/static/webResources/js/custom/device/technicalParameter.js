@@ -35,7 +35,6 @@ $(document).ready(function() {
   	 var params={}
   	 //设置请求需要的一些参数
   	 params['rowId']='id';
-  	 params['showAttributes']='name,parameterDescribe,actualValue,unit,serialNo';//要获取的属性名
   	 params['page']=page;
   	 params['size']=rowNum;
   	 params['sort']=sort;
