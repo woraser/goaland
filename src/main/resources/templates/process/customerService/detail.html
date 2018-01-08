@@ -54,7 +54,7 @@
 		    	<button class="back" th:text="#{return}"></button>
 		    </a>
 		</div>
-		<div id="detail" class="companyMgr-page" style="height: 900px" v-cloak="v-cloak">
+		<div id="detail" class="companyMgr-page" style="height: 1050px" v-cloak="v-cloak">
 		    <div class="process-table" style="height: 97%;padding-top: 1.5%;padding-left: 3%;padding-right: 3%">
 		        <div class="table-in">
 		            <div class="processList" style="height: 100%;background: #FFFFFF;border: solid #D9D9D9 1px">
@@ -83,22 +83,34 @@
 		                <div class="time-detail-top">
 		                </div>
 		                <div class="timeline-left" style="width: 4%;margin-left: 3.5%">
-		                    <div class="task-tab" style="margin-top: 10px;float: left">
-		                        	<img src="/webResources/img/process/发起.png"/>
-		                    </div>
-		                    <div v-if="'createTime' in examine" class="task-tab" style="margin-top: 100px;float: left">
-		                        	<img src="/webResources/img/process/审批.png"/>
-		                    </div>
-		                    <div v-if="'createTime' in evaluating" class="task-tab" style="margin-top: 105px;float: left">
-		                        	<img src="/webResources/img/process/评估.png"/>
-		                    </div>
-		                    <div v-if="'createTime' in distribute" class="task-tab" style="margin-top: 110px;float: left">
-		                        	<img src="/webResources/img/process/派单.png"/>
-		                    </div>
-		                    <div v-if="'createTime' in repair" class="task-tab" style="margin-top: 110px;float: left">
-		                        	<img src="/webResources/img/process/维修.png"/>
-		                    </div>
-		
+							<div class="task-tab" style="margin-top: 30px;float: left">
+								<img src="/webResources/img/process/发起.png"/>
+							</div>
+							<div v-if="'createTime' in examine" class="task-tab-right" style="margin-top:20px;">
+							</div>
+							<div v-if="'createTime' in examine" class="task-tab" style="margin-top: 78px;float: left">
+								<img src="/webResources/img/process/审批.png"/>
+							</div>
+							<div v-if="'createTime' in evaluating" class="task-tab-right" style="margin-top: 78px;">
+							</div>
+							<div v-if="'createTime' in evaluating" class="task-tab" style="margin-top: 120px;float: left">
+								<img src="/webResources/img/process/评估.png"/>
+							</div>
+							<div v-if="'createTime' in distribute" class="task-tab-right" style="margin-top: 104px;">
+							</div>
+							<div v-if="'createTime' in distribute" class="task-tab" style="margin-top: 95px;float: left">
+								<img src="/webResources/img/process/派单.png"/>
+							</div>
+							<div v-if="'createTime' in repair" class="task-tab-right" style="margin-top: 108px;">
+							</div>
+							<div v-if="'createTime' in repair" class="task-tab" style="margin-top: 95px;float: left">
+								<img src="/webResources/img/process/维修.png"/>
+							</div>
+							<div v-if="'createTime' in entrust" class="task-tab-right" style="margin-top: 110px;">
+							</div>
+							<div v-if="'createTime' in entrust" class="task-tab" style="margin-top: 95px;float: left">
+								<img src="/webResources/img/process/转派.png"/>
+							</div>
 		                </div>
 		                <div class="timeline-center">
 		
@@ -169,6 +181,20 @@
 		                    <div v-if="'endTime' in repair" class="circle-timeline">
 		                        {{repair.endTime | yearFormat}}<br/>{{repair.endTime | timeFormat}}
 		                    </div>
+
+							<div v-if="'createTime' in entrust" class="circle-line" id="line-4">
+							</div>
+							<div v-if="entrust.active" class="circle-timeline-head" v-on:click="showFunc('entrustShow')">
+							</div>
+							<a v-if="'endTime' in entrust" href="#" v-on:click="showFunc('entrustShow')">
+								<div class="circle-timeline-time">
+									<div class="circle-timeline-small" id="circle-timeline-small4">
+									</div>
+								</div>
+							</a>
+							<div v-if="'endTime' in entrust" class="circle-timeline">
+								{{entrust.endTime | yearFormat}}<br/>{{entrust.endTime | timeFormat}}
+							</div>
 		
 		                </div>
 		                <!-- 引入发起detail -->
