@@ -34,6 +34,7 @@
 		<input type="hidden" id="deviceId" name="deviceId" th:value="${device.id}"/> 
 		<input type="hidden" id="receiverIds" name="receiverIds" th:value="${receiverIds}"/>
 		<input type="hidden" id="ownerIds" name="ownerIds" th:value="${ownerIds}"/>
+		<input type="hidden" id="existFBoxId" name="existFBoxId" th:value="${device.boxId}"/>
 	    <fieldset>
 	    	<input type="hidden" th:field="*{project.id}"/>
 	    	<div class="form-group">
@@ -114,6 +115,13 @@
 		            </select>
     			</div>
 	    	</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">FBox</label>
+				<div class="col-sm-8">
+					<select name="fboxs" id="fboxs" class="form-control" style="width: 350px">
+					</select>
+				</div>
+			</div>
 	    </fieldset>  
 	</form>  
 </body>

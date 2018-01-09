@@ -46,6 +46,10 @@ $(document).ready(function() {
 			var options = {
 				type : "post",
 				url : '/device/save',
+				data:{
+					'boxId' : $("#fboxs").val(),
+					'boxSN' : $("#fboxs").find("option:selected").text(),
+				},
 				success : function(data) {
 					$.unblockUI();
 					if(data.result=='success'){
@@ -74,14 +78,34 @@ $(document).ready(function() {
 	
 	 $("#remindReceivers").chosen();
 	 $("#owners").chosen();
-	 
+
+     // 远程请求FBox列表
+	$.ajax({
+		url : '/api/client/box/grouped/boxs',
+		type : 'get',
+		dataType : 'json',
+		success : function(array) {
+            var select = $("#fboxs");
+            select.append("<option></option>");
+			// 生成select
+			$.each(array,function(){
+                select.append("<option id='boxId' name='boxId' value=" + this.boxid + ">" + this.boxNo + "</option>");
+			})
+
+            if($("#existFBoxId").val()!=null&&$("#existFBoxId").val()!=""){
+                $("#fboxs option[value='"+ $("#existFBoxId").val() +"']").attr("selected","selected");
+            }
+            select.chosen();
+		}
+	 });
+
 	 if($("#deviceId").val()!=null&&$("#deviceId").val()!=""){
 		$.each(eval($("#receiverIds").val()),function(index,item){
 			$("#remindReceivers option[value='"+ item.id +"']").attr("selected","selected");
 		}); 
 		$.each(eval($("#ownerIds").val()),function(index,item){
 			$("#owners option[value='"+ item.id +"']").attr("selected","selected");
-		}); 
+		});
 	 }
 	
 	jQuery.validator.addMethod("checkUniqueSerialNo", function(value, element) {
