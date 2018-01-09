@@ -72,6 +72,7 @@ $(document).ready(function() {
 		   evaluating : {'active':false},
 		   distribute : {'active':false},
 		   repair : {'active':false},
+           entrust : {'active':false},
 		   loginId : $("#loginId").val(),
 		   active : null,
 		   completeForm : true,
