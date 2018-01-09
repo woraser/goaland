@@ -38,9 +38,9 @@ public class I18nController {
                                               @RequestParam(value = "lang") String lang) {
         LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
         if ("zh".equals(lang)) {
-            localeResolver.setLocale(request, response, new Locale("zh", "CN"));
+            localeResolver.setLocale(request, response, new Locale("zh"));
         } else if ("en".equals(lang)) {
-            localeResolver.setLocale(request, response, new Locale("en", "US"));
+            localeResolver.setLocale(request, response, new Locale("en"));
         }
         return new ModelAndView("redirect:/index");
     }
