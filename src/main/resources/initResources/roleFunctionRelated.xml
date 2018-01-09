@@ -37,10 +37,6 @@
 		<roleFunctionBtn btnId="batadd" name="批量添加"></roleFunctionBtn>
 		<roleFunctionBtn btnId="viewDetail" name="查看详情"></roleFunctionBtn>
 	</roleFunction>
-	<roleFunction roleFunctionPageId="iotxManagement" name="iotx管理">
-	</roleFunction>
-	<roleFunction roleFunctionPageId="sensorManagement" name="传感器管理">
-	</roleFunction>
 	<roleFunction roleFunctionPageId="report" name="统计报表"></roleFunction>
 	<roleFunction roleFunctionPageId="advertisement" name="广告管理">
 		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
