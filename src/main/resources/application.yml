@@ -45,7 +45,8 @@ spring:
   #i18n
   messages:
     basename: static/webResources/i18n/messages
-    
+    cache-seconds: 3600
+
   #thymeleaf
   thymeleaf:
     check-template: true

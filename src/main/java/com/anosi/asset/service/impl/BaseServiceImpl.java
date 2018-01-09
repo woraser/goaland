@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.i18n.I18nComponent;
 import com.anosi.asset.component.SessionComponent;
 
 @Transactional

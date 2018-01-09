@@ -1,4 +1,4 @@
-package com.anosi.asset.component;
+package com.anosi.asset.i18n;
 
 import java.util.Locale;
 

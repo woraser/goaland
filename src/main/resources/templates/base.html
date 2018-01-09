@@ -1,201 +1,209 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
 <head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta charset="UTF-8" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<meta name="description" content="" />
-<meta name="author" content="" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
 
-<title th:text="#{indexPage}">首页</title>
+    <title th:text="#{indexPage}">首页</title>
 
-<link href="/webResources/plugins/bootstrap/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link href="/webResources/css/cloud/cloud-admin.css" rel="stylesheet" />
-<link href="/webResources/css/cloud/themes/night.css" rel="stylesheet" />
-<link href="/webResources/css/cloud/responsive.min.css" rel="stylesheet" />
-<link href="/webResources/plugins/font-awesome/css/font-awesome.min.css"
-	rel="stylesheet" />
-<link href="/webResources/css/cloud/animatecss/animate.min.css"
-	rel="stylesheet" />
-<link
-	href="/webResources/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"
-	rel="stylesheet" />
-<link href="/webResources/plugins/jquery-todo/css/styles.css"
-	rel="stylesheet" />
-<link href="/webResources/plugins/fullcalendar/fullcalendar.min.css"
-	rel="stylesheet" />
-<link href="/webResources/plugins/gritter/css/jquery.gritter.css"
-	rel="stylesheet" />
-<link
-	href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'
-	rel="stylesheet" />
-<link
-	href="/webResources/plugins/bootstrap3-dialog/bootstrap-dialog.min.css"
-	rel="stylesheet" />
-<link href="/webResources/css/custom/goaland.css" rel="stylesheet" />
-<link href="/webResources/css/custom/loading.css" rel="stylesheet" />
-<link href="/webResources/css/custom/vclock.css" rel="stylesheet" />
-<link href="/webResources/css/custom/menu.css" rel="stylesheet" />
-<link href="/webResources/plugins/toast/dist/jquery.toast.min.css"
-	rel="stylesheet" />
+    <link href="/webResources/plugins/bootstrap/css/bootstrap.min.css"
+          rel="stylesheet"/>
+    <link href="/webResources/css/cloud/cloud-admin.css" rel="stylesheet"/>
+    <link href="/webResources/css/cloud/themes/night.css" rel="stylesheet"/>
+    <link href="/webResources/css/cloud/responsive.min.css" rel="stylesheet"/>
+    <link href="/webResources/plugins/font-awesome/css/font-awesome.min.css"
+          rel="stylesheet"/>
+    <link href="/webResources/css/cloud/animatecss/animate.min.css"
+          rel="stylesheet"/>
+    <link
+            href="/webResources/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"
+            rel="stylesheet"/>
+    <link href="/webResources/plugins/jquery-todo/css/styles.css"
+          rel="stylesheet"/>
+    <link href="/webResources/plugins/fullcalendar/fullcalendar.min.css"
+          rel="stylesheet"/>
+    <link href="/webResources/plugins/gritter/css/jquery.gritter.css"
+          rel="stylesheet"/>
+    <link
+            href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'
+            rel="stylesheet"/>
+    <link
+            href="/webResources/plugins/bootstrap3-dialog/bootstrap-dialog.min.css"
+            rel="stylesheet"/>
+    <link href="/webResources/css/custom/goaland.css" rel="stylesheet"/>
+    <link href="/webResources/css/custom/loading.css" rel="stylesheet"/>
+    <link href="/webResources/css/custom/vclock.css" rel="stylesheet"/>
+    <link href="/webResources/css/custom/menu.css" rel="stylesheet"/>
+    <link href="/webResources/plugins/toast/dist/jquery.toast.min.css"
+          rel="stylesheet"/>
 
-<style type="text/css">
-body, html {
-	width: 100%;
-	height: 700px;
-}
+    <style type="text/css">
+        body, html {
+            width: 100%;
+            height: 700px;
+        }
 
-.ui-autocomplete {
-	display: block;
-	z-index: 99999;
-}
+        .ui-autocomplete {
+            display: block;
+            z-index: 99999;
+        }
 
-@media screen and (min-width: 768px) {
-	.modal-dialog {
-		width: 540px;
-		margin-left: 40%;
-		margin-top: 10%;
-		height: 460px;
-	}
-	.modal-content {
-		-webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-	}
-}
+        @media screen and (min-width: 768px) {
+            .modal-dialog {
+                width: 540px;
+                margin-left: 40%;
+                margin-top: 10%;
+                height: 460px;
+            }
 
-.navbar .nav.navbar-nav.pull-right {
-	min-width: 0px;
-	height: 50px;
-}
+            .modal-content {
+                -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            }
+        }
 
-#sidebar {
-	background: none repeat scroll 0 0 #4D4948;
-	padding: 0 !important;
-	width: 230px;
-	position: absolute;
-	border-bottom: 0px solid #22262e;
-	padding-top: 0px;
-}
+        .navbar .nav.navbar-nav.pull-right {
+            min-width: 0px;
+            height: 50px;
+        }
 
-.sidebar-menu>ul {
-	list-style: none;
-	margin: 0;
-	margin-top: 0px;
-	padding: 0;
-	margin-top: 0px;
-	border-bottom: 0px solid #4D4948 !important;
-	border-top: 0px solid #4D4948 !important;
-}
+        #sidebar {
+            background: none repeat scroll 0 0 #4D4948;
+            padding: 0 !important;
+            width: 230px;
+            position: absolute;
+            border-bottom: 0px solid #22262e;
+            padding-top: 0px;
+        }
 
-.sidebar-menu>ul>li>a {
-	border-bottom: 0px solid #383e4c !important;
-	border-top: 0px solid #22262e !important;
-	color: #cdd0d8 !important;
-	text-shadow: 0 1px 0 #000000;
-	padding-left: 25px;
-}
+        .sidebar-menu > ul {
+            list-style: none;
+            margin: 0;
+            margin-top: 0px;
+            padding: 0;
+            margin-top: 0px;
+            border-bottom: 0px solid #4D4948 !important;
+            border-top: 0px solid #4D4948 !important;
+        }
 
-body {
-	font-family: "\5FAE\8F6F\96C5\9ED1", "Helvetica Neue", Helvetica, Arial,
-		sans-serif;
-	font-size: 13px;
-	font-weight: 400;
-	color: #333333;
-}
+        .sidebar-menu > ul > li > a {
+            border-bottom: 0px solid #383e4c !important;
+            border-top: 0px solid #22262e !important;
+            color: #cdd0d8 !important;
+            text-shadow: 0 1px 0 #000000;
+            padding-left: 25px;
+        }
 
-.navbar .nav>li>a:hover, .navbar .nav>li>a:focus, .navbar .nav .open>a,
-	.navbar .nav .open>a:hover, .navbar .nav .open>a :focus {
-	background-color: #000000;
-	background-color: rgba(0,0,0,0.1);
-}
+        body {
+            font-family: "\5FAE\8F6F\96C5\9ED1", "Helvetica Neue", Helvetica, Arial,
+            sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #333333;
+        }
 
-.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
-	background-color: #FFFFFF;
-	border-color: #5e87b0;
-}
+        .navbar .nav > li > a:hover, .navbar .nav > li > a:focus, .navbar .nav .open > a,
+        .navbar .nav .open > a:hover, .navbar .nav .open > a :focus {
+            background-color: #000000;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
 
-.dropdown-menu.inbox .body {
-	max-width: 250px;
-}
-</style>
+        .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+            background-color: #FFFFFF;
+            border-color: #5e87b0;
+        }
 
-<script type="text/javascript"
-	src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/bootstrap3-dialog/bootstrap-dialog.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/js/custom/modal/modal.js"></script>
-<script type="text/javascript" src="/webResources/js/custom/common.js"></script>
+        .dropdown-menu.inbox .body {
+            max-width: 250px;
+        }
+    </style>
 
-<script type="text/javascript"
-	src="/webResources/plugins/bootstrap-daterangepicker/daterangepicker.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/bootstrap-daterangepicker/moment.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/fullcalendar/fullcalendar.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/jQuery-Cookie/jquery.cookie.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/i18n/jquery.i18n.properties-1.0.9.js"></script>
-<script type="text/javascript" src="/webResources/plugins/vue/vue.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/dateFormat/dateFormat.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/toaster/jquery.toaster.js"></script>
-<!-- CUSTOM SCRIPT -->
-<script type="text/javascript" src="/webResources/js/script.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/SockJS/sockjs.min.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/stompJs/stomp.js"></script>
-<script type="text/javascript" src="/webResources/js/custom/top/top.js"></script>
-<script type="text/javascript"
-	src="/webResources/plugins/toast/dist/jquery.toast.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/bootstrap3-dialog/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/js/custom/modal/modal.js"></script>
+    <script type="text/javascript" src="/webResources/js/custom/common.js"></script>
 
+    <script type="text/javascript"
+            src="/webResources/plugins/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/fullcalendar/fullcalendar.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/jQuery-Cookie/jquery.cookie.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/i18n/jquery.i18n.properties-1.0.9.js"></script>
+    <script type="text/javascript" src="/webResources/plugins/vue/vue.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/dateFormat/dateFormat.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/toaster/jquery.toaster.js"></script>
+    <!-- CUSTOM SCRIPT -->
+    <script type="text/javascript" src="/webResources/js/script.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/SockJS/sockjs.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/stompJs/stomp.js"></script>
+    <script type="text/javascript" src="/webResources/js/custom/top/top.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/toast/dist/jquery.toast.min.js"></script>
+    <script type="text/javascript"
+            src="/webResources/plugins/cookie.js"></script>
 
-<script>
-	jQuery(document).ready(function() {
-		App.setPage("index"); //Set current page
-		App.init(); //Initialise plugins and elements
+    <script>
+        jQuery(document).ready(function () {
+            App.setPage("index"); //Set current page
+            App.init(); //Initialise plugins and elements
 
-		loadProperties();
+            var lang = getcookie('org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE');
+            if (lang == null) {
+                lang = 'zh';
+            }
+            console.info('lang:' + lang);
 
-		function loadProperties() {
-			jQuery.i18n.properties({// 加载资浏览器语言对应的资源文件
-				name : 'messages', // 资源文件名称
-				path : '/webResources/i18n/', // 资源文件路径
-				mode : 'map', // 用 Map 的方式使用资源文件中的值
-				callback : function() {// 加载成功后设置显示内容
-				}
-			});
-		}
-	});
-</script>
+            function loadProperties() {
+                jQuery.i18n.properties({// 加载资浏览器语言对应的资源文件
+                    name: 'messages', // 资源文件名称
+                    path: '/webResources/i18n/', // 资源文件路径
+                    language: lang,
+                    mode: 'map', // 用 Map 的方式使用资源文件中的值
+                    callback: function () {// 加载成功后设置显示内容
+                    }
+                });
+            }
+            loadProperties();
+        });
+    </script>
 
 </head>
 
 <body>
-	<!-- 引入页眉 -->
-	<header class="navbar clearfix" th:include="top::top"></header>
+<!-- 引入页眉 -->
+<header class="navbar clearfix" th:include="top::top"></header>
 
-	<section id="page">
-		<!-- 引入menu -->
-		<div id="sidebar" class="sidebar" th:include="menu::menu"></div>
+<section id="page">
+    <!-- 引入menu -->
+    <div id="sidebar" class="sidebar" th:include="menu::menu"></div>
 
-		<!-- 具体内容 -->
-		<div id="main-content" layout:fragment="content"></div>
-	</section>
+    <!-- 具体内容 -->
+    <div id="main-content" layout:fragment="content"></div>
+</section>
 </body>
 
 </html>

@@ -30,7 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.anosi.asset.bean.FileMetaDataBean;
-import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.i18n.I18nComponent;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.mongo.FileMetaData;
 import com.anosi.asset.service.FileMetaDataService;

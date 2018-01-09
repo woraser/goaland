@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.i18n.I18nComponent;
 import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Materiel;
 import com.anosi.asset.service.MaterielService;

@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.anosi.asset.GoalandApplication;
-import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.i18n.I18nComponent;
 import com.anosi.asset.model.jpa.DevCategory;
 import com.anosi.asset.model.jpa.DevCategoryStructures;
 import com.anosi.asset.service.DevCategoryStructuresService;

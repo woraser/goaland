@@ -41,7 +41,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.anosi.asset.component.I18nComponent;
+import com.anosi.asset.i18n.I18nComponent;
 import com.anosi.asset.component.WebSocketComponent;
 import com.anosi.asset.exception.CustomRunTimeException;
 import com.anosi.asset.model.jpa.Account;
