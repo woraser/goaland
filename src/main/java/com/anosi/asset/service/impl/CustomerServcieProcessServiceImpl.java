@@ -1,18 +1,24 @@
 package com.anosi.asset.service.impl;
 
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.anosi.asset.dao.jpa.BaseJPADao;
+import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
+import com.anosi.asset.exception.CustomRunTimeException;
+import com.anosi.asset.i18n.I18nComponent;
+import com.anosi.asset.model.jpa.*;
+import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
+import com.anosi.asset.model.jpa.BaseProcess.FinishType;
+import com.anosi.asset.model.jpa.DocumentType.TypeValue;
+import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
+import com.anosi.asset.service.*;
+import com.google.common.collect.ImmutableMap;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.io.IOUtils;
@@ -27,43 +33,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.anosi.asset.i18n.I18nComponent;
-import com.anosi.asset.dao.jpa.BaseJPADao;
-import com.anosi.asset.dao.jpa.CustomerServiceProcessDao;
-import com.anosi.asset.exception.CustomRunTimeException;
-import com.anosi.asset.model.jpa.Account;
-import com.anosi.asset.model.jpa.BaseRepairDetail;
-import com.anosi.asset.model.jpa.AgreementStatus.Agreement;
-import com.anosi.asset.model.jpa.BaseProcess.FinishType;
-import com.anosi.asset.model.jpa.CustomerServiceProcess;
-import com.anosi.asset.model.jpa.Device;
-import com.anosi.asset.model.jpa.DocumentType.TypeValue;
-import com.anosi.asset.model.jpa.EntrustDetail;
-import com.anosi.asset.model.jpa.FaultCategory;
-import com.anosi.asset.model.jpa.MessageInfo;
-import com.anosi.asset.model.jpa.ProcessRecord;
-import com.anosi.asset.model.jpa.ProcessRecord.HandleType;
-import com.anosi.asset.model.jpa.QCustomerServiceProcess;
-import com.anosi.asset.model.jpa.RepairDetail;
-import com.anosi.asset.service.AccountService;
-import com.anosi.asset.service.CustomerServcieProcessService;
-import com.anosi.asset.service.DistributeDetailService;
-import com.anosi.asset.service.EntrustDetailService;
-import com.anosi.asset.service.EvaluatingDetailService;
-import com.anosi.asset.service.ExamineDetailService;
-import com.anosi.asset.service.FileMetaDataService;
-import com.anosi.asset.service.RepairDetailService;
-import com.anosi.asset.service.StartDetailService;
-import com.anosi.asset.service.TechnologyDocumentService;
-import com.google.common.collect.ImmutableMap;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.ConstantImpl;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringTemplate;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import javax.persistence.EntityManager;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("customerServcieProcessService")
 public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<CustomerServiceProcess>
@@ -299,14 +274,14 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		for (Long deviceId : devices) {
 			Device device = new Device();
 			device.setId(deviceId);
-			process.getRepairDetail().getDeviceList().add(device);
+			process.getEntrustDetail().getDeviceList().add(device);
 		}
 		// 同行工程师
 		if (fellows != null && fellows.length != 0) {
 			for (Long fellowId : fellows) {
 				Account account = new Account();
 				account.setId(fellowId);
-				process.getRepairDetail().getFellowList().add(account);
+				process.getEntrustDetail().getFellowList().add(account);
 			}
 		}
 		
@@ -315,7 +290,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		for (Long faultCategoryId : faultCategorys) {
 			FaultCategory faultCategory = new FaultCategory();
 			faultCategory.setId(faultCategoryId);
-			process.getRepairDetail().getFaultCategoryList().add(faultCategory);
+			process.getEntrustDetail().getFaultCategoryList().add(faultCategory);
 		}
 
 		entrustDetailService.save(process.getEntrustDetail());
