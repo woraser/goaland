@@ -1,30 +1,15 @@
 package com.anosi.asset.model.jpa;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.anosi.asset.model.elasticsearch.Content;
+import org.hibernate.search.annotations.*;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+
+import javax.persistence.*;
+import javax.persistence.Index;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.wltea.analyzer.lucene.IKAnalyzer;
-
-import com.alibaba.fastjson.annotation.JSONField;
-import com.anosi.asset.model.elasticsearch.Content;
 
 @Entity
 @Table(name = "device", indexes = { @Index(columnList = "rfid", name = "device_rfid") })
@@ -63,7 +48,6 @@ public class Device extends BaseEntity {
 
 	@Content
 	@Field(analyze = Analyze.NO)
-	@JSONField(serialize = false)
 	private String rfid;// rfid的值等于二维码的值
 
 	@JSONField(serialize = false)
