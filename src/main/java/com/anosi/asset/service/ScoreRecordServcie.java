@@ -1,5 +1,6 @@
 package com.anosi.asset.service;
 
+import com.anosi.asset.model.jpa.Integral;
 import com.anosi.asset.model.jpa.ScoreRecord;
 
 /**
@@ -16,4 +17,15 @@ import com.anosi.asset.model.jpa.ScoreRecord;
  * @Version: 1.0
  */
 public interface ScoreRecordServcie extends BaseJPAService<ScoreRecord>{
+
+    /***
+     * 创建积分记录
+     * @param score
+     * @param operate
+     * @param reason
+     * @param integralId
+     */
+    void createScoreRecord(int score, ScoreRecord.Operate operate,String reason, Long integralId);
+
+    void createScoreRecord(int score, ScoreRecord.Operate operate, String reason, Integral integral);
 }

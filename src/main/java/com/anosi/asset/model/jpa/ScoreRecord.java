@@ -1,9 +1,7 @@
 package com.anosi.asset.model.jpa;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 积分变更记录
@@ -20,18 +18,34 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "scoreRecord")
-public class ScoreRecord extends BaseEntity{
+public class ScoreRecord extends BaseEntity {
+
+    public ScoreRecord() {
+        super();
+    }
+
+    public ScoreRecord(Integral integral, Operate operate, int score, String reason) {
+        this.integral = integral;
+        this.operate = operate;
+        this.score = score;
+        this.reason = reason;
+        calculateRemainScore();
+    }
 
     private Integral integral;
 
     private Operate operate;
 
-    private int score;
+    private int score;// 本次操作的积分数
+
+    private int remainScore;// 本次剩余积分数
 
     private String reason;
 
-    public static enum Operate{
-        PLUS,MINUS
+    private Date operateTime = new Date();
+
+    public static enum Operate {
+        PLUS, MINUS
     }
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Integral.class)
@@ -66,4 +80,38 @@ public class ScoreRecord extends BaseEntity{
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    public int getRemainScore() {
+        return remainScore;
+    }
+
+    public void setRemainScore(int remainScore) {
+        this.remainScore = remainScore;
+    }
+
+    public Date getOperateTime() {
+        return operateTime;
+    }
+
+    public void setOperateTime(Date operateTime) {
+        this.operateTime = operateTime;
+    }
+
+    /**
+     * 计算剩余分数
+     */
+    @Transient
+    private void calculateRemainScore() {
+        int total = integral.getTotal();
+        switch (operate) {
+            case PLUS:
+                remainScore = total + score;
+                break;
+            case MINUS:
+                remainScore = total - score;
+                break;
+        }
+        integral.setTotal(remainScore);
+    }
+
 }

@@ -64,6 +64,16 @@
 						<span class="menu-text" style="margin-left:10px;" th:text="#{sensorMgr}" >传感器管理</span>
 					</a>
 				</li>
+				<li class="has-sub" shiro:hasPermission="integral:view">
+					<a style="padding-top: 20px;" href="#" class="">
+						<img style="margin-top: -7px;" src="/webResources/img/menu/积分管理.png"/> <span class="menu-text" style="margin-left:10px;" th:text="#{integral}">积分</span>
+						<span class="arrow"></span>
+					</a>
+					<ul class="sub">
+						<li shiro:hasPermission="myIntegral:view"><a href="/integral/myIntegral/view"><span class="sub-menu-text" th:text="#{myIntegral}">我的积分</span></a></li>
+						<li shiro:hasPermission="integralMgr:view"><a href="/integral/integralMgr/view"><span class="sub-menu-text" th:text="#{integralMgr}">积分管理</span></a></li>
+					</ul>
+				</li>
 			</ul>
 			<!-- /SIDEBAR MENU -->
 		</div>

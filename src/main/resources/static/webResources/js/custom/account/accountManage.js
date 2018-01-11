@@ -9,8 +9,7 @@ $(document).ready(function() {
 		        oper: "_oper", sort: "_sidx", order: "_sord"
 		    }
 		});
-		
-		
+
 		 var colModel=[
            	{label:$.i18n.prop('account.loginId'),name:'loginId',index:'loginId', sortable: true, width: '120', align: 'center'},
 			{label:$.i18n.prop('account.name'),name:'name',index:'name', sortable: true, width: '120', align: 'center'},

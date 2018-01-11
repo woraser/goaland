@@ -4,7 +4,8 @@
 <body>
 	<!-- HEADER -->
 	<header th:fragment="top">
-		<input type="hidden" id="loginId" name="loginId" th:value="${session.loginId}"/> 
+		<input type="hidden" id="loginId" name="loginId" th:value="${session.loginId}"/>
+		<input type="hidden" id="currentAccountId" name="currentAccountId" th:value="${session.user.id}"/>
 		<div id="top" class="container"  style="background: #4D4948" v-cloak="v-cloak">
 				<div class="navbar-brand" style="padding: 0%;">
 					<!-- COMPANY LOGO -->
