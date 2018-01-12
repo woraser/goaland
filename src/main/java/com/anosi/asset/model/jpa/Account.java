@@ -122,6 +122,7 @@ public class Account extends BaseEntity {
 	@ContainedIn
 	private List<Advertisement> advertisementList = new ArrayList<>();
 
+	@JSONField(serialize=false)
 	private Integral integral;
 
 	@JSONField(serialize=false)  
