@@ -3,14 +3,7 @@ package com.anosi.asset.model.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Analyzer;
@@ -128,6 +121,8 @@ public class Account extends BaseEntity {
 	@JSONField(serialize=false)  
 	@ContainedIn
 	private List<Advertisement> advertisementList = new ArrayList<>();
+
+	private Integral integral;
 
 	@JSONField(serialize=false)  
 	// 密码加盐
@@ -352,6 +347,15 @@ public class Account extends BaseEntity {
 
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
+	public Integral getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(Integral integral) {
+		this.integral = integral;
 	}
 
 	/***

@@ -151,4 +151,18 @@ public class DateFormatUtil {
 		return ((Number)between_days).intValue();
 	}
 
+	/**
+	 * 计算两个日期之间相差的小时数
+	 *
+	 * @param smdate
+	 *            较小的时间
+	 * @param bdate
+	 *            较大的时间
+	 * @return 相差小时数
+	 */
+	public static int daysBetweenHours(Date smdate, Date bdate) {
+		long between_days = (bdate.getTime() - smdate.getTime()) / (1000 * 3600);
+		return ((Number)between_days).intValue();
+	}
+
 }
