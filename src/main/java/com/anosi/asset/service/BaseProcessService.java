@@ -300,4 +300,10 @@ public interface BaseProcessService<T extends BaseProcess> extends BaseJPAServic
 	 */
 	public List<HistoricTaskInstance> getTaskDatas(T t);
 
+	/***
+	 * 获取流程所有任务节点的key
+	 * @return
+	 */
+	public List<String> getTaskDefinitionKeys();
+
 }

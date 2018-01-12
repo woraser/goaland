@@ -1,50 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <roleFunctions>
-	<roleFunction roleFunctionPageId="systemMgr" name="系统管理">
-		<roleFunction roleFunctionPageId="employeeMgr" name="人员管理">
-			<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
-			<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
-			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
-			<roleFunctionBtn btnId="batadd" name="批量配置"></roleFunctionBtn>
-		</roleFunction>
-		<roleFunction roleFunctionPageId="roleFunctionGroupMgr"
-			name="权限组管理">
-			<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
-			<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
-			<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
-		</roleFunction>
-	</roleFunction>
-	<roleFunction roleFunctionPageId="customServiceProcess"
-		name="售后流程">
-		<roleFunction roleFunctionPageId="customServiceProcessTaskStarted"
-			name="我发起的任务">
-		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessTaskToDo"
-			name="我待办的任务">
-		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessHistoricTasks"
-			name="我办过的任务">
-		</roleFunction>
-		<roleFunction roleFunctionPageId="customServiceProcessAllProcesses"
-			name="任务总览">
-		</roleFunction>
-	</roleFunction>
-	<roleFunction roleFunctionPageId="documentMgr" name="文档管理"></roleFunction>
-	<roleFunction roleFunctionPageId="deviceManagement" name="设备管理">
-		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
-		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
-		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
-		<roleFunctionBtn btnId="batadd" name="批量添加"></roleFunctionBtn>
-		<roleFunctionBtn btnId="viewDetail" name="查看详情"></roleFunctionBtn>
-	</roleFunction>
-	<roleFunction roleFunctionPageId="iotxManagement" name="iotx管理">
-	</roleFunction>
-	<roleFunction roleFunctionPageId="sensorManagement" name="传感器管理">
-	</roleFunction>
-	<roleFunction roleFunctionPageId="report" name="统计报表"></roleFunction>
-	<roleFunction roleFunctionPageId="advertisement" name="广告管理">
-		<roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
-		<roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
-		<roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
-	</roleFunction>
+    <roleFunction roleFunctionPageId="systemMgr" name="系统管理">
+        <roleFunction roleFunctionPageId="employeeMgr" name="人员管理">
+            <roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+            <roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+            <roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+            <roleFunctionBtn btnId="batadd" name="批量配置"></roleFunctionBtn>
+        </roleFunction>
+        <roleFunction roleFunctionPageId="roleFunctionGroupMgr"
+                      name="权限组管理">
+            <roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+            <roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+            <roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+        </roleFunction>
+    </roleFunction>
+    <roleFunction roleFunctionPageId="customServiceProcess"
+                  name="售后流程">
+        <roleFunction roleFunctionPageId="customServiceProcessTaskStarted"
+                      name="我发起的任务">
+        </roleFunction>
+        <roleFunction roleFunctionPageId="customServiceProcessTaskToDo"
+                      name="我待办的任务">
+        </roleFunction>
+        <roleFunction roleFunctionPageId="customServiceProcessHistoricTasks"
+                      name="我办过的任务">
+        </roleFunction>
+        <roleFunction roleFunctionPageId="customServiceProcessAllProcesses"
+                      name="任务总览">
+        </roleFunction>
+    </roleFunction>
+    <roleFunction roleFunctionPageId="documentMgr" name="文档管理"></roleFunction>
+    <roleFunction roleFunctionPageId="deviceManagement" name="设备管理">
+        <roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+        <roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+        <roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+        <roleFunctionBtn btnId="batadd" name="批量添加"></roleFunctionBtn>
+        <roleFunctionBtn btnId="viewDetail" name="查看详情"></roleFunctionBtn>
+    </roleFunction>
+    <roleFunction roleFunctionPageId="iotxManagement" name="iotx管理">
+    </roleFunction>
+    <roleFunction roleFunctionPageId="sensorManagement" name="传感器管理">
+    </roleFunction>
+    <roleFunction roleFunctionPageId="report" name="统计报表"></roleFunction>
+    <roleFunction roleFunctionPageId="advertisement" name="广告管理">
+        <roleFunctionBtn btnId="add" name="添加"></roleFunctionBtn>
+        <roleFunctionBtn btnId="edit" name="修改"></roleFunctionBtn>
+        <roleFunctionBtn btnId="delete" name="删除"></roleFunctionBtn>
+    </roleFunction>
+    <roleFunction roleFunctionPageId="integral" name="积分">
+        <roleFunction roleFunctionPageId="myIntegral"
+                      name="我的积分">
+        </roleFunction>
+        <roleFunction roleFunctionPageId="integralMgr"
+                      name="积分管理">
+        </roleFunction>
+        <roleFunction roleFunctionPageId="integralRule"
+                      name="积分规则">
+        </roleFunction>
+    </roleFunction>
 </roleFunctions>

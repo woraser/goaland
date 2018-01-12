@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="base">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{myIntegral}">我的积分</title>
+
+    <link href="/webResources/css/custom/intergration.css"
+          rel="stylesheet"/>
+
+    <script type="text/javascript" src="/webResources/js/custom/integral/myIntegral.js"></script>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div style="min-height: 897px">
+        <div class="table-top">
+            <div class="title-big" th:text="#{integralMgr}">
+                积分管理
+            </div>
+            <div class="title-small">
+                >&nbsp;&nbsp;
+                <span th:text="#{integral.center}"></span>
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="padding-left: 2.5%;padding-right: 2.5%;background: #F5F6FA" id="integral" v-cloak="v-cloak">
+            <div class="col-lg-8 all-left">
+                <div class="col-lg-3 mind-point">
+                    <div class="integration-img">
+                        <img src="/webResources/img/integral/jifen.png"/>
+                    </div>
+                    <div class="point">
+                        <span>{{integralData.total}}</span>
+                    </div>
+                    <div style="text-align: center;font-size: 15px">
+                    <span th:text="#{myIntegral}">
+                        我的积分
+                    </span>
+                    </div>
+                    <div style="text-align: center;margin-top: 70px;color: #C9C9C9">
+                    <span style="font-size: 10px" th:text="#{integral.process.complete}">
+                        您有未处理的工单，立即前往赚取积分
+                    </span>
+                    </div>
+                    <div class="get-point">
+                        <button class="get-point-button" th:text="#{integral.get}" v-on:click="viewTasks">
+                            赚积分
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 data-report">
+                    <div class="integration-head">
+                        <img class="title-img" src="/webResources/img/integral/integration-02.png"/>
+                        <span style="" th:text="#{integral.detail}">积分明细</span>
+                    </div>
+                    <div class="select-model">
+                        <div class="test">
+                            <span th:text="#{select}">筛选</span>
+                            <ul class="dropdown">
+                                <li th:text="#{integral.PLUS}" v-on:click="select('PLUS')">增加</li>
+                                <li th:text="#{integral.MINUS}" v-on:click="select('MINUS')">扣除</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="box-body"
+                         style="padding-right:4%;padding-left:4%;margin-top:20px;overflow:scroll;height: 620px;overflow-x:hidden">
+                        <table class="table">
+                            <thead>
+                            <tr class="table-head">
+                                <th class="point-table-head" th:text="#{integral.record.score}">积分</th>
+                                <th class="point-table-head" th:text="#{integral.record.time}">时间</th>
+                                <th class="point-table-head" th:text="#{integral.record.reason}">详情</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr style="border-top:0px #fff solid;" v-for="record in integralData.scoreRecords">
+                                <td v-if = "record.operate == 'PLUS'" class="table-one">+{{record.score}}</td>
+                                <td v-if = "record.operate == 'MINUS'" class="table-minus">-{{record.score}}</td>
+                                <td class="table-two">{{record.operateTime}}</td>
+                                <td class="table-three">{{record.reason}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 all-right">
+                <div class="integration-head">
+                    <img class="title-img" src="/webResources/img/integral/integration-01.png"/>
+                    <span style="" th:text="#{integral.rule}">积分规则</span>
+                </div>
+                <div class="rule-div">
+                    <div class="rule-div-in">
+                        <div class="rule-div-intitle">
+                            <img class="rule-title-img" src="/webResources/img/integral/rule-01.png"/>
+                            <span style="color: #F33448" th:text="#{integral.what}">什么是积分</span>
+                        </div>
+                        <br/>
+                        <p style="text-indent:35px;margin-bottom: 0px" th:text="#{integral.what.explain.one}">
+                            积分是高澜员工处理售后工单时给予的奖励，积分仅可在高澜公司使用。
+                            积分可直接用于员工进行线下礼品兑换。
+                        </p>
+                        <p style="text-indent:35px" th:text="#{integral.what.explain.two}">
+                            积分查询：您可以在“我的积分”中可查询到您的积分详细情况。
+                        </p>
+                    </div>
+                </div>
+                <div class="rule-div">
+                    <div class="rule-div-in">
+                        <div class="rule-div-intitle">
+                            <img class="rule-title-img" src="/webResources/img/integral/rule-02.png"/>
+                            <span style="color: #F33448" th:text="#{integral.get.how}">如何赚积分</span>
+                        </div>
+                        <br/>
+                        <p style="text-indent:35px;margin-bottom: 0px" th:text="#{integral.get.how.explain.one}">
+                            用户在我的待办任务页面对售后工单进行办理操作即可获得积分。系统会
+                            根据实际处理时间奖励积分，具体以通知为准。
+                        </p>
+                        <p style="text-indent:35px" th:text="#{integral.get.how.explain.two}">
+                            注：并非所有的操作都会产生积分，处理重复无意义的工单不会产生积分。
+                        </p>
+                    </div>
+                </div>
+                <div class="rule-div">
+                    <div class="rule-div-in">
+                        <div class="rule-div-intitle">
+                            <img class="rule-title-img" src="/webResources/img/integral/rule-03.png"/>
+                            <span style="color: #F33448" th:text="#{integral.use.how}">如何使用积分</span>
+                        </div>
+                        <br/>
+                        <p style="text-indent:35px" th:text="#{integral.use.how.explain}">
+                            在使用系统的同时，处理售后工单的操作都能够为用
+                            户带来积分。累计了一定数量的积分以后，用户可在线下使用积分兑换
+                            相应的奖品。
+                        </p>
+                    </div>
+                </div>
+                <div class="rule-div">
+                    <div class="rule-div-in">
+                        <div class="rule-div-intitle">
+                            <img class="rule-title-img" src="/webResources/img/integral/rule-04.png"/>
+                            <span style="color: #F33448" th:text="#{integral.minus.use}">积分扣减</span>
+                        </div>
+                        <br/>
+                        <p style="text-indent:35px" th:text="#{integral.minus.use.explain}">
+                            员工积分累计了一定数量以后，可以兑换奖品，管理员会减去相应的积分。
+                            处理售后工单所产生的积分具有有效期，有效期一年，
+                            例如今年获得的积分，统一在次年年底失效，失效积分作废，不可用于兑换。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+
