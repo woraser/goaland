@@ -81,13 +81,13 @@ public class QLExpressTest {
         runner.addOperatorWithAlias("否则", "else", null);
         runner.addOperatorWithAlias("超过", ">", null);
         runner.addOperatorWithAlias("少于", "<", null);
-        runner.addFunctionOfClassMethod("计算相差天数", DateFormatUtil.class.getName(), "daysBetween",
+        runner.addFunctionOfClassMethod("计算相差小时", DateFormatUtil.class.getName(), "daysBetween",
                 new String[] { "java.util.Date","java.util.Date" }, null);
         runner.addFunctionOfClassMethod("积分增加", QLExpressTest.class.getName(), "plusIntegral",
                 new String[] { "int" }, null);
-        runner.addMacro("任务办理天数", "计算相差天数(任务创建时间,任务完成时间)");
+        runner.addMacro("任务办理小时数", "计算相差小时(任务创建时间,任务完成时间)");
 
-        String exp = "如果 任务办理天数 超过 5 则 积分增加 100";
+        String exp = "如果 任务办理小时数 超过 5 则 积分增加 100";
         Object result = runner.execute(exp, context, null, false, false, null);
         System.out.println(result);
     }

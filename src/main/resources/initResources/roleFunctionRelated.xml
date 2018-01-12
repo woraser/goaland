@@ -54,5 +54,8 @@
         <roleFunction roleFunctionPageId="integralMgr"
                       name="积分管理">
         </roleFunction>
+        <roleFunction roleFunctionPageId="integralRule"
+                      name="积分规则">
+        </roleFunction>
     </roleFunction>
 </roleFunctions>
