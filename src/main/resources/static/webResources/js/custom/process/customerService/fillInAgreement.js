@@ -10,8 +10,14 @@ $(document).ready(function() {
 			},
 			"agreementStatus.endTime" : {
 				required : true,
-			},
+                compareDate: "#agreementStatus\\.beginTime"
+            },
 		},
+        messages:{
+            "agreementStatus.endTime":{
+                compareDate: "结束日期必须大于开始日期!"
+            }
+        },
 		submitHandler: function(form) {  
 			var options = {
 				type : "post",
@@ -46,5 +52,16 @@ $(document).ready(function() {
 	
 	$("#agreementStatus\\.beginTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
 	$("#agreementStatus\\.endTime").datetimepicker({language: 'zh-CN', format: 'yyyy-mm-dd hh:ii:ss',todayBtn:'true',todayHighlight:'true'});
+
+    jQuery.validator.methods.compareDate = function(value, element, param) {
+        //var startDate = jQuery(param).val() + ":00";补全yyyy-MM-dd HH:mm:ss格式
+        //value = value + ":00";
+
+        var startDate = jQuery(param).val();
+
+        var date1 = new Date(Date.parse(startDate.replace("-", "/")));
+        var date2 = new Date(Date.parse(value.replace("-", "/")));
+        return date1 < date2;
+    };
 
 })

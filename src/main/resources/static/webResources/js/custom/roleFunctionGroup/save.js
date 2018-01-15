@@ -63,27 +63,37 @@ $(document).ready(function() {
 			url : '/roleFunctionGroup/checkExist',
 			data : {
 				'name' : $("#name").val(),
-				'id' : $("#roleFunctionGroupId").val(),
 			},
 			type : 'get',
 			dataType : 'json',
 			async:false,
 			success : function(msg) {
-				if($("#roleFunctionGroupId").val()!=null&&$("#roleFunctionGroupId").val()!=""){
-					// true表示已经存在
-					if (msg.result == true) {
-						flag = true;
-					} else{
-						flag = false;
-					}
+                if (msg.result == true) {
+                    if($("#roleFunctionGroupId").val()!=null&&$("#roleFunctionGroupId").val()!=""){
+                        $.ajax({
+                            url : '/roleFunctionGroup/checkExist',
+                            data : {
+                                'name' : $("#name").val(),
+                                'id' : $("#roleFunctionGroupId").val(),
+                            },
+                            type : 'get',
+                            dataType : 'json',
+                            async:false,
+                            success : function(msg) {
+                                // true表示已经存在
+                                if (msg.result == true) {
+                                    flag = true;
+                                } else{
+                                    flag = false;
+                                }
+                            }
+                        });
+                    }else{
+                        flag = false;
+                    }
 				}else{
-					// true表示已经存在
-					if (msg.result == true) {
-						flag = false;
-					} else{
-						flag = true;
-					}
-				}
+                    flag = true;
+                }
 			}
 		});
 		return flag;

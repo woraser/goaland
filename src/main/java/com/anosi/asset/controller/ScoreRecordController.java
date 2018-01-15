@@ -49,7 +49,7 @@ public class ScoreRecordController extends BaseController<ScoreRecord> {
      */
     @RequestMapping(value = "/scoreRecord/management/data/{showType}", method = RequestMethod.GET)
     public JSONObject findScoreRecordManageData(@PathVariable ShowType showType,
-                                                @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, page = 0, size = 20) Pageable pageable,
+                                                @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, page = 0, size = 20)Pageable pageable,
                                                 @QuerydslPredicate(root = ScoreRecord.class) Predicate predicate,
                                                 @RequestParam(value = "showAttributes", required = false) String showAttributes,
                                                 @RequestParam(value = "rowId", required = false, defaultValue = "id") String rowId) throws Exception {
@@ -71,7 +71,7 @@ public class ScoreRecordController extends BaseController<ScoreRecord> {
      */
     @RequestMapping(value = "/scoreRecord/save", method = RequestMethod.POST)
     public JSONObject createScoreRecord(@RequestParam(value = "score") int score, @RequestParam(value = "operate") ScoreRecord.Operate operate,
-                                        @RequestParam(value = "reason") String reason, @RequestParam(value = "integralId",required = false)Long integralId) throws Exception {
+                                        @RequestParam(value = "reason") String reason, @RequestParam(value = "integralId", required = false) Long integralId) throws Exception {
         scoreRecordServcie.createScoreRecord(score, operate, reason, integralId);
         return new JSONObject(ImmutableMap.of("result", "success"));
     }

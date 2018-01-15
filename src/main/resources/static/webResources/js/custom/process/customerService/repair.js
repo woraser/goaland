@@ -39,6 +39,7 @@ $(document).ready(function() {
 			},
 			"repairDetail.repairEndTime" : {
 				required : true,
+                compareDate: "#repairDetail\\.repairEndTime"
 			},
 		},
 		errorPlacement: function(error, element) {
@@ -46,6 +47,11 @@ $(document).ready(function() {
                 error.insertAfter(element.parent());
             } else {
                 error.insertAfter(element);
+            }
+        },
+        messages:{
+            "repairDetail.repairEndTime":{
+                compareDate: "结束日期必须大于开始日期!"
             }
         },
 		submitHandler: function(form) {  
@@ -87,6 +93,17 @@ $(document).ready(function() {
 	$("#faultCategory").chosen();
 	$("#device").chosen();
 	$("#fellow").chosen();
+
+    jQuery.validator.methods.compareDate = function(value, element, param) {
+        //var startDate = jQuery(param).val() + ":00";补全yyyy-MM-dd HH:mm:ss格式
+        //value = value + ":00";
+
+        var startDate = jQuery(param).val();
+
+        var date1 = new Date(Date.parse(startDate.replace("-", "/")));
+        var date2 = new Date(Date.parse(value.replace("-", "/")));
+        return date1 < date2;
+    };
 	
 	jQuery.validator.addMethod("checkExist", function(value, element) {
 		var flag;
