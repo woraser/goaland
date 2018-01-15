@@ -197,6 +197,7 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 	@Transactional
 	public void repair(String taskId, CustomerServiceProcess process, MultipartFile[] multipartFiles, Long[] devices,
 			Long[] fellows, Long[] faultCategorys) throws Exception {
+		repairDetailService.save(process.getRepairDetail());
 		// 上传文件
 		if (multipartFiles != null && multipartFiles.length != 0) {
 			for (MultipartFile multipartFile : multipartFiles) {
@@ -226,7 +227,6 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 			process.getRepairDetail().getFaultCategoryList().add(faultCategory);
 		}
 
-		repairDetailService.save(process.getRepairDetail());
 		boolean entrust = process.getRepairDetail().getEntrust();
 		Map<String, Object> map = new HashMap<>();
 		map.put("entrust", entrust);

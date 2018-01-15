@@ -63,8 +63,11 @@ $(document).ready(function() {
 	 $("#empty").click(function(){
 		 $("#lowerLimit").val("")
 		 $("#upperLimit").val("")
+         files.deviceSN = ""
+		 files.projectNo = ""
+         $("#searchContent").val("")
 	 })
-	 
+
 	 $("#confirm").click(function(){
 		//加载数据
 		$("#search").click()

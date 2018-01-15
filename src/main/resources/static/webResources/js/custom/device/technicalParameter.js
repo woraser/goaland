@@ -14,7 +14,6 @@ $(document).ready(function() {
 	    {label:$.i18n.prop('device.technicalParameter.name'),name:'name',index:'name', width: '150',  align: 'center'},
        	{label:$.i18n.prop('device.technicalParameter.parameterDescribe'),name:'parameterDescribe',index:'parameterDescribe', width: '150',  align: 'center'},
   		{label:$.i18n.prop('device.technicalParameter.actualValue'),name:'actualValue',index:'actualValue', width: '150',  align: 'center'},
-  		{label:$.i18n.prop('device.technicalParameter.unit'),name:'unit', index:'unit', width:'150', align: 'center'},
   		{
             label:$.i18n.prop('operate'), name: 'operate', index: 'operate', width: 150,sortable: false, align:'center',
             formatter: function (cellvalue, options, rowObject) {
@@ -35,7 +34,7 @@ $(document).ready(function() {
   	 var params={}
   	 //设置请求需要的一些参数
   	 params['rowId']='id';
-  	 params['showAttributes']='name,parameterDescribe,actualValue,unit,serialNo';//要获取的属性名
+  	 params['showAttributes']='name,parameterDescribe,actualValue,serialNo';//要获取的属性名
   	 params['page']=page;
   	 params['size']=rowNum;
   	 params['sort']=sort;

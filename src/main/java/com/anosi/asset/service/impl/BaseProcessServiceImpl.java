@@ -363,7 +363,7 @@ public abstract class BaseProcessServiceImpl<T extends BaseProcess> extends Base
                                      Date endTime, FinishType finishType) {
         HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
                 .processDefinitionKey(getDefinitionKey()).orderByTaskCreateTime().desc()
-                .taskAssignee(sessionComponent.getCurrentUser().getLoginId());
+                .taskAssignee(sessionComponent.getCurrentUser().getLoginId()).finished();
         if (beginTime != null) {
             if ("start".equals(timeType)) {
                 historicTaskInstanceQuery.taskCreatedAfter(beginTime);
