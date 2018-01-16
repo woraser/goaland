@@ -32,13 +32,13 @@ $(document).ready(function() {
             formatter: function (cellvalue, options, rowObject) {
             	var detail = "";
             	if($("#allowEdit").length>0){
-            		detail += "<a href='#' edit='"+options.rowId+"'><img src='/webResources/img/operate/edit.png'/></a>"
+            		detail += "<a href='#' title="+$.i18n.prop('edit')+" edit='"+options.rowId+"'><img src='/webResources/img/operate/edit.png'/></a>"
             	}
             	if($("#allowDelete").length>0){
-            		detail += "<a href='#' delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
+            		detail += "<a href='#' title="+$.i18n.prop('delete')+" delete='"+options.rowId+"'><img src='/webResources/img/operate/delete.png'/></a>"
             	}
             	if($("#allowViewDetail").length>0){
-            		detail += "<a href='#' detail='"+options.rowId+"'><img src='/webResources/img/operate/detail.png'/></a>"
+            		detail += "<a href='#' title="+$.i18n.prop('detail')+" detail='"+options.rowId+"'><img src='/webResources/img/operate/detail.png'/></a>"
             	}
             	return detail;
             },
