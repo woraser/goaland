@@ -40,7 +40,7 @@ $(document).ready(function() {
   	 params['page']=page;
   	 params['size']=rowNum;
   	 params['sort']=sort;
-  	 params['repairDetail.device.id']=$("#deviceId").val();
+  	 params['repairDetail.deviceList.id']=$("#deviceId").val();
   	 
   	 var myGrid = jQuery("#recordTable");
 	 var myPager = jQuery("#recordPager");

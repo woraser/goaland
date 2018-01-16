@@ -69,12 +69,6 @@
 			            <label style="margin-top: 15px;margin-left: 15px" th:text="${session.user.name}">admin</label>
 			        </div>
 			        <div class="col-lg-12" style="background: #FFFFFF;padding-bottom: 30px">
-			            <div class="col-lg-12">
-			            	<a th:href="@{/customerServiceProcess/startedProcess/view}">
-		                		<input type="button" class="process-out-button" th:value="#{return}"/>
-		                	</a>
-		                    <input type="submit" class="process-save-button" th:value="#{commit}"/>
-			            </div>
 			        <div class="col-lg-12">
 			        <div class="project-info-title1" style="">
 			            <label style="margin-top: 5px;margin-left: 15px" th:text="#{project.message}">项目信息</label>
@@ -101,16 +95,12 @@
 			                    <div class="col-lg-3 formone" style="height: 40px">
 			                        <input type="text" class="form-control" th:field="*{startDetail.project.number}" th:placeholder="#{customerService.projectNo}"/>
 			                    </div>
-			                </div>
-			                <div class="form-group">
 			                    <div class="col-lg-1 formone" style="height: 40px">
 			                        <label style="margin-top: 5px" th:text="#{customerService.projectName}">项目名称</label>
 			                    </div>
 			                    <div class="col-lg-3 formone" style="height: 40px">
 			                        <input type="text" class="form-control" th:field="*{startDetail.project.name}" th:placeholder="#{customerService.projectName}" readonly="readonly"/>
 			                    </div>
-			                </div>
-			                <div class="form-group">
 			                    <div class="col-lg-1 formone" style="height: 40px">
 			                        <label style="margin-top: 5px" th:text="#{customerService.projectLocation}">项目地址</label>
 			                    </div>
@@ -125,16 +115,12 @@
 			                    <div class="col-lg-3 formone" style="height: 40px">
 			                        <input type="text" class="form-control" th:field="*{startDetail.productName}" th:placeholder="#{customerService.productName}"/>
 			                    </div>
-			                </div>
-			                <div class="form-group">
 			                    <div class="col-lg-1 formone" style="height: 40px">
 			                        <label style="margin-top: 5px" th:text="#{customerService.productNo}">产品编号</label>
 			                    </div>
 			                    <div class="col-lg-3 formone" style="height: 40px">
 			                        <input type="text" class="form-control" th:field="*{startDetail.productNo}" th:placeholder="#{customerService.productNo}"/>
 			                    </div>
-			                </div>
-			                <div class="form-group">
 			                    <div class="col-lg-1 formone" style="height: 40px">
 			                        <label style="margin-top: 5px" th:text="#{customerService.productSpecifications}">产品规格</label>
 			                    </div>
@@ -164,8 +150,6 @@
 			                        <div class="col-lg-3 formone" style="height: 40px">
 			                            <input type="text" class="form-control" th:field="*{startDetail.customerMan}" th:placeholder="#{customerService.customerMan}"/>
 			                        </div>
-			                    </div>
-			                    <div class="form-group">
 			                        <div class="col-lg-1 formone" style="height: 40px">
 			                            <label style="margin-top: 5px" th:text="#{customerService.customerNumber}">联系电话</label>
 			                        </div>
@@ -180,8 +164,6 @@
 			                        <div class="col-lg-3 formone" style="height: 40px">
 			                            <input class="form-control" th:value="${process.startDetail.projectMan!=null?process.startDetail.projectMan:session.user.name}" type="text" id="startDetail.projectMan" name="startDetail.projectMan" th:placeholder="#{customerService.projectMan}"/>
 			                        </div>
-			                    </div>
-			                    <div class="form-group">
 			                        <div class="col-lg-1 formone" style="height: 40px">
 			                            <label style="margin-top: 5px" th:text="#{customerService.projectNumber}">联系电话</label>
 			                        </div>
@@ -258,6 +240,12 @@
 			                        </div>
 			                    </div>
 			            </div>
+						<div class="col-lg-12">
+							<a th:href="@{/customerServiceProcess/startedProcess/view}">
+								<input type="button" class="process-out-button" th:value="#{return}"/>
+							</a>
+							<input type="submit" class="process-save-button" th:value="#{commit}"/>
+						</div>
 			        </div>
 			    </div>
 			</fieldset>
