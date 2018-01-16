@@ -32,56 +32,56 @@ function create() {
 	// The platforms group contains the ground and the 2 ledges we can jump on
 	platforms = game.add.group();
 
-	var scoreText = game.add.text(160, 115, '水槽夜间总需冷量11', {
+	var scoreText = game.add.text(160, 115, '蓄冷槽上端入口温度', {
 		font: '14px Arial',
 		fill: '#FFF'
 	});
-	scoreText11 = game.add.text(180, 135, '642.4  kw.h', {
+	scoreText11 = game.add.text(180, 135, '642.4', {
 		font: '14px Arial',
 		fill: '#66A9D2'
 	});
 
-	var scoreText = game.add.text(50, 235, '水槽夜间总需冷量22', {
+	var scoreText = game.add.text(50, 235, '蓄冷槽下端入口温度', {
 		font: '14px Arial',
 		fill: '#FFF'
 	});
-	scoreText22 = game.add.text(70, 255, '642.4  kw.h', {
+	scoreText22 = game.add.text(70, 255, '642.4', {
 		font: '14px Arial',
 		fill: '#66A9D2'
 	});
 
-	var scoreText = game.add.text(360, 65, '水槽夜间总需冷量33', {
+	var scoreText = game.add.text(360, 65, '新增空调主机出口温度', {
 		font: '14px Arial',
 		fill: '#FFF'
 	});
-	scoreText33 = game.add.text(380, 85, '642.4  kw.h', {
+	scoreText33 = game.add.text(380, 85, '642.4', {
 		font: '14px Arial',
 		fill: '#66A9D2'
 	});
 
-	var scoreText = game.add.text(510, 135, '水槽夜间总需冷量44', {
+	var scoreText = game.add.text(510, 135, '放冷板换入口温度', {
 		font: '14px Arial',
 		fill: '#FFF'
 	});
-	scoreText44 = game.add.text(530, 155, '642.4  kw.h', {
+	scoreText44 = game.add.text(530, 155, '642.4', {
 		font: '14px Arial',
 		fill: '#66A9D2'
 	});
 
-	var scoreText = game.add.text(560, 235, '水槽夜间总需冷量55', {
+	var scoreText = game.add.text(560, 235, '放冷板换出口温度', {
 		font: '14px Arial',
 		fill: '#FFF'
 	});
-	scoreText55 = game.add.text(580, 255, '642.4  kw.h', {
+	scoreText55 = game.add.text(580, 255, '642.4', {
 		font: '14px Arial',
 		fill: '#66A9D2'
 	});
 
-	var scoreText = game.add.text(690, 335, '水槽夜间总需冷量66', {
+	var scoreText = game.add.text(690, 335, '放冷端回水温度', {
 		font: '14px Arial',
 		fill: '#FFF'
 	});
-	scoreText66 = game.add.text(710, 355, '642.4  kw.h', {
+	scoreText66 = game.add.text(710, 355, '642.4', {
 		font: '14px Arial',
 		fill: '#66A9D2'
 	});
@@ -138,12 +138,12 @@ function update() {
 }
 
 function updateText() {
-	scoreText11.text = Math.round(Math.random() * 1000) + "  kw.h"
-	scoreText22.text = Math.round(Math.random() * 1000) + "  kw.h"
-	scoreText33.text = Math.round(Math.random() * 1000) + "  kw.h"
-	scoreText44.text = Math.round(Math.random() * 1000) + "  kw.h"
-	scoreText55.text = Math.round(Math.random() * 1000) + "  kw.h"
-	scoreText66.text = Math.round(Math.random() * 1000) + "  kw.h"
+	scoreText11.text = Math.round(Math.random() * 1000)
+	scoreText22.text = Math.round(Math.random() * 1000)
+	scoreText33.text = Math.round(Math.random() * 1000)
+	scoreText44.text = Math.round(Math.random() * 1000)
+	scoreText55.text = Math.round(Math.random() * 1000)
+	scoreText66.text = Math.round(Math.random() * 1000)
 }
 
 function actionOnClick () {

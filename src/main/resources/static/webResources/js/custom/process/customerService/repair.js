@@ -39,7 +39,7 @@ $(document).ready(function() {
 			},
 			"repairDetail.repairEndTime" : {
 				required : true,
-                compareDate: "#repairDetail\\.repairEndTime"
+                compareDate: "#repairDetail\\.repairStartTime"
 			},
 		},
 		errorPlacement: function(error, element) {
