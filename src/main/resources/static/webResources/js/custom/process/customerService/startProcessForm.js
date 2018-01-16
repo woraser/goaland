@@ -156,7 +156,8 @@ $(document).ready(function() {
 				required : true,
 			},
 		},
-		submitHandler: function(form) {  
+		submitHandler: function(form) {
+            $("#project\\.number").attr("disabled","disabled")
 			var options = {
 				type : "post",
 				url : '/customerServiceProcess/startProcess',

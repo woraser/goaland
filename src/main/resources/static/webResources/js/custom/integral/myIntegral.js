@@ -6,7 +6,7 @@ $(document).ready(function(){
         },
         methods : {
             viewTasks : function(){
-                window.location.href="/customerServiceProcess/runtimeTask/view"
+                window.location.href="/customerServiceProcess/runtimeTask/view?menuId=customServiceProcessTaskToDo"
             },
             select : function(operate){
                 var param = {

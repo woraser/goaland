@@ -37,37 +37,37 @@
 	    <fieldset>
 	    	<input type="hidden" th:field="*{project.id}"/>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectNo}" for="name">项目编号</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectNo}">项目编号</label>
 		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{project.number}" class="form-control" th:placeholder="#{customerService.projectNo}"/>  
+		    		<input type="text" th:field="*{project.number}" class="form-control" th:placeholder="#{customerService.projectNo}"/>
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectName}" for="name">项目名称</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectName}">项目名称</label>
 		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{project.name}" class="form-control" th:placeholder="#{customerService.projectName}" readonly="readonly"/>  
+		    		<input type="text" th:field="*{project.name}" class="form-control" th:placeholder="#{customerService.projectName}" disabled="true"/>
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectLocation}" for="name">项目地址</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{customerService.projectLocation}">项目地址</label>
 		    	<div class="col-sm-8">
-		    		<input type="text" th:field="*{project.location}" class="form-control" th:placeholder="#{customerService.projectLocation}" readonly="readonly"/>  
+		    		<input type="text" th:field="*{project.location}" class="form-control" th:placeholder="#{customerService.projectLocation}" disabled="true"/>
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.productNo}" for="name">产品编号</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{customerService.productNo}">产品编号</label>
 		    	<div class="col-sm-8">
 		    		<input type="text" th:field="*{productNo}" class="form-control" th:placeholder="#{customerService.productNo}"/>  
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.productName}" for="name">产品名称</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{customerService.productName}">产品名称</label>
 		    	<div class="col-sm-8">
 		    		<input type="text" th:field="*{productName}" class="form-control" th:placeholder="#{customerService.productName}"/>  
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{customerService.productSpecifications}" for="name">产品规格</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{customerService.productSpecifications}">产品规格</label>
 		    	<div class="col-sm-8">
 		    		<input type="text" th:field="*{productSpecifications}" class="form-control" th:placeholder="#{customerService.productSpecifications}"/>  
     			</div>
@@ -81,26 +81,26 @@
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{device.commissioningTime}" for="name">投运时间</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{device.commissioningTime}">投运时间</label>
 		    	<div class="col-sm-8">
 		    		<input type="text" th:field="*{commissioningTime}" class="form-control" th:placeholder="#{device.commissioningTime}"/>  
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{device.serialNo}" for="name">序列号</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{device.serialNo}">序列号</label>
 		    	<div class="col-sm-8">
 		    		<input type="text" th:field="*{serialNo}" class="form-control" th:placeholder="#{device.serialNo}"/>  
     			</div>
 	    	</div>
 	    	<div class="form-group">
-		    	<label class="col-sm-3 control-label"  th:text="#{device.rfid}" for="name">rfid</label>  
+		    	<label class="col-sm-3 control-label"  th:text="#{device.rfid}">rfid</label>
 		    	<div class="col-sm-8">
 		    		<input type="text" th:field="*{rfid}" class="form-control" th:placeholder="#{device.rfid}"/>  
     			</div>
 	    	</div>
 	    	<div class="form-group">
 		    	<label class="col-sm-3 control-label"  th:text="#{device.remind.receivers}">选择预警维护收件人</label>  
-		    	<div class="col-sm-8">
+		    	<div id="remindReceiversSelect" class="col-sm-8">
 		    	 	<select name="remindReceivers" id="remindReceivers" class="form-control" multiple="multiple" style="width: 350px"> 
 		            	<option th:each="receiver : ${receivers}" th:field="*{remindReceiverList}" th:value="${receiver.id}" th:text="${receiver.name}"></option>
 		            </select>

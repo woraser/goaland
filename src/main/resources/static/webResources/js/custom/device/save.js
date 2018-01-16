@@ -36,13 +36,14 @@ $(document).ready(function() {
 			},
 		},
 		errorPlacement: function(error, element) {
-            if(element.parent('#roleSelect').length) {
+            if(element.parent('#remindReceiversSelect').length) {
                 error.insertAfter(element.parent());
             } else {
                 error.insertAfter(element);
             }
         },
-		submitHandler: function(form) {  
+		submitHandler: function(form) {
+			$("#project\\.number").attr("disabled","disabled")
 			var options = {
 				type : "post",
 				url : '/device/save',

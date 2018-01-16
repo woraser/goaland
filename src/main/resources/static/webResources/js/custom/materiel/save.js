@@ -7,7 +7,7 @@ $(document).ready(function() {
 		rules : {
 			number : {
 				required : true,
-			}
+			},
 			name : {
 				required : true,
 			},

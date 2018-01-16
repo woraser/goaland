@@ -26,7 +26,7 @@ $(document).ready(function() {
 			},
 			"entrustDetail.repairEndTime" : {
 				required : true,
-                compareDate: "#entrustDetail\\.repairEndTime"
+                compareDate: "#entrustDetail\\.repairStartTime"
 			},
 		},
 		errorPlacement: function(error, element) {
