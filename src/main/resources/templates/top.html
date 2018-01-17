@@ -36,14 +36,14 @@
 
 				<!-- BEGIN TOP NAVIGATION MENU -->
 				<ul class="nav navbar-nav pull-right">
-					<li class="dropdown user">
-						<a href="javascript:customPost('/i18n/changeSessionLanauage',{'lang':'zh'})" class="dropdown-toggle">
-							<img alt="" src="/webResources/img/other/chinese.png"/>
+					<li class="dropdown user cn-li" th:if="${#locale.getLanguage().equals('en')}">
+						<a href="javascript:customPost('/i18n/changeSessionLanauage',{'lang':'zh'})" class="dropdown-toggle" id="cn-top">
+							<img id="cn-top-img" alt="" src="/webResources/img/language/home_icon_cn.png"/>
 						</a>
 					</li>
-					<li class="dropdown user">
-						<a href="javascript:customPost('/i18n/changeSessionLanauage',{'lang':'en'})" class="dropdown-toggle">
-							<img alt="" src="/webResources/img/other/english.png"/>
+					<li class="dropdown user en-li" th:if="${#locale.getLanguage().equals('zh')}">
+						<a href="javascript:customPost('/i18n/changeSessionLanauage',{'lang':'en'})" class="dropdown-toggle" id="en-top">
+							<img id="en-top-img" alt="" src="/webResources/img/language/home_icon_en.png"/>
 						</a>
 					</li>
 					<li class="dropdown user">
