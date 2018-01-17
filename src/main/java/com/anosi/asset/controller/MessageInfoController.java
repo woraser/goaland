@@ -43,8 +43,9 @@ public class MessageInfoController extends BaseController<MessageInfo> {
         logger.debug("view messageInfo");
         MessageInfo messageInfo = messageInfoService.getOne(id);
         // 设置阅读时间
-        if (messageInfo.getReadTime() == null) {
+        if (!messageInfo.isRead()) {
             messageInfo.setReadTime(new Date());
+            messageInfo.setMessageStatus(MessageInfo.MessageStatus.READ);
             messageInfoService.save(messageInfo);
         }
         return new ModelAndView("messageInfo/viewMessageInfo", "id", id);
@@ -53,7 +54,6 @@ public class MessageInfoController extends BaseController<MessageInfo> {
     /***
      * 查询某条具体的messageInfo
      *
-     * @param showType
      * @param predicate
      * @param showAttributes
      * @return

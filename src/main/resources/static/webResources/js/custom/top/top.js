@@ -9,7 +9,7 @@ $(document).ready(function() {
 	   },
 	   methods: {
 		   viewMessageInfo : function(id){
-			   createModalPageToView("消息","/messageInfo/"+id+"/view")
+               createModalPageToViewFunc("消息","/messageInfo/"+id+"/view",getMessage)
 		   }
 	   },
 	   filters: {
@@ -34,7 +34,10 @@ $(document).ready(function() {
 	var getMessage = function(){
 		$.ajax({
 			url : "/messageInfo/management/data/REMOTE",
-			data : {'showAttributes':'id,from.name,title,content,sendTime','to.loginId':$("#loginId").val(),'messageStatus':'UNREAD'},
+			data : {
+				'showAttributes':'id,from.name,title,content,sendTime','to.loginId':$("#loginId").val(),
+				'messageStatus':'UNREAD'
+			},
 			type : 'get',
 			dataType : 'json',
 			success : function( data ) {
@@ -44,5 +47,26 @@ $(document).ready(function() {
 	}
 	
 	getMessage();
-	
+
+    $("#cn-top").mouseover(function() {
+        $('#cn-top-img').attr("src",'/webResources/img/language/home_icon_cn_over.png');
+    });
+    $("#cn-top").mouseout(function() {
+        $('#cn-top-img').attr("src",'/webResources/img/language/home_icon_cn.png');
+    });
+    $("#en-top").mouseover(function() {
+        $('#en-top-img').attr("src",'/webResources/img/language/home_icon_en_over.png');
+    });
+    $("#en-top").mouseout(function() {
+        $('#en-top-img').attr("src",'/webResources/img/language/home_icon_en.png');
+    });
+    $("#cn-top").click(function() {
+        $('.cn-li').css("display",'none');
+        $('.en-li').css("display",'block');
+    });
+    $("#en-top").click(function() {
+        $('.en-li').css("display",'none');
+        $('.cn-li').css("display",'block');
+    });
+
 })
