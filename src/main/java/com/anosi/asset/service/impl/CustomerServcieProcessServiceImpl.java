@@ -419,10 +419,10 @@ public class CustomerServcieProcessServiceImpl extends BaseProcessServiceImpl<Cu
 		if (agreement != null) {
 			switch (agreement) {
 			case UNCOMFIRMED:
-				predicate = qc.agreementStatus.endTime.isNull().and(predicate);
+				predicate = qc.agreementStatus.isNull().and(predicate);
 				break;
 			case COMFIRMED:
-				predicate = qc.agreementStatus.endTime.isNotNull().and(predicate);
+				predicate = qc.agreementStatus.isNotNull().and(predicate);
 				break;
 			default:
 				break;
