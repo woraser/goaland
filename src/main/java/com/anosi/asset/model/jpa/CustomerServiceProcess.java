@@ -1,23 +1,15 @@
 package com.anosi.asset.model.jpa;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import com.alibaba.fastjson.annotation.JSONField;
+import com.anosi.asset.model.elasticsearch.Content;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.anosi.asset.model.elasticsearch.Content;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customerServiceProcess")
@@ -34,6 +26,7 @@ public class CustomerServiceProcess extends BaseProcess {
 	@IndexedEmbedded(depth = 1)
 	private Account applicant;// 发起人
 
+    @IndexedEmbedded
 	private StartDetail startDetail;// 发起字段
 
 	private ExamineDetail examineDetail = new ExamineDetail();// 领导审批字段

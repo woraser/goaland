@@ -1,20 +1,12 @@
 package com.anosi.asset.model.jpa;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.hibernate.search.annotations.*;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
-
-import com.alibaba.fastjson.annotation.JSONField;
 
 /***
  * 项目
@@ -24,6 +16,8 @@ import com.alibaba.fastjson.annotation.JSONField;
  */
 @Entity
 @Table(name = "project")
+@Indexed
+@Analyzer(impl = IKAnalyzer.class)
 public class Project extends BaseEntity {
 
 	/**
