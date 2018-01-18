@@ -1,20 +1,15 @@
 package com.anosi.asset.model.jpa;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import com.alibaba.fastjson.annotation.JSONField;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import javax.persistence.*;
+import java.util.Date;
 
 /***
  * 流程发起时的表单字段
@@ -63,7 +58,8 @@ public class StartDetail extends BaseEntity {
 
 	private Account nextAssignee;// 下一步办理人
 
-	@JSONField(serialize=false)  
+	@JSONField(serialize=false)
+	@ContainedIn
 	private CustomerServiceProcess customerServiceProcess;
 
 	public Belong getBelong() {

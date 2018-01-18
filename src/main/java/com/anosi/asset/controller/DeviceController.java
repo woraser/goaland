@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import com.anosi.asset.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -31,11 +32,6 @@ import com.anosi.asset.model.jpa.Account;
 import com.anosi.asset.model.jpa.Device;
 import com.anosi.asset.model.jpa.QAccount;
 import com.anosi.asset.model.jpa.QDevice;
-import com.anosi.asset.service.AccountService;
-import com.anosi.asset.service.DevCategoryService;
-import com.anosi.asset.service.DeviceService;
-import com.anosi.asset.service.DocumentTypeService;
-import com.anosi.asset.service.RoleService;
 import com.anosi.asset.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.querydsl.core.types.Predicate;
@@ -55,6 +51,8 @@ public class DeviceController extends BaseController<Device> {
 	private AccountService accountService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private ProjectService projectService;
 
 	/***
 	 * 进入查看<b>所有设备信息</b>的页面
@@ -183,6 +181,7 @@ public class DeviceController extends BaseController<Device> {
 			@RequestParam(name = "remindReceivers") Long[] receivers,
 			@RequestParam(name = "owners", required = false) Long[] owners) throws Exception {
 		logger.debug("saveOrUpdate device");
+		device.setProject(projectService.getOne(device.getProject().getId()));
 		deviceService.save(device);
 		device.getRemindReceiverList().clear();
 		for (Long receiver : receivers) {
