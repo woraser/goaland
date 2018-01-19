@@ -32,8 +32,8 @@
 						<span class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.entrust}">是否转派:</span>
 					</div>
 					<div class="col-lg-2 formone">
-						<label style="margin-top: 5px" v-if="detailData.repairDetail.entrust" th:text="#{yes}"></label>
-						<label style="margin-top: 5px" v-else="v-else" th:text="#{no}"></label>
+						<span style="margin-top: 5px" v-if="detailData.repairDetail.entrust" th:text="#{yes}"></span>
+						<span style="margin-top: 5px" v-else="v-else" th:text="#{no}"></span>
 					</div>
 				</div>
 				<div class="form-group col-lg-12">
@@ -45,7 +45,7 @@
 						<span  class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.entrustTo}">转派工程师:</span>
 					</div>
 					<div class="col-lg-2 formone">
-						<label style="margin-top: 5px" v-if="detailData.repairDetail.entrust">{{detailData.repairDetail.entruster.name}}</label>
+						<span style="margin-top: 5px" v-if="detailData.repairDetail.entrust">{{detailData.repairDetail.entruster.name}}</span>
 					</div>
 				</div>
 				<div class="form-group col-lg-12">
@@ -65,7 +65,7 @@
 						<span class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.repair.faultCategory}">故障分类:</span>
 					</div>
 					<div class="col-lg-6 formone" style="text-align:left;">
-						<label style="margin-top: 5px" v-for="faultCategory in detailData.repairDetail.faultCategoryList">{{faultCategory.name}}&nbsp;&nbsp;</label>
+						<span style="margin-top: 5px" v-for="faultCategory in detailData.repairDetail.faultCategoryList">{{faultCategory.name}}&nbsp;&nbsp;</span>
 					</div>
 					<div class="col-lg-4 formone">
 					</div>
@@ -75,7 +75,7 @@
 						<span class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.repair.device}">设备序列号:</span>
 					</div>
 					<div class="col-lg-6 formone" style="text-align:left;">
-						<label style="margin-top: 5px" v-for="device in detailData.repairDetail.deviceList">{{device.serialNo}}&nbsp;&nbsp;</label>
+						<span style="margin-top: 5px" v-for="device in detailData.repairDetail.deviceList">{{device.serialNo}}&nbsp;&nbsp;</span>
 					</div>
 					<div class="col-lg-4 formone">
 					</div>
@@ -85,7 +85,7 @@
 						<span class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.repair.fellowList}">同行工程师:</span>
 					</div>
 					<div class="col-lg-6 formone" style="text-align:left;">
-						<label style="margin-top: 5px" v-for="fellow in detailData.repairDetail.fellowList">{{fellow.name}}&nbsp;&nbsp;</label>
+						<span style="margin-top: 5px" v-for="fellow in detailData.repairDetail.fellowList">{{fellow.name}}&nbsp;&nbsp;</span>
 					</div>
 				</div>
 				<div class="form-group col-lg-12">
@@ -93,7 +93,7 @@
 						<span class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.repair.beginTime}">维修开始时间:</span>
 					</div>
 					<div class="col-lg-4 formone">
-						<label style="margin-top: 5px">{{detailData.repairDetail.repairStartTime}}</label>
+						<span style="margin-top: 5px">{{detailData.repairDetail.repairStartTime}}</span>
 					</div>
 				</div>
 				<div class="form-group col-lg-12">
@@ -101,7 +101,7 @@
 						<span class="processdetail-label" style="margin-top: 5px" th:text="#{customerService.repair.endTime}">维修结束时间:</span>
 					</div>
 					<div class="col-lg-4 formone">
-						<label style="margin-top: 5px">{{detailData.repairDetail.repairEndTime}}</label>
+						<span style="margin-top: 5px">{{detailData.repairDetail.repairEndTime}}</span>
 					</div>
 				</div>
 				<div class="form-group col-lg-12">
