@@ -38,7 +38,6 @@ $(document).ready(function() {
   	 params['page']=page;
   	 params['size']=rowNum;
   	 params['sort']=sort;
-  	 params['actual']=true;
   	 params['dust.device.serialNo']=$("#deviceSN").val();
   	 
   	var paging = new Vue({
@@ -111,5 +110,19 @@ $(document).ready(function() {
 	   	}
 		    	
     });
-	 
+
+    // webSocket监听
+    var stompClient = null;
+
+    var socket = new SockJS('http://10.1.1.91:8080/endpointWisely'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+    stompClient = Stomp.over(socket);//使用stomp子协议的WebSocket 客户端
+    stompClient.connect('guest', 'guest', function(frame) {//链接Web Socket的服务端。
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/broadcast/iotx/data/'+$("#deviceSN").val(), function(respnose){ //订阅/topic/broadcast/iotx/data/目标发送的消息。
+			var valueArray = JSON.parse(JSON.parse(respnose.body).responseMessage);
+            $.each(valueArray,function(){
+                myGrid.setCell(this.sensorSN,"actualValue",this.val);
+            })
+        });
+    });
 })
