@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.*;
 
 @Service("materielService")
@@ -63,14 +64,14 @@ public class MaterielServiceImpl extends BaseJPAServiceImpl<Materiel> implements
      * @param table
      */
     private void chekcMulitName(Table<Integer, String, Object> table) {
-        Map<Integer, Object> nameMap = table.columnMap().get("物料名称");
+        Map<Integer, Object> numberMap = table.columnMap().get("物料编码");
         Map<Integer, Object> serialNoMap = table.columnMap().get("所属设备(序列号)");
         int size = table.rowKeySet().size();
         for (int i = 0; i < size; i++) {
-            Object nameI = nameMap.get(i);
+            Object nameI = numberMap.get(i);
             Object serialNoI = serialNoMap.get(i);
             for (int j = i + 1; j < size; j++) {
-                Object nameJ = nameMap.get(j);
+                Object nameJ = numberMap.get(j);
                 if (Objects.equals(nameI, nameJ) && Objects.equals(serialNoI, serialNoMap.get(j))) {
                     throw new CustomRunTimeException(
                             MessageFormat.format(i18nComponent.getMessage("materiel.exist.excel"), i + 1, j + 1));
@@ -119,7 +120,15 @@ public class MaterielServiceImpl extends BaseJPAServiceImpl<Materiel> implements
 
         String number = cells.get("物料编码").toString();
         String beginTime = cells.get("投运时间").toString();
-        Date beginDate = DateFormatUtil.getDateByParttern(beginTime, "yyyy-MM-dd");
+        // 判断日期格式
+
+        Date beginDate = null;
+        try {
+            beginDate = DateFormatUtil.getDateByParttern(beginTime, "yyyy-MM-dd");
+        } catch (ParseException e) {
+            throw new CustomRunTimeException("rowNum:" + (rowNum + 1) + ","
+                    + MessageFormat.format(i18nComponent.getMessage("materiel.beginDate.parseError"), "yyyy-MM-dd"));
+        }
 
         Materiel materiel = new Materiel(number, name, device, beginDate, checkYear, checkMonth, checkDay, remindYear,
                 remindMonth, remindDay);

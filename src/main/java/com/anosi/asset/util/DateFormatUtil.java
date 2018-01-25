@@ -25,16 +25,10 @@ public class DateFormatUtil {
 		return dateFormat;
 	}
 
-	public static Date getDateByParttern(String date, String pattern) {
+	public static Date getDateByParttern(String date, String pattern) throws ParseException{
 		SimpleDateFormat dateFormat = setFormat(pattern);
-		try {
-			Date resultDate = dateFormat.parse(date);
-			return resultDate;
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		Date resultDate = dateFormat.parse(date);
+		return resultDate;
 	}
 
 	public static Date getDateByParttern(String date) {
