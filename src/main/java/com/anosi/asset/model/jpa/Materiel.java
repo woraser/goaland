@@ -17,7 +17,7 @@ import java.util.Date;
  *
  */
 @Entity
-@Table(name = "materiel", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "device_id"})})
+@Table(name = "materiel", uniqueConstraints = {@UniqueConstraint(columnNames = {"number", "device_id"})})
 @Indexed
 @Analyzer(impl = IKAnalyzer.class)
 public class Materiel extends BaseEntity {
